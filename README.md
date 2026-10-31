@@ -1,4 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# RAILHUB
+
+RAILHUB is a JavaScript Next.js railway travel simulation backed by Supabase. It is an academic project and is not an official KAI service.
+
+## Local development
+
+1. Install dependencies with `npm install`.
+2. Configure `.env.local` with `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `NEXT_PUBLIC_APP_URL`, and `NEXT_PUBLIC_WHATSAPP_NUMBER`. Do not commit credentials.
+3. In the Supabase SQL Editor, run the supplied data package's `supabase_schema.sql`, then its `seed.sql`.
+4. Run `supabase\migrations\202610310001_search_train_schedules.sql` after the base schema and seed. The migration exposes a restricted public search RPC and computes class seat availability from database records.
+5. Run `supabase\migrations\202610310002_secure_passenger_booking.sql` to create missing passenger profiles on signup, enable seat selection, atomic passenger booking, payment simulation, ticket issuance, and booking ownership policies.
+6. Run `supabase\migrations\202610310003_staff_operations.sql` to configure staff journey assignments, ticket validation, and operational status updates.
+7. Run `supabase\migrations\202610310004_passenger_services.sql` to enable the fictional onboard menu, passenger food orders, and assistance/lost-item reports.
+8. Run `supabase\migrations\202610310005_simulated_schedule_calendar.sql` to add daily Gambir–Solo Balapan sample schedules via Yogyakarta for the next 90 days.
+9. Run `supabase\migrations\202610310006_fix_simulated_schedule_times.sql` to set the simulated service to 07:00–16:00 Jakarta time.
+10. Run `supabase\migrations\202610310007_expand_simulated_schedule_calendar.sql` to add daily services for all other seeded routes over the same 90-day period.
+11. Start the app with `npm run dev`.
+
+The Supabase URL and anonymous key are public client configuration; never put a service-role key in the browser or in `.env.local` variables prefixed with `NEXT_PUBLIC_`.
+
+## Current functionality
+
+- Public home page with a station/date/passenger search.
+- Station choices loaded from active, bookable Supabase station records.
+- Search results loaded by the `search_train_schedules` database function, with class filtering and price, duration, and departure sorting.
+- Daily simulated schedules for all seeded routes over the next 90 days; these are not official operator timetables.
+- Passenger seat selection, fictional passenger details, atomic booking, simulated payment, and private QR tickets.
+- Passenger dashboard with RLS-protected booking and payment summaries.
+- Admin database overview and staff assignment; staff dashboard with assigned-journey status updates and one-time ticket validation.
+- Passenger food ordering and journey reports connected to the assigned staff service desk.
+
+## Create an admin account
+
+The project does not seed demo users in Supabase Auth. Register an account in the app, then sign in to the Supabase Dashboard as the project owner and run this in the SQL Editor, replacing the email with the registered account:
+
+```sql
+UPDATE public.profiles
+SET role = 'admin'
+WHERE lower(email) = lower('your-account@example.com');
+```
+
+Confirm that the query updated one row. Then sign out and back in to RAILHUB and open `/dashboard/admin`. Never expose a service-role key or grant admin role through the public registration form.
+
+To view the dashboard layout without an account, open `/dashboard/admin?preview=1`. This uses sample data only and disables admin actions; it does not grant access to live admin data.
+
+For production, store the schema and all follow-up SQL changes as ordered migrations and apply them to a dedicated Supabase project. Seed data and sample accounts are development-only.
+
+## Validation
+
+Run `npm run lint` and `npm run build` before submitting changes.
+
+---
+
+The remaining sections below are the original Next.js starter references.
 
 ## Getting Started
 
