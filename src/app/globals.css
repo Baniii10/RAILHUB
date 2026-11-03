@@ -110,6 +110,49 @@ html {
   background: var(--rh-surface);
 }
 
+.rh-route-transition {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: calc(var(--z-toast) + 2);
+  height: 28px;
+  overflow: hidden;
+  pointer-events: none;
+  background: transparent;
+  animation: route-transition-fade .72s ease forwards;
+}
+
+.rh-route-transition::before {
+  content: '';
+  position: absolute;
+  inset: 13px 0 auto;
+  border-top: 1px dashed rgba(15,37,82,.45);
+}
+
+.rh-route-transition span {
+  position: absolute;
+  top: 4px;
+  left: -28px;
+  display: grid;
+  width: 28px;
+  height: 18px;
+  place-items: center;
+  color: white;
+  border-radius: 5px;
+  background: var(--rh-primary);
+  animation: route-train-pass .68s cubic-bezier(.32,.72,.26,1) forwards;
+}
+
+@keyframes route-train-pass {
+  to { left: calc(100% + 4px); }
+}
+
+@keyframes route-transition-fade {
+  0%, 78% { opacity: 1; }
+  to { opacity: 0; visibility: hidden; }
+}
+
 .rh-icon-wrap {
   display: inline-grid;
   flex: 0 0 auto;

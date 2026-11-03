@@ -1,7 +1,9 @@
 import { Toaster } from 'react-hot-toast'
+import { Suspense } from 'react'
 import { Montserrat, Roboto_Mono } from 'next/font/google'
 import { AuthProvider } from '@/contexts/AuthContext'
 import { LangProvider } from '@/contexts/LangContext'
+import RouteTransition from '@/components/layout/RouteTransition'
 import './globals.css'
 
 const montserrat = Montserrat({ subsets: ['latin'], variable: '--font-montserrat', display: 'swap' })
@@ -36,6 +38,7 @@ export default function RootLayout({ children }) {
         <a className="rh-skip-link" href="#main-content">Lewati ke konten utama</a>
         <LangProvider>
           <AuthProvider>
+            <Suspense fallback={null}><RouteTransition /></Suspense>
             <div id="main-content" tabIndex={-1}>{children}</div>
             <Toaster
               position="top-right"
