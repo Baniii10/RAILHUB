@@ -147,7 +147,7 @@ export default function HomePage() {
   const activePromo = PROMO_BANNERS[promoIndex]
 
   return (
-    <div style={{ paddingBottom: '3rem' }}>
+    <div>
       <Navbar />
 
       {/* ── HERO & SEARCH SECTION ──────────────────────────── */}

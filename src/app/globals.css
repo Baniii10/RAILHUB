@@ -744,6 +744,19 @@ fieldset {
   }
 }
 
+/* Minimalist Footer container styling (safe mobile bottom nav clearance, zero white gap) */
+.rh-footer-container {
+  padding-top: 1.75rem;
+  padding-bottom: calc(5rem + env(safe-area-inset-bottom, 0px));
+}
+
+@media (min-width: 769px) {
+  .rh-footer-container {
+    padding-top: 1.75rem;
+    padding-bottom: 1.75rem;
+  }
+}
+
 /* ============================================================
    TRAIN / SEAT COMPONENTS
    ============================================================ */
