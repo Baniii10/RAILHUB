@@ -2,9 +2,28 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { Train, Menu, X, Globe, ChevronDown, User, LogOut, LayoutDashboard } from 'lucide-react'
+import {
+  Train,
+  Menu,
+  X,
+  Globe,
+  ChevronDown,
+  User,
+  LogOut,
+  LayoutDashboard,
+  Bell,
+  Home,
+  Ticket,
+  Compass,
+  Utensils,
+  TicketCheck,
+  ClipboardList,
+  CheckCircle2,
+  Clock3,
+} from 'lucide-react'
 import { useLang } from '@/contexts/LangContext'
 import { useAuth } from '@/contexts/AuthContext'
+import { createClient } from '@/lib/supabase/client'
 import toast from 'react-hot-toast'
 
 const publicNavLinks = (t) => [
@@ -32,12 +51,114 @@ export default function Navbar() {
   const [scrolled,     setScrolled]     = useState(false)
   const [mobileOpen,   setMobileOpen]   = useState(false)
   const [userMenuOpen, setUserMenuOpen] = useState(false)
+  const [notifOpen,    setNotifOpen]    = useState(false)
+  const [notifications, setNotifications] = useState([])
+  const [unreadCount, setUnreadCount] = useState(0)
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 10)
     window.addEventListener('scroll', handler)
     return () => window.removeEventListener('scroll', handler)
   }, [])
+
+  useEffect(() => {
+    let active = true
+    async function loadNotifications() {
+      const items = []
+      if (!user) {
+        items.push(
+          {
+            id: 'promo-1',
+            title: 'Promo Hemat Jelajah Jawa 25%',
+            desc: 'Pesan tiket Eksekutif & Luxury lebih hemat hari ini.',
+            href: '/trains',
+            time: 'Baru saja',
+          },
+          {
+            id: 'info-1',
+            title: 'E-Boarding Pass QR Tersedia',
+            desc: 'Masuk ke akun Anda untuk mengelola tiket dan memesan makanan di kereta.',
+            href: '/auth/login',
+            time: 'Info Layanan',
+          }
+        )
+        if (active) {
+          setNotifications(items)
+          setUnreadCount(items.length)
+        }
+        return
+      }
+
+      const supabase = createClient()
+      if (dashboardRole === 'conductor') {
+        const { data: assigns } = await supabase
+          .from('staff_assignments')
+          .select('id, schedule_id, schedules(status, departure_time, trains(name, train_number), routes(name))')
+          .eq('staff_id', user.id)
+          .order('created_at', { ascending: false })
+          .limit(5)
+        for (const a of assigns || []) {
+          items.push({
+            id: `assign-${a.id}`,
+            title: `Tugas: ${a.schedules?.trains?.name || 'Kereta'} (${a.schedules?.trains?.train_number || ''})`,
+            desc: `${a.schedules?.routes?.name || 'Rute'} · Status: ${a.schedules?.status || 'scheduled'}`,
+            href: '/dashboard/staff',
+            time: 'Penugasan Aktif',
+          })
+        }
+      } else if (dashboardRole === 'admin') {
+        items.push(
+          {
+            id: 'admin-ops',
+            title: 'Pantau Jadwal & Penugasan Petugas',
+            desc: 'Periksa perjalanan 7 hari ke depan dan tugaskan kondektur.',
+            href: '/dashboard/admin/staff',
+            time: 'Operasional',
+          },
+          {
+            id: 'admin-orders',
+            title: 'Layanan Makanan & Laporan Penumpang',
+            desc: 'Tinjau pesanan restorasi dan laporan bantuan aktif.',
+            href: '/dashboard/orders',
+            time: 'Layanan',
+          }
+        )
+      } else {
+        const { data: bks } = await supabase
+          .from('bookings')
+          .select('id, booking_code, status, schedules(departure_time, trains(name), routes(name))')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false })
+          .limit(4)
+        for (const b of bks || []) {
+          items.push({
+            id: `bk-${b.id}`,
+            title: `Booking ${b.booking_code} (${b.status === 'paid' ? 'Terbayar' : b.status === 'pending' ? 'Menunggu Pembayaran' : b.status})`,
+            desc: `${b.schedules?.trains?.name || 'Kereta'} · ${b.schedules?.routes?.name || ''}`,
+            href: `/booking/payment/${b.id}`,
+            time: b.status === 'paid' ? 'Tiket Aktif' : 'Perlu Tindakan',
+          })
+        }
+      }
+
+      if (items.length === 0) {
+        items.push({
+          id: 'welcome-notif',
+          title: 'Selamat datang di RAILHUB',
+          desc: 'Cari jadwal kereta dan pilih kursi perjalanan Anda.',
+          href: '/trains',
+          time: 'Aktif',
+        })
+      }
+
+      if (active) {
+        setNotifications(items)
+        setUnreadCount(items.length)
+      }
+    }
+    loadNotifications()
+    return () => { active = false }
+  }, [user, dashboardRole])
 
   async function handleSignOut() {
     try {
@@ -75,6 +196,37 @@ export default function Navbar() {
   const navLinks = isStaffArea ? (dashboardNavLinks || []) : publicNavLinks(t)
   const homeHref = isStaffArea ? getDashboardHref() : '/'
 
+  const mobileBottomItems = dashboardRole === 'admin'
+    ? [
+        { href: '/dashboard/admin', label: 'Overview', icon: LayoutDashboard },
+        { href: '/dashboard/admin/journeys', label: 'Jadwal', icon: Train },
+        { href: '/dashboard/admin/staff', label: 'Petugas', icon: User },
+        { href: '/dashboard/orders', label: 'Makanan', icon: Utensils },
+        { href: '/dashboard/reports', label: 'Laporan', icon: ClipboardList },
+      ]
+    : dashboardRole === 'conductor'
+      ? [
+          { href: '/dashboard/staff', label: 'Tugas', icon: Train },
+          { href: '/dashboard/staff#ticket-validation', label: 'Validasi', icon: TicketCheck },
+          { href: '/dashboard/orders', label: 'Makanan', icon: Utensils },
+          { href: '/dashboard/reports', label: 'Laporan', icon: ClipboardList },
+        ]
+      : user
+        ? [
+            { href: '/', label: 'Beranda', icon: Home },
+            { href: '/dashboard/passenger#my-bookings', label: 'Tiket', icon: Ticket },
+            { href: '/trains', label: 'Pesan', icon: Compass },
+            { href: '/faq', label: 'FAQ', icon: ClipboardList },
+            { href: '/contact', label: 'Bantuan', icon: User },
+          ]
+        : [
+            { href: '/', label: t.nav.home, icon: Home },
+            { href: '/trains', label: t.nav.book, icon: Ticket },
+            { href: '/about', label: t.nav.about, icon: Compass },
+            { href: '/faq', label: t.nav.faq, icon: ClipboardList },
+            { href: '/auth/login', label: t.nav.login, icon: User },
+          ]
+
   return (
     <>
       <header className={`rh-navbar ${scrolled ? 'rh-navbar-scrolled' : ''}`}>
@@ -95,7 +247,7 @@ export default function Navbar() {
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      onClick={() => { setMobileOpen(false); setUserMenuOpen(false) }}
+                      onClick={() => { setMobileOpen(false); setUserMenuOpen(false); setNotifOpen(false) }}
                       className={`rh-nav-link ${pathname === link.href ? 'rh-nav-link-active' : ''}`}
                     >
                       {link.label}
@@ -106,12 +258,12 @@ export default function Navbar() {
             </nav>
 
             {/* Right Actions */}
-            <div className="rh-hide-mobile" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               {/* Lang Toggle */}
               <button
                 onClick={toggleLang}
                 className="rh-btn rh-btn-ghost rh-btn-sm"
-                style={{ padding: '0.375rem 0.625rem', gap: '0.375rem' }}
+                style={{ padding: '0.375rem 0.625rem', gap: '0.35rem' }}
                 aria-label="Toggle language"
               >
                 <Globe size={14} />
@@ -120,87 +272,149 @@ export default function Navbar() {
                 </span>
               </button>
 
-              {user ? (
-                /* User Menu */
-                <div style={{ position: 'relative' }}>
-                  <button
-                    onClick={() => setUserMenuOpen(v => !v)}
-                    className="rh-btn rh-btn-ghost rh-btn-sm"
-                    style={{ gap: '0.5rem' }}
-                  >
-                    <div style={{
-                      width: 28, height: 28, borderRadius: '50%',
-                      background: 'var(--rh-primary)',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      color: 'white', fontSize: '0.75rem', fontWeight: 700
-                    }}>
-                      {accountName[0]?.toUpperCase() || 'U'}
-                    </div>
-                    <span style={{ maxWidth: 120, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                      {accountName}
-                    </span>
-                    <ChevronDown size={14} />
-                  </button>
-
-                  {userMenuOpen && (
-                    <div
-                      className="rh-card animate-scale-in"
-                      style={{
-                        position: 'absolute', top: 'calc(100% + 8px)', right: 0,
-                        minWidth: 200, zIndex: 'var(--z-dropdown)', padding: '0.5rem'
-                      }}
-                    >
-                      <div style={{ padding: '0.75rem 1rem', borderBottom: '1px solid var(--rh-border)', marginBottom: '0.5rem' }}>
-                        <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--rh-text)' }}>
-                          {profileName && profileName.toLowerCase() !== 'penumpang' ? profileName : roleLabel}
-                        </div>
-                        <div style={{ fontSize: '0.75rem', color: 'var(--rh-text-3)' }}>
-                          {profile?.email}
-                        </div>
-                        <span className={`rh-badge rh-badge-primary`} style={{ marginTop: '0.25rem', fontSize: '0.6875rem' }}>
-                          {roleLabel}
-                        </span>
-                      </div>
-                      <Link
-                        href={getDashboardHref()}
-                        onClick={() => setUserMenuOpen(false)}
-                        className="rh-sidebar-item"
-                        style={{ color: 'var(--rh-text-2)', fontSize: '0.875rem', borderRadius: 8 }}
-                      >
-                        <LayoutDashboard size={15} /> Dashboard
-                      </Link>
-                      <button
-                        onClick={handleSignOut}
-                        className="rh-sidebar-item"
-                        style={{ color: 'var(--rh-danger)', fontSize: '0.875rem', borderRadius: 8, width: '100%', border: 'none', background: 'none', cursor: 'pointer' }}
-                      >
-                        <LogOut size={15} /> {t.nav.logout}
-                      </button>
-                    </div>
+              {/* Notification Bell */}
+              <div style={{ position: 'relative' }}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setNotifOpen(v => !v)
+                    setUserMenuOpen(false)
+                    setUnreadCount(0)
+                  }}
+                  className="rh-btn rh-btn-ghost rh-btn-sm"
+                  style={{ position: 'relative', padding: '0.4rem 0.55rem' }}
+                  aria-label={t.dashboard.notifications}
+                >
+                  <Bell size={16} />
+                  {unreadCount > 0 && (
+                    <span style={{
+                      position: 'absolute', top: 4, right: 4,
+                      width: 8, height: 8, borderRadius: '50%',
+                      background: 'var(--rh-accent)',
+                    }} />
                   )}
-                </div>
-              ) : isStaffArea ? (
-                <span className="rh-badge rh-badge-primary">{roleLabel}</span>
-              ) : (
-                <>
-                  <Link href="/auth/login" className="rh-btn rh-btn-ghost rh-btn-sm">
-                    {t.nav.login}
-                  </Link>
-                  <Link href="/auth/register" className="rh-btn rh-btn-primary rh-btn-sm">
-                    {t.nav.register}
-                  </Link>
-                </>
-              )}
-            </div>
+                </button>
 
-            {/* Mobile Menu Toggle */}
-            <button
-              className="rh-show-mobile-only rh-btn rh-btn-ghost rh-btn-icon"
-              onClick={() => setMobileOpen(v => !v)}
-              aria-label="Toggle menu"
-            >
-              {mobileOpen ? <X size={22} /> : <Menu size={22} />}
-            </button>
+                {notifOpen && (
+                  <div
+                    className="rh-card animate-scale-in"
+                    style={{
+                      position: 'absolute', top: 'calc(100% + 8px)', right: 0,
+                      width: 310, zIndex: 'var(--z-dropdown)', padding: '0.75rem',
+                    }}
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '0.5rem', marginBottom: '0.5rem', borderBottom: '1px solid var(--rh-border)' }}>
+                      <strong style={{ fontSize: '0.875rem' }}>{t.dashboard.notifications}</strong>
+                      <span className="rh-badge rh-badge-primary" style={{ fontSize: '0.68rem' }}>{notifications.length} info</span>
+                    </div>
+                    <div style={{ display: 'grid', gap: '0.5rem', maxHeight: 280, overflowY: 'auto' }}>
+                      {notifications.map(item => (
+                        <Link
+                          key={item.id}
+                          href={item.href}
+                          onClick={() => setNotifOpen(false)}
+                          style={{
+                            display: 'block', padding: '0.6rem 0.75rem', borderRadius: 10,
+                            background: 'var(--rh-surface)', textDecoration: 'none', color: 'var(--rh-text)',
+                          }}
+                        >
+                          <div style={{ display: 'flex', justifyContent: 'space-between', gap: '0.5rem', fontSize: '0.8rem', fontWeight: 700 }}>
+                            <span>{item.title}</span>
+                          </div>
+                          <p style={{ margin: '0.2rem 0 0', fontSize: '0.76rem', color: 'var(--rh-text-2)' }}>{item.desc}</p>
+                          <small style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: '0.7rem', color: 'var(--rh-primary)', marginTop: 4 }}>
+                            <Clock3 size={11} /> {item.time}
+                          </small>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div className="rh-hide-mobile" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                {user ? (
+                  /* User Menu */
+                  <div style={{ position: 'relative' }}>
+                    <button
+                      onClick={() => { setUserMenuOpen(v => !v); setNotifOpen(false) }}
+                      className="rh-btn rh-btn-ghost rh-btn-sm"
+                      style={{ gap: '0.5rem' }}
+                    >
+                      <div style={{
+                        width: 28, height: 28, borderRadius: '50%',
+                        background: 'var(--rh-primary)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        color: 'white', fontSize: '0.75rem', fontWeight: 700
+                      }}>
+                        {accountName[0]?.toUpperCase() || 'U'}
+                      </div>
+                      <span style={{ maxWidth: 120, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {accountName}
+                      </span>
+                      <ChevronDown size={14} />
+                    </button>
+
+                    {userMenuOpen && (
+                      <div
+                        className="rh-card animate-scale-in"
+                        style={{
+                          position: 'absolute', top: 'calc(100% + 8px)', right: 0,
+                          minWidth: 200, zIndex: 'var(--z-dropdown)', padding: '0.5rem'
+                        }}
+                      >
+                        <div style={{ padding: '0.75rem 1rem', borderBottom: '1px solid var(--rh-border)', marginBottom: '0.5rem' }}>
+                          <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--rh-text)' }}>
+                            {profileName && profileName.toLowerCase() !== 'penumpang' ? profileName : roleLabel}
+                          </div>
+                          <div style={{ fontSize: '0.75rem', color: 'var(--rh-text-3)' }}>
+                            {profile?.email}
+                          </div>
+                          <span className={`rh-badge rh-badge-primary`} style={{ marginTop: '0.25rem', fontSize: '0.6875rem' }}>
+                            {roleLabel}
+                          </span>
+                        </div>
+                        <Link
+                          href={getDashboardHref()}
+                          onClick={() => setUserMenuOpen(false)}
+                          className="rh-sidebar-item"
+                          style={{ color: 'var(--rh-text-2)', fontSize: '0.875rem', borderRadius: 8 }}
+                        >
+                          <LayoutDashboard size={15} /> Dashboard
+                        </Link>
+                        <button
+                          onClick={handleSignOut}
+                          className="rh-sidebar-item"
+                          style={{ color: 'var(--rh-danger)', fontSize: '0.875rem', borderRadius: 8, width: '100%', border: 'none', background: 'none', cursor: 'pointer' }}
+                        >
+                          <LogOut size={15} /> {t.nav.logout}
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                ) : isStaffArea ? (
+                  <span className="rh-badge rh-badge-primary">{roleLabel}</span>
+                ) : (
+                  <>
+                    <Link href="/auth/login" className="rh-btn rh-btn-ghost rh-btn-sm">
+                      {t.nav.login}
+                    </Link>
+                    <Link href="/auth/register" className="rh-btn rh-btn-primary rh-btn-sm">
+                      {t.nav.register}
+                    </Link>
+                  </>
+                )}
+              </div>
+
+              {/* Mobile Menu Toggle */}
+              <button
+                className="rh-show-mobile-only rh-btn rh-btn-ghost rh-btn-icon"
+                onClick={() => setMobileOpen(v => !v)}
+                aria-label="Toggle menu"
+              >
+                {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+              </button>
+            </div>
           </div>
         </div>
       </header>
@@ -278,6 +492,55 @@ export default function Navbar() {
           </div>
         </div>
       )}
+
+      {/* Mobile Bottom App Navigation Bar */}
+      <nav
+        aria-label="Navigasi bawah mobile"
+        className="rh-show-mobile-only"
+        style={{
+          position: 'fixed',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          zIndex: 90,
+          background: 'rgba(255, 255, 255, 0.96)',
+          backdropFilter: 'blur(12px)',
+          borderTop: '1px solid var(--rh-border)',
+          padding: '0.35rem 0.5rem calc(0.35rem + env(safe-area-inset-bottom, 0px))',
+          boxShadow: '0 -4px 20px rgba(15, 23, 42, 0.06)',
+        }}
+      >
+        <div style={{ display: 'grid', gridTemplateColumns: `repeat(${mobileBottomItems.length}, 1fr)`, gap: '0.25rem' }}>
+          {mobileBottomItems.map(({ href, label, icon: Icon }) => {
+            const baseHref = href.split('?')[0].split('#')[0]
+            const active = pathname === baseHref
+            return (
+              <Link
+                key={href}
+                href={href}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.2rem',
+                  padding: '0.35rem 0.25rem',
+                  borderRadius: 10,
+                  textDecoration: 'none',
+                  fontSize: '0.68rem',
+                  fontWeight: active ? 700 : 600,
+                  color: active ? 'var(--rh-primary)' : 'var(--rh-text-2)',
+                }}
+              >
+                <Icon size={18} />
+                <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '100%' }}>
+                  {label}
+                </span>
+              </Link>
+            )
+          })}
+        </div>
+      </nav>
     </>
   )
 }

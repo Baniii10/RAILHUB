@@ -1,31 +1,38 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse } from 'next/server'
+import { getSupabaseEnv } from '@/lib/supabase/env'
 
 export async function middleware(request) {
   let supabaseResponse = NextResponse.next({ request })
+  const { url, anonKey, isConfigured } = getSupabaseEnv()
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll()
-        },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) =>
-            request.cookies.set(name, value, options)
-          )
-          supabaseResponse = NextResponse.next({ request })
-          cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
-          )
-        },
-      },
-    }
-  )
+  let user = null
 
-  const { data: { user } } = await supabase.auth.getUser()
+  if (isConfigured) {
+    const supabase = createServerClient(
+      url,
+      anonKey,
+      {
+        cookies: {
+          getAll() {
+            return request.cookies.getAll()
+          },
+          setAll(cookiesToSet) {
+            cookiesToSet.forEach(({ name, value, options }) =>
+              request.cookies.set(name, value, options)
+            )
+            supabaseResponse = NextResponse.next({ request })
+            cookiesToSet.forEach(({ name, value, options }) =>
+              supabaseResponse.cookies.set(name, value, options)
+            )
+          },
+        },
+      }
+    )
+
+    const { data } = await supabase.auth.getUser()
+    user = data.user
+  }
 
   const { pathname } = request.nextUrl
   const isAdminPreview = ['/dashboard/admin', '/dashboard/admin/journeys', '/dashboard/admin/staff', '/dashboard/reports', '/dashboard/orders'].includes(pathname)

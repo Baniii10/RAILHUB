@@ -16,28 +16,46 @@ export function AuthProvider({ children }) {
   const supabase = useMemo(() => createClient(), [])
 
   const fetchProfile = useCallback(async (userId) => {
-    const { data } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', userId)
-      .single()
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .maybeSingle()
 
-    if (!data) {
-      console.error('Unable to load the authenticated user profile.')
+      if (error && error.code !== 'PGRST116') {
+        console.warn('Unable to load user profile:', error.message)
+      }
+      setProfile(data || null)
+    } catch {
+      setProfile(null)
+    } finally {
+      setLoading(false)
     }
-    setProfile(data)
-    setLoading(false)
   }, [supabase])
 
   useEffect(() => {
     let active = true
 
-    supabase.auth.getUser().then(({ data: { user: currentUser }, error }) => {
+    supabase.auth.getUser().then(({ data, error }) => {
       if (!active) return
-      if (error) console.error('Unable to restore the authentication session:', error.message)
+      const currentUser = data?.user ?? null
+      // "Auth session missing!" is normal for guests/unauthenticated visitors
+      const isMissingSession = error && (
+        error.message?.toLowerCase().includes('session missing') ||
+        error.name === 'AuthSessionMissingError'
+      )
+      if (error && !isMissingSession) {
+        console.warn('Unable to restore authentication session:', error.message)
+      }
       setUser(currentUser)
-      if (currentUser) fetchProfile(currentUser.id)
-      else setLoading(false)
+      if (currentUser) {
+        fetchProfile(currentUser.id)
+      } else {
+        setLoading(false)
+      }
+    }).catch(() => {
+      if (active) setLoading(false)
     })
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
@@ -61,10 +79,13 @@ export function AuthProvider({ children }) {
   }, [supabase, fetchProfile])
 
   async function signOut() {
-    const { error } = await supabase.auth.signOut()
-    if (error) throw error
-    setUser(null)
-    setProfile(null)
+    try {
+      const { error } = await supabase.auth.signOut()
+      if (error) console.warn('Sign out warning:', error.message)
+    } finally {
+      setUser(null)
+      setProfile(null)
+    }
   }
 
   return (

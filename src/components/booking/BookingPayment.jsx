@@ -169,7 +169,7 @@ export default function BookingPayment({ bookingId }) {
       if (tickets.length === 0) return
       const entries = await Promise.all(tickets.map(async ticket => [
         ticket.ticket_number,
-        await QRCode.toDataURL(ticket.ticket_number, { width: 180, margin: 1 }),
+        await QRCode.toDataURL(ticket.ticket_number, { width: 360, margin: 1 }),
       ]))
       if (active) setQrCodes(Object.fromEntries(entries))
     }
@@ -671,8 +671,8 @@ export default function BookingPayment({ bookingId }) {
                           {boardingPassOpen && canOpenBoardingPass && (
                             <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', paddingTop: '.85rem', borderTop: '1px dashed var(--rh-border)' }}>
                               {qrCodes[ticket.ticket_number]
-                                ? <Image src={qrCodes[ticket.ticket_number]} alt={`QR e-boarding pass ${ticket.ticket_number}`} width={120} height={120} unoptimized />
-                                : <div aria-label="Membuat QR e-boarding pass" style={{ width: 120, height: 120, display: 'grid', placeItems: 'center' }}><Ticket size={24} /></div>}
+                                ? <Image src={qrCodes[ticket.ticket_number]} alt={`QR e-boarding pass ${ticket.ticket_number}`} width={168} height={168} unoptimized />
+                                : <div aria-label="Membuat QR e-boarding pass" style={{ width: 168, height: 168, display: 'grid', placeItems: 'center' }}><Ticket size={24} /></div>}
                               <div>
                                 <strong>E-boarding pass</strong>
                                 <span style={{ display: 'block', color: 'var(--rh-text-2)', marginTop: '.25rem' }}>

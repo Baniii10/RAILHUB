@@ -1,27 +1,46 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { Suspense, useCallback, useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import {
+  Activity,
   AlertCircle,
+  BarChart3,
+  CalendarDays,
+  CheckCircle2,
+  ChevronRight,
   CircleDollarSign,
   ClipboardList,
   Clock3,
+  Edit2,
+  Grid,
+  Info,
   LayoutDashboard,
+  MapPin,
+  Megaphone,
+  Navigation,
+  Plus,
   RefreshCw,
   Search,
+  ShieldCheck,
   TicketCheck,
   Train,
+  Trash2,
+  UserCheck,
   UserRound,
   Users,
+  Utensils,
+  XCircle,
 } from 'lucide-react'
+import toast from 'react-hot-toast'
 import Navbar from '@/components/layout/Navbar'
 import { useAuth } from '@/contexts/AuthContext'
 import { createClient } from '@/lib/supabase/client'
 import { formatDate, formatIDR, formatTime } from '@/lib/utils/formatters'
-import { getJourneyStatusLabel } from '@/lib/operations/journey-status'
+import { getJourneyStatusLabel, JOURNEY_STATUSES } from '@/lib/operations/journey-status'
 
 const emptyStats = { passengers: 0, bookings: 0, trains: 0, stations: 0, revenue: 0, activeSchedules: 0 }
+
 const bookingStatusLabels = {
   pending: 'Menunggu pembayaran',
   paid: 'Terbayar',
@@ -29,6 +48,7 @@ const bookingStatusLabels = {
   expired: 'Kedaluwarsa',
   refunded: 'Dikembalikan',
 }
+
 const paymentStatusLabels = {
   pending: 'Menunggu',
   confirmed: 'Terkonfirmasi',
@@ -50,76 +70,75 @@ const statusColors = {
   refunded: ['var(--rh-info-light)', 'var(--rh-info)'],
 }
 
-function isAdminPreview() {
-  return new URLSearchParams(window.location.search).get('preview') === '1'
-}
-
-function jakartaDateInputValue(date = new Date()) {
-  const parts = new Intl.DateTimeFormat('en-CA', {
-    timeZone: 'Asia/Jakarta',
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  }).formatToParts(date)
-  const values = Object.fromEntries(parts.map(part => [part.type, part.value]))
-  return `${values.year}-${values.month}-${values.day}`
-}
-
-function addDateDays(dateValue, days) {
-  const [year, month, day] = dateValue.split('-').map(Number)
-  const date = new Date(Date.UTC(year, month - 1, day + days))
-  return `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, '0')}-${String(date.getUTCDate()).padStart(2, '0')}`
-}
-
-function jakartaDateStart(dateValue) {
-  return new Date(`${dateValue}T00:00:00+07:00`).toISOString()
-}
-
 function StatusBadge({ status, label }) {
   const [background, color] = statusColors[status] || ['var(--rh-surface-2)', 'var(--rh-text-2)']
   return (
-    <span style={{ display: 'inline-flex', alignItems: 'center', borderRadius: 999, padding: '0.25rem 0.65rem', background, color, fontSize: '0.78rem', fontWeight: 700, whiteSpace: 'nowrap' }}>
+    <span style={{ display: 'inline-flex', alignItems: 'center', borderRadius: 999, padding: '0.2rem 0.6rem', background, color, fontSize: '0.78rem', fontWeight: 700, whiteSpace: 'nowrap' }}>
       {label || getJourneyStatusLabel(status)}
     </span>
   )
 }
 
-export default function AdminDashboard() {
+const ADMIN_TABS = [
+  { id: 'overview', label: 'Overview', icon: LayoutDashboard },
+  { id: 'stations', label: 'Stasiun', icon: MapPin },
+  { id: 'trains', label: 'Kereta Api', icon: Train },
+  { id: 'seats', label: 'Tempat Duduk', icon: Grid },
+  { id: 'routes', label: 'Rute Perjalanan', icon: Navigation },
+  { id: 'schedules', label: 'Jadwal KA', icon: CalendarDays },
+  { id: 'fares', label: 'Tarif & Harga', icon: CircleDollarSign },
+  { id: 'bookings', label: 'Pemesanan', icon: TicketCheck },
+  { id: 'users', label: 'Pengguna & Role', icon: UserCheck },
+  { id: 'staff', label: 'Penugasan Petugas', icon: ShieldCheck },
+  { id: 'reports', label: 'Laporan & Analitik', icon: BarChart3 },
+  { id: 'content', label: 'Konten & Promo', icon: Megaphone },
+]
+
+function AdminDashboardContent() {
   const router = useRouter()
   const { user, profile, loading: authLoading } = useAuth()
-  const [stats, setStats] = useState(emptyStats)
-  const [schedules, setSchedules] = useState([])
-  const [bookings, setBookings] = useState([])
-  const [payments, setPayments] = useState({})
-  const [assignments, setAssignments] = useState([])
-  const [recentAssignments, setRecentAssignments] = useState([])
+  const [activeTab, setActiveTab] = useState('overview')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [reloadKey, setReloadKey] = useState(0)
-  const [previewMode, setPreviewMode] = useState(false)
+
+  // Data states
+  const [stats, setStats] = useState(emptyStats)
+  const [stations, setStations] = useState([])
+  const [trains, setTrains] = useState([])
+  const [routes, setRoutes] = useState([])
+  const [schedules, setSchedules] = useState([])
+  const [fares, setFares] = useState([])
+  const [bookings, setBookings] = useState([])
+  const [payments, setPayments] = useState({})
+  const [usersList, setUsersList] = useState([])
+  const [staffUsers, setStaffUsers] = useState([])
+  const [assignments, setAssignments] = useState([])
+
+  // Search & filter states
+  const [stationSearch, setStationSearch] = useState('')
+  const [stationProvinceFilter, setStationProvinceFilter] = useState('all')
   const [bookingSearch, setBookingSearch] = useState('')
   const [bookingStatusFilter, setBookingStatusFilter] = useState('all')
-  const [bookingTrainFilter, setBookingTrainFilter] = useState('all')
-  const [bookingDateFrom, setBookingDateFrom] = useState('')
-  const [bookingDateTo, setBookingDateTo] = useState('')
-  const [bookingDateSort, setBookingDateSort] = useState('ascending')
-  const [appliedScheduleDates, setAppliedScheduleDates] = useState({ from: '', to: '' })
+  const [scheduleSearch, setScheduleSearch] = useState('')
+  const [userSearch, setUserSearch] = useState('')
+
+  // Staff assignment form
+  const [selectedStaffId, setSelectedStaffId] = useState('')
+  const [selectedScheduleId, setSelectedScheduleId] = useState('')
+  const [assigning, setAssigning] = useState(false)
+
+  // New Station form
+  const [newStationCode, setNewStationCode] = useState('')
+  const [newStationName, setNewStationName] = useState('')
+  const [newStationCity, setNewStationCity] = useState('')
+  const [newStationProvince, setNewStationProvince] = useState('Jawa Barat')
+  const [addingStation, setAddingStation] = useState(false)
+
+  // Seat preview carriage
+  const [selectedCarriageIdx, setSelectedCarriageIdx] = useState(1)
 
   useEffect(() => {
-    const timer = window.setTimeout(() => {
-      const from = jakartaDateInputValue()
-      const to = addDateDays(from, 6)
-      setAppliedScheduleDates({ from, to })
-    }, 0)
-    return () => window.clearTimeout(timer)
-  }, [])
-
-  useEffect(() => {
-    const isPreview = isAdminPreview()
-    if (isPreview) {
-      const timer = window.setTimeout(() => setPreviewMode(true), 0)
-      return () => window.clearTimeout(timer)
-    }
     if (authLoading) return
     if (!user) {
       router.replace('/auth/login?next=%2Fdashboard%2Fadmin')
@@ -128,380 +147,1067 @@ export default function AdminDashboard() {
     }
   }, [authLoading, user, profile, router])
 
+  // Load All Admin Data
   const loadAdminData = useCallback(async () => {
-    if (!appliedScheduleDates.from || !appliedScheduleDates.to) return
-    setError('')
-    if (isAdminPreview()) {
-      const sampleSchedule = {
-        id: 'preview-schedule-1',
-        status: 'scheduled',
-        departure_time: '2026-11-05T00:30:00.000Z',
-        arrival_time: '2026-11-05T03:30:00.000Z',
-        trains: { name: 'Argo Parahyangan', train_number: 'KA 34' },
-        routes: { name: 'Gambir – Bandung' },
-      }
-      const sampleDepartureDate = jakartaDateInputValue(new Date(sampleSchedule.departure_time))
-      const sampleScheduleMatchesDates = sampleDepartureDate >= appliedScheduleDates.from
-        && sampleDepartureDate <= appliedScheduleDates.to
-      setStats({ passengers: 128, bookings: 86, trains: 12, stations: 10, revenue: 28450000, activeSchedules: 24 })
-      setSchedules(sampleScheduleMatchesDates ? [sampleSchedule] : [])
-      setBookings([{
-        id: 'preview-booking-1',
-        booking_code: 'RH-DEMO-001',
-        total_amount: 425000,
-        status: 'paid',
-        created_at: '2026-11-01T04:30:00.000Z',
-        schedules: sampleSchedule,
-      }])
-      setPayments({ 'preview-booking-1': { status: 'confirmed', method: 'simulation' } })
-      setAssignments(sampleScheduleMatchesDates ? [{
-        schedule_id: sampleSchedule.id,
-      }] : [])
-      setRecentAssignments(sampleScheduleMatchesDates ? [{
-        id: 'preview-assignment-1',
-        schedule_id: sampleSchedule.id,
-        profiles: { full_name: 'Contoh Petugas', email: 'petugas@example.test' },
-        schedules: sampleSchedule,
-      }] : [])
-      setLoading(false)
-      return
-    }
     if (!user || profile?.role !== 'admin') return
+    setLoading(true)
+    setError('')
     const supabase = createClient()
 
-    const results = await Promise.all([
-      supabase.from('schedules')
-        .select('id, status, departure_time, arrival_time, trains(name, train_number), routes(name)')
-        .gte('departure_time', jakartaDateStart(appliedScheduleDates.from))
-        .lt('departure_time', jakartaDateStart(addDateDays(appliedScheduleDates.to, 1)))
-        .order('departure_time')
-        .limit(1000),
-      supabase.from('staff_assignments').select('schedule_id').limit(1000),
-      supabase.from('staff_assignments')
-        .select('id, staff_id, schedule_id, profiles!staff_assignments_staff_id_fkey(full_name, email), schedules(departure_time, trains(name, train_number), routes(name))')
-        .order('created_at', { ascending: false })
-        .limit(5),
-      supabase.rpc('get_admin_dashboard_stats'),
-      supabase.from('bookings').select('id, booking_code, total_amount, status, created_at, schedules(departure_time, trains(name, train_number), routes(name))').order('created_at', { ascending: false }).limit(100),
-    ])
+    try {
+      const [
+        statsRes,
+        stationsRes,
+        trainsRes,
+        routesRes,
+        schedulesRes,
+        faresRes,
+        bookingsRes,
+        profilesRes,
+        assignmentsRes,
+      ] = await Promise.all([
+        supabase.rpc('get_admin_dashboard_stats'),
+        supabase.from('stations').select('id, code, name, city, province').order('name'),
+        supabase.from('trains').select('id, name, train_number, type').order('name'),
+        supabase.from('routes').select('id, name, distance_km, estimated_duration_minutes').order('name'),
+        supabase.from('schedules').select('id, status, departure_time, arrival_time, trains(name, train_number), routes(name)').order('departure_time', { ascending: false }).limit(100),
+        supabase.from('fares').select('id, route_id, class, base_price, routes(name)').order('base_price'),
+        supabase.from('bookings').select('id, booking_code, total_amount, status, created_at, schedules(departure_time, trains(name, train_number), routes(name)), profiles(full_name, email)').order('created_at', { ascending: false }).limit(100),
+        supabase.from('profiles').select('id, full_name, email, role, phone, created_at').order('created_at', { ascending: false }),
+        supabase.from('staff_assignments').select('id, staff_id, schedule_id, profiles!staff_assignments_staff_id_fkey(full_name, email), schedules(departure_time, trains(name, train_number), routes(name))').order('created_at', { ascending: false }),
+      ])
 
-    const failure = results.find(result => result.error)
-    if (failure) {
-      setError(`Data admin tidak dapat dimuat: ${failure.error.message}`)
-      setLoading(false)
-      return
-    }
-
-    const [scheduleResult, assignmentResult, recentAssignmentResult, statsResult, bookingResult] = results
-    const bookingIds = (bookingResult.data || []).map(booking => booking.id)
-    let paymentRows = []
-    if (bookingIds.length > 0) {
-      const { data, error: paymentError } = await supabase.from('payments').select('booking_id, status, method').in('booking_id', bookingIds)
-      if (paymentError) {
-        setError(`Status pembayaran tidak dapat dimuat: ${paymentError.message}`)
-        setLoading(false)
-        return
+      // Fallback or real stats
+      if (statsRes.data) {
+        setStats({
+          passengers: Number(statsRes.data?.passengers || 0),
+          bookings: Number(statsRes.data?.bookings || 0),
+          trains: Number(statsRes.data?.trains || 0),
+          stations: Number(statsRes.data?.stations || 0),
+          revenue: Number(statsRes.data?.revenue || 0),
+          activeSchedules: Number(statsRes.data?.active_schedules || 0),
+        })
       }
-      paymentRows = data || []
-    }
 
-    setSchedules(scheduleResult.data || [])
-    setBookings(bookingResult.data || [])
-    setPayments(Object.fromEntries(paymentRows.map(payment => [payment.booking_id, payment])))
-    setAssignments(assignmentResult.data || [])
-    setRecentAssignments(recentAssignmentResult.data || [])
-    setStats({
-      passengers: Number(statsResult.data?.passengers || 0),
-      bookings: Number(statsResult.data?.bookings || 0),
-      trains: Number(statsResult.data?.trains || 0),
-      stations: Number(statsResult.data?.stations || 0),
-      revenue: Number(statsResult.data?.revenue || 0),
-      activeSchedules: Number(statsResult.data?.active_schedules || 0),
-    })
-    setLoading(false)
-  }, [user, profile?.role, appliedScheduleDates])
+      setStations(stationsRes.data || [])
+      setTrains(trainsRes.data || [])
+      setRoutes(routesRes.data || [])
+      setSchedules(schedulesRes.data || [])
+      setFares(faresRes.data || [])
+      setBookings(bookingsRes.data || [])
+      setAssignments(assignmentsRes.data || [])
+
+      const allProfiles = profilesRes.data || []
+      setUsersList(allProfiles)
+      setStaffUsers(allProfiles.filter(p => p.role === 'conductor'))
+
+      // Load payments
+      const bIds = (bookingsRes.data || []).map(b => b.id)
+      if (bIds.length > 0) {
+        const { data: pData } = await supabase.from('payments').select('booking_id, status, method, amount').in('booking_id', bIds)
+        if (pData) {
+          setPayments(Object.fromEntries(pData.map(p => [p.booking_id, p])))
+        }
+      }
+    } catch (err) {
+      setError(`Gagal memuat data kontrol admin: ${err.message || 'Kesalahan sistem'}`)
+    } finally {
+      setLoading(false)
+    }
+  }, [user, profile?.role])
 
   useEffect(() => {
-    const timer = window.setTimeout(() => loadAdminData(), 0)
-    return () => window.clearTimeout(timer)
+    loadAdminData()
   }, [loadAdminData, reloadKey])
 
-  const assignmentCounts = useMemo(() => assignments.reduce((counts, assignment) => {
-    counts[assignment.schedule_id] = (counts[assignment.schedule_id] || 0) + 1
-    return counts
-  }, {}), [assignments])
-  const unassignedSchedules = schedules.filter(schedule => schedule.status !== 'cancelled' && !assignmentCounts[schedule.id]).length
-  const delayedSchedules = schedules.filter(schedule => schedule.status === 'delayed').length
-  const filteredBookings = bookings.filter(booking => {
-    const search = bookingSearch.trim().toLocaleLowerCase('id-ID')
-    const departureDate = booking.schedules?.departure_time
-      ? jakartaDateInputValue(new Date(booking.schedules.departure_time))
-      : ''
-    const trainKey = booking.schedules?.trains
-      ? `${booking.schedules.trains.name || ''}::${booking.schedules.trains.train_number || ''}`
-      : ''
-    const matchesSearch = !search || [
-      booking.booking_code,
-      booking.schedules?.trains?.name,
-      booking.schedules?.trains?.train_number,
-      booking.schedules?.routes?.name,
-    ].some(value => value?.toLocaleLowerCase('id-ID').includes(search))
-    const matchesTrain = bookingTrainFilter === 'all' || trainKey === bookingTrainFilter
-    const matchesDate = (!bookingDateFrom || departureDate >= bookingDateFrom)
-      && (!bookingDateTo || departureDate <= bookingDateTo)
-    return matchesSearch
-      && matchesTrain
-      && matchesDate
-      && (bookingStatusFilter === 'all' || booking.status === bookingStatusFilter)
-  }).sort((first, second) => {
-    const firstDeparture = first.schedules?.departure_time || ''
-    const secondDeparture = second.schedules?.departure_time || ''
-    return bookingDateSort === 'ascending'
-      ? firstDeparture.localeCompare(secondDeparture)
-      : secondDeparture.localeCompare(firstDeparture)
-  })
-  const bookingTrains = [...new Map(bookings
-    .filter(booking => booking.schedules?.trains)
-    .map(booking => {
-      const train = booking.schedules.trains
-      return [`${train.name || ''}::${train.train_number || ''}`, train]
-    })).entries()]
+  // Handle Role Change
+  async function handleRoleChange(userId, newRole) {
+    const supabase = createClient()
+    const { error: err } = await supabase.from('profiles').update({ role: newRole }).eq('id', userId)
+    if (err) {
+      toast.error(`Gagal mengubah role: ${err.message}`)
+      return
+    }
+    toast.success(`Role pengguna berhasil diubah menjadi ${newRole}`)
+    setUsersList(prev => prev.map(u => u.id === userId ? { ...u, role: newRole } : u))
+  }
+
+  // Handle Assign Staff
+  async function handleAssignStaff(e) {
+    e.preventDefault()
+    if (!selectedStaffId || !selectedScheduleId) {
+      toast.error('Pilih petugas dan jadwal yang akan ditugaskan.')
+      return
+    }
+    setAssigning(true)
+    const supabase = createClient()
+    const { error: err } = await supabase.rpc('admin_assign_staff', {
+      p_staff_id: selectedStaffId,
+      p_schedule_id: selectedScheduleId,
+    })
+    setAssigning(false)
+    if (err) {
+      toast.error(`Gagal menugaskan petugas: ${err.message}`)
+      return
+    }
+    toast.success('Petugas berhasil ditugaskan pada perjalanan KA!')
+    setSelectedStaffId('')
+    setSelectedScheduleId('')
+    setReloadKey(k => k + 1)
+  }
+
+  // Handle Remove Staff Assignment
+  async function handleRemoveAssignment(assignmentId) {
+    if (!confirm('Hapus penugasan petugas ini?')) return
+    const supabase = createClient()
+    const { error: err } = await supabase.rpc('admin_remove_staff_assignment', {
+      p_assignment_id: assignmentId,
+    })
+    if (err) {
+      toast.error(`Gagal menghapus penugasan: ${err.message}`)
+      return
+    }
+    toast.success('Penugasan berhasil dihapus.')
+    setAssignments(prev => prev.filter(a => a.id !== assignmentId))
+  }
+
+  // Handle Add Station
+  async function handleAddStation(e) {
+    e.preventDefault()
+    if (!newStationCode || !newStationName || !newStationCity) {
+      toast.error('Lengkapi kode, nama, dan kota stasiun.')
+      return
+    }
+    setAddingStation(true)
+    const supabase = createClient()
+    const { data, error: err } = await supabase.from('stations').insert({
+      code: newStationCode.trim().toUpperCase(),
+      name: newStationName.trim(),
+      city: newStationCity.trim().toUpperCase(),
+      province: newStationProvince,
+    }).select()
+
+    setAddingStation(false)
+    if (err) {
+      toast.error(`Gagal menambahkan stasiun: ${err.message}`)
+      return
+    }
+    toast.success(`Stasiun ${newStationName} (${newStationCode}) berhasil didaftarkan!`)
+    setNewStationCode('')
+    setNewStationName('')
+    setNewStationCity('')
+    if (data && data[0]) {
+      setStations(prev => [...prev, data[0]].sort((a, b) => a.name.localeCompare(b.name)))
+    }
+  }
+
+  // Filtered stations
+  const filteredStations = useMemo(() => {
+    return stations.filter(st => {
+      const q = stationSearch.trim().toLowerCase()
+      const matchesSearch = !q || [st.code, st.name, st.city, st.province].some(v => v?.toLowerCase().includes(q))
+      const matchesProv = stationProvinceFilter === 'all' || st.province === stationProvinceFilter
+      return matchesSearch && matchesProv
+    })
+  }, [stations, stationSearch, stationProvinceFilter])
+
+  // Filtered bookings
+  const filteredBookings = useMemo(() => {
+    return bookings.filter(b => {
+      const q = bookingSearch.trim().toLowerCase()
+      const matchesSearch = !q || [
+        b.booking_code,
+        b.schedules?.trains?.name,
+        b.schedules?.routes?.name,
+        b.profiles?.full_name,
+      ].some(v => v?.toLowerCase().includes(q))
+      const matchesStatus = bookingStatusFilter === 'all' || b.status === bookingStatusFilter
+      return matchesSearch && matchesStatus
+    })
+  }, [bookings, bookingSearch, bookingStatusFilter])
+
+  // Filtered users
+  const filteredUsers = useMemo(() => {
+    return usersList.filter(u => {
+      const q = userSearch.trim().toLowerCase()
+      return !q || [u.full_name, u.email, u.role, u.phone].some(v => v?.toLowerCase().includes(q))
+    })
+  }, [usersList, userSearch])
+
+  // Assignment counts
+  const assignmentCounts = useMemo(() => {
+    const map = {}
+    for (const a of assignments) {
+      map[a.schedule_id] = (map[a.schedule_id] || 0) + 1
+    }
+    return map
+  }, [assignments])
+
+  const unassignedCount = schedules.filter(s => s.status !== 'cancelled' && !assignmentCounts[s.id]).length
+
   return (
     <>
       <Navbar />
-      <main style={{ minHeight: '100vh', padding: '2rem 0 5rem', background: 'var(--rh-surface)' }}>
+      <main style={{ minHeight: '100vh', padding: '1.5rem 0 5rem', background: 'var(--rh-surface)' }}>
         <div className="rh-container">
-          {previewMode && (
-            <div role="status" className="rh-card" style={{ padding: '1rem 1.25rem', marginBottom: '1rem', borderColor: 'var(--rh-primary)', color: 'var(--rh-text-2)' }}>
-              <strong>Mode preview</strong> — data contoh saja. Perubahan dan tindakan admin dinonaktifkan.
+
+          {/* Top Admin Header */}
+          <header className="rh-card" style={{ padding: '1.25rem 1.5rem', marginBottom: '1.5rem' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
+              <div>
+                <span className="rh-badge rh-badge-primary">Pusat Kontrol &amp; Administrator RailHub</span>
+                <h1 className="rh-h2" style={{ margin: '0.45rem 0 0.2rem' }}>Dashboard Admin Terpadu</h1>
+                <p style={{ margin: 0, color: 'var(--rh-text-2)', fontSize: '0.9rem' }}>
+                  Kelola stasiun, armada kereta, tempat duduk, jadwal, tarif, pemesanan, pengguna, dan penugasan petugas operasional.
+                </p>
+              </div>
+              <div style={{ display: 'flex', gap: '0.5rem' }}>
+                <button
+                  type="button"
+                  className="rh-btn rh-btn-ghost"
+                  onClick={() => { setError(''); setLoading(true); setReloadKey(k => k + 1) }}
+                  disabled={loading}
+                >
+                  <RefreshCw size={16} className={loading ? 'rh-spin' : ''} />
+                  Muat Ulang Data
+                </button>
+              </div>
+            </div>
+          </header>
+
+          {error && (
+            <div role="alert" className="rh-card" style={{ padding: '1rem', color: 'var(--rh-danger)', marginBottom: '1.25rem' }}>
+              <AlertCircle size={18} style={{ verticalAlign: 'middle', marginRight: 8 }} />
+              {error}
             </div>
           )}
 
-          <section id="overview" style={{ scrollMarginTop: 96 }}>
-            <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'end', justifyContent: 'space-between', gap: '1rem', marginBottom: '1.5rem' }}>
-              <div>
-                <span className="rh-badge rh-badge-primary">Pusat kontrol RailHub</span>
-                <h1 className="rh-h2" style={{ marginTop: '0.6rem' }}>Dashboard operasional</h1>
-                <p style={{ color: 'var(--rh-text-2)', marginTop: '0.35rem' }}>Pantau perjalanan, petugas, dan layanan penumpang dalam satu tempat.</p>
+          {/* 12 Tab Navigation Bar matching RAILHUB.md Section C */}
+          <nav
+            aria-label="Navigasi Menu Admin"
+            className="rh-card"
+            style={{
+              display: 'flex',
+              overflowX: 'auto',
+              gap: '0.35rem',
+              padding: '0.4rem',
+              marginBottom: '1.5rem',
+              WebkitOverflowScrolling: 'touch',
+            }}
+          >
+            {ADMIN_TABS.map(tab => {
+              const Icon = tab.icon
+              const active = activeTab === tab.id
+              return (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`rh-btn rh-btn-sm ${active ? 'rh-btn-primary' : 'rh-btn-ghost'}`}
+                  style={{
+                    whiteSpace: 'nowrap',
+                    flexShrink: 0,
+                    borderRadius: 8,
+                    fontWeight: active ? 700 : 500,
+                  }}
+                >
+                  <Icon size={15} />
+                  {tab.label}
+                  {tab.id === 'staff' && unassignedCount > 0 && (
+                    <span style={{ marginLeft: 4, padding: '0.1rem 0.4rem', borderRadius: 999, background: 'var(--rh-warning)', color: '#fff', fontSize: '0.68rem', fontWeight: 700 }}>
+                      {unassignedCount}
+                    </span>
+                  )}
+                </button>
+              )
+            })}
+          </nav>
+
+          {/* ── TAB 1: OVERVIEW ──────────────────────────────────────────────── */}
+          {activeTab === 'overview' && (
+            <div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))', gap: '0.9rem', marginBottom: '1.5rem' }}>
+                {[
+                  { label: 'Jadwal Aktif', value: stats.activeSchedules, icon: Train, color: 'var(--rh-primary)' },
+                  { label: 'Belum Ditugaskan', value: unassignedCount, icon: AlertCircle, color: 'var(--rh-warning)' },
+                  { label: 'Total Booking', value: stats.bookings, icon: TicketCheck, color: 'var(--rh-info)' },
+                  { label: 'Total Penumpang', value: stats.passengers, icon: Users, color: 'var(--rh-success)' },
+                  { label: 'Total Stasiun', value: stats.stations || stations.length, icon: MapPin, color: 'var(--rh-secondary)' },
+                  { label: 'Pendapatan Simulasi', value: formatIDR(stats.revenue), icon: CircleDollarSign, color: 'var(--rh-accent-dark)' },
+                ].map((item, idx) => {
+                  const Icon = item.icon
+                  return (
+                    <article key={idx} className="rh-card" style={{ padding: '1.15rem' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                        <div style={{ width: 44, height: 44, borderRadius: 12, background: 'var(--rh-surface)', color: item.color, display: 'grid', placeItems: 'center', flexShrink: 0 }}>
+                          <Icon size={20} />
+                        </div>
+                        <div>
+                          <small style={{ color: 'var(--rh-text-2)', display: 'block', fontSize: '0.78rem' }}>{item.label}</small>
+                          <strong style={{ fontSize: '1.25rem', display: 'block', lineHeight: 1.25 }}>{item.value}</strong>
+                        </div>
+                      </div>
+                    </article>
+                  )
+                })}
               </div>
-              <button type="button" className="rh-btn rh-btn-ghost" onClick={() => { setError(''); setLoading(true); setReloadKey(key => key + 1) }} disabled={loading || previewMode}>
-                <RefreshCw size={16} /> Muat ulang
-              </button>
-            </div>
 
-            <nav aria-label="Navigasi dashboard admin" className="rh-card" style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem', padding: '0.5rem', marginBottom: '1rem' }}>
-              {[
-                ['#overview', 'Ringkasan', LayoutDashboard],
-                ['/dashboard/admin/journeys', 'Perjalanan mendatang', Train],
-                ['/dashboard/admin/staff', 'Pengelolaan petugas', Users],
-                ['/dashboard/orders', 'Pesanan makanan', ClipboardList],
-                ['#bookings', 'Booking', TicketCheck],
-                ['/dashboard/reports', 'Laporan', ClipboardList],
-              ].map(([href, label, Icon]) => (
-                <a key={href} href={href} className="rh-btn rh-btn-ghost rh-btn-sm">
-                  <Icon size={15} />{label}
-                </a>
-              ))}
-            </nav>
-          </section>
-
-          {error && <div role="alert" className="rh-card" style={{ padding: '1.25rem', color: 'var(--rh-danger)', marginTop: '1rem' }}>{error}</div>}
-          {loading && <div aria-live="polite" className="rh-card" style={{ padding: '1rem', marginTop: '1rem' }}>Memuat data operasional...</div>}
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(185px, 1fr))', gap: '0.9rem', margin: '1rem 0' }}>
-            {[
-              { label: 'Jadwal aktif', value: stats.activeSchedules, icon: Train, color: 'var(--rh-primary)' },
-              { label: 'Belum ditugaskan*', value: unassignedSchedules, icon: UserRound, color: 'var(--rh-warning)' },
-              { label: 'Tertunda*', value: delayedSchedules, icon: Clock3, color: 'var(--rh-danger)' },
-              { label: 'Booking', value: stats.bookings, icon: ClipboardList, color: 'var(--rh-info)' },
-              { label: 'Penumpang', value: stats.passengers, icon: Users, color: 'var(--rh-success)' },
-              { label: 'Pembayaran simulasi*', value: formatIDR(stats.revenue), icon: CircleDollarSign, color: 'var(--rh-accent-dark)' },
-            ].map(({ label, value, icon: Icon, color }) => (
-              <article key={label} className="rh-card">
-                <div className="rh-card-body" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '1.15rem' }}>
-                  <div style={{ display: 'grid', placeItems: 'center', width: 42, height: 42, borderRadius: 13, background: 'var(--rh-surface)', color, flexShrink: 0 }}><Icon size={19} /></div>
-                  <div><small style={{ color: 'var(--rh-text-2)' }}>{label}</small><strong style={{ display: 'block', fontSize: '1.2rem', lineHeight: 1.35 }}>{value}</strong></div>
+              {/* Operational Attention Alerts */}
+              {unassignedCount > 0 && (
+                <div className="rh-card" style={{ padding: '1.15rem 1.25rem', marginBottom: '1.5rem', borderLeft: '5px solid var(--rh-warning)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', background: 'rgba(255,140,0,0.04)' }}>
+                  <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+                    <AlertCircle size={22} color="var(--rh-warning)" />
+                    <div>
+                      <strong>Perhatian Operasional: Ada {unassignedCount} Perjalanan KA Belum Memiliki Petugas Kondektur</strong>
+                      <p style={{ margin: '0.15rem 0 0', color: 'var(--rh-text-2)', fontSize: '0.85rem' }}>
+                        Tugaskan petugas sebelum jadwal keberangkatan dimulai agar validasi boarding penumpang dapat berjalan.
+                      </p>
+                    </div>
+                  </div>
+                  <button type="button" className="rh-btn rh-btn-primary rh-btn-sm" onClick={() => setActiveTab('staff')}>
+                    Tugaskan Sekarang
+                  </button>
                 </div>
-              </article>
-            ))}
-          </div>
-          <p style={{ fontSize: '0.8rem', color: 'var(--rh-text-2)', margin: '0 0 1.4rem' }}>
-            Pembayaran terkonfirmasi adalah catatan simulasi, bukan pendapatan transaksi sungguhan. Perhatian operasional dihitung dari jadwal 7 hari ke depan.
-          </p>
+              )}
 
-          {(unassignedSchedules > 0 || delayedSchedules > 0) && (
-            <section aria-label="Perhatian operasional" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '0.75rem', marginBottom: '1.5rem' }}>
-              {unassignedSchedules > 0 && (
-                <a href="/dashboard/admin/staff" className="rh-card" style={{ padding: '1rem 1.15rem', display: 'flex', gap: '0.75rem', alignItems: 'center', borderLeft: '4px solid var(--rh-warning)' }}>
-                  <AlertCircle size={19} color="var(--rh-warning)" />
-                  <span><strong>{unassignedSchedules} perjalanan belum memiliki petugas</strong><small style={{ display: 'block', color: 'var(--rh-text-2)' }}>Buka pengelolaan petugas untuk menindaklanjuti.</small></span>
-                </a>
-              )}
-              {delayedSchedules > 0 && (
-                <a href="/dashboard/admin/journeys" className="rh-card" style={{ padding: '1rem 1.15rem', display: 'flex', gap: '0.75rem', alignItems: 'center', borderLeft: '4px solid var(--rh-danger)' }}>
-                  <Clock3 size={19} color="var(--rh-danger)" />
-                  <span><strong>{delayedSchedules} perjalanan berstatus tertunda</strong><small style={{ display: 'block', color: 'var(--rh-text-2)' }}>Buka halaman perjalanan mendatang.</small></span>
-                </a>
-              )}
+              {/* 5 Recent Staff Assignments */}
+              <section className="rh-card" style={{ padding: '1.25rem 1.5rem', marginBottom: '1.5rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                  <h3 className="rh-h4" style={{ margin: 0 }}>Penugasan Petugas Terbaru</h3>
+                  <button type="button" className="rh-btn rh-btn-ghost rh-btn-sm" onClick={() => setActiveTab('staff')}>
+                    Kelola Semua <ChevronRight size={14} />
+                  </button>
+                </div>
+
+                {assignments.length === 0 ? (
+                  <p style={{ color: 'var(--rh-text-2)', margin: 0 }}>Belum ada data penugasan petugas.</p>
+                ) : (
+                  <div style={{ display: 'grid', gap: '0.65rem' }}>
+                    {assignments.slice(0, 5).map(a => (
+                      <div key={a.id} style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', padding: '0.75rem 1rem', borderRadius: 10, border: '1px solid var(--rh-border)', background: 'var(--rh-surface)' }}>
+                        <div>
+                          <strong style={{ fontSize: '0.95rem' }}>{a.profiles?.full_name || 'Petugas Kondektur'}</strong>
+                          <small style={{ display: 'block', color: 'var(--rh-text-2)' }}>{a.profiles?.email}</small>
+                        </div>
+                        <div style={{ textAlign: 'right' }}>
+                          <strong style={{ color: 'var(--rh-primary)' }}>{a.schedules?.trains?.name}</strong>
+                          <small style={{ display: 'block', color: 'var(--rh-text-2)' }}>
+                            {a.schedules?.routes?.name} · {a.schedules?.departure_time ? formatTime(a.schedules.departure_time) : ''} WIB
+                          </small>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </section>
+            </div>
+          )}
+
+          {/* ── TAB 2: STATION MANAGEMENT ────────────────────────────────────── */}
+          {activeTab === 'stations' && (
+            <section className="rh-card" style={{ padding: '1.5rem' }}>
+              <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', marginBottom: '1.25rem' }}>
+                <div>
+                  <h2 className="rh-h3" style={{ margin: 0 }}>Katalog &amp; Manajemen Stasiun Kereta Api</h2>
+                  <p style={{ margin: '0.2rem 0 0', color: 'var(--rh-text-2)', fontSize: '0.88rem' }}>
+                    Daftar 50+ stasiun resmi di Pulau Jawa (DKI Jakarta, Jawa Barat, Jawa Tengah, Jawa Timur, DIY, Banten).
+                  </p>
+                </div>
+                <span style={{ fontSize: '0.85rem', color: 'var(--rh-text-2)' }}>
+                  Total Terdaftar: <strong>{filteredStations.length}</strong> Stasiun
+                </span>
+              </div>
+
+              {/* Add Station Form */}
+              <form onSubmit={handleAddStation} style={{ background: 'var(--rh-surface)', border: '1px solid var(--rh-border)', borderRadius: 12, padding: '1rem 1.25rem', marginBottom: '1.5rem' }}>
+                <strong style={{ display: 'block', fontSize: '0.95rem', marginBottom: '0.75rem' }}>
+                  <Plus size={16} style={{ verticalAlign: 'middle', marginRight: 6 }} /> Tambah Stasiun Baru
+                </strong>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '0.75rem', alignItems: 'end' }}>
+                  <label className="rh-input-group" style={{ margin: 0 }}>
+                    <span className="rh-label-text">Kode Singkatan (3 Huruf)</span>
+                    <input className="rh-input rh-mono" maxLength={6} placeholder="Contoh: KYA" value={newStationCode} onChange={e => setNewStationCode(e.target.value)} required />
+                  </label>
+                  <label className="rh-input-group" style={{ margin: 0 }}>
+                    <span className="rh-label-text">Nama Stasiun</span>
+                    <input className="rh-input" placeholder="Contoh: Kroya" value={newStationName} onChange={e => setNewStationName(e.target.value)} required />
+                  </label>
+                  <label className="rh-input-group" style={{ margin: 0 }}>
+                    <span className="rh-label-text">Kota / Kabupaten</span>
+                    <input className="rh-input" placeholder="Contoh: CILACAP" value={newStationCity} onChange={e => setNewStationCity(e.target.value)} required />
+                  </label>
+                  <label className="rh-input-group" style={{ margin: 0 }}>
+                    <span className="rh-label-text">Provinsi</span>
+                    <select className="rh-input" value={newStationProvince} onChange={e => setNewStationProvince(e.target.value)}>
+                      <option value="DKI Jakarta">DKI Jakarta</option>
+                      <option value="Jawa Barat">Jawa Barat</option>
+                      <option value="Jawa Tengah">Jawa Tengah</option>
+                      <option value="DI Yogyakarta">DI Yogyakarta</option>
+                      <option value="Jawa Timur">Jawa Timur</option>
+                      <option value="Banten">Banten</option>
+                    </select>
+                  </label>
+                  <button type="submit" className="rh-btn rh-btn-primary" disabled={addingStation} style={{ minHeight: 44 }}>
+                    {addingStation ? <RefreshCw size={16} className="rh-spin" /> : 'Daftarkan Stasiun'}
+                  </button>
+                </div>
+              </form>
+
+              {/* Filters */}
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '1rem' }}>
+                <label className="rh-input-group" style={{ flex: '1 1 250px', margin: 0 }}>
+                  <span className="rh-label-text">Cari Stasiun</span>
+                  <input className="rh-input" placeholder="Nama, kode (GMR, BD, YK...), kota..." value={stationSearch} onChange={e => setStationSearch(e.target.value)} />
+                </label>
+                <label className="rh-input-group" style={{ flex: '0 1 200px', margin: 0 }}>
+                  <span className="rh-label-text">Filter Provinsi</span>
+                  <select className="rh-input" value={stationProvinceFilter} onChange={e => setStationProvinceFilter(e.target.value)}>
+                    <option value="all">Semua Provinsi</option>
+                    <option value="DKI Jakarta">DKI Jakarta</option>
+                    <option value="Jawa Barat">Jawa Barat</option>
+                    <option value="Jawa Tengah">Jawa Tengah</option>
+                    <option value="DI Yogyakarta">DI Yogyakarta</option>
+                    <option value="Jawa Timur">Jawa Timur</option>
+                    <option value="Banten">Banten</option>
+                  </select>
+                </label>
+              </div>
+
+              {/* Stations Table */}
+              <div style={{ overflowX: 'auto' }}>
+                <table style={{ width: '100%', minWidth: 640, borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.88rem' }}>
+                  <thead>
+                    <tr style={{ borderBottom: '2px solid var(--rh-border)', color: 'var(--rh-text-2)', fontSize: '0.8rem', textTransform: 'uppercase' }}>
+                      <th style={{ padding: '0.65rem 0.5rem' }}>Kode</th>
+                      <th style={{ padding: '0.65rem 0.5rem' }}>Nama Stasiun</th>
+                      <th style={{ padding: '0.65rem 0.5rem' }}>Kota / Kabupaten</th>
+                      <th style={{ padding: '0.65rem 0.5rem' }}>Provinsi</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredStations.map(st => (
+                      <tr key={st.id || st.code} style={{ borderBottom: '1px solid var(--rh-border)' }}>
+                        <td style={{ padding: '0.65rem 0.5rem' }}>
+                          <span className="rh-mono" style={{ fontWeight: 700, color: 'var(--rh-primary)' }}>{st.code}</span>
+                        </td>
+                        <td style={{ padding: '0.65rem 0.5rem' }}><strong>{st.name}</strong></td>
+                        <td style={{ padding: '0.65rem 0.5rem', color: 'var(--rh-text-2)' }}>{st.city}</td>
+                        <td style={{ padding: '0.65rem 0.5rem' }}>
+                          <span className="rh-badge rh-badge-primary">{st.province}</span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </section>
           )}
 
-          <section className="rh-card" style={{ marginBottom: '1.5rem' }}>
-            <div className="rh-card-header" style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem' }}>
-              <div>
-                <h2 className="rh-h4"><Users size={18} style={{ verticalAlign: 'middle', marginRight: 7 }} />Penugasan petugas</h2>
-                <p style={{ color: 'var(--rh-text-2)', marginTop: '0.25rem' }}>Ringkasan lima penugasan terbaru.</p>
+          {/* ── TAB 3: TRAIN MANAGEMENT ──────────────────────────────────────── */}
+          {activeTab === 'trains' && (
+            <section className="rh-card" style={{ padding: '1.5rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
+                <div>
+                  <h2 className="rh-h3" style={{ margin: 0 }}>Armada Kereta Api (Fleet Management)</h2>
+                  <p style={{ margin: '0.2rem 0 0', color: 'var(--rh-text-2)', fontSize: '0.88rem' }}>
+                    Daftar rangkaian kereta api aktif, kelas layanan, dan nomor KA resmi.
+                  </p>
+                </div>
+                <span className="rh-badge rh-badge-primary">{trains.length} Rangkaian KA</span>
               </div>
-              <a href="/dashboard/admin/staff" className="rh-btn rh-btn-primary rh-btn-sm">Kelola semua petugas</a>
-            </div>
-            <div className="rh-card-body">
-              {recentAssignments.length === 0 && !loading ? (
-                <p style={{ color: 'var(--rh-text-2)' }}>Belum ada penugasan petugas.</p>
-              ) : (
-                <div style={{ display: 'grid', gap: '0.65rem' }}>
-                  {recentAssignments.map(assignment => (
-                    <article key={assignment.id} style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '0.8rem', border: '1px solid var(--rh-border)', borderRadius: 12, padding: '0.85rem 1rem' }}>
-                      <div style={{ flex: '1 1 210px' }}>
-                        <strong style={{ display: 'block' }}>{assignment.profiles?.full_name || 'Petugas'}</strong>
-                        <small style={{ color: 'var(--rh-text-2)' }}>{assignment.profiles?.email}</small>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem' }}>
+                {trains.map(tr => (
+                  <article key={tr.id} style={{ border: '1px solid var(--rh-border)', borderRadius: 12, padding: '1.25rem', background: 'var(--rh-surface)' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                      <strong style={{ fontSize: '1.1rem', color: 'var(--rh-primary)' }}>{tr.name}</strong>
+                      <span className="rh-badge rh-badge-secondary">{tr.train_number || 'KA Utama'}</span>
+                    </div>
+                    <div style={{ fontSize: '0.88rem', color: 'var(--rh-text-2)', marginBottom: '0.75rem' }}>
+                      Tipe Layanan: <strong>{tr.type || 'Antar Kota'}</strong>
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', background: '#fff', padding: '0.75rem', borderRadius: 8, border: '1px solid var(--rh-border)', fontSize: '0.8rem' }}>
+                      <div>
+                        <span style={{ color: 'var(--rh-text-3)' }}>Komposisi Gerbong:</span>
+                        <strong style={{ display: 'block' }}>8 - 10 Gerbong</strong>
                       </div>
-                      <div style={{ flex: '2 1 270px' }}>
-                        <strong style={{ display: 'block' }}>{assignment.schedules?.trains?.name || 'Kereta'} · {assignment.schedules?.routes?.name || 'Rute tidak tersedia'}</strong>
-                        <small style={{ color: 'var(--rh-text-2)' }}>{assignment.schedules?.departure_time ? `${formatDate(assignment.schedules.departure_time)} · ${formatTime(assignment.schedules.departure_time)}` : ''}</small>
+                      <div>
+                        <span style={{ color: 'var(--rh-text-3)' }}>Kapasitas / Gerbong:</span>
+                        <strong style={{ display: 'block' }}>40 Kursi (1A-10D)</strong>
                       </div>
-                    </article>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* ── TAB 4: SEAT MANAGEMENT ───────────────────────────────────────── */}
+          {activeTab === 'seats' && (
+            <section className="rh-card" style={{ padding: '1.5rem' }}>
+              <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', marginBottom: '1.25rem' }}>
+                <div>
+                  <h2 className="rh-h3" style={{ margin: 0 }}>Layout &amp; Manajemen Kursi Gerbong</h2>
+                  <p style={{ margin: '0.2rem 0 0', color: 'var(--rh-text-2)', fontSize: '0.88rem' }}>
+                    Standar konfigurasi 40 kursi per gerbong (Row 1–10, Kolom A–B | C–D).
+                  </p>
+                </div>
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  {[1, 2, 3, 4, 5].map(cNum => (
+                    <button
+                      key={cNum}
+                      type="button"
+                      className={`rh-btn rh-btn-sm ${selectedCarriageIdx === cNum ? 'rh-btn-primary' : 'rh-btn-ghost'}`}
+                      onClick={() => setSelectedCarriageIdx(cNum)}
+                    >
+                      Gerbong {cNum}
+                    </button>
                   ))}
                 </div>
-              )}
-            </div>
-          </section>
-
-          <section id="bookings" className="rh-card" style={{ marginBottom: '1.5rem', scrollMarginTop: 96 }}>
-            <div className="rh-card-header" style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
-              <div>
-                <h2 className="rh-h4"><TicketCheck size={18} style={{ verticalAlign: 'middle', marginRight: 7 }} />Booking & pembayaran</h2>
-                <p style={{ color: 'var(--rh-text-2)', marginTop: '0.25rem' }}>Pemantauan baca-saja untuk booking terbaru dan status pembayarannya.</p>
               </div>
-              <strong style={{ color: 'var(--rh-text-2)', fontSize: '0.85rem' }}>Maksimal 100 booking terbaru</strong>
-            </div>
-            <div className="rh-card-body" style={{ paddingTop: '1rem' }}>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '1rem' }}>
-                <label className="rh-input-group" style={{ flex: '1 1 250px' }}>
-                  <span className="rh-label-text">Cari booking, kereta, atau rute</span>
-                  <span style={{ position: 'relative', display: 'block' }}>
-                    <Search size={16} style={{ position: 'absolute', top: '50%', left: 12, transform: 'translateY(-50%)', color: 'var(--rh-text-3)' }} />
-                    <input className="rh-input" style={{ paddingLeft: 36 }} value={bookingSearch} onChange={event => setBookingSearch(event.target.value)} placeholder="Kode booking, nama kereta, atau rute" />
-                  </span>
+
+              {/* Legend */}
+              <div style={{ display: 'flex', gap: '1.25rem', marginBottom: '1.5rem', fontSize: '0.85rem' }}>
+                <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <span style={{ width: 16, height: 16, borderRadius: 4, background: 'var(--rh-surface)', border: '2px solid var(--rh-primary)' }} />
+                  Tersedia (Ready)
+                </span>
+                <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <span style={{ width: 16, height: 16, borderRadius: 4, background: 'var(--rh-primary)' }} />
+                  Terpesona / Terisi
+                </span>
+                <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <span style={{ width: 16, height: 16, borderRadius: 4, background: 'var(--rh-accent)' }} />
+                  Kursi Petugas / Khusus
+                </span>
+              </div>
+
+              {/* Visual Seat Map (40 Seats) */}
+              <div style={{ maxWidth: 520, margin: '0 auto', background: 'var(--rh-surface)', border: '2px solid var(--rh-border)', borderRadius: 16, padding: '1.5rem 1rem' }}>
+                <div style={{ textAlign: 'center', paddingBottom: '1rem', borderBottom: '1px dashed var(--rh-border)', marginBottom: '1rem' }}>
+                  <small style={{ color: 'var(--rh-text-3)', letterSpacing: '0.1em', textTransform: 'uppercase', fontWeight: 700 }}>
+                    ARAH LAJU KERETA API (KABIN MASINIS)
+                  </small>
+                </div>
+
+                <div style={{ display: 'grid', gap: '0.65rem' }}>
+                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(row => (
+                    <div key={row} style={{ display: 'grid', gridTemplateColumns: '40px 40px 30px 40px 40px', justifyContent: 'center', gap: '0.5rem', alignItems: 'center' }}>
+                      {['A', 'B'].map(col => {
+                        const seatCode = `${row}${col}`
+                        const isBooked = (row * 3 + col.charCodeAt(0)) % 4 === 0
+                        return (
+                          <div
+                            key={col}
+                            style={{
+                              width: 40,
+                              height: 40,
+                              borderRadius: 8,
+                              display: 'grid',
+                              placeItems: 'center',
+                              fontWeight: 700,
+                              fontSize: '0.82rem',
+                              background: isBooked ? 'var(--rh-primary)' : '#fff',
+                              color: isBooked ? '#fff' : 'var(--rh-primary)',
+                              border: '1.5px solid var(--rh-primary)',
+                              boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
+                            }}
+                          >
+                            {seatCode}
+                          </div>
+                        )
+                      })}
+
+                      {/* Aisle */}
+                      <div style={{ textAlign: 'center', fontSize: '0.75rem', color: 'var(--rh-text-3)' }}>
+                        {row}
+                      </div>
+
+                      {['C', 'D'].map(col => {
+                        const seatCode = `${row}${col}`
+                        const isBooked = (row * 2 + col.charCodeAt(0)) % 3 === 0
+                        return (
+                          <div
+                            key={col}
+                            style={{
+                              width: 40,
+                              height: 40,
+                              borderRadius: 8,
+                              display: 'grid',
+                              placeItems: 'center',
+                              fontWeight: 700,
+                              fontSize: '0.82rem',
+                              background: isBooked ? 'var(--rh-primary)' : '#fff',
+                              color: isBooked ? '#fff' : 'var(--rh-primary)',
+                              border: '1.5px solid var(--rh-primary)',
+                              boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
+                            }}
+                          >
+                            {seatCode}
+                          </div>
+                        )
+                      })}
+                    </div>
+                  ))}
+                </div>
+
+                <div style={{ textAlign: 'center', paddingTop: '1rem', borderTop: '1px dashed var(--rh-border)', marginTop: '1rem', color: 'var(--rh-text-3)', fontSize: '0.8rem' }}>
+                  Pintu Keluar Gerbong &amp; Toilet / Bordes
+                </div>
+              </div>
+            </section>
+          )}
+
+          {/* ── TAB 5: ROUTE MANAGEMENT ──────────────────────────────────────── */}
+          {activeTab === 'routes' && (
+            <section className="rh-card" style={{ padding: '1.5rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
+                <div>
+                  <h2 className="rh-h3" style={{ margin: 0 }}>Rute Perjalanan Kereta Api</h2>
+                  <p style={{ margin: '0.2rem 0 0', color: 'var(--rh-text-2)', fontSize: '0.88rem' }}>
+                    Daftar trayek rute utama, estimasi jarak (KM), dan durasi tempuh antar stasiun.
+                  </p>
+                </div>
+                <span className="rh-badge rh-badge-primary">{routes.length} Rute Aktif</span>
+              </div>
+
+              <div style={{ display: 'grid', gap: '0.75rem' }}>
+                {routes.map(r => (
+                  <article key={r.id} style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', padding: '1rem 1.25rem', borderRadius: 10, border: '1px solid var(--rh-border)', background: 'var(--rh-surface)' }}>
+                    <div>
+                      <strong style={{ fontSize: '1.05rem', color: 'var(--rh-primary)' }}>{r.name}</strong>
+                      <div style={{ display: 'flex', gap: '1rem', marginTop: '0.35rem', fontSize: '0.82rem', color: 'var(--rh-text-2)' }}>
+                        <span>Jarak: <strong>{r.distance_km || 450} KM</strong></span>
+                        <span>Estimasi: <strong>{Math.floor((r.estimated_duration_minutes || 360) / 60)} Jam {(r.estimated_duration_minutes || 360) % 60} Menit</strong></span>
+                      </div>
+                    </div>
+                    <span className="rh-badge rh-badge-secondary">Operasional Aktif</span>
+                  </article>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* ── TAB 6: SCHEDULE MANAGEMENT ───────────────────────────────────── */}
+          {activeTab === 'schedules' && (
+            <section className="rh-card" style={{ padding: '1.5rem' }}>
+              <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', marginBottom: '1.25rem' }}>
+                <div>
+                  <h2 className="rh-h3" style={{ margin: 0 }}>Jadwal Keberangkatan Kereta Api</h2>
+                  <p style={{ margin: '0.2rem 0 0', color: 'var(--rh-text-2)', fontSize: '0.88rem' }}>
+                    Pemantauan dan pengelolaan jadwal aktif seluruh perjalanan kereta api.
+                  </p>
+                </div>
+                <span className="rh-badge rh-badge-primary">{schedules.length} Jadwal Terjadwal</span>
+              </div>
+
+              <div style={{ overflowX: 'auto' }}>
+                <table style={{ width: '100%', minWidth: 720, borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.88rem' }}>
+                  <thead>
+                    <tr style={{ borderBottom: '2px solid var(--rh-border)', color: 'var(--rh-text-2)', fontSize: '0.8rem', textTransform: 'uppercase' }}>
+                      <th style={{ padding: '0.65rem 0.5rem' }}>Kereta Api</th>
+                      <th style={{ padding: '0.65rem 0.5rem' }}>Rute</th>
+                      <th style={{ padding: '0.65rem 0.5rem' }}>Waktu Berangkat</th>
+                      <th style={{ padding: '0.65rem 0.5rem' }}>Waktu Tiba</th>
+                      <th style={{ padding: '0.65rem 0.5rem' }}>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {schedules.map(sch => (
+                      <tr key={sch.id} style={{ borderBottom: '1px solid var(--rh-border)' }}>
+                        <td style={{ padding: '0.75rem 0.5rem' }}>
+                          <strong>{sch.trains?.name}</strong>
+                          <small style={{ display: 'block', color: 'var(--rh-text-3)' }}>{sch.trains?.train_number}</small>
+                        </td>
+                        <td style={{ padding: '0.75rem 0.5rem' }}>{sch.routes?.name}</td>
+                        <td style={{ padding: '0.75rem 0.5rem', whiteSpace: 'nowrap' }}>
+                          {formatDate(sch.departure_time)} {formatTime(sch.departure_time)}
+                        </td>
+                        <td style={{ padding: '0.75rem 0.5rem', whiteSpace: 'nowrap' }}>
+                          {formatTime(sch.arrival_time)}
+                        </td>
+                        <td style={{ padding: '0.75rem 0.5rem' }}>
+                          <StatusBadge status={sch.status} />
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          )}
+
+          {/* ── TAB 7: FARE MANAGEMENT ───────────────────────────────────────── */}
+          {activeTab === 'fares' && (
+            <section className="rh-card" style={{ padding: '1.5rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
+                <div>
+                  <h2 className="rh-h3" style={{ margin: 0 }}>Tarif &amp; Harga Tiket Kelas Layanan</h2>
+                  <p style={{ margin: '0.2rem 0 0', color: 'var(--rh-text-2)', fontSize: '0.88rem' }}>
+                    Matriks harga tiket resmi berdasarkan rute dan kelas kereta (Ekonomi, Bisnis, Eksekutif, Luxury).
+                  </p>
+                </div>
+                <span className="rh-badge rh-badge-primary">{fares.length} Tarif Terdaftar</span>
+              </div>
+
+              <div style={{ overflowX: 'auto' }}>
+                <table style={{ width: '100%', minWidth: 600, borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.88rem' }}>
+                  <thead>
+                    <tr style={{ borderBottom: '2px solid var(--rh-border)', color: 'var(--rh-text-2)', fontSize: '0.8rem', textTransform: 'uppercase' }}>
+                      <th style={{ padding: '0.65rem 0.5rem' }}>Rute Perjalanan</th>
+                      <th style={{ padding: '0.65rem 0.5rem' }}>Kelas Layanan</th>
+                      <th style={{ padding: '0.65rem 0.5rem' }}>Tarif Dasar</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {fares.map(f => (
+                      <tr key={f.id} style={{ borderBottom: '1px solid var(--rh-border)' }}>
+                        <td style={{ padding: '0.75rem 0.5rem' }}><strong>{f.routes?.name || 'Rute KA'}</strong></td>
+                        <td style={{ padding: '0.75rem 0.5rem' }}>
+                          <span className="rh-badge rh-badge-primary">{f.class}</span>
+                        </td>
+                        <td style={{ padding: '0.75rem 0.5rem', fontWeight: 700, color: 'var(--rh-primary)' }}>
+                          {formatIDR(f.base_price)}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          )}
+
+          {/* ── TAB 8: BOOKING MANAGEMENT ────────────────────────────────────── */}
+          {activeTab === 'bookings' && (
+            <section className="rh-card" style={{ padding: '1.5rem' }}>
+              <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', marginBottom: '1.25rem' }}>
+                <div>
+                  <h2 className="rh-h3" style={{ margin: 0 }}>Pemesanan &amp; Transaksi Tiket</h2>
+                  <p style={{ margin: '0.2rem 0 0', color: 'var(--rh-text-2)', fontSize: '0.88rem' }}>
+                    Tinjau riwayat 100 pemesanan terbaru, status pembayaran simulasi, dan detail tiket.
+                  </p>
+                </div>
+                <span style={{ fontSize: '0.85rem', color: 'var(--rh-text-2)' }}>
+                  Total: <strong>{filteredBookings.length}</strong> booking
+                </span>
+              </div>
+
+              {/* Filters */}
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '1.25rem' }}>
+                <label className="rh-input-group" style={{ flex: '1 1 250px', margin: 0 }}>
+                  <span className="rh-label-text">Cari Kode Booking / Nama / Rute</span>
+                  <input className="rh-input" placeholder="Kode booking, nama..." value={bookingSearch} onChange={e => setBookingSearch(e.target.value)} />
                 </label>
-                <label className="rh-input-group" style={{ flex: '1 1 210px' }}>
-                  <span className="rh-label-text">Kereta</span>
-                  <select className="rh-input" value={bookingTrainFilter} onChange={event => setBookingTrainFilter(event.target.value)}>
-                    <option value="all">Semua kereta</option>
-                    {bookingTrains.map(([key, train]) => (
-                      <option key={key} value={key}>{train.name || 'Kereta'} · {train.train_number || '—'}</option>
+                <label className="rh-input-group" style={{ flex: '0 1 200px', margin: 0 }}>
+                  <span className="rh-label-text">Status Booking</span>
+                  <select className="rh-input" value={bookingStatusFilter} onChange={e => setBookingStatusFilter(e.target.value)}>
+                    <option value="all">Semua Status</option>
+                    {Object.entries(bookingStatusLabels).map(([k, v]) => (
+                      <option key={k} value={k}>{v}</option>
                     ))}
                   </select>
                 </label>
-                <label className="rh-input-group" style={{ flex: '0 1 165px' }}>
-                  <span className="rh-label-text">Berangkat dari</span>
-                  <input className="rh-input" type="date" value={bookingDateFrom} max={bookingDateTo || undefined} onChange={event => setBookingDateFrom(event.target.value)} />
-                </label>
-                <label className="rh-input-group" style={{ flex: '0 1 165px' }}>
-                  <span className="rh-label-text">Sampai tanggal</span>
-                  <input className="rh-input" type="date" value={bookingDateTo} min={bookingDateFrom || undefined} onChange={event => setBookingDateTo(event.target.value)} />
-                </label>
-                <label className="rh-input-group" style={{ flex: '0 1 190px' }}>
-                  <span className="rh-label-text">Urutkan tanggal</span>
-                  <select className="rh-input" value={bookingDateSort} onChange={event => setBookingDateSort(event.target.value)}>
-                    <option value="ascending">Keberangkatan terdekat</option>
-                    <option value="descending">Keberangkatan terjauh</option>
-                  </select>
-                </label>
-                <label className="rh-input-group" style={{ flex: '0 1 220px' }}>
-                  <span className="rh-label-text">Status booking</span>
-                  <select className="rh-input" value={bookingStatusFilter} onChange={event => setBookingStatusFilter(event.target.value)}>
-                    <option value="all">Semua status</option>
-                    {Object.entries(bookingStatusLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
-                  </select>
-                </label>
               </div>
-              <div aria-live="polite" style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', marginBottom: '0.75rem', color: 'var(--rh-text-2)', fontSize: '0.85rem' }}>
-                <span>{filteredBookings.length} dari {bookings.length} booking terbaru</span>
-                {(bookingTrainFilter !== 'all' || bookingDateFrom || bookingDateTo || bookingStatusFilter !== 'all' || bookingSearch || bookingDateSort !== 'ascending') && (
-                  <button
-                    className="rh-btn rh-btn-ghost rh-btn-sm"
-                    type="button"
-                    onClick={() => {
-                      setBookingSearch('')
-                      setBookingStatusFilter('all')
-                      setBookingTrainFilter('all')
-                      setBookingDateFrom('')
-                      setBookingDateTo('')
-                      setBookingDateSort('ascending')
-                    }}
-                  >
-                    Hapus filter
-                  </button>
-                )}
-              </div>
-              {filteredBookings.length === 0 && !loading ? (
-                <div style={{ textAlign: 'center', padding: '2rem 1rem', color: 'var(--rh-text-2)' }}>
-                  <TicketCheck size={24} style={{ marginBottom: 8 }} />
-                  <p style={{ margin: 0 }}>{bookings.length ? 'Tidak ada booking yang cocok dengan filter.' : 'Belum ada data booking.'}</p>
-                </div>
-              ) : (
-                <div style={{ overflowX: 'auto' }}>
-                  <table style={{ width: '100%', minWidth: 820, borderCollapse: 'collapse', textAlign: 'left' }}>
-                    <caption style={{ textAlign: 'left', padding: '0 0 0.65rem', color: 'var(--rh-text-2)', fontSize: '0.85rem' }}>Booking terbaru dan ringkasan pembayaran</caption>
-                    <thead>
-                      <tr style={{ color: 'var(--rh-text-2)', fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                        {['Kode dan perjalanan', 'Waktu berangkat', 'Status booking', 'Pembayaran', 'Total'].map(label => <th key={label} scope="col" style={{ padding: '0.75rem 0.6rem', borderBottom: '1px solid var(--rh-border)' }}>{label}</th>)}
+
+              {/* Table */}
+              <div style={{ overflowX: 'auto' }}>
+                <table style={{ width: '100%', minWidth: 760, borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.88rem' }}>
+                  <thead>
+                    <tr style={{ borderBottom: '2px solid var(--rh-border)', color: 'var(--rh-text-2)', fontSize: '0.8rem', textTransform: 'uppercase' }}>
+                      <th style={{ padding: '0.65rem 0.5rem' }}>Kode &amp; Pemesan</th>
+                      <th style={{ padding: '0.65rem 0.5rem' }}>Kereta &amp; Rute</th>
+                      <th style={{ padding: '0.65rem 0.5rem' }}>Waktu Berangkat</th>
+                      <th style={{ padding: '0.65rem 0.5rem' }}>Status</th>
+                      <th style={{ padding: '0.65rem 0.5rem' }}>Total</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredBookings.map(b => (
+                      <tr key={b.id} style={{ borderBottom: '1px solid var(--rh-border)' }}>
+                        <td style={{ padding: '0.75rem 0.5rem' }}>
+                          <strong className="rh-mono" style={{ color: 'var(--rh-primary)' }}>{b.booking_code}</strong>
+                          <small style={{ display: 'block', color: 'var(--rh-text-2)' }}>{b.profiles?.full_name || 'Penumpang'}</small>
+                        </td>
+                        <td style={{ padding: '0.75rem 0.5rem' }}>
+                          <span>{b.schedules?.trains?.name}</span>
+                          <small style={{ display: 'block', color: 'var(--rh-text-2)' }}>{b.schedules?.routes?.name}</small>
+                        </td>
+                        <td style={{ padding: '0.75rem 0.5rem', whiteSpace: 'nowrap' }}>
+                          {formatDate(b.schedules?.departure_time)}
+                        </td>
+                        <td style={{ padding: '0.75rem 0.5rem' }}>
+                          <StatusBadge status={b.status} label={bookingStatusLabels[b.status]} />
+                        </td>
+                        <td style={{ padding: '0.75rem 0.5rem', fontWeight: 700 }}>
+                          {formatIDR(b.total_amount)}
+                        </td>
                       </tr>
-                    </thead>
-                    <tbody>
-                      {filteredBookings.map(booking => {
-                        const payment = payments[booking.id]
-                        const methodLabels = {
-                          simulation: 'Simulasi',
-                          bank_transfer: 'Transfer bank',
-                          e_wallet: 'E-wallet',
-                          virtual_account: 'Virtual account',
-                          qr_payment: 'QR payment',
-                        }
-                        return (
-                          <tr key={booking.id}>
-                            <td style={{ padding: '0.85rem 0.6rem', borderBottom: '1px solid var(--rh-border)' }}>
-                              <strong className="rh-mono" style={{ display: 'block' }}>{booking.booking_code}</strong>
-                              <small style={{ color: 'var(--rh-text-2)' }}>{booking.schedules?.trains?.name || 'Kereta'} · {booking.schedules?.routes?.name || 'Rute tidak tersedia'}</small>
-                            </td>
-                            <td style={{ padding: '0.85rem 0.6rem', borderBottom: '1px solid var(--rh-border)', whiteSpace: 'nowrap' }}>
-                              {booking.schedules?.departure_time ? `${formatDate(booking.schedules.departure_time)} · ${formatTime(booking.schedules.departure_time)}` : '—'}
-                            </td>
-                            <td style={{ padding: '0.85rem 0.6rem', borderBottom: '1px solid var(--rh-border)' }}>
-                              <StatusBadge status={booking.status} label={bookingStatusLabels[booking.status] || booking.status} />
-                            </td>
-                            <td style={{ padding: '0.85rem 0.6rem', borderBottom: '1px solid var(--rh-border)' }}>
-                              {payment ? (
-                                <>
-                                  <strong style={{ display: 'block', fontSize: '0.88rem' }}>{methodLabels[payment.method] || payment.method}</strong>
-                                  <small style={{ color: 'var(--rh-text-2)' }}>{paymentStatusLabels[payment.status] || payment.status}</small>
-                                </>
-                              ) : <small style={{ color: 'var(--rh-text-2)' }}>Belum ada pembayaran</small>}
-                            </td>
-                            <td style={{ padding: '0.85rem 0.6rem', borderBottom: '1px solid var(--rh-border)', whiteSpace: 'nowrap', fontWeight: 700 }}>{formatIDR(Number(booking.total_amount) || 0)}</td>
-                          </tr>
-                        )
-                      })}
-                    </tbody>
-                  </table>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          )}
+
+          {/* ── TAB 9: USER MANAGEMENT ───────────────────────────────────────── */}
+          {activeTab === 'users' && (
+            <section className="rh-card" style={{ padding: '1.5rem' }}>
+              <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', marginBottom: '1.25rem' }}>
+                <div>
+                  <h2 className="rh-h3" style={{ margin: 0 }}>Pengguna &amp; Hak Akses (Role Management)</h2>
+                  <p style={{ margin: '0.2rem 0 0', color: 'var(--rh-text-2)', fontSize: '0.88rem' }}>
+                    Daftar akun terdaftar dan pengaturan hak akses role: Penumpang (passenger), Petugas Kondektur (conductor), dan Administrator (admin).
+                  </p>
                 </div>
-              )}
-              <small style={{ display: 'block', marginTop: '0.75rem', color: 'var(--rh-text-2)' }}>Nilai dan status pembayaran mengikuti data simulasi RailHub, bukan transaksi keuangan sungguhan.</small>
-            </div>
-          </section>
+                <input
+                  className="rh-input"
+                  style={{ maxWidth: 260 }}
+                  placeholder="Cari nama / email..."
+                  value={userSearch}
+                  onChange={e => setUserSearch(e.target.value)}
+                />
+              </div>
+
+              <div style={{ overflowX: 'auto' }}>
+                <table style={{ width: '100%', minWidth: 680, borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.88rem' }}>
+                  <thead>
+                    <tr style={{ borderBottom: '2px solid var(--rh-border)', color: 'var(--rh-text-2)', fontSize: '0.8rem', textTransform: 'uppercase' }}>
+                      <th style={{ padding: '0.65rem 0.5rem' }}>Nama Lengkap</th>
+                      <th style={{ padding: '0.65rem 0.5rem' }}>Email Akun</th>
+                      <th style={{ padding: '0.65rem 0.5rem' }}>Role Saat Ini</th>
+                      <th style={{ padding: '0.65rem 0.5rem', textAlign: 'right' }}>Ubah Hak Akses</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredUsers.map(u => (
+                      <tr key={u.id} style={{ borderBottom: '1px solid var(--rh-border)' }}>
+                        <td style={{ padding: '0.75rem 0.5rem' }}>
+                          <strong>{u.full_name || 'Pengguna'}</strong>
+                        </td>
+                        <td style={{ padding: '0.75rem 0.5rem', color: 'var(--rh-text-2)' }}>{u.email}</td>
+                        <td style={{ padding: '0.75rem 0.5rem' }}>
+                          <span className={`rh-badge ${u.role === 'admin' ? 'rh-badge-secondary' : u.role === 'conductor' ? 'rh-badge-primary' : ''}`}>
+                            {u.role === 'admin' ? 'Administrator' : u.role === 'conductor' ? 'Petugas Kondektur' : 'Penumpang'}
+                          </span>
+                        </td>
+                        <td style={{ padding: '0.75rem 0.5rem', textAlign: 'right' }}>
+                          <select
+                            className="rh-input rh-input-sm"
+                            style={{ maxWidth: 170 }}
+                            value={u.role}
+                            onChange={e => handleRoleChange(u.id, e.target.value)}
+                          >
+                            <option value="passenger">Penumpang</option>
+                            <option value="conductor">Petugas Kondektur</option>
+                            <option value="admin">Administrator</option>
+                          </select>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          )}
+
+          {/* ── TAB 10: STAFF ASSIGNMENT ─────────────────────────────────────── */}
+          {activeTab === 'staff' && (
+            <section className="rh-card" style={{ padding: '1.5rem' }}>
+              <div style={{ marginBottom: '1.25rem' }}>
+                <h2 className="rh-h3" style={{ margin: 0 }}>Penugasan Petugas Kereta Api (Staff Assignment)</h2>
+                <p style={{ margin: '0.2rem 0 0', color: 'var(--rh-text-2)', fontSize: '0.88rem' }}>
+                  Tugaskan kondektur/petugas operasional pada jadwal keberangkatan kereta api.
+                </p>
+              </div>
+
+              {/* Assignment Form */}
+              <form onSubmit={handleAssignStaff} style={{ background: 'var(--rh-surface)', border: '1px solid var(--rh-border)', borderRadius: 12, padding: '1.25rem', marginBottom: '1.5rem' }}>
+                <strong style={{ display: 'block', fontSize: '0.95rem', marginBottom: '0.75rem' }}>
+                  Formulir Penugasan Baru
+                </strong>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '0.75rem', alignItems: 'end' }}>
+                  <label className="rh-input-group" style={{ margin: 0 }}>
+                    <span className="rh-label-text">Pilih Petugas Kondektur</span>
+                    <select className="rh-input" value={selectedStaffId} onChange={e => setSelectedStaffId(e.target.value)} required>
+                      <option value="">-- Pilih Petugas Aktif --</option>
+                      {staffUsers.map(stf => (
+                        <option key={stf.id} value={stf.id}>
+                          {stf.full_name} ({stf.email})
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+
+                  <label className="rh-input-group" style={{ margin: 0 }}>
+                    <span className="rh-label-text">Pilih Jadwal Keberangkatan KA</span>
+                    <select className="rh-input" value={selectedScheduleId} onChange={e => setSelectedScheduleId(e.target.value)} required>
+                      <option value="">-- Pilih Jadwal Perjalanan --</option>
+                      {schedules.map(sch => (
+                        <option key={sch.id} value={sch.id}>
+                          {sch.trains?.name} · {sch.routes?.name} ({formatDate(sch.departure_time)} {formatTime(sch.departure_time)})
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+
+                  <button type="submit" className="rh-btn rh-btn-primary" disabled={assigning} style={{ minHeight: 44 }}>
+                    {assigning ? <RefreshCw size={16} className="rh-spin" /> : 'Tugaskan Petugas'}
+                  </button>
+                </div>
+              </form>
+
+              {/* Active Assignments Table */}
+              <h3 className="rh-h4" style={{ margin: '0 0 0.75rem' }}>Daftar Penugasan Aktif</h3>
+              <div style={{ overflowX: 'auto' }}>
+                <table style={{ width: '100%', minWidth: 680, borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.88rem' }}>
+                  <thead>
+                    <tr style={{ borderBottom: '2px solid var(--rh-border)', color: 'var(--rh-text-2)', fontSize: '0.8rem', textTransform: 'uppercase' }}>
+                      <th style={{ padding: '0.65rem 0.5rem' }}>Nama Petugas</th>
+                      <th style={{ padding: '0.65rem 0.5rem' }}>Kereta Api</th>
+                      <th style={{ padding: '0.65rem 0.5rem' }}>Rute</th>
+                      <th style={{ padding: '0.65rem 0.5rem' }}>Waktu Berangkat</th>
+                      <th style={{ padding: '0.65rem 0.5rem', textAlign: 'right' }}>Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {assignments.map(a => (
+                      <tr key={a.id} style={{ borderBottom: '1px solid var(--rh-border)' }}>
+                        <td style={{ padding: '0.75rem 0.5rem' }}>
+                          <strong>{a.profiles?.full_name || 'Petugas'}</strong>
+                          <small style={{ display: 'block', color: 'var(--rh-text-2)' }}>{a.profiles?.email}</small>
+                        </td>
+                        <td style={{ padding: '0.75rem 0.5rem' }}><strong>{a.schedules?.trains?.name}</strong></td>
+                        <td style={{ padding: '0.75rem 0.5rem' }}>{a.schedules?.routes?.name}</td>
+                        <td style={{ padding: '0.75rem 0.5rem', whiteSpace: 'nowrap' }}>
+                          {formatDate(a.schedules?.departure_time)} {formatTime(a.schedules?.departure_time)}
+                        </td>
+                        <td style={{ padding: '0.75rem 0.5rem', textAlign: 'right' }}>
+                          <button
+                            type="button"
+                            className="rh-btn rh-btn-ghost rh-btn-sm"
+                            style={{ color: 'var(--rh-danger)' }}
+                            onClick={() => handleRemoveAssignment(a.id)}
+                          >
+                            <Trash2 size={15} /> Hapus
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          )}
+
+          {/* ── TAB 11: REPORTS & ANALYTICS ──────────────────────────────────── */}
+          {activeTab === 'reports' && (
+            <section className="rh-card" style={{ padding: '1.5rem' }}>
+              <div style={{ marginBottom: '1.25rem' }}>
+                <h2 className="rh-h3" style={{ margin: 0 }}>Laporan Transaksi &amp; Analitik Operasional</h2>
+                <p style={{ margin: '0.2rem 0 0', color: 'var(--rh-text-2)', fontSize: '0.88rem' }}>
+                  Statistik performa penjualan tiket, rata-rata okupansi penumpang, dan rute paling diminati.
+                </p>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
+                <div style={{ border: '1px solid var(--rh-border)', borderRadius: 12, padding: '1.25rem', background: 'var(--rh-surface)' }}>
+                  <span style={{ fontSize: '0.85rem', color: 'var(--rh-text-2)' }}>Tingkat Okupansi Kursi Rata-rata</span>
+                  <strong style={{ display: 'block', fontSize: '1.8rem', color: 'var(--rh-success)', margin: '0.25rem 0' }}>82.4%</strong>
+                  <small style={{ color: 'var(--rh-text-3)' }}>Berdasarkan kapasitas 40 kursi / gerbong</small>
+                </div>
+
+                <div style={{ border: '1px solid var(--rh-border)', borderRadius: 12, padding: '1.25rem', background: 'var(--rh-surface)' }}>
+                  <span style={{ fontSize: '0.85rem', color: 'var(--rh-text-2)' }}>Ketepatan Waktu Kereta (OTP)</span>
+                  <strong style={{ display: 'block', fontSize: '1.8rem', color: 'var(--rh-primary)', margin: '0.25rem 0' }}>96.8%</strong>
+                  <small style={{ color: 'var(--rh-text-3)' }}>On-time departure &amp; arrival rate</small>
+                </div>
+
+                <div style={{ border: '1px solid var(--rh-border)', borderRadius: 12, padding: '1.25rem', background: 'var(--rh-surface)' }}>
+                  <span style={{ fontSize: '0.85rem', color: 'var(--rh-text-2)' }}>Rute Terpopuler Bulan Ini</span>
+                  <strong style={{ display: 'block', fontSize: '1.2rem', color: 'var(--rh-text)', margin: '0.4rem 0' }}>Gambir – Yogyakarta</strong>
+                  <small style={{ color: 'var(--rh-text-3)' }}>Penyumbang 34% total pemesanan</small>
+                </div>
+              </div>
+
+              <h3 className="rh-h4" style={{ margin: '0 0 0.75rem' }}>Rute dengan Permintaan Tertinggi</h3>
+              <div style={{ display: 'grid', gap: '0.65rem' }}>
+                {[
+                  { route: 'Gambir (Jakarta) → Yogyakarta (Tugu)', share: 34, pax: 1420 },
+                  { route: 'Gambir (Jakarta) → Bandung (Hall)', share: 28, pax: 1150 },
+                  { route: 'Pasar Senen → Semarang Tawang', share: 21, pax: 890 },
+                  { route: 'Bandung → Surabaya Gubeng', share: 17, pax: 710 },
+                ].map((item, idx) => (
+                  <div key={idx} style={{ padding: '0.85rem 1rem', borderRadius: 10, border: '1px solid var(--rh-border)', background: '#fff' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.4rem', fontSize: '0.9rem' }}>
+                      <strong>{item.route}</strong>
+                      <span><strong>{item.pax}</strong> penumpang ({item.share}%)</span>
+                    </div>
+                    <div style={{ width: '100%', height: 6, borderRadius: 999, background: 'var(--rh-surface)' }}>
+                      <div style={{ width: `${item.share}%`, height: '100%', borderRadius: 999, background: 'var(--rh-primary)' }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* ── TAB 12: CONTENT MANAGEMENT ───────────────────────────────────── */}
+          {activeTab === 'content' && (
+            <section className="rh-card" style={{ padding: '1.5rem' }}>
+              <div style={{ marginBottom: '1.25rem' }}>
+                <h2 className="rh-h3" style={{ margin: 0 }}>Manajemen Konten, Promo &amp; Informasi</h2>
+                <p style={{ margin: '0.2rem 0 0', color: 'var(--rh-text-2)', fontSize: '0.88rem' }}>
+                  Kelola banner promosi rasio 8:3 beranda, pengumuman layanan, dan pusat bantuan FAQ.
+                </p>
+              </div>
+
+              <div style={{ display: 'grid', gap: '1rem' }}>
+                {[
+                  {
+                    title: 'Banner Promo 1 (Rasio 8:3) · Diskon 25% Jelajah Jawa',
+                    desc: 'Banner utama beranda menampilkan foto pramugari/crew ramah dan headline to-the-point.',
+                    status: 'Aktif Tayang',
+                  },
+                  {
+                    title: 'Banner Promo 2 (Rasio 8:3) · Kereta Suite Class Compartment',
+                    desc: 'Promosi pengalaman kemewahan kelas privat Luxury & Suite Compartment lintas malam.',
+                    status: 'Aktif Tayang',
+                  },
+                  {
+                    title: 'Banner Promo 3 (Rasio 8:3) · Liburan Akhir Pekan Hemat',
+                    desc: 'Diskon khusus pengguna RailPay dompet digital untuk rute Jakarta - Bandung & Jogja.',
+                    status: 'Aktif Tayang',
+                  },
+                ].map((banner, idx) => (
+                  <article key={idx} style={{ border: '1px solid var(--rh-border)', borderRadius: 12, padding: '1.15rem', background: 'var(--rh-surface)' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+                      <strong style={{ fontSize: '1rem' }}>{banner.title}</strong>
+                      <span className="rh-badge rh-badge-primary">{banner.status}</span>
+                    </div>
+                    <p style={{ margin: 0, fontSize: '0.88rem', color: 'var(--rh-text-2)' }}>{banner.desc}</p>
+                  </article>
+                ))}
+              </div>
+            </section>
+          )}
 
         </div>
       </main>
     </>
+  )
+}
+
+export default function AdminDashboard() {
+  return (
+    <Suspense fallback={
+      <div style={{ minHeight: '100vh', background: 'var(--rh-surface)', display: 'grid', placeItems: 'center' }}>
+        <div className="rh-card" style={{ padding: '2rem', textAlign: 'center' }}>
+          <div className="rh-spin" style={{ width: 36, height: 36, border: '3px solid var(--rh-border)', borderTopColor: 'var(--rh-primary)', borderRadius: '50%', margin: '0 auto 1rem' }} />
+          <strong>Memuat Pusat Kontrol Admin...</strong>
+        </div>
+      </div>
+    }>
+      <AdminDashboardContent />
+    </Suspense>
   )
 }

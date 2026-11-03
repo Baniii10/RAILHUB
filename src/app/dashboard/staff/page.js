@@ -1,14 +1,38 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { AlertCircle, CalendarDays, CheckCircle2, RefreshCw, Search, TicketCheck, Train, Users } from 'lucide-react'
+import {
+  AlertCircle,
+  Bell,
+  CalendarDays,
+  CheckCircle2,
+  ChevronRight,
+  Clock3,
+  Coffee,
+  Filter,
+  HelpingHand,
+  Info,
+  LayoutDashboard,
+  MapPin,
+  PackageSearch,
+  RefreshCw,
+  Search,
+  ShieldCheck,
+  TicketCheck,
+  Train,
+  UserCheck,
+  Users,
+  Utensils,
+  XCircle,
+} from 'lucide-react'
 import toast from 'react-hot-toast'
 import Navbar from '@/components/layout/Navbar'
+import TicketScanner from '@/components/staff/TicketScanner'
 import { useAuth } from '@/contexts/AuthContext'
 import { createClient } from '@/lib/supabase/client'
 import { getJourneyStatusLabel, getNextJourneyStatuses, JOURNEY_STATUSES } from '@/lib/operations/journey-status'
-import { formatDate, formatTime } from '@/lib/utils/formatters'
+import { formatDate, formatIDR, formatTime } from '@/lib/utils/formatters'
 
 const STATUS_COLORS = {
   scheduled: ['var(--rh-info-light)', 'var(--rh-info)'],
@@ -22,28 +46,57 @@ const STATUS_COLORS = {
 function JourneyStatus({ status }) {
   const [background, color] = STATUS_COLORS[status] || ['var(--rh-surface-2)', 'var(--rh-text-2)']
   return (
-    <span style={{ display: 'inline-flex', alignItems: 'center', borderRadius: 999, padding: '0.25rem 0.65rem', background, color, fontSize: '0.78rem', fontWeight: 700 }}>
+    <span style={{ display: 'inline-flex', alignItems: 'center', borderRadius: 999, padding: '0.25rem 0.65rem', background, color, fontSize: '0.78rem', fontWeight: 700, whiteSpace: 'nowrap' }}>
       {getJourneyStatusLabel(status)}
     </span>
   )
 }
 
-export default function StaffDashboard() {
+const TABS = [
+  { id: 'overview', label: 'Overview', icon: LayoutDashboard },
+  { id: 'validation', label: 'Validasi Tiket', icon: TicketCheck },
+  { id: 'passengers', label: 'Daftar Penumpang', icon: Users },
+  { id: 'journey', label: 'Status Perjalanan', icon: Train },
+  { id: 'assistance', label: 'Laporan Bantuan', icon: HelpingHand },
+  { id: 'lostfound', label: 'Barang Hilang', icon: PackageSearch },
+  { id: 'orders', label: 'Pesanan Makanan', icon: Utensils },
+  { id: 'notifications', label: 'Notifikasi Tugas', icon: Bell },
+]
+
+function StaffDashboardContent() {
   const router = useRouter()
   const { user, profile, loading: authLoading } = useAuth()
+  const [activeTab, setActiveTab] = useState('overview')
   const [journeys, setJourneys] = useState([])
+  const [tickets, setTickets] = useState([])
+  const [foodOrders, setFoodOrders] = useState([])
+  const [reports, setReports] = useState([])
   const [loading, setLoading] = useState(true)
   const [hasLoaded, setHasLoaded] = useState(false)
   const [error, setError] = useState('')
+  const [reloadKey, setReloadKey] = useState(0)
+
+  // Validation form state
   const [ticketNumber, setTicketNumber] = useState('')
   const [validation, setValidation] = useState(null)
   const [validating, setValidating] = useState(false)
+  const validatingRef = useRef(false)
+  const [recentValidations, setRecentValidations] = useState([])
+
+  // Journey status update state
   const [updating, setUpdating] = useState('')
-  const [reloadKey, setReloadKey] = useState(0)
-  const [journeySearch, setJourneySearch] = useState('')
-  const [statusFilter, setStatusFilter] = useState('all')
   const [statusDrafts, setStatusDrafts] = useState({})
   const [statusNotes, setStatusNotes] = useState({})
+
+  // Manifest filters
+  const [passengerSearch, setPassengerSearch] = useState('')
+  const [passengerScheduleFilter, setPassengerScheduleFilter] = useState('all')
+  const [passengerValidatedFilter, setPassengerValidatedFilter] = useState('all')
+
+  // Service Desk state
+  const [orderFilter, setOrderFilter] = useState('all')
+  const [reportFilter, setReportFilter] = useState('all')
+  const [reportNoteInputs, setReportNoteInputs] = useState({})
 
   useEffect(() => {
     if (authLoading) return
@@ -54,87 +107,114 @@ export default function StaffDashboard() {
     }
   }, [authLoading, user, profile, router])
 
-  const loadJourneys = useCallback(async () => {
+  // Load operational data
+  const loadStaffData = useCallback(async () => {
     if (!user || (profile?.role !== 'conductor' && profile?.role !== 'admin')) return
     if (!hasLoaded) setLoading(true)
     setError('')
     const supabase = createClient()
-    const { data: assignments, error: assignmentError } = await supabase
-      .from('staff_assignments')
-      .select('id, schedule_id, schedules(id, status, departure_time, arrival_time, trains(name, train_number), routes(name))')
-      .eq('staff_id', user.id)
-      .order('created_at', { ascending: false })
 
-    if (assignmentError) {
-      setError(`Perjalanan tugas tidak dapat dimuat: ${assignmentError.message}`)
+    try {
+      // 1. Fetch staff assignments
+      const { data: assignments, error: assignmentError } = await supabase
+        .from('staff_assignments')
+        .select('id, schedule_id, schedules(id, status, departure_time, arrival_time, trains(name, train_number, type), routes(name, distance_km))')
+        .eq('staff_id', user.id)
+        .order('created_at', { ascending: false })
+
+      if (assignmentError) throw assignmentError
+
+      const scheduleIds = (assignments || []).map(a => a.schedule_id)
+
+      if (scheduleIds.length === 0) {
+        setJourneys([])
+        setTickets([])
+        setFoodOrders([])
+        setReports([])
+        setLoading(false)
+        setHasLoaded(true)
+        return
+      }
+
+      // 2. Fetch parallel: tickets, updates, food orders, reports
+      const [ticketRes, updateRes, foodRes, reportRes] = await Promise.all([
+        supabase
+          .from('tickets')
+          .select('id, ticket_number, is_validated, validated_at, schedule_id, passengers(full_name, identity_number, id_type), seats(seat_number, carriages(carriage_number, class)), schedules(departure_time, trains(name, train_number), routes(name))')
+          .in('schedule_id', scheduleIds)
+          .order('created_at', { ascending: false }),
+        supabase
+          .from('journey_updates')
+          .select('schedule_id, status, note, created_at, profiles(full_name)')
+          .in('schedule_id', scheduleIds)
+          .order('created_at', { ascending: false }),
+        supabase
+          .from('food_orders')
+          .select('id, order_code, schedule_id, status, total_amount, note, created_at, passengers(full_name), seats(seat_number), food_order_items(quantity, unit_price, food_products(name))')
+          .in('schedule_id', scheduleIds)
+          .order('created_at', { ascending: false }),
+        supabase
+          .from('passenger_reports')
+          .select('id, schedule_id, category, title, description, status, response_note, passenger_name, created_at, bookings(booking_code)')
+          .in('schedule_id', scheduleIds)
+          .order('created_at', { ascending: false }),
+      ])
+
+      const fetchedTickets = ticketRes.data || []
+      const latestUpdates = {}
+      for (const update of updateRes.data || []) {
+        if (!latestUpdates[update.schedule_id]) latestUpdates[update.schedule_id] = update
+      }
+
+      setJourneys((assignments || []).map(assignment => ({
+        ...assignment,
+        tickets: fetchedTickets.filter(ticket => ticket.schedule_id === assignment.schedule_id),
+        latestUpdate: latestUpdates[assignment.schedule_id] || null,
+      })))
+
+      setTickets(fetchedTickets)
+      setFoodOrders(foodRes.data || [])
+      setReports(reportRes.data || [])
+    } catch (err) {
+      setError(`Gagal memuat data operasional petugas: ${err.message || 'Terjadi kesalahan'}`)
+    } finally {
       setLoading(false)
       setHasLoaded(true)
-      return
     }
-
-    const scheduleIds = (assignments || []).map(assignment => assignment.schedule_id)
-    if (scheduleIds.length === 0) {
-      setJourneys([])
-      setLoading(false)
-      setHasLoaded(true)
-      return
-    }
-
-    const [ticketResult, updateResult] = await Promise.all([
-      supabase.from('tickets').select('schedule_id, is_validated').in('schedule_id', scheduleIds),
-      supabase.from('journey_updates').select('schedule_id, status, note, created_at').in('schedule_id', scheduleIds).order('created_at', { ascending: false }),
-    ])
-
-    if (ticketResult.error || updateResult.error) {
-      setError(`Ringkasan perjalanan tidak dapat dimuat: ${ticketResult.error?.message || updateResult.error?.message}`)
-      setLoading(false)
-      setHasLoaded(true)
-      return
-    }
-
-    const tickets = ticketResult.data || []
-    const latestUpdates = {}
-    for (const update of updateResult.data || []) {
-      if (!latestUpdates[update.schedule_id]) latestUpdates[update.schedule_id] = update
-    }
-
-    setJourneys((assignments || []).map(assignment => ({
-      ...assignment,
-      tickets: tickets.filter(ticket => ticket.schedule_id === assignment.schedule_id),
-      latestUpdate: latestUpdates[assignment.schedule_id] || null,
-    })))
-    setLoading(false)
-    setHasLoaded(true)
   }, [user, profile?.role, hasLoaded])
 
   useEffect(() => {
     let active = true
     const load = async () => {
       if (!active) return
-      await loadJourneys()
+      await loadStaffData()
     }
     const timer = window.setTimeout(load, 0)
     return () => {
       active = false
       window.clearTimeout(timer)
     }
-  }, [loadJourneys, reloadKey])
+  }, [loadStaffData, reloadKey])
 
+  // Periodic 30s auto reload
   useEffect(() => {
     if (!user || (profile?.role !== 'conductor' && profile?.role !== 'admin')) return
     const timer = window.setInterval(() => setReloadKey(key => key + 1), 30000)
     return () => window.clearInterval(timer)
   }, [user, profile?.role])
 
-  async function validateTicket(event) {
-    event.preventDefault()
-    if (!ticketNumber.trim() || validating) return
+  // Validate ticket handler
+  async function runValidation(code) {
+    const value = code.trim()
+    if (!value || validatingRef.current) return
+    validatingRef.current = true
     setValidating(true)
     setValidation(null)
     const supabase = createClient()
     const { data, error: validationError } = await supabase.rpc('validate_assigned_ticket', {
-      p_ticket_number: ticketNumber.trim(),
+      p_ticket_number: value.slice(0, 50),
     })
+    validatingRef.current = false
     setValidating(false)
     if (validationError) {
       toast.error(`Validasi gagal: ${validationError.message}`)
@@ -144,12 +224,25 @@ export default function StaffDashboard() {
     if (data.success) {
       toast.success(data.message)
       setTicketNumber('')
+      setRecentValidations(prev => [{
+        ticket_number: data.ticket_number,
+        passenger_name: data.passenger_name,
+        seat_number: data.seat_number,
+        validated_at: new Date().toISOString(),
+        success: true,
+      }, ...prev.slice(0, 9)])
       setReloadKey(key => key + 1)
     } else {
       toast.error(data.message)
     }
   }
 
+  function validateTicket(event) {
+    event.preventDefault()
+    return runValidation(ticketNumber)
+  }
+
+  // Update Journey Status
   async function updateJourney(journey) {
     const scheduleId = journey.schedule_id
     const status = statusDrafts[scheduleId] || journey.schedules.status
@@ -172,208 +265,939 @@ export default function StaffDashboard() {
       : item))
     setStatusDrafts(current => ({ ...current, [scheduleId]: status }))
     setStatusNotes(current => ({ ...current, [scheduleId]: '' }))
-    toast.success('Status perjalanan diperbarui dan dapat dilihat penumpang.')
+    toast.success('Status perjalanan diperbarui dan dapat dilihat penumpang secara langsung.')
   }
 
-  const ticketTotal = journeys.reduce((total, journey) => total + journey.tickets.length, 0)
-  const validatedTotal = journeys.reduce((total, journey) => total + journey.tickets.filter(ticket => ticket.is_validated).length, 0)
-  const needsAttention = journeys.filter(journey => ['delayed', 'cancelled'].includes(journey.schedules?.status)).length
-  const scheduleIds = useMemo(() => journeys.map(journey => journey.schedule_id), [journeys])
-  const filteredJourneys = journeys.filter(journey => {
-    const schedule = journey.schedules
-    const search = journeySearch.trim().toLocaleLowerCase('id-ID')
-    const matchesSearch = !search || [
-      schedule?.trains?.name,
-      schedule?.trains?.train_number,
-      schedule?.routes?.name,
-    ].some(value => value?.toLocaleLowerCase('id-ID').includes(search))
-    return matchesSearch && (statusFilter === 'all' || schedule?.status === statusFilter)
-  })
+  // Update Food Order status
+  async function updateOrderStatus(orderId, newStatus) {
+    const supabase = createClient()
+    const { error: err } = await supabase
+      .from('food_orders')
+      .update({ status: newStatus, updated_at: new Date().toISOString() })
+      .eq('id', orderId)
+    if (err) {
+      toast.error(`Gagal mengubah status pesanan: ${err.message}`)
+      return
+    }
+    setFoodOrders(prev => prev.map(o => o.id === orderId ? { ...o, status: newStatus } : o))
+    toast.success(`Status pesanan diperbarui menjadi ${newStatus.replace('_', ' ')}`)
+  }
+
+  // Update Report status
+  async function updateReportStatus(reportId, newStatus) {
+    const supabase = createClient()
+    const note = reportNoteInputs[reportId]?.trim() || null
+    const { error: err } = await supabase
+      .from('passenger_reports')
+      .update({
+        status: newStatus,
+        response_note: note,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', reportId)
+    if (err) {
+      toast.error(`Gagal memperbarui status laporan: ${err.message}`)
+      return
+    }
+    setReports(prev => prev.map(r => r.id === reportId ? { ...r, status: newStatus, response_note: note || r.response_note } : r))
+    toast.success(`Laporan diperbarui menjadi: ${newStatus}`)
+  }
+
+  // Calculations
+  const ticketTotal = tickets.length
+  const validatedTotal = tickets.filter(t => t.is_validated).length
+  const pendingOrders = foodOrders.filter(o => o.status === 'pending' || o.status === 'confirmed').length
+  const pendingReports = reports.filter(r => r.status === 'pending' || r.status === 'in_progress').length
+  const assistanceReports = reports.filter(r => ['assistance', 'medical', 'wheelchair', 'priority', 'facility'].includes(r.category) || !r.category?.includes('lost'))
+  const lostFoundReports = reports.filter(r => ['lost_item', 'found_item', 'lost_and_found'].includes(r.category) || r.category?.includes('lost'))
+
+  // Filtered Manifest
+  const filteredTickets = useMemo(() => {
+    return tickets.filter(t => {
+      const search = passengerSearch.trim().toLowerCase()
+      const matchesSearch = !search || [
+        t.ticket_number,
+        t.passengers?.full_name,
+        t.passengers?.identity_number,
+        t.seats?.seat_number,
+      ].some(v => v?.toLowerCase().includes(search))
+
+      const matchesSchedule = passengerScheduleFilter === 'all' || t.schedule_id === passengerScheduleFilter
+      const matchesValidated = passengerValidatedFilter === 'all'
+        ? true
+        : passengerValidatedFilter === 'validated'
+          ? t.is_validated
+          : !t.is_validated
+
+      return matchesSearch && matchesSchedule && matchesValidated
+    })
+  }, [tickets, passengerSearch, passengerScheduleFilter, passengerValidatedFilter])
 
   return (
     <>
       <Navbar />
-      <main style={{ minHeight: '100vh', padding: '2rem 0 5rem', background: 'var(--rh-surface)' }}>
+      <main style={{ minHeight: '100vh', padding: '1.5rem 0 5rem', background: 'var(--rh-surface)' }}>
         <div className="rh-container">
-          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'end', justifyContent: 'space-between', gap: '1rem', marginBottom: '1.5rem' }}>
-            <div>
-              <span className="rh-badge rh-badge-primary">Area operasional</span>
-              <h1 className="rh-h2" style={{ marginTop: '0.55rem' }}>Dashboard petugas</h1>
-              <p style={{ color: 'var(--rh-text-2)', margin: '0.25rem 0 0' }}>
-                Kelola hanya perjalanan yang ditugaskan kepada akun Anda. Pembaruan status akan terlihat oleh admin dan penumpang bertiket.
-              </p>
-            </div>
-            <button type="button" className="rh-btn rh-btn-ghost" onClick={() => setReloadKey(key => key + 1)} disabled={loading}>
-              <RefreshCw size={16} className={loading ? 'rh-spin' : ''} /> Muat ulang
-            </button>
-          </div>
 
-          <nav aria-label="Navigasi dashboard petugas" className="rh-card" style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem', padding: '0.5rem', marginBottom: '1rem' }}>
-            {[
-              ['#staff-journeys', 'Perjalanan tugas', Train],
-              ['#ticket-validation', 'Validasi tiket', TicketCheck],
-              ['/dashboard/orders', 'Pesanan makanan', Users],
-            ].map(([href, label, Icon]) => (
-              <a key={href} href={href} className="rh-btn rh-btn-ghost rh-btn-sm"><Icon size={15} />{label}</a>
-            ))}
+          {/* Header Card */}
+          <header className="rh-card" style={{ padding: '1.25rem 1.5rem', marginBottom: '1.5rem' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                  <span className="rh-badge rh-badge-primary">Area Operasional Kereta Api</span>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.8rem', color: 'var(--rh-success)', fontWeight: 700 }}>
+                    <span style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--rh-success)' }} />
+                    Dinas Aktif
+                  </span>
+                </div>
+                <h1 className="rh-h2" style={{ margin: '0.45rem 0 0.2rem' }}>
+                  Dashboard Petugas
+                </h1>
+                <p style={{ margin: 0, color: 'var(--rh-text-2)', fontSize: '0.9rem' }}>
+                  Petugas: <strong>{profile?.full_name || 'Petugas Kondektur'}</strong> · ID: <span className="rh-mono">STF-{user?.id?.slice(0, 8).toUpperCase()}</span> · Penugasan {journeys.length} Perjalanan
+                </p>
+              </div>
+
+              <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                <button
+                  type="button"
+                  className="rh-btn rh-btn-ghost"
+                  onClick={() => { setLoading(true); setReloadKey(k => k + 1) }}
+                  disabled={loading}
+                >
+                  <RefreshCw size={16} className={loading ? 'rh-spin' : ''} />
+                  Muat Ulang
+                </button>
+              </div>
+            </div>
+          </header>
+
+          {error && (
+            <div role="alert" className="rh-card" style={{ padding: '1rem 1.25rem', color: 'var(--rh-danger)', borderColor: 'var(--rh-danger-light)', marginBottom: '1.25rem' }}>
+              <AlertCircle size={18} style={{ verticalAlign: 'middle', marginRight: 8 }} />
+              {error}
+            </div>
+          )}
+
+          {/* 8-Tab Navigation Bar matching RAILHUB.md Section B */}
+          <nav
+            aria-label="Menu Petugas"
+            className="rh-card"
+            style={{
+              display: 'flex',
+              overflowX: 'auto',
+              gap: '0.35rem',
+              padding: '0.4rem',
+              marginBottom: '1.5rem',
+              WebkitOverflowScrolling: 'touch',
+            }}
+          >
+            {TABS.map(tab => {
+              const Icon = tab.icon
+              const active = activeTab === tab.id
+              let badge = null
+              if (tab.id === 'passengers') badge = ticketTotal
+              if (tab.id === 'orders' && pendingOrders > 0) badge = pendingOrders
+              if (tab.id === 'assistance' && pendingReports > 0) badge = pendingReports
+
+              return (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`rh-btn rh-btn-sm ${active ? 'rh-btn-primary' : 'rh-btn-ghost'}`}
+                  style={{
+                    whiteSpace: 'nowrap',
+                    flexShrink: 0,
+                    borderRadius: 8,
+                    fontWeight: active ? 700 : 500,
+                  }}
+                >
+                  <Icon size={15} />
+                  {tab.label}
+                  {badge !== null && badge > 0 && (
+                    <span
+                      style={{
+                        marginLeft: 4,
+                        padding: '0.1rem 0.4rem',
+                        borderRadius: 999,
+                        fontSize: '0.7rem',
+                        fontWeight: 700,
+                        background: active ? 'rgba(255,255,255,0.25)' : 'var(--rh-primary-light)',
+                        color: active ? '#fff' : 'var(--rh-primary)',
+                      }}
+                    >
+                      {badge}
+                    </span>
+                  )}
+                </button>
+              )
+            })}
           </nav>
 
-          {error && <div role="alert" className="rh-card" style={{ padding: '1rem 1.25rem', color: 'var(--rh-danger)', marginBottom: '1rem' }}>{error}</div>}
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))', gap: '0.9rem', marginBottom: '1.5rem' }}>
-            {[
-              { label: 'Perjalanan tugas', value: journeys.length, icon: Train },
-              { label: 'Tiket penumpang', value: ticketTotal, icon: TicketCheck },
-              { label: 'Tiket tervalidasi', value: `${validatedTotal}/${ticketTotal}`, icon: CheckCircle2 },
-              { label: 'Perlu perhatian', value: needsAttention, icon: AlertCircle },
-            ].map(({ label, value, icon: Icon }) => (
-              <article key={label} className="rh-card">
-                <div className="rh-card-body" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '1.15rem' }}>
-                  <div className="rh-logo-mark"><Icon size={18} /></div>
-                  <div><small style={{ color: 'var(--rh-text-2)' }}>{label}</small><strong style={{ display: 'block', fontSize: '1.3rem' }}>{value}</strong></div>
-                </div>
-              </article>
-            ))}
-          </div>
-
-          <section id="ticket-validation" className="rh-card" style={{ marginBottom: '1.5rem', scrollMarginTop: 96 }}>
-            <div className="rh-card-header">
-              <h2 className="rh-h4"><TicketCheck size={18} style={{ verticalAlign: 'middle', marginRight: 7 }} />Validasi tiket</h2>
-              <p style={{ color: 'var(--rh-text-2)', marginTop: '0.25rem' }}>
-                Tiket harus sudah dibayar dan berasal dari perjalanan tugas Anda. Validasi ini menggunakan nomor tiket secara manual.
-              </p>
-            </div>
-            <div className="rh-card-body">
-              <form onSubmit={validateTicket} style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
-                <label className="rh-input-group" style={{ flex: '1 1 270px' }}>
-                  <span className="rh-label-text">Nomor tiket</span>
-                  <input className="rh-input rh-mono" autoComplete="off" maxLength={50} placeholder="TKT-..." value={ticketNumber} onChange={event => setTicketNumber(event.target.value)} required />
-                </label>
-                <button className="rh-btn rh-btn-primary" type="submit" disabled={validating} style={{ alignSelf: 'end', minHeight: 46 }}>
-                  {validating && <RefreshCw size={16} className="rh-spin" />}
-                  {validating ? 'Memeriksa...' : 'Validasi tiket'}
-                </button>
-              </form>
-              {validation && (
-                <div role="status" style={{
-                  marginTop: '1rem', padding: '1rem', borderRadius: 12,
-                  background: validation.success ? 'var(--rh-success-light)' : 'var(--rh-danger-light)',
-                  color: validation.success ? 'var(--rh-success)' : 'var(--rh-danger)',
-                }}>
-                  <strong>{validation.message}</strong>
-                  {validation.ticket_number && <div style={{ marginTop: '0.5rem', color: 'var(--rh-text)' }}>
-                    {validation.passenger_name} · Kursi {validation.seat_number} · {validation.ticket_number}
-                  </div>}
-                </div>
-              )}
-            </div>
-          </section>
-
-          <section id="staff-journeys" style={{ scrollMarginTop: 96 }}>
-            <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'end', justifyContent: 'space-between', gap: '1rem', marginBottom: '0.75rem' }}>
-              <div>
-                <h2 className="rh-h3" style={{ margin: 0 }}>Perjalanan yang ditugaskan</h2>
-                <p style={{ color: 'var(--rh-text-2)', margin: '0.25rem 0 0' }}>Status dan catatan operasional dibagikan dengan admin serta penumpang yang telah membayar.</p>
+          {/* ── TAB 1: OVERVIEW ──────────────────────────────────────────────── */}
+          {activeTab === 'overview' && (
+            <div>
+              {/* Stat Cards */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: '0.9rem', marginBottom: '1.5rem' }}>
+                {[
+                  { label: 'Perjalanan Tugas', value: journeys.length, icon: Train, color: 'var(--rh-primary)' },
+                  { label: 'Manifest Penumpang', value: ticketTotal, icon: Users, color: 'var(--rh-info)' },
+                  { label: 'Tiket Tervalidasi', value: `${validatedTotal} / ${ticketTotal}`, sub: ticketTotal ? `${Math.round((validatedTotal / ticketTotal) * 100)}% boarding` : '0%', icon: CheckCircle2, color: 'var(--rh-success)' },
+                  { label: 'Pesanan Makanan Aktif', value: pendingOrders, icon: Utensils, color: 'var(--rh-accent)' },
+                  { label: 'Laporan Bantuan / Hilang', value: pendingReports, icon: HelpingHand, color: 'var(--rh-secondary)' },
+                ].map((item, idx) => {
+                  const Icon = item.icon
+                  return (
+                    <article key={idx} className="rh-card" style={{ padding: '1.15rem' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+                        <div style={{ width: 44, height: 44, borderRadius: 12, background: 'var(--rh-surface)', color: item.color, display: 'grid', placeItems: 'center', flexShrink: 0 }}>
+                          <Icon size={20} />
+                        </div>
+                        <div>
+                          <small style={{ color: 'var(--rh-text-2)', display: 'block', fontSize: '0.8rem' }}>{item.label}</small>
+                          <strong style={{ fontSize: '1.35rem', display: 'block', lineHeight: 1.25 }}>{item.value}</strong>
+                          {item.sub && <small style={{ color: 'var(--rh-text-3)', fontSize: '0.74rem' }}>{item.sub}</small>}
+                        </div>
+                      </div>
+                    </article>
+                  )
+                })}
               </div>
-              <span style={{ fontSize: '0.85rem', color: 'var(--rh-text-2)' }}>{filteredJourneys.length} perjalanan</span>
-            </div>
 
-            <div className="rh-card" style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', padding: '1rem', marginBottom: '1rem' }}>
-              <label className="rh-input-group" style={{ flex: '1 1 250px' }}>
-                <span className="rh-label-text">Cari kereta atau rute</span>
-                <span style={{ position: 'relative', display: 'block' }}>
-                  <Search size={16} style={{ position: 'absolute', top: '50%', left: 12, transform: 'translateY(-50%)', color: 'var(--rh-text-3)' }} />
-                  <input className="rh-input" style={{ paddingLeft: 36 }} value={journeySearch} onChange={event => setJourneySearch(event.target.value)} placeholder="Nama kereta, nomor, atau rute" />
+              {/* Quick Actions Shortcuts */}
+              <div className="rh-card" style={{ padding: '1.25rem', marginBottom: '1.5rem', background: 'linear-gradient(135deg, rgba(26,66,138,0.04), rgba(255,140,0,0.04))' }}>
+                <h3 className="rh-h4" style={{ margin: '0 0 0.75rem' }}>Aksi Cepat Petugas</h3>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
+                  <button type="button" className="rh-btn rh-btn-primary" onClick={() => setActiveTab('validation')}>
+                    <TicketCheck size={16} /> Buka Scanner Gerbang Boarding
+                  </button>
+                  <button type="button" className="rh-btn rh-btn-secondary" onClick={() => setActiveTab('passengers')}>
+                    <Users size={16} /> Buka Manifest Penumpang
+                  </button>
+                  <button type="button" className="rh-btn rh-btn-ghost" onClick={() => setActiveTab('journey')}>
+                    <Train size={16} /> Update Status Perjalanan
+                  </button>
+                  <button type="button" className="rh-btn rh-btn-ghost" onClick={() => setActiveTab('orders')}>
+                    <Utensils size={16} /> Cek Pesanan Makanan ({pendingOrders})
+                  </button>
+                </div>
+              </div>
+
+              {/* Active Assigned Journeys List */}
+              <section>
+                <h3 className="rh-h3" style={{ margin: '0 0 0.85rem' }}>Jadwal Penugasan Hari Ini</h3>
+                {journeys.length === 0 ? (
+                  <div className="rh-card" style={{ padding: '2rem', textAlign: 'center', color: 'var(--rh-text-2)' }}>
+                    <Train size={36} style={{ margin: '0 auto 0.75rem', opacity: 0.5 }} />
+                    <p style={{ margin: 0 }}>Belum ada jadwal perjalanan yang ditugaskan kepada akun Anda.</p>
+                  </div>
+                ) : (
+                  <div style={{ display: 'grid', gap: '1rem' }}>
+                    {journeys.map(j => {
+                      const s = j.schedules
+                      const countVal = j.tickets.filter(t => t.is_validated).length
+                      return (
+                        <article key={j.id} className="rh-card" style={{ padding: '1.25rem' }}>
+                          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '1rem' }}>
+                            <div>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
+                                <strong style={{ fontSize: '1.1rem' }}>{s?.trains?.name} · {s?.trains?.train_number}</strong>
+                                <JourneyStatus status={s?.status} />
+                              </div>
+                              <span style={{ color: 'var(--rh-text-2)', fontSize: '0.9rem' }}>{s?.routes?.name}</span>
+                              <div style={{ display: 'flex', gap: '1rem', marginTop: '0.4rem', fontSize: '0.8rem', color: 'var(--rh-text-3)' }}>
+                                <span><CalendarDays size={13} style={{ verticalAlign: 'middle', marginRight: 4 }} />{formatDate(s?.departure_time)}</span>
+                                <span><Clock3 size={13} style={{ verticalAlign: 'middle', marginRight: 4 }} />{formatTime(s?.departure_time)} WIB</span>
+                              </div>
+                            </div>
+                            <div style={{ textAlign: 'right' }}>
+                              <div style={{ fontSize: '0.85rem', color: 'var(--rh-text-2)', marginBottom: '0.5rem' }}>
+                                Validasi: <strong>{countVal} / {j.tickets.length}</strong> tiket
+                              </div>
+                              <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                <button type="button" className="rh-btn rh-btn-primary rh-btn-sm" onClick={() => { setPassengerScheduleFilter(j.schedule_id); setActiveTab('passengers') }}>
+                                  Lihat Penumpang
+                                </button>
+                                <button type="button" className="rh-btn rh-btn-ghost rh-btn-sm" onClick={() => setActiveTab('journey')}>
+                                  Ubah Status
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </article>
+                      )
+                    })}
+                  </div>
+                )}
+              </section>
+            </div>
+          )}
+
+          {/* ── TAB 2: TICKET VALIDATION ────────────────────────────────────── */}
+          {activeTab === 'validation' && (
+            <section className="rh-card" style={{ padding: '1.5rem' }}>
+              <div style={{ marginBottom: '1.25rem' }}>
+                <span className="rh-badge rh-badge-primary">Pintu Gerbang Boarding</span>
+                <h2 className="rh-h3" style={{ margin: '0.4rem 0 0.2rem' }}>Validasi Tiket Digital QR Code</h2>
+                <p style={{ margin: 0, color: 'var(--rh-text-2)', fontSize: '0.88rem' }}>
+                  Arahkan kamera ke QR Code boarding pass tiket penumpang, atau masukkan kode tiket secara manual.
+                </p>
+              </div>
+
+              <div className="rh-gate-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
+                <div>
+                  <TicketScanner onScan={runValidation} paused={validating} />
+
+                  <form onSubmit={validateTicket} style={{ marginTop: '1.25rem', display: 'flex', gap: '0.5rem' }}>
+                    <label className="rh-input-group" style={{ flex: 1, margin: 0 }}>
+                      <span className="rh-label-text">Kode Tiket Manual</span>
+                      <input
+                        className="rh-input rh-mono"
+                        placeholder="Contoh: TKT-202611-..."
+                        value={ticketNumber}
+                        onChange={e => setTicketNumber(e.target.value)}
+                        required
+                      />
+                    </label>
+                    <button type="submit" className="rh-btn rh-btn-primary" disabled={validating} style={{ alignSelf: 'end', minHeight: 44 }}>
+                      {validating ? <RefreshCw size={16} className="rh-spin" /> : 'Validasi'}
+                    </button>
+                  </form>
+                </div>
+
+                {/* Gate Result Graphic */}
+                <div>
+                  <div
+                    role="status"
+                    aria-live="polite"
+                    className={`rh-gate-result ${validation ? (validation.success ? 'rh-gate-ok' : 'rh-gate-fail') : ''}`}
+                    style={{ minHeight: 260, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '1.5rem', borderRadius: 16 }}
+                  >
+                    {!validation && (
+                      <div style={{ color: 'var(--rh-text-2)' }}>
+                        <TicketCheck size={48} style={{ margin: '0 auto 0.75rem', opacity: 0.4 }} />
+                        <strong style={{ display: 'block', fontSize: '1rem', color: 'var(--rh-text)' }}>
+                          {validating ? 'Memeriksa tiket...' : 'Siap Memindai'}
+                        </strong>
+                        <span style={{ fontSize: '0.85rem' }}>Arahkan kamera ke QR Code atau ketik kode tiket.</span>
+                      </div>
+                    )}
+
+                    {validation && (
+                      <>
+                        {validation.success ? <CheckCircle2 size={56} color="var(--rh-success)" /> : <XCircle size={56} color="var(--rh-danger)" />}
+                        <strong style={{ fontSize: '1.4rem', marginTop: '0.5rem', color: validation.success ? 'var(--rh-success)' : 'var(--rh-danger)' }}>
+                          {validation.success ? 'GERBANG TERBUKA · TIKET VALID' : 'AKSES DITOLAK'}
+                        </strong>
+                        <p style={{ margin: '0.4rem 0 0.8rem', fontSize: '0.9rem' }}>{validation.message}</p>
+                        {validation.ticket_number && (
+                          <div style={{ background: 'var(--rh-surface)', border: '1px solid var(--rh-border)', borderRadius: 10, padding: '0.75rem 1.25rem', width: '100%', maxWidth: 320, textAlign: 'left' }}>
+                            <div style={{ fontSize: '0.8rem', color: 'var(--rh-text-2)' }}>Nama Penumpang:</div>
+                            <strong style={{ display: 'block', fontSize: '1rem' }}>{validation.passenger_name}</strong>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.4rem', fontSize: '0.85rem' }}>
+                              <span>Kursi: <b>{validation.seat_number}</b></span>
+                              <span className="rh-mono" style={{ fontSize: '0.8rem' }}>{validation.ticket_number}</span>
+                            </div>
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </div>
+
+                  {/* Recent Validations Log */}
+                  {recentValidations.length > 0 && (
+                    <div style={{ marginTop: '1rem' }}>
+                      <strong style={{ fontSize: '0.85rem', color: 'var(--rh-text-2)' }}>Riwayat Validasi Terakhir Sesi Ini:</strong>
+                      <div style={{ display: 'grid', gap: '0.4rem', marginTop: '0.4rem' }}>
+                        {recentValidations.map((rv, idx) => (
+                          <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.4rem 0.6rem', borderRadius: 8, background: 'var(--rh-surface)', fontSize: '0.8rem' }}>
+                            <span><strong>{rv.passenger_name}</strong> ({rv.seat_number})</span>
+                            <span className="rh-mono" style={{ color: 'var(--rh-success)', fontWeight: 700 }}>{rv.ticket_number}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </section>
+          )}
+
+          {/* ── TAB 3: PASSENGER LIST (MANIFEST) ────────────────────────────── */}
+          {activeTab === 'passengers' && (
+            <section className="rh-card" style={{ padding: '1.5rem' }}>
+              <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', marginBottom: '1.25rem' }}>
+                <div>
+                  <h2 className="rh-h3" style={{ margin: 0 }}>Manifest Penumpang</h2>
+                  <p style={{ margin: '0.2rem 0 0', color: 'var(--rh-text-2)', fontSize: '0.88rem' }}>
+                    Daftar seluruh penumpang bertiket pada perjalanan kereta api yang ditugaskan kepada Anda.
+                  </p>
+                </div>
+                <span style={{ fontSize: '0.85rem', color: 'var(--rh-text-2)' }}>
+                  Total: <strong>{filteredTickets.length}</strong> penumpang
                 </span>
-              </label>
-              <label className="rh-input-group" style={{ flex: '0 1 220px' }}>
-                <span className="rh-label-text">Status perjalanan</span>
-                <select className="rh-input" value={statusFilter} onChange={event => setStatusFilter(event.target.value)}>
-                  <option value="all">Semua status</option>
-                  {JOURNEY_STATUSES.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
-                </select>
-              </label>
-            </div>
-
-            {loading && <div aria-live="polite" className="rh-card" style={{ padding: '1.5rem' }}>Memuat daftar penugasan...</div>}
-            {!loading && !error && journeys.length === 0 && (
-              <div className="rh-card" style={{ padding: '1.5rem', color: 'var(--rh-text-2)' }}>
-                Belum ada jadwal yang ditugaskan. Hubungi administrator untuk penugasan.
               </div>
-            )}
-            {!loading && !error && journeys.length > 0 && filteredJourneys.length === 0 && (
-              <div className="rh-card" style={{ padding: '1.5rem', color: 'var(--rh-text-2)' }}>Tidak ada perjalanan yang cocok dengan pencarian atau filter.</div>
-            )}
-            <div style={{ display: 'grid', gap: '1rem' }}>
-              {filteredJourneys.map(journey => {
-                const schedule = journey.schedules
-                const currentStatus = schedule?.status || 'scheduled'
-                const nextStatuses = getNextJourneyStatuses(currentStatus)
-                const draftStatus = statusDrafts[journey.schedule_id] || currentStatus
-                const ticketsValidated = journey.tickets.filter(ticket => ticket.is_validated).length
-                return (
-                  <article key={journey.id} className="rh-card">
-                    <div className="rh-card-body" style={{ display: 'grid', gap: '1rem' }}>
-                      <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', gap: '1rem' }}>
-                        <div style={{ flex: '1 1 270px' }}>
-                          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '0.6rem' }}>
-                            <strong style={{ fontSize: '1.05rem' }}>{schedule?.trains?.name || 'Kereta'} · {schedule?.trains?.train_number || ''}</strong>
+
+              {/* Filters */}
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '1.25rem' }}>
+                <label className="rh-input-group" style={{ flex: '1 1 250px', margin: 0 }}>
+                  <span className="rh-label-text">Cari Penumpang / Tiket</span>
+                  <span style={{ position: 'relative', display: 'block' }}>
+                    <Search size={16} style={{ position: 'absolute', top: '50%', left: 12, transform: 'translateY(-50%)', color: 'var(--rh-text-3)' }} />
+                    <input
+                      className="rh-input"
+                      style={{ paddingLeft: 36 }}
+                      placeholder="Nama, No. KTP, Kode Tiket, Kursi..."
+                      value={passengerSearch}
+                      onChange={e => setPassengerSearch(e.target.value)}
+                    />
+                  </span>
+                </label>
+
+                <label className="rh-input-group" style={{ flex: '1 1 200px', margin: 0 }}>
+                  <span className="rh-label-text">Pilih Kereta</span>
+                  <select
+                    className="rh-input"
+                    value={passengerScheduleFilter}
+                    onChange={e => setPassengerScheduleFilter(e.target.value)}
+                  >
+                    <option value="all">Semua Kereta Tugas</option>
+                    {journeys.map(j => (
+                      <option key={j.schedule_id} value={j.schedule_id}>
+                        {j.schedules?.trains?.name} · {j.schedules?.trains?.train_number}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+
+                <label className="rh-input-group" style={{ flex: '0 1 180px', margin: 0 }}>
+                  <span className="rh-label-text">Status Boarding</span>
+                  <select
+                    className="rh-input"
+                    value={passengerValidatedFilter}
+                    onChange={e => setPassengerValidatedFilter(e.target.value)}
+                  >
+                    <option value="all">Semua Status</option>
+                    <option value="validated">Sudah Validasi</option>
+                    <option value="unvalidated">Belum Validasi</option>
+                  </select>
+                </label>
+              </div>
+
+              {/* Manifest Table */}
+              <div style={{ overflowX: 'auto' }}>
+                <table style={{ width: '100%', minWidth: 780, borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.88rem' }}>
+                  <thead>
+                    <tr style={{ borderBottom: '2px solid var(--rh-border)', color: 'var(--rh-text-2)', fontSize: '0.8rem', textTransform: 'uppercase' }}>
+                      <th style={{ padding: '0.75rem 0.5rem' }}>Tempat Duduk</th>
+                      <th style={{ padding: '0.75rem 0.5rem' }}>Nama Penumpang</th>
+                      <th style={{ padding: '0.75rem 0.5rem' }}>No. Tiket</th>
+                      <th style={{ padding: '0.75rem 0.5rem' }}>Perjalanan</th>
+                      <th style={{ padding: '0.75rem 0.5rem' }}>Status</th>
+                      <th style={{ padding: '0.75rem 0.5rem', textAlign: 'right' }}>Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredTickets.length === 0 ? (
+                      <tr>
+                        <td colSpan={6} style={{ textAlign: 'center', padding: '2rem', color: 'var(--rh-text-2)' }}>
+                          Tidak ada data penumpang yang cocok dengan filter.
+                        </td>
+                      </tr>
+                    ) : (
+                      filteredTickets.map(t => {
+                        const seat = t.seats
+                        const carriage = seat?.carriages
+                        const passenger = t.passengers
+                        const schedule = t.schedules
+
+                        return (
+                          <tr key={t.id} style={{ borderBottom: '1px solid var(--rh-border)' }}>
+                            <td style={{ padding: '0.85rem 0.5rem' }}>
+                              <strong style={{ color: 'var(--rh-primary)', fontSize: '1rem' }}>
+                                {seat?.seat_number || '—'}
+                              </strong>
+                              <small style={{ display: 'block', color: 'var(--rh-text-2)' }}>
+                                {carriage?.class || 'Eksekutif'} {carriage?.carriage_number ? `(${carriage.carriage_number})` : ''}
+                              </small>
+                            </td>
+                            <td style={{ padding: '0.85rem 0.5rem' }}>
+                              <strong>{passenger?.full_name || 'Penumpang'}</strong>
+                              {passenger?.identity_number && (
+                                <small style={{ display: 'block', color: 'var(--rh-text-3)' }}>
+                                  {passenger?.id_type || 'NIK'}: {passenger.identity_number}
+                                </small>
+                              )}
+                            </td>
+                            <td style={{ padding: '0.85rem 0.5rem' }}>
+                              <span className="rh-mono" style={{ fontWeight: 700 }}>{t.ticket_number}</span>
+                            </td>
+                            <td style={{ padding: '0.85rem 0.5rem' }}>
+                              <span>{schedule?.trains?.name}</span>
+                              <small style={{ display: 'block', color: 'var(--rh-text-2)' }}>{schedule?.routes?.name}</small>
+                            </td>
+                            <td style={{ padding: '0.85rem 0.5rem' }}>
+                              {t.is_validated ? (
+                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '0.2rem 0.6rem', borderRadius: 999, background: 'var(--rh-success-light)', color: 'var(--rh-success)', fontSize: '0.75rem', fontWeight: 700 }}>
+                                  <CheckCircle2 size={12} /> Tervalidasi
+                                </span>
+                              ) : (
+                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '0.2rem 0.6rem', borderRadius: 999, background: 'var(--rh-warning-light)', color: 'var(--rh-warning)', fontSize: '0.75rem', fontWeight: 700 }}>
+                                  <Clock3 size={12} /> Menunggu
+                                </span>
+                              )}
+                            </td>
+                            <td style={{ padding: '0.85rem 0.5rem', textAlign: 'right' }}>
+                              {!t.is_validated ? (
+                                <button
+                                  type="button"
+                                  className="rh-btn rh-btn-primary rh-btn-sm"
+                                  onClick={() => runValidation(t.ticket_number)}
+                                  disabled={validating}
+                                >
+                                  Validasi Cepat
+                                </button>
+                              ) : (
+                                <span style={{ color: 'var(--rh-text-3)', fontSize: '0.75rem' }}>
+                                  {t.validated_at ? formatTime(t.validated_at) : 'OK'}
+                                </span>
+                              )}
+                            </td>
+                          </tr>
+                        )
+                      })
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          )}
+
+          {/* ── TAB 4: JOURNEY MANAGEMENT ───────────────────────────────────── */}
+          {activeTab === 'journey' && (
+            <section style={{ display: 'grid', gap: '1.25rem' }}>
+              <div className="rh-card" style={{ padding: '1.25rem' }}>
+                <h2 className="rh-h3" style={{ margin: 0 }}>Manajemen Status Perjalanan</h2>
+                <p style={{ margin: '0.25rem 0 0', color: 'var(--rh-text-2)', fontSize: '0.88rem' }}>
+                  Pembaruan status di halaman ini disinkronkan ke live tracking penumpang (tampilan ala Grab) dan layar informasi stasiun.
+                </p>
+              </div>
+
+              {journeys.length === 0 ? (
+                <div className="rh-card" style={{ padding: '2rem', textAlign: 'center', color: 'var(--rh-text-2)' }}>
+                  Belum ada penugasan perjalanan.
+                </div>
+              ) : (
+                journeys.map(j => {
+                  const s = j.schedules
+                  const currentStatus = s?.status || 'scheduled'
+                  const nextStatuses = getNextJourneyStatuses(currentStatus)
+                  const draftStatus = statusDrafts[j.schedule_id] || currentStatus
+
+                  return (
+                    <article key={j.id} className="rh-card" style={{ padding: '1.5rem' }}>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', borderBottom: '1px solid var(--rh-border)', paddingBottom: '1rem' }}>
+                        <div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                            <h3 className="rh-h3" style={{ margin: 0 }}>{s?.trains?.name} · {s?.trains?.train_number}</h3>
                             <JourneyStatus status={currentStatus} />
                           </div>
-                          <span style={{ display: 'block', color: 'var(--rh-text-2)', marginTop: '0.25rem' }}>{schedule?.routes?.name || 'Rute perjalanan'}</span>
-                          {schedule?.departure_time && <small style={{ display: 'block', color: 'var(--rh-text-3)', marginTop: '0.35rem' }}>
-                            <CalendarDays size={13} style={{ verticalAlign: 'middle', marginRight: 4 }} />{formatDate(schedule.departure_time)} · {formatTime(schedule.departure_time)}
-                          </small>}
+                          <span style={{ color: 'var(--rh-text-2)', fontSize: '0.9rem' }}>{s?.routes?.name}</span>
+                          <div style={{ display: 'flex', gap: '1rem', marginTop: '0.35rem', fontSize: '0.8rem', color: 'var(--rh-text-3)' }}>
+                            <span>Keberangkatan: {formatDate(s?.departure_time)} · {formatTime(s?.departure_time)} WIB</span>
+                            <span>Estimasi Tiba: {formatTime(s?.arrival_time)} WIB</span>
+                          </div>
                         </div>
-                        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', color: 'var(--rh-text-2)' }}>
-                          <TicketCheck size={16} />
-                          <span><strong style={{ color: 'var(--rh-text)' }}>{ticketsValidated}/{journey.tickets.length}</strong> tiket tervalidasi</span>
+
+                        <div style={{ textAlign: 'right' }}>
+                          <span style={{ fontSize: '0.85rem', color: 'var(--rh-text-2)' }}>
+                            Tiket Boarding: <strong>{j.tickets.filter(t => t.is_validated).length} / {j.tickets.length}</strong>
+                          </span>
                         </div>
                       </div>
 
-                      {journey.latestUpdate && (
-                        <div style={{ background: 'var(--rh-surface)', borderRadius: 10, padding: '0.75rem 0.9rem' }}>
-                          <small style={{ color: 'var(--rh-text-2)' }}>
-                            Pembaruan terakhir: {getJourneyStatusLabel(journey.latestUpdate.status)} · {formatDate(journey.latestUpdate.created_at)} {formatTime(journey.latestUpdate.created_at)}
+                      {/* Station Progress Track Preview */}
+                      <div style={{ margin: '1.25rem 0', background: 'var(--rh-surface)', padding: '1rem', borderRadius: 12 }}>
+                        <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--rh-text-2)', textTransform: 'uppercase' }}>
+                          Progres Rute Stasiun
+                        </span>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0.75rem', position: 'relative' }}>
+                          <div style={{ position: 'absolute', top: '50%', left: 10, right: 10, height: 3, background: 'var(--rh-border)', zIndex: 0 }} />
+                          {['Stasiun Asal', 'Stasiun Antara', 'Pemeriksaan Sinyal', 'Stasiun Akhir'].map((stop, idx) => {
+                            const reached = currentStatus === 'arrived' || (currentStatus === 'departed' && idx <= 1) || (currentStatus === 'boarding' && idx === 0)
+                            return (
+                              <div key={idx} style={{ position: 'relative', zIndex: 1, textAlign: 'center', background: 'var(--rh-surface)', padding: '0 6px' }}>
+                                <div style={{ width: 22, height: 22, borderRadius: '50%', background: reached ? 'var(--rh-primary)' : 'var(--rh-border)', color: '#fff', display: 'grid', placeItems: 'center', margin: '0 auto', fontSize: '0.75rem', fontWeight: 700 }}>
+                                  {idx + 1}
+                                </div>
+                                <small style={{ display: 'block', fontSize: '0.72rem', marginTop: 4, color: reached ? 'var(--rh-text)' : 'var(--rh-text-3)' }}>
+                                  {stop}
+                                </small>
+                              </div>
+                            )
+                          })}
+                        </div>
+                      </div>
+
+                      {/* Latest Note log */}
+                      {j.latestUpdate && (
+                        <div style={{ background: 'rgba(26,66,138,0.05)', borderRadius: 10, padding: '0.75rem 1rem', marginBottom: '1.25rem' }}>
+                          <small style={{ color: 'var(--rh-primary)', fontWeight: 700 }}>
+                            Catatan Operasional Terakhir ({getJourneyStatusLabel(j.latestUpdate.status)}):
                           </small>
-                          {journey.latestUpdate.note && <p style={{ margin: '0.25rem 0 0', whiteSpace: 'pre-wrap' }}>{journey.latestUpdate.note}</p>}
+                          <p style={{ margin: '0.2rem 0 0', fontSize: '0.9rem' }}>{j.latestUpdate.note || 'Tidak ada catatan.'}</p>
+                          <small style={{ color: 'var(--rh-text-3)', fontSize: '0.75rem' }}>
+                            {formatDate(j.latestUpdate.created_at)} {formatTime(j.latestUpdate.created_at)} WIB
+                          </small>
                         </div>
                       )}
 
-                      {nextStatuses.length > 0 && (
-                        <form onSubmit={event => { event.preventDefault(); updateJourney(journey) }} style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'end', gap: '0.75rem', borderTop: '1px solid var(--rh-border)', paddingTop: '1rem' }}>
-                          <label className="rh-input-group" style={{ flex: '0 1 220px' }}>
-                            <span className="rh-label-text">Perbarui status</span>
-                            <select className="rh-input" value={draftStatus} onChange={event => setStatusDrafts(current => ({ ...current, [journey.schedule_id]: event.target.value }))}>
-                              <option value={currentStatus}>{getJourneyStatusLabel(currentStatus)} (saat ini)</option>
-                              {nextStatuses.map(status => <option key={status} value={status}>{getJourneyStatusLabel(status)}</option>)}
-                            </select>
-                          </label>
-                          <label className="rh-input-group" style={{ flex: '1 1 300px' }}>
-                            <span className="rh-label-text">Catatan untuk admin dan penumpang (opsional)</span>
-                            <input
-                              className="rh-input"
-                              maxLength={500}
-                              value={statusNotes[journey.schedule_id] || ''}
-                              onChange={event => setStatusNotes(current => ({ ...current, [journey.schedule_id]: event.target.value }))}
-                              placeholder={draftStatus === 'delayed' ? 'Contoh: menunggu pemeriksaan operasional' : 'Informasi singkat tentang perjalanan'}
-                            />
-                          </label>
-                          <button className="rh-btn rh-btn-primary" type="submit" disabled={updating === journey.schedule_id || draftStatus === currentStatus}>
-                            {updating === journey.schedule_id && <RefreshCw size={15} className="rh-spin" />}
-                            Simpan pembaruan
-                          </button>
-                        </form>
+                      {/* Status Update Form */}
+                      <form
+                        onSubmit={e => { e.preventDefault(); updateJourney(j) }}
+                        style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '0.75rem', alignItems: 'end' }}
+                      >
+                        <label className="rh-input-group" style={{ margin: 0 }}>
+                          <span className="rh-label-text">Pilih Status Baru</span>
+                          <select
+                            className="rh-input"
+                            value={draftStatus}
+                            onChange={e => setStatusDrafts(curr => ({ ...curr, [j.schedule_id]: e.target.value }))}
+                          >
+                            <option value={currentStatus}>{getJourneyStatusLabel(currentStatus)} (Saat Ini)</option>
+                            {nextStatuses.map(st => (
+                              <option key={st} value={st}>{getJourneyStatusLabel(st)}</option>
+                            ))}
+                          </select>
+                        </label>
+
+                        <label className="rh-input-group" style={{ margin: 0, gridColumn: 'span 2' }}>
+                          <span className="rh-label-text">Catatan Informasi Penumpang / Stasiun (Opsional)</span>
+                          <input
+                            className="rh-input"
+                            maxLength={500}
+                            placeholder="Contoh: Berjalan tepat waktu, jalur peron aman"
+                            value={statusNotes[j.schedule_id] || ''}
+                            onChange={e => setStatusNotes(curr => ({ ...curr, [j.schedule_id]: e.target.value }))}
+                          />
+                        </label>
+
+                        <button
+                          type="submit"
+                          className="rh-btn rh-btn-primary"
+                          disabled={updating === j.schedule_id || draftStatus === currentStatus}
+                          style={{ minHeight: 44 }}
+                        >
+                          {updating === j.schedule_id ? <RefreshCw size={16} className="rh-spin" /> : 'Simpan Status'}
+                        </button>
+                      </form>
+                    </article>
+                  )
+                })
+              )}
+            </section>
+          )}
+
+          {/* ── TAB 5: ASSISTANCE REPORTS ───────────────────────────────────── */}
+          {activeTab === 'assistance' && (
+            <section className="rh-card" style={{ padding: '1.5rem' }}>
+              <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', marginBottom: '1.25rem' }}>
+                <div>
+                  <h2 className="rh-h3" style={{ margin: 0 }}>Laporan Bantuan Khusus Penumpang</h2>
+                  <p style={{ margin: '0.2rem 0 0', color: 'var(--rh-text-2)', fontSize: '0.88rem' }}>
+                    Permintaan bantuan kursi roda, lansia, ibu hamil, medis, atau kendala fasilitas di dalam gerbong.
+                  </p>
+                </div>
+                <span className="rh-badge rh-badge-secondary">{assistanceReports.length} Laporan</span>
+              </div>
+
+              {assistanceReports.length === 0 ? (
+                <div style={{ textAlign: 'center', padding: '2.5rem 1rem', color: 'var(--rh-text-2)' }}>
+                  <HelpingHand size={40} style={{ margin: '0 auto 0.75rem', opacity: 0.4 }} />
+                  <p style={{ margin: 0 }}>Tidak ada laporan bantuan yang sedang menunggu di perjalanan Anda.</p>
+                </div>
+              ) : (
+                <div style={{ display: 'grid', gap: '1rem' }}>
+                  {assistanceReports.map(rep => (
+                    <article key={rep.id} style={{ border: '1px solid var(--rh-border)', borderRadius: 12, padding: '1.15rem', background: 'var(--rh-surface)' }}>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', gap: '0.75rem', marginBottom: '0.5rem' }}>
+                        <div>
+                          <strong style={{ fontSize: '1rem' }}>{rep.title || 'Laporan Bantuan'}</strong>
+                          <div style={{ fontSize: '0.85rem', color: 'var(--rh-text-2)' }}>
+                            Pemohon: <b>{rep.passenger_name}</b> · Booking: <span className="rh-mono">{rep.bookings?.booking_code || '—'}</span>
+                          </div>
+                        </div>
+                        <span style={{ fontSize: '0.8rem', padding: '0.2rem 0.6rem', borderRadius: 999, fontWeight: 700, background: rep.status === 'resolved' ? 'var(--rh-success-light)' : 'var(--rh-warning-light)', color: rep.status === 'resolved' ? 'var(--rh-success)' : 'var(--rh-warning)' }}>
+                          {rep.status}
+                        </span>
+                      </div>
+
+                      <p style={{ margin: '0.5rem 0', fontSize: '0.9rem', color: 'var(--rh-text)' }}>
+                        {rep.description}
+                      </p>
+
+                      {rep.response_note && (
+                        <div style={{ background: '#fff', border: '1px solid var(--rh-border)', padding: '0.5rem 0.75rem', borderRadius: 8, fontSize: '0.82rem', marginBottom: '0.75rem' }}>
+                          <span style={{ color: 'var(--rh-primary)', fontWeight: 700 }}>Respon Petugas: </span>
+                          {rep.response_note}
+                        </div>
                       )}
+
+                      {/* Action buttons */}
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', alignItems: 'center', borderTop: '1px solid var(--rh-border)', paddingTop: '0.75rem' }}>
+                        <input
+                          className="rh-input rh-input-sm"
+                          style={{ flex: '1 1 200px' }}
+                          placeholder="Catatan tindak lanjut..."
+                          value={reportNoteInputs[rep.id] || ''}
+                          onChange={e => setReportNoteInputs(curr => ({ ...curr, [rep.id]: e.target.value }))}
+                        />
+                        {rep.status === 'pending' && (
+                          <button type="button" className="rh-btn rh-btn-primary rh-btn-sm" onClick={() => updateReportStatus(rep.id, 'in_progress')}>
+                            Tindak Lanjuti
+                          </button>
+                        )}
+                        {rep.status !== 'resolved' && (
+                          <button type="button" className="rh-btn rh-btn-secondary rh-btn-sm" onClick={() => updateReportStatus(rep.id, 'resolved')}>
+                            Selesaikan Bantuan
+                          </button>
+                        )}
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              )}
+            </section>
+          )}
+
+          {/* ── TAB 6: LOST & FOUND ─────────────────────────────────────────── */}
+          {activeTab === 'lostfound' && (
+            <section className="rh-card" style={{ padding: '1.5rem' }}>
+              <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', marginBottom: '1.25rem' }}>
+                <div>
+                  <h2 className="rh-h3" style={{ margin: 0 }}>Lost & Found (Barang Hilang / Tertinggal)</h2>
+                  <p style={{ margin: '0.2rem 0 0', color: 'var(--rh-text-2)', fontSize: '0.88rem' }}>
+                    Daftar laporan barang penumpang yang tertinggal di gerbong atau stasiun untuk diidentifikasi petugas.
+                  </p>
+                </div>
+                <span className="rh-badge rh-badge-primary">{lostFoundReports.length} Laporan</span>
+              </div>
+
+              {lostFoundReports.length === 0 ? (
+                <div style={{ textAlign: 'center', padding: '2.5rem 1rem', color: 'var(--rh-text-2)' }}>
+                  <PackageSearch size={40} style={{ margin: '0 auto 0.75rem', opacity: 0.4 }} />
+                  <p style={{ margin: 0 }}>Belum ada laporan barang hilang di perjalanan tugas ini.</p>
+                </div>
+              ) : (
+                <div style={{ display: 'grid', gap: '1rem' }}>
+                  {lostFoundReports.map(rep => (
+                    <article key={rep.id} style={{ border: '1px solid var(--rh-border)', borderRadius: 12, padding: '1.15rem', background: 'var(--rh-surface)' }}>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', gap: '0.75rem', marginBottom: '0.4rem' }}>
+                        <div>
+                          <strong style={{ fontSize: '1rem' }}>{rep.title || 'Barang Tertinggal'}</strong>
+                          <div style={{ fontSize: '0.85rem', color: 'var(--rh-text-2)' }}>
+                            Pelapor: <b>{rep.passenger_name}</b> · Booking: <span className="rh-mono">{rep.bookings?.booking_code || '—'}</span>
+                          </div>
+                        </div>
+                        <span style={{ fontSize: '0.8rem', padding: '0.2rem 0.6rem', borderRadius: 999, fontWeight: 700, background: rep.status === 'resolved' ? 'var(--rh-success-light)' : 'var(--rh-warning-light)', color: rep.status === 'resolved' ? 'var(--rh-success)' : 'var(--rh-warning)' }}>
+                          {rep.status}
+                        </span>
+                      </div>
+
+                      <p style={{ margin: '0.5rem 0', fontSize: '0.9rem' }}>{rep.description}</p>
+
+                      {rep.response_note && (
+                        <div style={{ background: '#fff', border: '1px solid var(--rh-border)', padding: '0.5rem 0.75rem', borderRadius: 8, fontSize: '0.82rem', marginBottom: '0.75rem' }}>
+                          <span style={{ color: 'var(--rh-primary)', fontWeight: 700 }}>Status Penyimpanan: </span>
+                          {rep.response_note}
+                        </div>
+                      )}
+
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', alignItems: 'center', borderTop: '1px solid var(--rh-border)', paddingTop: '0.75rem' }}>
+                        <input
+                          className="rh-input rh-input-sm"
+                          style={{ flex: '1 1 200px' }}
+                          placeholder="Lokasi penyimpanan / respon (e.g. Disimpan di Pos Keamanan)..."
+                          value={reportNoteInputs[rep.id] || ''}
+                          onChange={e => setReportNoteInputs(curr => ({ ...curr, [rep.id]: e.target.value }))}
+                        />
+                        {rep.status !== 'resolved' && (
+                          <button type="button" className="rh-btn rh-btn-success rh-btn-sm" onClick={() => updateReportStatus(rep.id, 'resolved')}>
+                            Tandai Ditemukan & Disimpan
+                          </button>
+                        )}
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              )}
+            </section>
+          )}
+
+          {/* ── TAB 7: FOOD ORDERS ─────────────────────────────────────────── */}
+          {activeTab === 'orders' && (
+            <section className="rh-card" style={{ padding: '1.5rem' }}>
+              <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', marginBottom: '1.25rem' }}>
+                <div>
+                  <h2 className="rh-h3" style={{ margin: 0 }}>Pesanan Makanan di Kereta (Onboard Dining)</h2>
+                  <p style={{ margin: '0.2rem 0 0', color: 'var(--rh-text-2)', fontSize: '0.88rem' }}>
+                    Pesanan kuliner kereta dari penumpang bertiket untuk diantarkan langsung ke nomor kursi.
+                  </p>
+                </div>
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  {['all', 'pending', 'confirmed', 'preparing', 'on_the_way', 'completed'].map(st => (
+                    <button
+                      key={st}
+                      type="button"
+                      className={`rh-btn rh-btn-sm ${orderFilter === st ? 'rh-btn-primary' : 'rh-btn-ghost'}`}
+                      onClick={() => setOrderFilter(st)}
+                    >
+                      {st === 'all' ? 'Semua' : st.replace('_', ' ')}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {foodOrders.length === 0 ? (
+                <div style={{ textAlign: 'center', padding: '2.5rem 1rem', color: 'var(--rh-text-2)' }}>
+                  <Utensils size={40} style={{ margin: '0 auto 0.75rem', opacity: 0.4 }} />
+                  <p style={{ margin: 0 }}>Belum ada pesanan makanan pada perjalanan yang ditugaskan.</p>
+                </div>
+              ) : (
+                <div style={{ display: 'grid', gap: '1rem' }}>
+                  {foodOrders
+                    .filter(o => orderFilter === 'all' || o.status === orderFilter)
+                    .map(order => {
+                      return (
+                        <article key={order.id} style={{ border: '1px solid var(--rh-border)', borderRadius: 12, padding: '1.15rem', background: 'var(--rh-surface)' }}>
+                          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem' }}>
+                            <div>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                <strong style={{ fontSize: '1.05rem', color: 'var(--rh-primary)' }}>{order.order_code}</strong>
+                                <span style={{ padding: '0.2rem 0.6rem', borderRadius: 999, fontSize: '0.75rem', fontWeight: 700, background: order.status === 'completed' ? 'var(--rh-success-light)' : 'var(--rh-accent-light)', color: order.status === 'completed' ? 'var(--rh-success)' : 'var(--rh-accent-dark)' }}>
+                                  {order.status.replace('_', ' ')}
+                                </span>
+                              </div>
+                              <span style={{ fontSize: '0.88rem', color: 'var(--rh-text-2)' }}>
+                                Penumpang: <b>{order.passengers?.full_name}</b> · Kursi: <strong style={{ color: 'var(--rh-primary)' }}>{order.seats?.seat_number || '12A'}</strong>
+                              </span>
+                            </div>
+
+                            <div style={{ textAlign: 'right' }}>
+                              <strong style={{ fontSize: '1.1rem', color: 'var(--rh-text)' }}>{formatIDR(order.total_amount)}</strong>
+                              <small style={{ display: 'block', color: 'var(--rh-text-3)', fontSize: '0.75rem' }}>{formatTime(order.created_at)} WIB</small>
+                            </div>
+                          </div>
+
+                          {/* Order Items */}
+                          <div style={{ background: '#fff', border: '1px solid var(--rh-border)', borderRadius: 8, padding: '0.65rem 0.9rem', marginBottom: '0.85rem' }}>
+                            <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--rh-text-2)', marginBottom: '0.35rem' }}>Menu Dipesan:</div>
+                            {order.food_order_items?.map((item, idx) => (
+                              <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', padding: '0.15rem 0' }}>
+                                <span>{item.quantity}x {item.food_products?.name || 'Menu Kereta'}</span>
+                                <span>{formatIDR(item.unit_price * item.quantity)}</span>
+                              </div>
+                            ))}
+                            {order.note && (
+                              <small style={{ display: 'block', marginTop: '0.4rem', color: 'var(--rh-accent-dark)', fontStyle: 'italic' }}>
+                                Catatan: &quot;{order.note}&quot;
+                              </small>
+                            )}
+                          </div>
+
+                          {/* Progression Actions */}
+                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', justifyContent: 'flex-end' }}>
+                            {order.status === 'pending' && (
+                              <button type="button" className="rh-btn rh-btn-primary rh-btn-sm" onClick={() => updateOrderStatus(order.id, 'confirmed')}>
+                                Konfirmasi Pesanan
+                              </button>
+                            )}
+                            {order.status === 'confirmed' && (
+                              <button type="button" className="rh-btn rh-btn-primary rh-btn-sm" onClick={() => updateOrderStatus(order.id, 'preparing')}>
+                                Mulai Siapkan di Restorasi
+                              </button>
+                            )}
+                            {order.status === 'preparing' && (
+                              <button type="button" className="rh-btn rh-btn-accent rh-btn-sm" onClick={() => updateOrderStatus(order.id, 'on_the_way')}>
+                                Antar ke Kursi Penumpang
+                              </button>
+                            )}
+                            {order.status === 'on_the_way' && (
+                              <button type="button" className="rh-btn rh-btn-success rh-btn-sm" onClick={() => updateOrderStatus(order.id, 'completed')}>
+                                Selesai Diterima Penumpang
+                              </button>
+                            )}
+                          </div>
+                        </article>
+                      )
+                    })}
+                </div>
+              )}
+            </section>
+          )}
+
+          {/* ── TAB 8: NOTIFICATIONS ────────────────────────────────────────── */}
+          {activeTab === 'notifications' && (
+            <section className="rh-card" style={{ padding: '1.5rem' }}>
+              <div style={{ marginBottom: '1.25rem' }}>
+                <h2 className="rh-h3" style={{ margin: 0 }}>Pemberitahuan Tugas & Protokol Dinas</h2>
+                <p style={{ margin: '0.2rem 0 0', color: 'var(--rh-text-2)', fontSize: '0.88rem' }}>
+                  Instruksi operasional, pengumuman keselamatan PT KAI / RailHub, dan log perubahan status dinas.
+                </p>
+              </div>
+
+              <div style={{ display: 'grid', gap: '0.9rem' }}>
+                {[
+                  {
+                    title: 'Briefing Operasional Keselamatan Perjalanan KA',
+                    desc: 'Pastikan seluruh pintu bordes gerbong terkunci sempurna sebelum kereta bergerak. Periksa alat pemadam api ringan (APAR) dan kotak P3K di kereta restorasi.',
+                    time: 'Hari Ini · 06.00 WIB',
+                    level: 'Penting',
+                  },
+                  {
+                    title: 'Protokol Validasi Tiket Digital QR Code',
+                    desc: 'Setiap penumpang wajib menunjukkan e-boarding pass asli dari aplikasi RailHub dengan nama sesuai KTP. Tiket fisik atau screenshot tidak valid bila kode QR telah kedaluwarsa.',
+                    time: 'Hari Ini · 05.30 WIB',
+                    level: 'SOP',
+                  },
+                  {
+                    title: 'Pemberitahuan Cuaca & Kondisi Jalur',
+                    desc: 'Jalur lintas utara Cirebon - Semarang dilaporkan lancar dengan kecepatan normal. Perhatikan jarak aman saat mendekati sinyal masuk stasiun.',
+                    time: 'Hari Ini · 05.00 WIB',
+                    level: 'Informasi',
+                  },
+                ].map((notif, idx) => (
+                  <article key={idx} style={{ padding: '1rem', borderRadius: 12, border: '1px solid var(--rh-border)', background: 'var(--rh-surface)' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
+                      <strong style={{ fontSize: '0.95rem' }}>{notif.title}</strong>
+                      <span className="rh-badge rh-badge-primary">{notif.level}</span>
                     </div>
+                    <p style={{ margin: 0, fontSize: '0.88rem', color: 'var(--rh-text-2)' }}>{notif.desc}</p>
+                    <small style={{ display: 'block', marginTop: '0.4rem', color: 'var(--rh-text-3)', fontSize: '0.75rem' }}>{notif.time}</small>
                   </article>
-                )
-              })}
-            </div>
-          </section>
+                ))}
+              </div>
+            </section>
+          )}
 
         </div>
       </main>
     </>
+  )
+}
+
+export default function StaffDashboard() {
+  return (
+    <Suspense fallback={
+      <div style={{ minHeight: '100vh', background: 'var(--rh-surface)', display: 'grid', placeItems: 'center' }}>
+        <div className="rh-card" style={{ padding: '2rem', textAlign: 'center' }}>
+          <div className="rh-spin" style={{ width: 36, height: 36, border: '3px solid var(--rh-border)', borderTopColor: 'var(--rh-primary)', borderRadius: '50%', margin: '0 auto 1rem' }} />
+          <strong>Memuat Dashboard Petugas...</strong>
+        </div>
+      </div>
+    }>
+      <StaffDashboardContent />
+    </Suspense>
   )
 }

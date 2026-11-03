@@ -52,7 +52,7 @@ function StationSelect({ label, value, onChange, exclude, placeholder, icon: Ico
           border: open ? '2px solid var(--rh-primary)' : '2px solid var(--rh-border)',
           borderRadius: '12px', cursor: 'pointer', textAlign: 'left',
           transition: 'all 0.15s',
-          boxShadow: open ? '0 0 0 3px hsla(215,90%,52%,0.12)' : 'none',
+          boxShadow: open ? '0 0 0 3px rgba(26,66,138,0.12)' : 'none',
         }}
       >
         <Icon size={16} style={{ color: selected ? 'var(--rh-primary)' : 'var(--rh-text-3)', flexShrink: 0 }} />
@@ -153,9 +153,13 @@ export default function SearchWidget({ compact = false }) {
   const [stationsLoading, setStationsLoading] = useState(true)
   const [stationError, setStationError] = useState('')
 
-  const [origin,      setOrigin]      = useState('')
-  const [destination, setDestination] = useState('')
-  const [date,        setDate]        = useState('')
+  const [origin,      setOrigin]      = useState('GMR')
+  const [destination, setDestination] = useState('YK')
+  const [date,        setDate]        = useState(() => {
+    const tomorrow = new Date()
+    tomorrow.setDate(tomorrow.getDate() + 1)
+    return formatLocalDate(tomorrow)
+  })
   const [passengers,  setPassengers]  = useState(1)
   const [loading,     setLoading]     = useState(false)
 
@@ -231,7 +235,7 @@ export default function SearchWidget({ compact = false }) {
             title={t.hero.swap}
             style={{
               width: 40, height: 40, borderRadius: '50%', flexShrink: 0,
-              background: 'var(--rh-primary-light)', border: '2px solid hsl(215,90%,80%)',
+              background: 'var(--rh-primary-light)', border: '2px solid #B5C3DE',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               cursor: 'pointer', color: 'var(--rh-primary)',
               transition: 'all 0.2s', marginBottom: 2,

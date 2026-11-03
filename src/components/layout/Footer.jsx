@@ -5,7 +5,7 @@ const footerLinks = {
   layanan: [
     { href: '/trains', label: 'Pesan Tiket' },
     { href: '/dashboard/passenger', label: 'Cek Booking' },
-    { href: '/dashboard/passenger/journey', label: 'Lacak Perjalanan' },
+    { href: '/dashboard/passenger#my-bookings', label: 'Lacak Perjalanan' },
   ],
   informasi: [
     { href: '/about', label: 'Tentang RAILHUB' },
