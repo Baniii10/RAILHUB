@@ -476,7 +476,7 @@ export default function TrainSearchResults({ origin, destination, date, passenge
         <div>
           <div className="rh-card" style={{ marginBottom: '1rem', background: '#ffffff', borderRadius: 16 }}>
             <TrainTrackLoader
-              text="Mencari jadwal kereta terbaik..."
+              text="Mencari jadwal kereta terbaik…"
               subtext={`Menghubungkan stasiun ${origin} menuju ${destination}`}
             />
           </div>

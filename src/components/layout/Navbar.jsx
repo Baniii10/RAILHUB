@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import {
   Train,
   Menu,
@@ -18,9 +18,9 @@ import {
   Utensils,
   TicketCheck,
   ClipboardList,
-  CheckCircle2,
   Clock3,
-  BadgePercent,
+  MapPin,
+  ChevronRight,
 } from 'lucide-react'
 import { useLang } from '@/contexts/LangContext'
 import { useAuth } from '@/contexts/AuthContext'
@@ -39,11 +39,14 @@ export default function Navbar() {
   const { t, lang, toggleLang } = useLang()
   const { user, profile, signOut } = useAuth()
   const pathname = usePathname()
+  const searchParams = useSearchParams()
   const router   = useRouter()
   const dashboardRole = profile?.role
     || (pathname.startsWith('/dashboard/admin') ? 'admin' : pathname.startsWith('/dashboard/staff') ? 'conductor' : null)
-  const roleLabels = { admin: 'Admin', conductor: 'Petugas', passenger: 'Penumpang' }
-  const roleLabel = roleLabels[dashboardRole] || 'Pengguna'
+  const roleLabels = lang === 'en'
+    ? { admin: 'Admin', conductor: 'Staff', passenger: 'Passenger' }
+    : { admin: 'Admin', conductor: 'Petugas', passenger: 'Penumpang' }
+  const roleLabel = roleLabels[dashboardRole] || (lang === 'en' ? 'User' : 'Pengguna')
   const profileName = profile?.full_name?.trim()
   const accountName = profileName && profileName.toLowerCase() !== 'penumpang'
     ? profileName.split(' ')[0]
@@ -55,6 +58,7 @@ export default function Navbar() {
   const [notifOpen,    setNotifOpen]    = useState(false)
   const [notifications, setNotifications] = useState([])
   const [unreadCount, setUnreadCount] = useState(0)
+  const [activeJourney, setActiveJourney] = useState(null)
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 10)
@@ -67,31 +71,17 @@ export default function Navbar() {
     async function loadNotifications() {
       const items = []
       if (!user) {
-        items.push(
-          {
-            id: 'promo-1',
-            title: 'Promo Hemat Jelajah Jawa 25%',
-            desc: 'Pesan tiket Eksekutif & Luxury lebih hemat hari ini.',
-            href: '/trains',
-            time: 'Baru saja',
-          },
-          {
-            id: 'info-1',
-            title: 'E-Boarding Pass QR Tersedia',
-            desc: 'Masuk ke akun Anda untuk mengelola tiket dan memesan makanan di kereta.',
-            href: '/auth/login',
-            time: 'Info Layanan',
-          }
-        )
+        setActiveJourney(null)
         if (active) {
-          setNotifications(items)
-          setUnreadCount(items.length)
+          setNotifications([])
+          setUnreadCount(0)
         }
         return
       }
 
       const supabase = createClient()
       if (dashboardRole === 'conductor') {
+        setActiveJourney(null)
         const { data: assigns } = await supabase
           .from('staff_assignments')
           .select('id, schedule_id, schedules(status, departure_time, trains(name, train_number), routes(name))')
@@ -108,6 +98,7 @@ export default function Navbar() {
           })
         }
       } else if (dashboardRole === 'admin') {
+        setActiveJourney(null)
         items.push(
           {
             id: 'admin-ops',
@@ -127,10 +118,11 @@ export default function Navbar() {
       } else {
         const { data: bks } = await supabase
           .from('bookings')
-          .select('id, booking_code, status, schedules(departure_time, trains(name), routes(name))')
+          .select('id, booking_code, status, schedules(departure_time, arrival_time, trains(name, train_number), routes(name))')
           .eq('user_id', user.id)
           .order('created_at', { ascending: false })
           .limit(4)
+        if (active) setActiveJourney((bks || []).find(booking => booking.status === 'paid' && booking.schedules) || null)
         for (const b of bks || []) {
           items.push({
             id: `bk-${b.id}`,
@@ -187,8 +179,8 @@ export default function Navbar() {
     ]
     : dashboardRole === 'conductor'
       ? [
-          { href: '/dashboard/staff#staff-journeys', label: 'Perjalanan tugas' },
-          { href: '/dashboard/staff#ticket-validation', label: 'Validasi tiket' },
+          { href: '/dashboard/staff?tab=overview', label: 'Perjalanan tugas' },
+          { href: '/dashboard/staff?tab=validation', label: 'Validasi tiket' },
           { href: '/dashboard/orders', label: 'Pesanan makanan' },
           { href: '/dashboard/reports', label: 'Laporan' },
         ]
@@ -199,34 +191,36 @@ export default function Navbar() {
 
   const mobileBottomItems = dashboardRole === 'admin'
     ? [
-        { href: '/dashboard/admin', label: 'Overview', icon: LayoutDashboard },
-        { href: '/dashboard/admin/journeys', label: 'Jadwal', icon: Train },
-        { href: '/dashboard/admin/staff', label: 'Petugas', icon: User },
-        { href: '/dashboard/orders', label: 'Makanan', icon: Utensils },
-        { href: '/dashboard/reports', label: 'Laporan', icon: ClipboardList },
+        { href: '/dashboard/admin', label: lang === 'en' ? 'Summary' : 'Ringkasan', icon: LayoutDashboard },
+        { href: '/dashboard/admin/journeys', label: lang === 'en' ? 'Schedule' : 'Jadwal', icon: Train },
+        { href: '/dashboard/admin/staff', label: lang === 'en' ? 'Staff' : 'Petugas', icon: User },
+        { href: '/dashboard/orders', label: lang === 'en' ? 'Services' : 'Layanan', icon: Utensils },
       ]
     : dashboardRole === 'conductor'
       ? [
-          { href: '/dashboard/staff', label: 'Tugas', icon: Train },
-          { href: '/dashboard/staff#ticket-validation', label: 'Validasi', icon: TicketCheck },
-          { href: '/dashboard/orders', label: 'Makanan', icon: Utensils },
-          { href: '/dashboard/reports', label: 'Laporan', icon: ClipboardList },
+          { href: '/dashboard/staff?tab=overview', label: lang === 'en' ? 'Duties' : 'Tugas', icon: Train },
+          { href: '/dashboard/staff?tab=validation', label: lang === 'en' ? 'Validate' : 'Validasi', icon: TicketCheck },
+          { href: '/dashboard/staff?tab=orders', label: lang === 'en' ? 'Services' : 'Layanan', icon: Utensils },
+          { href: '/dashboard/staff?tab=assistance', label: lang === 'en' ? 'Help' : 'Bantuan', icon: ClipboardList },
         ]
       : user
         ? [
-            { href: '/', label: 'Beranda', icon: Home },
-            { href: '/trains', label: 'Kereta', icon: Train },
-            { href: '/dashboard/passenger#my-bookings', label: 'Tiket Saya', icon: Ticket },
-            { href: '/#promos', label: 'Promo', icon: BadgePercent },
-            { href: '/dashboard/passenger', label: 'Akun', icon: User },
+            { href: '/', label: t.nav.home, icon: Home },
+            { href: '/trains', label: lang === 'en' ? 'Schedule' : 'Jadwal', icon: Train },
+            { href: '/dashboard/passenger?tab=tickets', label: lang === 'en' ? 'Journeys' : 'Perjalanan', icon: Ticket },
+            { href: '/dashboard/passenger?tab=account', label: lang === 'en' ? 'Account' : 'Akun', icon: User },
           ]
         : [
-            { href: '/', label: 'Beranda', icon: Home },
-            { href: '/trains', label: 'Kereta', icon: Train },
-            { href: '/dashboard/passenger#my-bookings', label: 'Tiket Saya', icon: Ticket },
-            { href: '/#promos', label: 'Promo', icon: BadgePercent },
-            { href: '/auth/login', label: 'Akun', icon: User },
+            { href: '/', label: t.nav.home, icon: Home },
+            { href: '/trains', label: lang === 'en' ? 'Schedule' : 'Jadwal', icon: Train },
+            { href: '/auth/login', label: lang === 'en' ? 'Account' : 'Akun', icon: User },
           ]
+
+  const isBookingFlow = pathname.startsWith('/booking/')
+  const journeyRoute = activeJourney?.schedules?.routes?.name || 'Perjalanan aktif'
+  const journeyTime = activeJourney?.schedules?.departure_time
+    ? new Intl.DateTimeFormat(lang === 'en' ? 'en-ID' : 'id-ID', { hour: '2-digit', minute: '2-digit' }).format(new Date(activeJourney.schedules.departure_time))
+    : null
 
   return (
     <>
@@ -244,17 +238,21 @@ export default function Navbar() {
             {/* Desktop Nav */}
             <nav className="rh-hide-mobile" style={{ flex: 1, marginLeft: '1rem' }}>
               <ul className="rh-nav-links">
-                {navLinks.map(link => (
-                  <li key={link.href}>
+                {navLinks.map(link => {
+                  const [linkPath, linkQuery = ''] = link.href.split('?')
+                  const linkTab = new URLSearchParams(linkQuery).get('tab')
+                  const linkActive = pathname === linkPath && (!linkTab || searchParams.get('tab') === linkTab)
+                  return <li key={link.href}>
                     <Link
                       href={link.href}
                       onClick={() => { setMobileOpen(false); setUserMenuOpen(false); setNotifOpen(false) }}
-                      className={`rh-nav-link ${pathname === link.href ? 'rh-nav-link-active' : ''}`}
+                      className={`rh-nav-link ${linkActive ? 'rh-nav-link-active' : ''}`}
+                      aria-current={linkActive ? 'page' : undefined}
                     >
                       {link.label}
                     </Link>
                   </li>
-                ))}
+                })}
               </ul>
             </nav>
 
@@ -265,7 +263,7 @@ export default function Navbar() {
                 onClick={toggleLang}
                 className="rh-btn rh-btn-ghost rh-btn-sm"
                 style={{ padding: '0.375rem 0.625rem', gap: '0.35rem' }}
-                aria-label="Toggle language"
+                aria-label={lang === 'id' ? 'Switch to English' : 'Ganti ke Bahasa Indonesia'}
               >
                 <Globe size={14} />
                 <span style={{ fontWeight: 700, fontSize: '0.8125rem' }}>
@@ -274,7 +272,7 @@ export default function Navbar() {
               </button>
 
               {/* Notification Bell */}
-              <div style={{ position: 'relative' }}>
+              {user && <div style={{ position: 'relative' }}>
                 <button
                   type="button"
                   onClick={() => {
@@ -285,6 +283,8 @@ export default function Navbar() {
                   className="rh-btn rh-btn-ghost rh-btn-sm"
                   style={{ position: 'relative', padding: '0.4rem 0.55rem' }}
                   aria-label={t.dashboard.notifications}
+                  aria-expanded={notifOpen}
+                  aria-controls="railhub-notifications"
                 >
                   <Bell size={16} />
                   {unreadCount > 0 && (
@@ -298,6 +298,7 @@ export default function Navbar() {
 
                 {notifOpen && (
                   <div
+                    id="railhub-notifications"
                     className="rh-card animate-scale-in"
                     style={{
                       position: 'absolute', top: 'calc(100% + 8px)', right: 0,
@@ -331,7 +332,7 @@ export default function Navbar() {
                     </div>
                   </div>
                 )}
-              </div>
+              </div>}
 
               <div className="rh-hide-mobile" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                 {user ? (
@@ -341,6 +342,8 @@ export default function Navbar() {
                       onClick={() => { setUserMenuOpen(v => !v); setNotifOpen(false) }}
                       className="rh-btn rh-btn-ghost rh-btn-sm"
                       style={{ gap: '0.5rem' }}
+                      aria-expanded={userMenuOpen}
+                      aria-controls="railhub-user-menu"
                     >
                       <div style={{
                         width: 28, height: 28, borderRadius: '50%',
@@ -358,6 +361,7 @@ export default function Navbar() {
 
                     {userMenuOpen && (
                       <div
+                        id="railhub-user-menu"
                         className="rh-card animate-scale-in"
                         style={{
                           position: 'absolute', top: 'calc(100% + 8px)', right: 0,
@@ -411,7 +415,9 @@ export default function Navbar() {
               <button
                 className="rh-show-mobile-only rh-btn rh-btn-ghost rh-btn-icon"
                 onClick={() => setMobileOpen(v => !v)}
-                aria-label="Toggle menu"
+                aria-label={mobileOpen ? 'Tutup menu' : 'Buka menu'}
+                aria-expanded={mobileOpen}
+                aria-controls="railhub-mobile-menu"
               >
                 {mobileOpen ? <X size={22} /> : <Menu size={22} />}
               </button>
@@ -432,6 +438,10 @@ export default function Navbar() {
           onClick={() => setMobileOpen(false)}
         >
           <div
+            id="railhub-mobile-menu"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Menu utama"
             className="animate-slide-right"
             style={{
               position: 'absolute', right: 0, top: 0, bottom: 0,
@@ -494,8 +504,27 @@ export default function Navbar() {
         </div>
       )}
 
+      {activeJourney && dashboardRole === 'passenger' && !isBookingFlow && (
+        <Link
+          href="/dashboard/passenger?tab=journey"
+          className="rh-journey-dock rh-show-mobile-only"
+          aria-label={`Buka perjalanan ${journeyRoute}`}
+        >
+          <span className="rh-journey-dock-icon"><Train size={19} aria-hidden="true" /></span>
+          <span className="rh-journey-dock-copy">
+            <small>Perjalanan Kita{journeyTime ? ` · ${journeyTime}` : ''}</small>
+            <strong>{activeJourney.schedules?.trains?.name || 'Kereta Anda'}</strong>
+            <span><MapPin size={11} aria-hidden="true" /> {journeyRoute}</span>
+          </span>
+          <span className="rh-journey-mini-map" aria-hidden="true">
+            <i /><i className="is-train"><Train size={12} /></i><i />
+          </span>
+          <ChevronRight size={18} aria-hidden="true" />
+        </Link>
+      )}
+
       {/* Mobile Bottom App Navigation Bar */}
-      <nav
+      {!isBookingFlow && <nav
         aria-label="Navigasi bawah mobile"
         className="rh-show-mobile-only"
         style={{
@@ -513,12 +542,17 @@ export default function Navbar() {
       >
         <div style={{ display: 'grid', gridTemplateColumns: `repeat(${mobileBottomItems.length}, 1fr)`, gap: '0.25rem' }}>
           {mobileBottomItems.map(({ href, label, icon: Icon }) => {
-            const baseHref = href.split('?')[0].split('#')[0]
+            const [baseHref, query = ''] = href.split('?')
+            const expectedTab = new URLSearchParams(query).get('tab')
+            const currentTab = searchParams.get('tab')
+            const isPassengerJourney = expectedTab === 'tickets' && ['tickets', 'journey', 'onboard'].includes(currentTab)
             const active = pathname === baseHref
+              && (expectedTab ? currentTab === expectedTab || isPassengerJourney : !currentTab || !baseHref.startsWith('/dashboard/'))
             return (
               <Link
                 key={href}
                 href={href}
+                aria-current={active ? 'page' : undefined}
                 style={{
                   display: 'flex',
                   flexDirection: 'column',
@@ -533,7 +567,7 @@ export default function Navbar() {
                   color: active ? 'var(--rh-primary)' : 'var(--rh-text-2)',
                 }}
               >
-                <Icon size={18} />
+                <Icon size={18} aria-hidden="true" />
                 <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '100%' }}>
                   {label}
                 </span>
@@ -541,7 +575,7 @@ export default function Navbar() {
             )
           })}
         </div>
-      </nav>
+      </nav>}
     </>
   )
 }

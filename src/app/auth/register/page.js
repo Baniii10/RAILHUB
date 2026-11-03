@@ -62,7 +62,13 @@ export default function RegisterPage() {
     }
 
     toast.success('Registrasi berhasil! Silakan masuk.')
-    router.push('/auth/login')
+    const requestedNext = new URLSearchParams(window.location.search).get('next')
+    const safeNext = requestedNext
+      && !requestedNext.startsWith('//')
+      && (requestedNext.startsWith('/booking/') || requestedNext.startsWith('/dashboard'))
+      ? requestedNext
+      : null
+    router.push(safeNext ? `/auth/login?next=${encodeURIComponent(safeNext)}` : '/auth/login')
   }
 
   return (
@@ -102,38 +108,38 @@ export default function RegisterPage() {
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               {/* Full Name */}
               <div className="rh-input-group">
-                <label className="rh-label-text">{t.auth.fullName}</label>
+                <label className="rh-label-text" htmlFor="register-name">{t.auth.fullName}</label>
                 <div style={{ position: 'relative' }}>
                   <User size={16} style={{ position: 'absolute', left: '0.875rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--rh-text-3)', pointerEvents: 'none' }} />
-                  <input type="text" className="rh-input" placeholder="Nama lengkap sesuai KTP" value={form.fullName} onChange={update('fullName')} required style={{ paddingLeft: '2.5rem' }} />
+                  <input id="register-name" type="text" name="name" autoComplete="name" className="rh-input" placeholder="Nama lengkap sesuai identitas" value={form.fullName} onChange={update('fullName')} required style={{ paddingLeft: '2.5rem' }} />
                 </div>
               </div>
 
               {/* Email */}
               <div className="rh-input-group">
-                <label className="rh-label-text">{t.auth.email}</label>
+                <label className="rh-label-text" htmlFor="register-email">{t.auth.email}</label>
                 <div style={{ position: 'relative' }}>
                   <Mail size={16} style={{ position: 'absolute', left: '0.875rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--rh-text-3)', pointerEvents: 'none' }} />
-                  <input type="email" className="rh-input" placeholder="nama@email.com" value={form.email} onChange={update('email')} required style={{ paddingLeft: '2.5rem' }} />
+                  <input id="register-email" type="email" name="email" autoComplete="email" spellCheck={false} className="rh-input" placeholder="nama@email.com" value={form.email} onChange={update('email')} required style={{ paddingLeft: '2.5rem' }} />
                 </div>
               </div>
 
               {/* Phone */}
               <div className="rh-input-group">
-                <label className="rh-label-text">{t.auth.phone}</label>
+                <label className="rh-label-text" htmlFor="register-phone">{t.auth.phone}</label>
                 <div style={{ position: 'relative' }}>
                   <Phone size={16} style={{ position: 'absolute', left: '0.875rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--rh-text-3)', pointerEvents: 'none' }} />
-                  <input type="tel" className="rh-input" placeholder="08xx-xxxx-xxxx" value={form.phone} onChange={update('phone')} style={{ paddingLeft: '2.5rem' }} />
+                  <input id="register-phone" type="tel" name="tel" autoComplete="tel" inputMode="tel" className="rh-input" placeholder="08xx-xxxx-xxxx" value={form.phone} onChange={update('phone')} style={{ paddingLeft: '2.5rem' }} />
                 </div>
               </div>
 
               {/* Password */}
               <div className="rh-input-group">
-                <label className="rh-label-text">{t.auth.password}</label>
+                <label className="rh-label-text" htmlFor="register-password">{t.auth.password}</label>
                 <div style={{ position: 'relative' }}>
                   <Lock size={16} style={{ position: 'absolute', left: '0.875rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--rh-text-3)', pointerEvents: 'none' }} />
-                  <input type={showPw ? 'text' : 'password'} className="rh-input" placeholder="Minimal 8 karakter" value={form.password} onChange={update('password')} required style={{ paddingLeft: '2.5rem', paddingRight: '3rem' }} />
-                  <button type="button" onClick={() => setShowPw(v => !v)} style={{ position: 'absolute', right: '0.875rem', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--rh-text-3)', padding: 0 }}>
+                  <input id="register-password" type={showPw ? 'text' : 'password'} name="new-password" autoComplete="new-password" className="rh-input" placeholder="Minimal 8 karakter" value={form.password} onChange={update('password')} required style={{ paddingLeft: '2.5rem', paddingRight: '3rem' }} />
+                  <button type="button" aria-label={showPw ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'} onClick={() => setShowPw(v => !v)} style={{ position: 'absolute', right: '0.35rem', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--rh-text-3)', width: 40, height: 40, padding: 0 }}>
                     {showPw ? <EyeOff size={16} /> : <Eye size={16} />}
                   </button>
                 </div>
@@ -152,11 +158,11 @@ export default function RegisterPage() {
 
               {/* Confirm Password */}
               <div className="rh-input-group">
-                <label className="rh-label-text">Konfirmasi Kata Sandi</label>
+                <label className="rh-label-text" htmlFor="register-confirm-password">Konfirmasi Kata Sandi</label>
                 <div style={{ position: 'relative' }}>
                   <Lock size={16} style={{ position: 'absolute', left: '0.875rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--rh-text-3)', pointerEvents: 'none' }} />
                   <input
-                    type="password" className={`rh-input ${form.confirmPassword && form.confirmPassword !== form.password ? 'rh-input-error' : ''}`}
+                    id="register-confirm-password" type="password" name="confirm-password" autoComplete="new-password" className={`rh-input ${form.confirmPassword && form.confirmPassword !== form.password ? 'rh-input-error' : ''}`}
                     placeholder="Ulangi kata sandi" value={form.confirmPassword} onChange={update('confirmPassword')} required
                     style={{ paddingLeft: '2.5rem' }}
                   />
@@ -168,7 +174,7 @@ export default function RegisterPage() {
 
               <button type="submit" className="rh-btn rh-btn-primary rh-btn-full" disabled={loading} style={{ marginTop: '0.5rem', height: 48 }}>
                 {loading && <span className="rh-spinner rh-spinner-sm" style={{ borderTopColor: 'white', borderColor: 'rgba(255,255,255,0.3)' }} />}
-                {loading ? 'Mendaftar...' : 'Buat Akun'}
+                {loading ? 'Mendaftar…' : 'Buat Akun'}
               </button>
             </form>
 

@@ -49,7 +49,7 @@ const PROMO_BANNERS = [
   {
     id: 'promo-3',
     badge: 'PAKET KELUARGA & ROMBONGAN',
-    headline: 'PESAN HINGGA 6 PENUMPANG SEKALIGUS + BONUS RAILPOINTS',
+    headline: 'PESAN HINGGA 6 PENUMPANG DALAM SATU BOOKING',
     subtext: 'Duduk berdampingan satu keluarga dalam satu kode booking, lengkap dengan e-boarding pass QR instan.',
     code: 'KELUARGARAIL',
     attendantName: 'Petugas Hospitality Stasiun',
@@ -59,13 +59,19 @@ const PROMO_BANNERS = [
   },
 ]
 
+const PROMO_BANNERS_EN = [
+  { badge: 'EXCLUSIVE OFFER · RAILHUB CREW', headline: '25% OFF EXECUTIVE TICKETS ACROSS JAVA', subtext: 'Enjoy reclining seats, warm bistro meals, and attentive onboard service.', attendantName: 'Executive Service Crew' },
+  { badge: 'EARLY BIRD · ADVANCE BOOKING', headline: 'SAVE RP 75,000 ON JAKARTA, YOGYAKARTA & SURABAYA ROUTES', subtext: 'Book selected departures early and choose your preferred available seat.', attendantName: 'Onboard Service Crew' },
+  { badge: 'FAMILY & GROUP TRAVEL', headline: 'BOOK UP TO 6 PASSENGERS IN ONE RESERVATION', subtext: 'Keep one booking code for the group and receive a digital QR ticket.', attendantName: 'Station Service Crew' },
+]
+
 const POPULAR_ROUTES = [
-  { from: 'GMR', fromName: 'Gambir (Jakarta)',   to: 'BD',  toName: 'Bandung',         duration: '3j 00m', price: 'Mulai Rp 150.000', tag: 'Favorit Akhir Pekan' },
-  { from: 'GMR', fromName: 'Gambir (Jakarta)',   to: 'YK',  toName: 'Yogyakarta',      duration: '7j 00m', price: 'Mulai Rp 250.000', tag: 'Rute Wisata' },
-  { from: 'GMR', fromName: 'Gambir (Jakarta)',   to: 'SGU', toName: 'Surabaya Gubeng', duration: '8j 15m', price: 'Mulai Rp 350.000', tag: 'Lintas Pantura' },
-  { from: 'BD',  fromName: 'Bandung',            to: 'SGU', toName: 'Surabaya Gubeng', duration: '11j 00m', price: 'Mulai Rp 300.000', tag: 'Lintas Selatan' },
-  { from: 'YK',  fromName: 'Yogyakarta',         to: 'GMR', toName: 'Gambir (Jakarta)',duration: '7j 00m', price: 'Mulai Rp 250.000', tag: 'Bisnis & Wisata' },
-  { from: 'SLO', fromName: 'Solo Balapan',       to: 'BD',  toName: 'Bandung',         duration: '8j 45m', price: 'Mulai Rp 195.000', tag: 'Antar Budaya' },
+  { from: 'GMR', fromName: 'Gambir (Jakarta)',   to: 'BD',  toName: 'Bandung',         duration: '3j 00m', price: 'Mulai Rp 150.000', tag: 'Favorit Akhir Pekan', enTag: 'Weekend Favorite' },
+  { from: 'GMR', fromName: 'Gambir (Jakarta)',   to: 'YK',  toName: 'Yogyakarta',      duration: '7j 00m', price: 'Mulai Rp 250.000', tag: 'Rute Wisata', enTag: 'Leisure Route' },
+  { from: 'GMR', fromName: 'Gambir (Jakarta)',   to: 'SGU', toName: 'Surabaya Gubeng', duration: '8j 15m', price: 'Mulai Rp 350.000', tag: 'Lintas Pantura', enTag: 'North Coast' },
+  { from: 'BD',  fromName: 'Bandung',            to: 'SGU', toName: 'Surabaya Gubeng', duration: '11j 00m', price: 'Mulai Rp 300.000', tag: 'Lintas Selatan', enTag: 'Southern Line' },
+  { from: 'YK',  fromName: 'Yogyakarta',         to: 'GMR', toName: 'Gambir (Jakarta)',duration: '7j 00m', price: 'Mulai Rp 250.000', tag: 'Bisnis & Wisata', enTag: 'Business & Leisure' },
+  { from: 'SLO', fromName: 'Solo Balapan',       to: 'BD',  toName: 'Bandung',         duration: '8j 45m', price: 'Mulai Rp 195.000', tag: 'Antar Budaya', enTag: 'Cross-Cultural' },
 ]
 
 const FLEET_CLASSES = [
@@ -73,6 +79,7 @@ const FLEET_CLASSES = [
     title: 'Luxury Sleeper',
     badge: 'Kenyamanan Tertinggi',
     summary: 'Kursi rebah 140° · Layar VOD Pribadi · Bistro Hangat Gratis',
+    summaryEn: '140° reclining seat · Personal VOD screen · Warm meal',
     icon: Armchair,
     price: 'Mulai Rp 450.000',
   },
@@ -80,6 +87,7 @@ const FLEET_CLASSES = [
     title: 'Eksekutif',
     badge: 'Paling Populer',
     summary: 'Captain Seat 2-2 Putar · Meja Kerja Lipat · WiFi Kabin',
+    summaryEn: '2-2 reclining seat · Folding table · Cabin WiFi',
     icon: Train,
     price: 'Mulai Rp 250.000',
   },
@@ -87,15 +95,16 @@ const FLEET_CLASSES = [
     title: 'Ekonomi New Gen',
     badge: 'Terjangkau & Modern',
     summary: 'Kursi 2-2 Reclining · AC Dingin · Kabin Bebas Bising',
+    summaryEn: '2-2 reclining seat · Air-conditioned cabin',
     icon: Sparkles,
     price: 'Mulai Rp 120.000',
   },
 ]
 
 export default function HomePage() {
-  const { t } = useLang()
+  const { t, lang } = useLang()
   const router = useRouter()
-  const { user, loading: authLoading } = useAuth()
+  const { user } = useAuth()
   const [promoIndex, setPromoIndex] = useState(0)
 
   // Auto rotate promo banners every 6 seconds
@@ -105,24 +114,6 @@ export default function HomePage() {
     }, 6000)
     return () => window.clearInterval(timer)
   }, [])
-
-  if (authLoading) {
-    return (
-      <>
-        <Navbar />
-        <main className="rh-container" style={{ minHeight: '70vh', padding: '2.5rem 1.5rem' }} aria-busy="true" aria-live="polite">
-          <div style={{ display: 'grid', gap: '1.25rem' }}>
-            <div className="rh-skeleton" style={{ height: 260, borderRadius: 20 }} />
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))', gap: '1rem' }}>
-              <div className="rh-skeleton" style={{ height: 140, borderRadius: 16 }} />
-              <div className="rh-skeleton" style={{ height: 140, borderRadius: 16 }} />
-              <div className="rh-skeleton" style={{ height: 140, borderRadius: 16 }} />
-            </div>
-          </div>
-        </main>
-      </>
-    )
-  }
 
   function openPopularRoute(event, route) {
     event.preventDefault()
@@ -141,28 +132,25 @@ export default function HomePage() {
     if (navigator.clipboard) {
       navigator.clipboard.writeText(code)
     }
-    toast.success(`Kode promo ${code} berhasil disalin!`)
+    toast.success(lang === 'en' ? `Promo code ${code} copied!` : `Kode promo ${code} berhasil disalin!`)
   }
 
-  const activePromo = PROMO_BANNERS[promoIndex]
+  const activePromo = lang === 'en'
+    ? { ...PROMO_BANNERS[promoIndex], ...PROMO_BANNERS_EN[promoIndex] }
+    : PROMO_BANNERS[promoIndex]
 
   return (
     <div>
       <Navbar />
 
       {/* ── CINEMATIC TRAIN BUMPER (Strict 8:2 Aspect Ratio, Smooth GPU Animation, Zero Lag) ── */}
-      <TrainBumperBanner />
+      <div className="rh-hide-mobile"><TrainBumperBanner /></div>
 
       {/* ── HERO & SEARCH SECTION ──────────────────────────── */}
       <section className="rh-hero" style={{ paddingBottom: '2.5rem' }}>
         <div className="rh-pattern-dots" style={{ position: 'absolute', inset: 0, opacity: 0.35 }} />
 
         <div className="rh-container" style={{ position: 'relative', zIndex: 1 }}>
-          {/* Mobile Super App Portal View (Greeting, 9 Service Badges, Live Tracking Banner) */}
-          <div className="rh-show-mobile-only" style={{ marginBottom: '1rem', paddingTop: '0.25rem' }}>
-            <MobilePortalHeader />
-          </div>
-
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))', gap: 'clamp(1.5rem, 3.5vw, 3rem)', alignItems: 'center' }}>
             {/* Desktop Headline & Value Highlights */}
             <div className="animate-fade-in rh-hide-mobile">
@@ -178,27 +166,27 @@ export default function HomePage() {
                   gap: '0.45rem',
                 }}
               >
-                <Train size={14} /> Railway Super App — Pulau Jawa
+                <Train size={14} /> {lang === 'en' ? 'Java Railway Platform' : 'Platform Kereta Pulau Jawa'}
               </div>
 
               <h1 className="rh-h1" style={{ color: 'white', marginBottom: '1rem', maxWidth: 500, lineHeight: 1.18 }}>
-                Pesan Tiket Kereta Cepat & Tanpa Antre
+                {t.hero.title}
               </h1>
 
               <p className="rh-body-lg" style={{ color: 'rgba(255,255,255,0.85)', marginBottom: '1.75rem', maxWidth: 440, lineHeight: 1.6 }}>
-                Jelajahi 50 stasiun se-Pulau Jawa dengan pilihan kursi bebas per gerbong, e-boarding pass QR instan, dan live tracking kereta real-time.
+                {t.hero.subtitle}
               </p>
 
               {/* Fast stats pills */}
               <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap', paddingTop: '0.5rem', borderTop: '1px solid rgba(255,255,255,0.15)' }}>
                 <div>
                   <strong style={{ display: 'block', fontSize: '1.4rem', color: 'var(--rh-accent)', fontWeight: 800 }}>50</strong>
-                  <span style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.75)' }}>Stasiun Aktif</span>
+                  <span style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.75)' }}>{lang === 'en' ? 'Stations' : 'Stasiun Aktif'}</span>
                 </div>
                 <div style={{ width: 1, background: 'rgba(255,255,255,0.15)' }} />
                 <div>
                   <strong style={{ display: 'block', fontSize: '1.4rem', color: 'white', fontWeight: 800 }}>100%</strong>
-                  <span style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.75)' }}>Anti Kursi Ganda</span>
+                  <span style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.75)' }}>{lang === 'en' ? 'Seat Availability' : 'Ketersediaan Kursi'}</span>
                 </div>
                 <div style={{ width: 1, background: 'rgba(255,255,255,0.15)' }} />
                 <div>
@@ -214,15 +202,19 @@ export default function HomePage() {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.15rem' }}>
                   <h2 style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--rh-navy)', margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                     <Train size={20} style={{ color: 'var(--rh-primary)' }} />
-                    Cari Tiket Kereta Api
+                    {t.hero.searchTitle}
                   </h2>
                   <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--rh-primary)', background: 'var(--rh-primary-light)', padding: '0.2rem 0.6rem', borderRadius: 999 }}>
-                    Jadwal Resmi
+                    {lang === 'en' ? 'Schedule' : 'Jadwal'}
                   </span>
                 </div>
                 <SearchWidget />
               </div>
             </div>
+          </div>
+
+          <div className="rh-show-mobile-only" style={{ marginTop: '1rem' }}>
+            <MobilePortalHeader />
           </div>
         </div>
       </section>
@@ -233,9 +225,9 @@ export default function HomePage() {
           <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem', marginBottom: '1rem' }}>
             <div>
               <span className="rh-badge rh-badge-primary" style={{ marginBottom: '0.25rem' }}>
-                <Sparkles size={12} /> Penawaran Terbatas
+                <Sparkles size={12} /> {lang === 'en' ? 'Limited Offers' : 'Penawaran Terbatas'}
               </span>
-              <h2 className="rh-h3" style={{ margin: 0, color: 'var(--rh-navy)', fontSize: '1.25rem' }}>Promo Perjalanan RAILHUB</h2>
+              <h2 className="rh-h3" style={{ margin: 0, color: 'var(--rh-navy)', fontSize: '1.25rem' }}>{lang === 'en' ? 'RAILHUB Travel Deals' : 'Promo Perjalanan RAILHUB'}</h2>
             </div>
 
             {/* Slider controls */}
@@ -243,7 +235,7 @@ export default function HomePage() {
               <button
                 type="button"
                 className="rh-btn rh-btn-ghost rh-btn-sm"
-                aria-label="Banner sebelumnya"
+                aria-label={lang === 'en' ? 'Previous banner' : 'Banner sebelumnya'}
                 onClick={() => setPromoIndex(prev => (prev - 1 + PROMO_BANNERS.length) % PROMO_BANNERS.length)}
                 style={{ borderRadius: '50%', width: 32, height: 32, padding: 0, display: 'grid', placeItems: 'center' }}
               >
@@ -255,7 +247,7 @@ export default function HomePage() {
               <button
                 type="button"
                 className="rh-btn rh-btn-ghost rh-btn-sm"
-                aria-label="Banner berikutnya"
+                aria-label={lang === 'en' ? 'Next banner' : 'Banner berikutnya'}
                 onClick={() => setPromoIndex(prev => (prev + 1) % PROMO_BANNERS.length)}
                 style={{ borderRadius: '50%', width: 32, height: 32, padding: 0, display: 'grid', placeItems: 'center' }}
               >
@@ -349,7 +341,7 @@ export default function HomePage() {
                     padding: '0.25rem 0.55rem',
                     borderRadius: 8,
                   }}
-                  title="Klik untuk menyalin kode promo"
+                  title={lang === 'en' ? 'Copy promo code' : 'Salin kode promo'}
                 >
                   <Copy size={12} /> {activePromo.code}
                 </button>
@@ -363,7 +355,7 @@ export default function HomePage() {
                     fontWeight: 700,
                   }}
                 >
-                  Pakai Promo <ChevronRight size={13} />
+                  {lang === 'en' ? 'Use Deal' : 'Pakai Promo'} <ChevronRight size={13} />
                 </Link>
               </div>
             </div>
@@ -419,7 +411,7 @@ export default function HomePage() {
               <button
                 key={banner.id}
                 type="button"
-                aria-label={`Pilih promo ${idx + 1}`}
+                aria-label={`${lang === 'en' ? 'Select deal' : 'Pilih promo'} ${idx + 1}`}
                 onClick={() => setPromoIndex(idx)}
                 style={{
                   width: promoIndex === idx ? 24 : 8,
@@ -428,7 +420,7 @@ export default function HomePage() {
                   border: 'none',
                   cursor: 'pointer',
                   background: promoIndex === idx ? 'var(--rh-primary)' : 'var(--rh-border)',
-                  transition: 'all 0.25s ease',
+                  transition: 'background-color 0.25s ease, width 0.25s ease',
                 }}
               />
             ))}
@@ -442,12 +434,12 @@ export default function HomePage() {
           <div style={{ marginBottom: '1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '0.5rem' }}>
             <div>
               <span className="rh-badge rh-badge-primary" style={{ marginBottom: '0.25rem' }}>
-                <Compass size={12} /> Destinasi Terpopuler
+                <Compass size={12} /> {lang === 'en' ? 'Popular Destinations' : 'Destinasi Terpopuler'}
               </span>
-              <h2 className="rh-h3" style={{ margin: 0, color: 'var(--rh-navy)', fontSize: '1.25rem' }}>Rute Favorit Penumpang</h2>
+              <h2 className="rh-h3" style={{ margin: 0, color: 'var(--rh-navy)', fontSize: '1.25rem' }}>{lang === 'en' ? 'Favorite Routes' : 'Rute Favorit Penumpang'}</h2>
             </div>
             <span style={{ fontSize: '0.75rem', color: 'var(--rh-text-3)', fontWeight: 600 }}>
-              Geser untuk rute lainnya →
+              {lang === 'en' ? 'Swipe for more routes →' : 'Geser untuk rute lainnya →'}
             </span>
           </div>
 
@@ -471,10 +463,10 @@ export default function HomePage() {
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.6rem' }}>
                   <span style={{ fontSize: '0.65rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--rh-primary)', background: 'var(--rh-primary-light)', padding: '0.12rem 0.5rem', borderRadius: 6 }}>
-                    {route.tag}
+                    {lang === 'en' ? route.enTag : route.tag}
                   </span>
                   <span style={{ fontSize: '0.72rem', color: 'var(--rh-text-2)', display: 'flex', alignItems: 'center', gap: 3 }}>
-                    <Clock size={11} /> {route.duration}
+                    <Clock size={11} /> {lang === 'en' ? route.duration.replace('j', 'h') : route.duration}
                   </span>
                 </div>
 
@@ -489,10 +481,10 @@ export default function HomePage() {
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px dashed var(--rh-border)', paddingTop: '0.5rem' }}>
                   <span style={{ fontSize: '0.85rem', color: 'var(--rh-accent-dark)', fontWeight: 800 }}>
-                    {route.price}
+                    {lang === 'en' ? route.price.replace('Mulai', 'From') : route.price}
                   </span>
                   <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--rh-primary)', display: 'inline-flex', alignItems: 'center', gap: 2 }}>
-                    Cek <ChevronRight size={13} />
+                    {lang === 'en' ? 'View' : 'Cek'} <ChevronRight size={13} />
                   </span>
                 </div>
               </Link>
@@ -502,13 +494,13 @@ export default function HomePage() {
       </section>
 
       {/* ── FLEET & CABIN COMFORT (ULTRA-MINIMAL 3 CARDS) ── */}
-      <section className="rh-section" style={{ background: '#ffffff', paddingTop: '2rem', paddingBottom: '2rem' }}>
+      <section className="rh-section home-fleet-section" style={{ background: '#ffffff', paddingTop: '2rem', paddingBottom: '2rem' }}>
         <div className="rh-container">
           <div style={{ marginBottom: '1.25rem', textAlign: 'center' }}>
             <span className="rh-badge rh-badge-primary" style={{ marginBottom: '0.25rem' }}>
-              <Train size={12} /> Standar Layanan
+              <Train size={12} /> {lang === 'en' ? 'Service Classes' : 'Standar Layanan'}
             </span>
-            <h2 className="rh-h3" style={{ margin: 0, color: 'var(--rh-navy)', fontSize: '1.25rem' }}>Pilihan Kelas Kereta</h2>
+            <h2 className="rh-h3" style={{ margin: 0, color: 'var(--rh-navy)', fontSize: '1.25rem' }}>{lang === 'en' ? 'Choose Your Travel Class' : 'Pilihan Kelas Kereta'}</h2>
           </div>
 
           {/* Ultra-compact 3-card horizontal grid */}
@@ -537,10 +529,10 @@ export default function HomePage() {
                   <div style={{ minWidth: 0, flex: 1 }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.35rem' }}>
                       <strong style={{ fontSize: '0.9rem', color: 'var(--rh-navy)' }}>{fc.title}</strong>
-                      <span style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--rh-accent-dark)' }}>{fc.price}</span>
+                      <span style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--rh-accent-dark)' }}>{lang === 'en' ? fc.price.replace('Mulai', 'From') : fc.price}</span>
                     </div>
                     <span style={{ display: 'block', fontSize: '0.72rem', color: 'var(--rh-text-2)', marginTop: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                      {fc.summary}
+                      {lang === 'en' ? fc.summaryEn : fc.summary}
                     </span>
                   </div>
                   <ChevronRight size={15} style={{ color: 'var(--rh-text-3)', flexShrink: 0 }} />
@@ -551,24 +543,24 @@ export default function HomePage() {
 
           <div style={{ textAlign: 'center', marginTop: '1.25rem' }}>
             <Link href="/about" style={{ fontSize: '0.8rem', color: 'var(--rh-primary)', fontWeight: 700, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 3 }}>
-              Lihat Seluruh Armada & Portofolio Tim <ChevronRight size={14} />
+              {lang === 'en' ? 'See All Classes & About the Team' : 'Lihat Seluruh Armada & Portofolio Tim'} <ChevronRight size={14} />
             </Link>
           </div>
         </div>
       </section>
 
       {/* ── FAST CALL-TO-ACTION (COMPACT) ─────────────────── */}
-      <section style={{ background: 'linear-gradient(135deg, #0F2552 0%, #1A428A 100%)', padding: '2.5rem 0 calc(5.5rem + env(safe-area-inset-bottom, 0px))', color: 'white' }}>
+      <section className="home-bottom-cta" style={{ background: 'linear-gradient(135deg, #0F2552 0%, #1A428A 100%)', padding: '2.5rem 0 calc(5.5rem + env(safe-area-inset-bottom, 0px))', color: 'white' }}>
         <div className="rh-container" style={{ textAlign: 'center', maxWidth: 580 }}>
           <h2 className="rh-h3" style={{ color: 'white', marginBottom: '0.5rem', fontSize: '1.35rem' }}>
-            Siap Memulai Perjalanan Anda?
+            {lang === 'en' ? 'Ready for Your Next Journey?' : 'Siap Memulai Perjalanan Anda?'}
           </h2>
           <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: '0.9rem', margin: '0 0 1.25rem', lineHeight: 1.5 }}>
-            Dapatkan pengalaman pesan tiket kereta terbaik dengan e-boarding pass QR dan live tracking stasiun real-time.
+            {lang === 'en' ? 'Book tickets, keep your QR boarding pass, and view journey status in one place.' : 'Pesan tiket, simpan e-boarding pass QR, dan pantau status perjalanan dari satu tempat.'}
           </p>
           <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', flexWrap: 'wrap' }}>
             <Link href="/trains" className="rh-btn rh-btn-accent rh-btn-sm" style={{ padding: '0.55rem 1.25rem', fontSize: '0.85rem' }}>
-              Cari Tiket Sekarang <ChevronRight size={16} />
+              {lang === 'en' ? 'Find Tickets' : 'Cari Tiket Sekarang'} <ChevronRight size={16} />
             </Link>
             <Link
               href="/about"
@@ -581,7 +573,7 @@ export default function HomePage() {
                 fontSize: '0.85rem',
               }}
             >
-              Tentang & Privasi Keamanan
+              {lang === 'en' ? 'About & Privacy' : 'Tentang & Privasi'}
             </Link>
           </div>
         </div>

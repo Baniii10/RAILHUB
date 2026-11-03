@@ -142,7 +142,7 @@ export default function StaffServiceDesk({ scheduleIds, isAdmin = false, showOrd
         ? (showOrders ? (isAdmin ? 'Layanan penumpang' : 'Layanan penumpang pada perjalanan tugas') : 'Laporan bantuan dan barang hilang')
         : 'Pesanan makanan'}</h2>
       {error && <div role="alert" className="rh-card" style={{ padding: '1rem', color: 'var(--rh-danger)' }}>{error}</div>}
-      {loading && <div aria-live="polite" className="rh-card" style={{ padding: '1rem' }}>{showOrders && showReports ? 'Memuat pesanan dan laporan...' : showOrders ? 'Memuat pesanan...' : 'Memuat laporan...'}</div>}
+      {loading && <div aria-live="polite" className="rh-card" style={{ padding: '1rem' }}>{showOrders && showReports ? 'Memuat pesanan dan laporan…' : showOrders ? 'Memuat pesanan…' : 'Memuat laporan…'}</div>}
 
       {showOrders && <article className="rh-card">
         <div className="rh-card-header">

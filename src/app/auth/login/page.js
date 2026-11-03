@@ -8,7 +8,7 @@ import { useLang } from '@/contexts/LangContext'
 import toast from 'react-hot-toast'
 
 export default function LoginPage() {
-  const { t } = useLang()
+  const { t, lang } = useLang()
   const router = useRouter()
   const supabase = createClient()
 
@@ -41,7 +41,9 @@ export default function LoginPage() {
     toast.success(t.auth.loginSuccess)
 
     const requestedNext = new URLSearchParams(window.location.search).get('next')
-    if (requestedNext?.startsWith('/booking/') && !requestedNext.startsWith('//')) {
+    if (requestedNext
+      && !requestedNext.startsWith('//')
+      && (requestedNext.startsWith('/booking/') || requestedNext.startsWith('/dashboard'))) {
       router.push(requestedNext)
     } else if (profile?.role === 'admin')     router.push('/dashboard/admin')
     else if (profile?.role === 'conductor') router.push('/dashboard/staff')
@@ -62,7 +64,7 @@ export default function LoginPage() {
             <span style={{ fontSize: '1.5rem' }}>RAILHUB</span>
           </Link>
           <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.9375rem' }}>
-            Platform Kereta Api Terpadu Pulau Jawa
+            {lang === 'en' ? 'Integrated Railway Platform for Java' : 'Platform Kereta Api Terpadu Pulau Jawa'}
           </p>
         </div>
 
@@ -71,7 +73,7 @@ export default function LoginPage() {
           <div className="rh-card-header">
             <h1 className="rh-h4">{t.auth.login}</h1>
             <p style={{ color: 'var(--rh-text-2)', fontSize: '0.9rem', marginTop: '0.25rem' }}>
-              Masuk ke akun RAILHUB Anda
+              {lang === 'en' ? 'Sign in to your RAILHUB account' : 'Masuk ke akun RAILHUB Anda'}
             </p>
           </div>
           <div className="rh-card-body">
@@ -96,6 +98,8 @@ export default function LoginPage() {
                   <input
                     id="email"
                     type="email"
+                    name="email"
+                    spellCheck={false}
                     className="rh-input"
                     placeholder="nama@email.com"
                     value={email}
@@ -116,7 +120,7 @@ export default function LoginPage() {
                     id="password"
                     type={showPw ? 'text' : 'password'}
                     className="rh-input"
-                    placeholder="Kata sandi"
+                    placeholder={t.auth.password}
                     value={password}
                     onChange={e => setPassword(e.target.value)}
                     required
@@ -125,19 +129,13 @@ export default function LoginPage() {
                   />
                   <button
                     type="button"
+                    aria-label={showPw ? (lang === 'en' ? 'Hide password' : 'Sembunyikan kata sandi') : (lang === 'en' ? 'Show password' : 'Tampilkan kata sandi')}
                     onClick={() => setShowPw(v => !v)}
-                    style={{ position: 'absolute', right: '0.875rem', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--rh-text-3)', padding: 0 }}
+                    style={{ position: 'absolute', right: '0.35rem', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--rh-text-3)', width: 40, height: 40, padding: 0 }}
                   >
                     {showPw ? <EyeOff size={16} /> : <Eye size={16} />}
                   </button>
                 </div>
-              </div>
-
-              {/* Forgot Password link */}
-              <div style={{ textAlign: 'right' }}>
-                <span style={{ fontSize: '0.875rem', color: 'var(--rh-primary)', cursor: 'pointer' }}>
-                  {t.auth.forgotPassword}
-                </span>
               </div>
 
               <button
@@ -147,14 +145,14 @@ export default function LoginPage() {
                 style={{ marginTop: '0.5rem', height: 48 }}
               >
                 {loading && <span className="rh-spinner rh-spinner-sm" style={{ borderTopColor: 'white', borderColor: 'rgba(255,255,255,0.3)' }} />}
-                {loading ? 'Sedang masuk...' : t.auth.login}
+                {loading ? (lang === 'en' ? 'Signing in…' : 'Sedang masuk…') : t.auth.login}
               </button>
             </form>
 
             {/* Divider */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', margin: '1.5rem 0' }}>
               <div style={{ flex: 1, height: 1, background: 'var(--rh-border)' }} />
-              <span style={{ fontSize: '0.8125rem', color: 'var(--rh-text-3)' }}>atau</span>
+              <span style={{ fontSize: '0.8125rem', color: 'var(--rh-text-3)' }}>{lang === 'en' ? 'or' : 'atau'}</span>
               <div style={{ flex: 1, height: 1, background: 'var(--rh-border)' }} />
             </div>
 
@@ -171,14 +169,14 @@ export default function LoginPage() {
               borderRadius: 10, border: '1px solid var(--rh-border)',
               fontSize: '0.8125rem', color: 'var(--rh-text-3)',
             }}>
-              <strong style={{ color: 'var(--rh-text-2)', display: 'block', marginBottom: '0.375rem' }}>Belum punya akun?</strong>
-              <div>Akun demo tidak tersedia di project ini. Buat akun melalui Daftar. Akun baru memiliki akses penumpang; role Admin hanya dapat diberikan oleh pengelola project.</div>
+              <strong style={{ color: 'var(--rh-text-2)', display: 'block', marginBottom: '0.375rem' }}>{t.auth.noAccount}</strong>
+              <div>{lang === 'en' ? 'Demo accounts are not provided. New accounts receive passenger access; only a project administrator can assign elevated roles.' : 'Akun demo tidak tersedia. Akun baru mendapat akses penumpang; role lebih tinggi hanya dapat diberikan oleh pengelola project.'}</div>
             </div>
           </div>
         </div>
 
         <p style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.8125rem', color: 'rgba(255,255,255,0.4)' }}>
-          <Link href="/" style={{ color: 'rgba(255,255,255,0.5)' }}>← Kembali ke Beranda</Link>
+          <Link href="/" style={{ color: 'rgba(255,255,255,0.5)' }}>← {lang === 'en' ? 'Back to Home' : 'Kembali ke Beranda'}</Link>
         </p>
       </div>
     </div>

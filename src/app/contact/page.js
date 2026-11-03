@@ -99,7 +99,7 @@ export default function ContactPage() {
                       </label>
                       <label className="rh-input-group">
                         <span className="rh-label-text">Kode Booking (Opsional)</span>
-                        <input className="rh-input rh-mono" value={bookingCode} onChange={e => setBookingCode(e.target.value)} placeholder="RH-..." />
+                        <input className="rh-input rh-mono" value={bookingCode} onChange={e => setBookingCode(e.target.value)} placeholder="RH-…" />
                       </label>
                     </div>
                     <label className="rh-input-group">
@@ -119,7 +119,7 @@ export default function ContactPage() {
                         rows={4}
                         value={message}
                         onChange={e => setMessage(e.target.value)}
-                        placeholder="Tuliskan detail perjalanan, nomor kereta, atau pertanyaan Anda..."
+                        placeholder="Tuliskan detail perjalanan, nomor kereta, atau pertanyaan Anda…"
                         required
                       />
                     </label>

@@ -294,7 +294,7 @@ export default function AdminJourneysPage() {
                 Rentang: {appliedDates.from && formatDate(`${appliedDates.from}T12:00:00`)} – {appliedDates.to && formatDate(`${appliedDates.to}T12:00:00`)} · {schedules.length} jadwal
               </p>
               {error && <div role="alert" className="rh-card" style={{ padding: '1rem', color: 'var(--rh-danger)', marginBottom: '1rem' }}><AlertCircle size={16} style={{ verticalAlign: 'middle', marginRight: 6 }} />{error}</div>}
-              {loading && <div aria-live="polite" className="rh-card" style={{ padding: '1rem', marginBottom: '1rem' }}>Memuat jadwal perjalanan...</div>}
+              {loading && <div aria-live="polite" className="rh-card" style={{ padding: '1rem', marginBottom: '1rem' }}>Memuat jadwal perjalanan…</div>}
 
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '1rem' }}>
                 <label className="rh-input-group" style={{ flex: '1 1 250px' }}>

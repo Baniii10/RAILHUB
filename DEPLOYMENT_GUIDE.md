@@ -149,3 +149,4 @@ Flag `--prod` akan mem-build aplikasi dan langsung mengarahkan domain utama ke d
 Jika kamu ingin memerintahkan agent AI lain untuk melakukan deployment RAILHUB, kamu bisa copy-paste instruksi berikut:
 
 > *"Tolong lakukan build verification dengan `npm run build`. Jika sukses tanpa error, lakukan commit dengan pesan yang jelas, lalu push perubahan ke production Vercel dengan perintah `git push bagas master:main && git push bagas master && git push origin master:main && git push origin master`. Pastikan Vercel Production menerima commit terbaru pada branch main."*
+

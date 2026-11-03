@@ -442,7 +442,7 @@ export default function BookingPayment({ bookingId }) {
           </h1>
 
           {error && <div role="alert" className="rh-card" style={{ padding: '1.25rem', color: 'var(--rh-danger)' }}>{error}</div>}
-          {!booking && !error && <div aria-live="polite" className="rh-card" style={{ padding: '1.5rem' }}>Memuat booking...</div>}
+          {!booking && !error && <div aria-live="polite" className="rh-card" style={{ padding: '1.5rem' }}>Memuat booking…</div>}
 
           {booking && (
             <>
@@ -494,7 +494,7 @@ export default function BookingPayment({ bookingId }) {
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
                       <button className="rh-btn rh-btn-primary" type="button" onClick={confirmPayment} disabled={processing}>
                         {processing && <LoaderCircle size={16} className="rh-spin" />}
-                        {processing ? 'Memproses simulasi...' : `Bayar ${formatIDR(booking.total_amount)}`}
+                        {processing ? 'Memproses simulasi…' : `Bayar ${formatIDR(booking.total_amount)}`}
                       </button>
                       <button className="rh-btn rh-btn-ghost" type="button" onClick={cancelBooking} disabled={processing}>
                         Batalkan booking

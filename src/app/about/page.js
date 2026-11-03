@@ -121,7 +121,7 @@ export default function AboutPage() {
               Membangun Standar Baru Sistem Informasi Kereta Api
             </h1>
             <p className="rh-body-lg" style={{ color: 'rgba(255,255,255,0.78)', lineHeight: 1.7 }}>
-              RAILHUB adalah platform simulasi perjalanan kereta api terpadu di Pulau Jawa yang menyatukan pemesanan tiket kursi real-time, pelacakan perjalanan interaktif, layanan restorasi di atas kereta, serta sinergi operasional antara Penumpang, Petugas, dan Admin.
+              RAILHUB adalah platform simulasi perjalanan kereta api terpadu di Pulau Jawa yang menyatukan pemesanan tiket, status perjalanan terjadwal, layanan restorasi di atas kereta, serta alur kerja Penumpang, Petugas, dan Admin.
             </p>
           </div>
         </div>
@@ -257,7 +257,7 @@ export default function AboutPage() {
             </span>
             <h2 className="rh-h2">Kebijakan Privasi & Keamanan Sistem</h2>
             <p className="rh-body-lg" style={{ color: 'var(--rh-text-2)', marginTop: '0.5rem' }}>
-              RAILHUB menerapkan protokol enkripsi perbankan dan integritas data atomik untuk melindungi seluruh privasi penumpang dan keaslian tiket.
+              RAILHUB menggunakan autentikasi, pembatasan akses berbasis role, dan kebijakan kepemilikan data untuk melindungi akun serta tiket pengguna.
             </p>
           </div>
 
@@ -267,10 +267,10 @@ export default function AboutPage() {
                 <Shield size={22} />
               </div>
               <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--rh-navy)', marginBottom: '0.5rem' }}>
-                Enkripsi Transaksi & Pembayaran
+                Transaksi & Pembayaran
               </h3>
               <p style={{ fontSize: '0.875rem', color: 'var(--rh-text-2)', lineHeight: 1.6, margin: 0 }}>
-                Setiap pembayaran tiket menggunakan gateway resmi berstandar PCI-DSS dan enkripsi TLS 256-bit. RAILHUB tidak pernah menyimpan nomor kartu kredit atau detail pembayaran sensitif.
+                Pembayaran yang terhubung ke gateway diproses melalui endpoint server. RAILHUB tidak meminta atau menyimpan nomor kartu pada formulir aplikasi ini.
               </p>
             </div>
 
@@ -279,10 +279,10 @@ export default function AboutPage() {
                 <CheckCircle2 size={22} />
               </div>
               <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--rh-navy)', marginBottom: '0.5rem' }}>
-                Anti-Pemalsuan QR E-Boarding
+                Validasi QR E-Boarding
               </h3>
               <p style={{ fontSize: '0.875rem', color: 'var(--rh-text-2)', lineHeight: 1.6, margin: 0 }}>
-                Kode QR e-boarding pass ditandatangani dengan cryptographic hash unik. Hanya kondektur dan petugas resmi terautentikasi yang dapat memvalidasi boarding pass di gerbang stasiun.
+                Kode tiket diperiksa terhadap data tiket dan status validasi. Akses menu validasi dibatasi untuk akun petugas yang terautentikasi.
               </p>
             </div>
 

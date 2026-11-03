@@ -59,7 +59,7 @@ const FAQ_ITEMS = [
   {
     category: 'account',
     q: 'Bagaimana cara memverifikasi identitas KTP/NIK pada akun saya?',
-    a: 'Buka Dashboard Penumpang lalu pilih menu My Account. Masukkan nomor NIK 16 digit pada bagian Verifikasi Identitas (Simulasi KTP) untuk mengaktifkan lencana Penumpang Terverifikasi.',
+    a: 'Verifikasi dokumen identitas belum tersedia. RAILHUB tidak meminta unggahan KTP sampai penyimpanan aman dan proses verifikasi resmi siap digunakan.',
   },
 ]
 
@@ -102,7 +102,7 @@ export default function FaqPage() {
                 type="search"
                 className="rh-input"
                 style={{ paddingLeft: 42 }}
-                placeholder="Cari topik pertanyaan (mis. peron, reschedule, QR, makanan)..."
+                placeholder="Cari topik pertanyaan (mis. peron, reschedule, QR, makanan)…"
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
               />

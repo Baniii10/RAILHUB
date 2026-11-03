@@ -81,7 +81,7 @@ export default function FoodOrdersPage() {
             <div className="rh-card-body">
               {error && <div role="alert" className="rh-card" style={{ padding: '1rem', color: 'var(--rh-danger)', marginBottom: '1rem' }}>{error}</div>}
               {scheduleIds === null && !isAdmin
-                ? <div aria-live="polite" className="rh-card" style={{ padding: '1rem' }}>Memuat perjalanan tugas...</div>
+                ? <div aria-live="polite" className="rh-card" style={{ padding: '1rem' }}>Memuat perjalanan tugas…</div>
                 : scheduleIds?.length === 0 && !isAdmin
                   ? <div className="rh-card" style={{ padding: '1rem', color: 'var(--rh-text-2)' }}>Belum ada perjalanan yang ditugaskan, jadi pesanan makanan belum tersedia.</div>
                   : <StaffServiceDesk scheduleIds={scheduleIds || []} isAdmin={isAdmin} showReports={false} />}

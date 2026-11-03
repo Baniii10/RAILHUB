@@ -8,7 +8,7 @@
  * Surface: #E7ECF6
  */
 
-export function TrainTrackLoader({ text = 'Mencari jadwal terbaik...', subtext = 'Menghubungkan ke sistem RAILHUB...' }) {
+export function TrainTrackLoader({ text = 'Mencari jadwal terbaik…', subtext = 'Menghubungkan ke sistem RAILHUB…' }) {
   return (
     <div
       role="status"
@@ -74,6 +74,8 @@ export function TrainTrackLoader({ text = 'Mencari jadwal terbaik...', subtext =
         <style jsx>{`
           .rh-loader-train {
             animation: rh-glide 2s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate;
+            transform-box: fill-box;
+            transform-origin: center;
           }
           .rh-loader-ties {
             animation: rh-track-move 1.2s linear infinite;
@@ -92,6 +94,12 @@ export function TrainTrackLoader({ text = 'Mencari jadwal terbaik...', subtext =
             }
             100% {
               transform: translateX(-30px);
+            }
+          }
+          @media (prefers-reduced-motion: reduce) {
+            .rh-loader-train,
+            .rh-loader-ties {
+              animation: none;
             }
           }
         `}</style>

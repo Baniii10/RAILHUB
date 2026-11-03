@@ -336,7 +336,7 @@ export default function TrainBumperBanner() {
             {/* Bottom Status Ticker Bar */}
             <rect x="4" y="104" width="252" height="18" fill="#0B132B" />
             <text x="12" y="117" fill="#38BDF8" fontSize="8" fontWeight="700" fontFamily="monospace">
-              ⚡ LIVE REALTIME SYNC · ANTI KURSI GANDA 100%
+              STATUS PERJALANAN · PILIH KURSI PER GERBONG
             </text>
           </g>
 

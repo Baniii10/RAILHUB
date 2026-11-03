@@ -53,7 +53,7 @@ async function BookingPageContent({ params, searchParams }) {
 
 export default function BookingPage({ params, searchParams }) {
   return (
-    <Suspense fallback={<main className="rh-container" style={{ padding: '4rem 1.5rem' }}>Memuat pemesanan...</main>}>
+    <Suspense fallback={<main className="rh-container" style={{ padding: '4rem 1.5rem' }}>Memuat pemesanan…</main>}>
       <BookingPageContent params={params} searchParams={searchParams} />
     </Suspense>
   )

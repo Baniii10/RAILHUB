@@ -1,13 +1,18 @@
 import { Toaster } from 'react-hot-toast'
+import { Montserrat, Roboto_Mono } from 'next/font/google'
 import { AuthProvider } from '@/contexts/AuthContext'
 import { LangProvider } from '@/contexts/LangContext'
 import './globals.css'
+
+const montserrat = Montserrat({ subsets: ['latin'], variable: '--font-montserrat', display: 'swap' })
+const robotoMono = Roboto_Mono({ subsets: ['latin'], variable: '--font-roboto-mono', display: 'swap' })
 
 export const viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
   viewportFit: 'cover',
+  themeColor: '#0F2552',
 }
 
 export const metadata = {
@@ -27,24 +32,17 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="id">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500&display=swap"
-          rel="stylesheet"
-        />
-      </head>
-      <body>
+      <body className={`${montserrat.variable} ${robotoMono.variable}`}>
+        <a className="rh-skip-link" href="#main-content">Lewati ke konten utama</a>
         <LangProvider>
           <AuthProvider>
-            {children}
+            <div id="main-content" tabIndex={-1}>{children}</div>
             <Toaster
               position="top-right"
               toastOptions={{
                 duration: 4000,
                 style: {
-                  fontFamily: "'Montserrat', sans-serif",
+                  fontFamily: 'var(--font-montserrat), sans-serif',
                   fontSize: '0.9375rem',
                   borderRadius: '12px',
                   boxShadow: '0 10px 30px rgba(0,0,0,0.12)',

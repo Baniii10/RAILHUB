@@ -113,7 +113,7 @@ const id = {
     activeSchedules: 'Jadwal Aktif',
   },
   common: {
-    loading: 'Memuat...',
+    loading: 'Memuat…',
     error: 'Terjadi kesalahan',
     retry: 'Coba lagi',
     noData: 'Tidak ada data',
@@ -262,7 +262,7 @@ const en = {
     activeSchedules: 'Active Schedules',
   },
   common: {
-    loading: 'Loading...',
+    loading: 'Loading…',
     error: 'An error occurred',
     retry: 'Try again',
     noData: 'No data available',

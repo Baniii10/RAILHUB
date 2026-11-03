@@ -58,7 +58,7 @@ export default function JourneyStatusTimeline({ scheduleId }) {
   }, [scheduleId, reloadKey])
 
   if (loading) {
-    return <div aria-live="polite" className="rh-card" style={{ padding: '1rem', marginBottom: '1rem' }}>Memuat status perjalanan...</div>
+    return <div aria-live="polite" className="rh-card" style={{ padding: '1rem', marginBottom: '1rem' }}>Memuat status perjalanan…</div>
   }
 
   return (

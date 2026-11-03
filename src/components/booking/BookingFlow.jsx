@@ -63,12 +63,6 @@ export default function BookingFlow({
   const passengerDetailsRef = useRef(null)
 
   useEffect(() => {
-    if (authLoading || user) return
-    const next = `/booking/${scheduleId}?class=${encodeURIComponent(requestedClass)}&pax=${passengerCount}`
-    router.replace(`/auth/login?next=${encodeURIComponent(next)}`)
-  }, [authLoading, user, router, scheduleId, requestedClass, passengerCount])
-
-  useEffect(() => {
     let active = true
     const supabase = createClient()
 
@@ -180,6 +174,17 @@ export default function BookingFlow({
   const passengerDetailsComplete = passengers.every(passenger => (
     passenger.fullName.trim().length >= 2 && passenger.identity.trim().length >= 3
   ))
+  const loginNextParams = new URLSearchParams({
+    class: requestedClass || selectedClass || 'Ekonomi',
+    pax: String(passengerCount),
+    ...(origin ? { from: origin } : {}),
+    ...(destination ? { to: destination } : {}),
+    ...(departureDate ? { date: departureDate } : {}),
+    ...(trainName ? { train: trainName } : {}),
+    ...(price ? { price: String(price) } : {}),
+    ...(subclass ? { subclass } : {}),
+  })
+  const loginHref = `/auth/login?next=${encodeURIComponent(`/booking/${scheduleId}?${loginNextParams}`)}`
 
   useEffect(() => {
     if (step === 'seats') {
@@ -318,7 +323,7 @@ export default function BookingFlow({
 
           {!journey && !loadError && (
             <div aria-live="polite" className="rh-card" style={{ padding: '1.5rem' }}>
-              <LoaderCircle size={18} className="rh-spin" /> Memuat perjalanan dan ketersediaan kursi...
+              <LoaderCircle size={18} className="rh-spin" /> Memuat perjalanan dan ketersediaan kursi…
             </div>
           )}
 
@@ -350,6 +355,21 @@ export default function BookingFlow({
                 </div>
               </section>
 
+              {!authLoading && !user && (
+                <section className="rh-card rh-booking-auth-gate" aria-labelledby="booking-login-title">
+                  <div className="rh-card-body">
+                    <span className="rh-icon-wrap"><UserRound size={20} aria-hidden="true" /></span>
+                    <div>
+                      <h2 id="booking-login-title" className="rh-h4">Masuk untuk melanjutkan</h2>
+                      <p>Jadwal pilihan Anda sudah disimpan. Masuk sebelum mengisi identitas penumpang dan memilih kursi.</p>
+                    </div>
+                    <Link href={loginHref} className="rh-btn rh-btn-primary">Masuk & lanjutkan</Link>
+                    <Link href={`/auth/register?next=${encodeURIComponent(`/booking/${scheduleId}?${loginNextParams}`)}`} className="rh-btn rh-btn-ghost">Buat akun</Link>
+                  </div>
+                </section>
+              )}
+
+              {user && <>
               <div ref={stepHeadingRef} className="rh-booking-steps" aria-label="Tahapan pemesanan" tabIndex={-1}>
                 <div className={`rh-booking-step ${step === 'details' ? 'is-active' : 'is-complete'}`}>
                   <span>{step === 'seats' ? <Check size={16} /> : '1'}</span>
@@ -639,7 +659,7 @@ export default function BookingFlow({
                           </button>
                           <button className="rh-btn rh-btn-primary rh-btn-lg" type="submit" disabled={submitting || selectedSeats.length !== passengerCount}>
                             {submitting && <LoaderCircle size={17} className="rh-spin" />}
-                            {submitting ? 'Membuat booking...' : 'Buat booking'}
+                            {submitting ? 'Membuat booking…' : 'Buat booking'}
                           </button>
                         </div>
                       </div>
@@ -647,6 +667,7 @@ export default function BookingFlow({
                   </>
                 )}
               </form>
+              </>}
             </>
           )}
         </div>

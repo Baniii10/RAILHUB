@@ -202,7 +202,7 @@ export default function AdminStaffPage() {
           </header>
 
           {error && <div role="alert" className="rh-card" style={{ padding: '1.25rem', color: 'var(--rh-danger)', marginBottom: '1rem' }}>{error}</div>}
-          {loading && <div aria-live="polite" className="rh-card" style={{ padding: '1rem', marginBottom: '1rem' }}>Memuat data petugas dan penugasan...</div>}
+          {loading && <div aria-live="polite" className="rh-card" style={{ padding: '1rem', marginBottom: '1rem' }}>Memuat data petugas dan penugasan…</div>}
 
           <section className="rh-card" style={{ marginBottom: '1.5rem' }}>
             <div className="rh-card-header">
@@ -299,7 +299,7 @@ export default function AdminStaffPage() {
                   <div>
                     <button className="rh-btn rh-btn-primary" type="submit" disabled={submitting || previewMode || loading || !selectedSchedule}>
                       {submitting && <RefreshCw size={15} className="rh-spin" />}
-                      {submitting ? 'Menyimpan...' : 'Tugaskan petugas'}
+                      {submitting ? 'Menyimpan…' : 'Tugaskan petugas'}
                     </button>
                   </div>
                 </form>

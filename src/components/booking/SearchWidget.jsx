@@ -64,7 +64,7 @@ function StationSelect({ label, value, onChange, exclude, placeholder, icon: Ico
           </div>
         ) : (
           <span style={{ fontSize: '0.9375rem', color: 'var(--rh-text-3)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-            {loading ? 'Memuat stasiun...' : placeholder}
+            {loading ? 'Memuat stasiun…' : placeholder}
           </span>
         )}
       </button>
@@ -87,7 +87,7 @@ function StationSelect({ label, value, onChange, exclude, placeholder, icon: Ico
                   closePicker()
                 }
               }}
-              placeholder="Cari nama, kode, atau kota..."
+              placeholder="Cari nama, kode, atau kota…"
               aria-label={`Cari ${label.toLocaleLowerCase('id')}`}
               className="rh-input"
               style={{ width: '100%', minWidth: 0, padding: '0.625rem 0.75rem' }}
@@ -129,7 +129,7 @@ function StationSelect({ label, value, onChange, exclude, placeholder, icon: Ico
             ))}
             {filtered.length === 0 && (
               <p style={{ padding: '0.875rem 1rem', color: 'var(--rh-text-2)', fontSize: '0.875rem' }}>
-                {loading ? 'Memuat stasiun...' : query ? 'Stasiun tidak ditemukan.' : 'Tidak ada stasiun yang tersedia.'}
+                {loading ? 'Memuat stasiun…' : query ? 'Stasiun tidak ditemukan.' : 'Tidak ada stasiun yang tersedia.'}
               </p>
             )}
           </div>

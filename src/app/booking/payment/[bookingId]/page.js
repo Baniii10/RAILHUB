@@ -13,7 +13,7 @@ async function PaymentPageContent({ params }) {
 
 export default function PaymentPage({ params }) {
   return (
-    <Suspense fallback={<main className="rh-container" style={{ padding: '4rem 1.5rem' }}>Memuat pembayaran...</main>}>
+    <Suspense fallback={<main className="rh-container" style={{ padding: '4rem 1.5rem' }}>Memuat pembayaran…</main>}>
       <PaymentPageContent params={params} />
     </Suspense>
   )

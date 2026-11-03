@@ -242,7 +242,7 @@ export default function PassengerServices({ userId, bookingId: initialBookingId,
       <h2 className="rh-h3">Layanan tiket</h2>
       {error && <div role="alert" className="rh-card" style={{ padding: '1rem', color: 'var(--rh-danger)' }}>{error}</div>}
       {statusError && <div role="alert" className="rh-card" style={{ padding: '1rem', color: 'var(--rh-danger)' }}>{statusError}</div>}
-      {loading && <div aria-live="polite" className="rh-card" style={{ padding: '1rem' }}>Memuat menu dan laporan...</div>}
+      {loading && <div aria-live="polite" className="rh-card" style={{ padding: '1rem' }}>Memuat menu dan laporan…</div>}
 
       <article className="rh-card passenger-food-card">
         <div className="rh-card-header passenger-food-header">
@@ -308,7 +308,7 @@ export default function PassengerServices({ userId, bookingId: initialBookingId,
                 onClick={submitFoodOrder}
                 disabled={submittingFood}
               >
-                {submittingFood ? 'Memproses simulasi...' : `Bayar ${formatIDR(total)}`}
+                {submittingFood ? 'Memproses simulasi…' : `Bayar ${formatIDR(total)}`}
               </button>
               <small style={{ color: 'var(--rh-text-2)' }}>
                 Ini pembayaran simulasi untuk demo. Tidak ada uang sungguhan yang diproses.
@@ -446,7 +446,7 @@ export default function PassengerServices({ userId, bookingId: initialBookingId,
             </label>
             <div style={{ display: 'flex', justifyContent: 'end' }}>
               <button className="rh-btn rh-btn-primary" type="submit" disabled={submittingReport}>
-                {submittingReport ? 'Mengirim...' : 'Kirim laporan'}
+                {submittingReport ? 'Mengirim…' : 'Kirim laporan'}
               </button>
             </div>
           </form>

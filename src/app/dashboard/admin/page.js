@@ -217,7 +217,8 @@ function AdminDashboardContent() {
   }, [user, profile?.role])
 
   useEffect(() => {
-    loadAdminData()
+    const timer = window.setTimeout(loadAdminData, 0)
+    return () => window.clearTimeout(timer)
   }, [loadAdminData, reloadKey])
 
   // Handle Role Change
@@ -557,7 +558,7 @@ function AdminDashboardContent() {
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '1rem' }}>
                 <label className="rh-input-group" style={{ flex: '1 1 250px', margin: 0 }}>
                   <span className="rh-label-text">Cari Stasiun</span>
-                  <input className="rh-input" placeholder="Nama, kode (GMR, BD, YK...), kota..." value={stationSearch} onChange={e => setStationSearch(e.target.value)} />
+                  <input className="rh-input" placeholder="Nama, kode (GMR, BD, YK…), kota…" value={stationSearch} onChange={e => setStationSearch(e.target.value)} />
                 </label>
                 <label className="rh-input-group" style={{ flex: '0 1 200px', margin: 0 }}>
                   <span className="rh-label-text">Filter Provinsi</span>
@@ -896,7 +897,7 @@ function AdminDashboardContent() {
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '1.25rem' }}>
                 <label className="rh-input-group" style={{ flex: '1 1 250px', margin: 0 }}>
                   <span className="rh-label-text">Cari Kode Booking / Nama / Rute</span>
-                  <input className="rh-input" placeholder="Kode booking, nama..." value={bookingSearch} onChange={e => setBookingSearch(e.target.value)} />
+                  <input className="rh-input" placeholder="Kode booking, nama…" value={bookingSearch} onChange={e => setBookingSearch(e.target.value)} />
                 </label>
                 <label className="rh-input-group" style={{ flex: '0 1 200px', margin: 0 }}>
                   <span className="rh-label-text">Status Booking</span>
@@ -962,7 +963,7 @@ function AdminDashboardContent() {
                 <input
                   className="rh-input"
                   style={{ maxWidth: 260 }}
-                  placeholder="Cari nama / email..."
+                  placeholder="Cari nama / email…"
                   value={userSearch}
                   onChange={e => setUserSearch(e.target.value)}
                 />
@@ -1175,7 +1176,7 @@ function AdminDashboardContent() {
                   },
                   {
                     title: 'Banner Promo 3 (Rasio 8:3) · Liburan Akhir Pekan Hemat',
-                    desc: 'Diskon khusus pengguna RailPay dompet digital untuk rute Jakarta - Bandung & Jogja.',
+                    desc: 'Diskon perjalanan untuk rute Jakarta - Bandung dan Yogyakarta.',
                     status: 'Aktif Tayang',
                   },
                 ].map((banner, idx) => (
@@ -1203,7 +1204,7 @@ export default function AdminDashboard() {
       <div style={{ minHeight: '100vh', background: 'var(--rh-surface)', display: 'grid', placeItems: 'center' }}>
         <div className="rh-card" style={{ padding: '2rem', textAlign: 'center' }}>
           <div className="rh-spin" style={{ width: 36, height: 36, border: '3px solid var(--rh-border)', borderTopColor: 'var(--rh-primary)', borderRadius: '50%', margin: '0 auto 1rem' }} />
-          <strong>Memuat Pusat Kontrol Admin...</strong>
+          <strong>Memuat Pusat Kontrol Admin…</strong>
         </div>
       </div>
     }>

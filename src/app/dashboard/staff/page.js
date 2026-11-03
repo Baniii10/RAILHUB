@@ -1,7 +1,7 @@
 'use client'
 
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import {
   AlertCircle,
   Bell,
@@ -65,8 +65,10 @@ const TABS = [
 
 function StaffDashboardContent() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const { user, profile, loading: authLoading } = useAuth()
-  const [activeTab, setActiveTab] = useState('overview')
+  const requestedTab = searchParams.get('tab')
+  const activeTab = TABS.some(tab => tab.id === requestedTab) ? requestedTab : 'overview'
   const [journeys, setJourneys] = useState([])
   const [tickets, setTickets] = useState([])
   const [foodOrders, setFoodOrders] = useState([])
@@ -97,6 +99,10 @@ function StaffDashboardContent() {
   const [orderFilter, setOrderFilter] = useState('all')
   const [reportFilter, setReportFilter] = useState('all')
   const [reportNoteInputs, setReportNoteInputs] = useState({})
+
+  function selectTab(tab) {
+    router.push(`/dashboard/staff?tab=${tab}`, { scroll: false })
+  }
 
   useEffect(() => {
     if (authLoading) return
@@ -379,10 +385,17 @@ function StaffDashboardContent() {
             </div>
           )}
 
-          {/* 8-Tab Navigation Bar matching RAILHUB.md Section B */}
+          <label className="dashboard-tab-select rh-show-mobile-only">
+            <span>Menu petugas</span>
+            <select value={activeTab} onChange={event => selectTab(event.target.value)}>
+              {TABS.map(tab => <option key={tab.id} value={tab.id}>{tab.label}</option>)}
+            </select>
+          </label>
+
+          {/* Desktop operational navigation */}
           <nav
             aria-label="Menu Petugas"
-            className="rh-card"
+            className="rh-card staff-tabs-nav"
             style={{
               display: 'flex',
               overflowX: 'auto',
@@ -404,7 +417,7 @@ function StaffDashboardContent() {
                 <button
                   key={tab.id}
                   type="button"
-                  onClick={() => setActiveTab(tab.id)}
+                  onClick={() => selectTab(tab.id)}
                   className={`rh-btn rh-btn-sm ${active ? 'rh-btn-primary' : 'rh-btn-ghost'}`}
                   style={{
                     whiteSpace: 'nowrap',
@@ -469,16 +482,16 @@ function StaffDashboardContent() {
               <div className="rh-card" style={{ padding: '1.25rem', marginBottom: '1.5rem', background: 'linear-gradient(135deg, rgba(26,66,138,0.04), rgba(255,140,0,0.04))' }}>
                 <h3 className="rh-h4" style={{ margin: '0 0 0.75rem' }}>Aksi Cepat Petugas</h3>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
-                  <button type="button" className="rh-btn rh-btn-primary" onClick={() => setActiveTab('validation')}>
+                  <button type="button" className="rh-btn rh-btn-primary" onClick={() => selectTab('validation')}>
                     <TicketCheck size={16} /> Buka Scanner Gerbang Boarding
                   </button>
-                  <button type="button" className="rh-btn rh-btn-secondary" onClick={() => setActiveTab('passengers')}>
+                  <button type="button" className="rh-btn rh-btn-secondary" onClick={() => selectTab('passengers')}>
                     <Users size={16} /> Buka Manifest Penumpang
                   </button>
-                  <button type="button" className="rh-btn rh-btn-ghost" onClick={() => setActiveTab('journey')}>
+                  <button type="button" className="rh-btn rh-btn-ghost" onClick={() => selectTab('journey')}>
                     <Train size={16} /> Update Status Perjalanan
                   </button>
-                  <button type="button" className="rh-btn rh-btn-ghost" onClick={() => setActiveTab('orders')}>
+                  <button type="button" className="rh-btn rh-btn-ghost" onClick={() => selectTab('orders')}>
                     <Utensils size={16} /> Cek Pesanan Makanan ({pendingOrders})
                   </button>
                 </div>
@@ -516,10 +529,10 @@ function StaffDashboardContent() {
                                 Validasi: <strong>{countVal} / {j.tickets.length}</strong> tiket
                               </div>
                               <div style={{ display: 'flex', gap: '0.5rem' }}>
-                                <button type="button" className="rh-btn rh-btn-primary rh-btn-sm" onClick={() => { setPassengerScheduleFilter(j.schedule_id); setActiveTab('passengers') }}>
+                                <button type="button" className="rh-btn rh-btn-primary rh-btn-sm" onClick={() => { setPassengerScheduleFilter(j.schedule_id); selectTab('passengers') }}>
                                   Lihat Penumpang
                                 </button>
-                                <button type="button" className="rh-btn rh-btn-ghost rh-btn-sm" onClick={() => setActiveTab('journey')}>
+                                <button type="button" className="rh-btn rh-btn-ghost rh-btn-sm" onClick={() => selectTab('journey')}>
                                   Ubah Status
                                 </button>
                               </div>
@@ -554,7 +567,7 @@ function StaffDashboardContent() {
                       <span className="rh-label-text">Kode Tiket Manual</span>
                       <input
                         className="rh-input rh-mono"
-                        placeholder="Contoh: TKT-202611-..."
+                        placeholder="Contoh: TKT-202611-…"
                         value={ticketNumber}
                         onChange={e => setTicketNumber(e.target.value)}
                         required
@@ -578,7 +591,7 @@ function StaffDashboardContent() {
                       <div style={{ color: 'var(--rh-text-2)' }}>
                         <TicketCheck size={48} style={{ margin: '0 auto 0.75rem', opacity: 0.4 }} />
                         <strong style={{ display: 'block', fontSize: '1rem', color: 'var(--rh-text)' }}>
-                          {validating ? 'Memeriksa tiket...' : 'Siap Memindai'}
+                          {validating ? 'Memeriksa tiket…' : 'Siap Memindai'}
                         </strong>
                         <span style={{ fontSize: '0.85rem' }}>Arahkan kamera ke QR Code atau ketik kode tiket.</span>
                       </div>
@@ -648,7 +661,7 @@ function StaffDashboardContent() {
                     <input
                       className="rh-input"
                       style={{ paddingLeft: 36 }}
-                      placeholder="Nama, No. KTP, Kode Tiket, Kursi..."
+                      placeholder="Nama, No. KTP, Kode Tiket, Kursi…"
                       value={passengerSearch}
                       onChange={e => setPassengerSearch(e.target.value)}
                     />
@@ -780,7 +793,7 @@ function StaffDashboardContent() {
               <div className="rh-card" style={{ padding: '1.25rem' }}>
                 <h2 className="rh-h3" style={{ margin: 0 }}>Manajemen Status Perjalanan</h2>
                 <p style={{ margin: '0.25rem 0 0', color: 'var(--rh-text-2)', fontSize: '0.88rem' }}>
-                  Pembaruan status di halaman ini disinkronkan ke live tracking penumpang (tampilan ala Grab) dan layar informasi stasiun.
+                  Pembaruan status di halaman ini ditampilkan pada status perjalanan penumpang dan layar informasi operasional.
                 </p>
               </div>
 
@@ -949,7 +962,7 @@ function StaffDashboardContent() {
                         <input
                           className="rh-input rh-input-sm"
                           style={{ flex: '1 1 200px' }}
-                          placeholder="Catatan tindak lanjut..."
+                          placeholder="Catatan tindak lanjut…"
                           value={reportNoteInputs[rep.id] || ''}
                           onChange={e => setReportNoteInputs(curr => ({ ...curr, [rep.id]: e.target.value }))}
                         />
@@ -1018,7 +1031,7 @@ function StaffDashboardContent() {
                         <input
                           className="rh-input rh-input-sm"
                           style={{ flex: '1 1 200px' }}
-                          placeholder="Lokasi penyimpanan / respon (e.g. Disimpan di Pos Keamanan)..."
+                          placeholder="Lokasi penyimpanan / respons (mis. disimpan di Pos Keamanan)…"
                           value={reportNoteInputs[rep.id] || ''}
                           onChange={e => setReportNoteInputs(curr => ({ ...curr, [rep.id]: e.target.value }))}
                         />
@@ -1193,7 +1206,7 @@ export default function StaffDashboard() {
       <div style={{ minHeight: '100vh', background: 'var(--rh-surface)', display: 'grid', placeItems: 'center' }}>
         <div className="rh-card" style={{ padding: '2rem', textAlign: 'center' }}>
           <div className="rh-spin" style={{ width: 36, height: 36, border: '3px solid var(--rh-border)', borderTopColor: 'var(--rh-primary)', borderRadius: '50%', margin: '0 auto 1rem' }} />
-          <strong>Memuat Dashboard Petugas...</strong>
+          <strong>Memuat Dashboard Petugas…</strong>
         </div>
       </div>
     }>
