@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import SearchWidget from '@/components/booking/SearchWidget'
+import MobilePortalHeader from '@/components/home/MobilePortalHeader'
 import { useLang } from '@/contexts/LangContext'
 import { useAuth } from '@/contexts/AuthContext'
 import PassengerDashboard from '@/app/dashboard/passenger/page'
@@ -274,9 +275,14 @@ export default function HomePage() {
         }} />
 
         <div className="rh-container" style={{ position: 'relative', zIndex: 1 }}>
+          {/* Mobile Super App Portal View (Screenshot 1: Greeting, RailPay, 9 Service Badges, Live Tracking) */}
+          <div className="rh-show-mobile-only" style={{ marginBottom: '1.5rem', paddingTop: '0.5rem' }}>
+            <MobilePortalHeader />
+          </div>
+
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 310px), 1fr))', gap: 'clamp(1.5rem, 4vw, 3rem)', alignItems: 'center' }}>
-            {/* Left: Headlines */}
-            <div className="animate-fade-in">
+            {/* Left: Headlines (Desktop / Tablet) */}
+            <div className="animate-fade-in rh-hide-mobile">
               <div className="rh-badge" style={{
                 background: 'rgba(255,255,255,0.1)', color: 'var(--rh-accent)',
                 border: '1px solid rgba(255,255,255,0.15)', marginBottom: '1.5rem',
@@ -491,7 +497,7 @@ export default function HomePage() {
       </section>
 
       {/* ── 3 SLIDING PROMO BANNERS (RATIO 8:3) ───────────── */}
-      <section className="rh-section" style={{ background: 'var(--rh-white)', paddingBottom: '2rem' }}>
+      <section id="promos" className="rh-section" style={{ background: 'var(--rh-white)', paddingBottom: '2rem' }}>
         <div className="rh-container">
           <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '1rem', marginBottom: '1.25rem' }}>
             <div>

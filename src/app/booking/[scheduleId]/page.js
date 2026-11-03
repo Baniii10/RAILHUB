@@ -33,11 +33,21 @@ async function BookingPageContent({ params, searchParams }) {
     }).toString()}`
     : '/trains'
 
+  const trainName = Array.isArray(query.train) ? query.train[0] : query.train
+  const price = Number(Array.isArray(query.price) ? query.price[0] : query.price) || 430000
+  const subclass = Array.isArray(query.subclass) ? query.subclass[0] : query.subclass || 'CA'
+
   return <BookingFlow
     scheduleId={scheduleId}
     requestedClass={requestedClass || ''}
     passengerCount={passengerCount}
     returnTo={returnTo}
+    origin={origin}
+    destination={destination}
+    departureDate={departureDate}
+    trainName={trainName}
+    price={price}
+    subclass={subclass}
   />
 }
 

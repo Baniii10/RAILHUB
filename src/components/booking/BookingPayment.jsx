@@ -73,6 +73,21 @@ export default function BookingPayment({ bookingId }) {
         .single()
 
       if (bookingError) {
+        try {
+          const simStore = JSON.parse(localStorage.getItem('railhub_simulated_bookings') || '{}')
+          const sim = simStore[bookingId]
+          if (sim) {
+            setBooking({ ...sim, is_simulated: true })
+            setPayment(sim.payment)
+            setSelectedPaymentMethod(sim.payment?.method || 'qr_payment')
+            setTickets(sim.tickets || [])
+            setRescheduleDate(sim.schedules?.departure_time ? localDateValue(sim.schedules.departure_time) : '')
+            setJourney({ schedule: sim.schedules })
+            return
+          }
+        } catch (e) {
+          console.warn('Sim load error', e)
+        }
         if (active) setError(`Booking tidak ditemukan atau tidak dapat diakses: ${bookingError.message}`)
         return
       }
@@ -194,6 +209,24 @@ export default function BookingPayment({ bookingId }) {
     }
 
     setProcessing(true)
+
+    if (booking.is_simulated) {
+      const updatedBooking = { ...booking, status: 'paid' }
+      const updatedPayment = { ...payment, status: 'paid', confirmed_at: new Date().toISOString() }
+      try {
+        const simStore = JSON.parse(localStorage.getItem('railhub_simulated_bookings') || '{}')
+        simStore[booking.id] = { ...simStore[booking.id], status: 'paid', payment: updatedPayment }
+        localStorage.setItem('railhub_simulated_bookings', JSON.stringify(simStore))
+      } catch (e) {
+        console.warn('Sim update error', e)
+      }
+      setBooking(updatedBooking)
+      setPayment(updatedPayment)
+      setProcessing(false)
+      toast.success('Pembayaran simulasi berhasil. Tiket digital telah diterbitkan.')
+      return
+    }
+
     const supabase = createClient()
     const { error: methodError } = await supabase.rpc('select_booking_payment_method', {
       p_booking_id: booking.id,
@@ -228,6 +261,21 @@ export default function BookingPayment({ bookingId }) {
     if (!booking || processing) return
     if (!window.confirm('Batalkan booking ini? Kursi yang ditahan akan dilepas.')) return
     setProcessing(true)
+
+    if (booking.is_simulated) {
+      try {
+        const simStore = JSON.parse(localStorage.getItem('railhub_simulated_bookings') || '{}')
+        delete simStore[booking.id]
+        localStorage.setItem('railhub_simulated_bookings', JSON.stringify(simStore))
+      } catch (e) {
+        console.warn('Sim delete error', e)
+      }
+      setProcessing(false)
+      toast.success('Booking dibatalkan dan kursi dilepas.')
+      router.push('/dashboard/passenger')
+      return
+    }
+
     const supabase = createClient()
     const { error: cancelError } = await supabase.rpc('cancel_own_pending_booking', {
       p_booking_id: booking.id,

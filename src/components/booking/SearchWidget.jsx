@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation'
 import { MapPin, Calendar, Users, ArrowLeftRight, Search } from 'lucide-react'
 import { useLang } from '@/contexts/LangContext'
 import { createClient } from '@/lib/supabase/client'
+import { STATIONS_CATALOG } from '@/lib/data/stationsCatalog'
 import toast from 'react-hot-toast'
 
 function StationSelect({ label, value, onChange, exclude, placeholder, icon: Icon, stations, loading }) {
@@ -149,12 +150,12 @@ function formatLocalDate(date) {
 export default function SearchWidget({ compact = false }) {
   const { t } = useLang()
   const router = useRouter()
-  const [stations, setStations] = useState([])
-  const [stationsLoading, setStationsLoading] = useState(true)
+  const [stations, setStations] = useState(STATIONS_CATALOG)
+  const [stationsLoading, setStationsLoading] = useState(false)
   const [stationError, setStationError] = useState('')
 
-  const [origin,      setOrigin]      = useState('GMR')
-  const [destination, setDestination] = useState('YK')
+  const [origin,      setOrigin]      = useState('PSE')
+  const [destination, setDestination] = useState('SGU')
   const [date,        setDate]        = useState(() => {
     const tomorrow = new Date()
     tomorrow.setDate(tomorrow.getDate() + 1)
@@ -179,8 +180,16 @@ export default function SearchWidget({ compact = false }) {
 
       if (error) {
         setStationError(error.message)
-      } else {
-        setStations(data ?? [])
+      } else if (data && data.length > 0) {
+        // Merge with curated 50 stations catalog
+        const existingCodes = new Set(data.map(s => s.code))
+        const combined = [...data]
+        STATIONS_CATALOG.forEach(catStation => {
+          if (!existingCodes.has(catStation.code)) {
+            combined.push(catStation)
+          }
+        })
+        setStations(combined.sort((a, b) => a.name.localeCompare(b.name)))
       }
       setStationsLoading(false)
     }

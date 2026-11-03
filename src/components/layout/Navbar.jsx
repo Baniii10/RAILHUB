@@ -20,6 +20,7 @@ import {
   ClipboardList,
   CheckCircle2,
   Clock3,
+  BadgePercent,
 } from 'lucide-react'
 import { useLang } from '@/contexts/LangContext'
 import { useAuth } from '@/contexts/AuthContext'
@@ -214,17 +215,17 @@ export default function Navbar() {
       : user
         ? [
             { href: '/', label: 'Beranda', icon: Home },
-            { href: '/dashboard/passenger#my-bookings', label: 'Tiket', icon: Ticket },
-            { href: '/trains', label: 'Pesan', icon: Compass },
-            { href: '/faq', label: 'FAQ', icon: ClipboardList },
-            { href: '/contact', label: 'Bantuan', icon: User },
+            { href: '/trains', label: 'Kereta', icon: Train },
+            { href: '/dashboard/passenger#my-bookings', label: 'Tiket Saya', icon: Ticket },
+            { href: '/#promos', label: 'Promo', icon: BadgePercent },
+            { href: '/dashboard/passenger', label: 'Akun', icon: User },
           ]
         : [
-            { href: '/', label: t.nav.home, icon: Home },
-            { href: '/trains', label: t.nav.book, icon: Ticket },
-            { href: '/about', label: t.nav.about, icon: Compass },
-            { href: '/faq', label: t.nav.faq, icon: ClipboardList },
-            { href: '/auth/login', label: t.nav.login, icon: User },
+            { href: '/', label: 'Beranda', icon: Home },
+            { href: '/trains', label: 'Kereta', icon: Train },
+            { href: '/dashboard/passenger#my-bookings', label: 'Tiket Saya', icon: Ticket },
+            { href: '/#promos', label: 'Promo', icon: BadgePercent },
+            { href: '/auth/login', label: 'Akun', icon: User },
           ]
 
   return (
