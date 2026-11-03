@@ -582,8 +582,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_about_page",
-      "community": 8,
-      "community_name": "about/page.js",
+      "community": 7,
+      "community_name": "useAuth",
       "norm_label": "about/page.js"
     },
     {
@@ -593,8 +593,8 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "src_app_about_page_timeline",
-      "community": 8,
-      "community_name": "about/page.js",
+      "community": 7,
+      "community_name": "useAuth",
       "norm_label": "timeline"
     },
     {
@@ -604,8 +604,8 @@
       "source_location": "L49",
       "_origin": "ast",
       "id": "src_app_about_page_team_members",
-      "community": 8,
-      "community_name": "about/page.js",
+      "community": 7,
+      "community_name": "useAuth",
       "norm_label": "team_members"
     },
     {
@@ -615,8 +615,8 @@
       "source_location": "L70",
       "_origin": "ast",
       "id": "src_app_about_page_fleet_portfolio",
-      "community": 8,
-      "community_name": "about/page.js",
+      "community": 7,
+      "community_name": "useAuth",
       "norm_label": "fleet_portfolio"
     },
     {
@@ -627,8 +627,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_app_about_page_aboutpage",
-      "community": 8,
-      "community_name": "about/page.js",
+      "community": 7,
+      "community_name": "useAuth",
       "norm_label": "aboutpage()"
     },
     {
@@ -802,7 +802,7 @@
       "_origin": "ast",
       "id": "src_app_auth_login_page",
       "community": 1,
-      "community_name": "app/page.js",
+      "community_name": "MobilePortalHeader.jsx",
       "norm_label": "login/page.js"
     },
     {
@@ -814,7 +814,7 @@
       "_origin": "ast",
       "id": "src_app_auth_login_page_loginpage",
       "community": 1,
-      "community_name": "app/page.js",
+      "community_name": "MobilePortalHeader.jsx",
       "norm_label": "loginpage()"
     },
     {
@@ -825,7 +825,7 @@
       "_origin": "ast",
       "id": "src_app_auth_register_page",
       "community": 1,
-      "community_name": "app/page.js",
+      "community_name": "MobilePortalHeader.jsx",
       "norm_label": "register/page.js"
     },
     {
@@ -837,7 +837,7 @@
       "_origin": "ast",
       "id": "src_app_auth_register_page_registerpage",
       "community": 1,
-      "community_name": "app/page.js",
+      "community_name": "MobilePortalHeader.jsx",
       "norm_label": "registerpage()"
     },
     {
@@ -847,8 +847,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_booking_scheduleid_page",
-      "community": 5,
-      "community_name": "TrainSearchResults.jsx",
+      "community": 9,
+      "community_name": "createClient",
       "norm_label": "[scheduleid]/page.js"
     },
     {
@@ -859,8 +859,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_app_booking_scheduleid_page_bookingpagecontent",
-      "community": 5,
-      "community_name": "TrainSearchResults.jsx",
+      "community": 9,
+      "community_name": "createClient",
       "norm_label": "bookingpagecontent()"
     },
     {
@@ -871,8 +871,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_app_booking_scheduleid_page_bookingpage",
-      "community": 5,
-      "community_name": "TrainSearchResults.jsx",
+      "community": 9,
+      "community_name": "createClient",
       "norm_label": "bookingpage()"
     },
     {
@@ -882,7 +882,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_booking_payment_bookingid_page",
-      "community": 7,
+      "community": 9,
       "community_name": "createClient",
       "norm_label": "[bookingid]/page.js"
     },
@@ -894,7 +894,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_app_booking_payment_bookingid_page_paymentpagecontent",
-      "community": 7,
+      "community": 9,
       "community_name": "createClient",
       "norm_label": "paymentpagecontent()"
     },
@@ -906,7 +906,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_app_booking_payment_bookingid_page_paymentpage",
-      "community": 7,
+      "community": 9,
       "community_name": "createClient",
       "norm_label": "paymentpage()"
     },
@@ -918,7 +918,7 @@
       "_origin": "ast",
       "id": "src_app_contact_page",
       "community": 8,
-      "community_name": "about/page.js",
+      "community_name": "faq/page.js",
       "norm_label": "contact/page.js"
     },
     {
@@ -929,7 +929,7 @@
       "_origin": "ast",
       "id": "src_app_contact_page_station_desks",
       "community": 8,
-      "community_name": "about/page.js",
+      "community_name": "faq/page.js",
       "norm_label": "station_desks"
     },
     {
@@ -941,7 +941,7 @@
       "_origin": "ast",
       "id": "src_app_contact_page_contactpage",
       "community": 8,
-      "community_name": "about/page.js",
+      "community_name": "faq/page.js",
       "norm_label": "contactpage()"
     },
     {
@@ -1124,7 +1124,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_app_dashboard_admin_page_admindashboardcontent",
-      "community": 7,
+      "community": 9,
       "community_name": "createClient",
       "norm_label": "admindashboardcontent()"
     },
@@ -1148,7 +1148,7 @@
       "_origin": "ast",
       "id": "src_app_dashboard_admin_staff_page",
       "community": 7,
-      "community_name": "createClient",
+      "community_name": "useAuth",
       "norm_label": "admin/staff/page.js"
     },
     {
@@ -1160,7 +1160,7 @@
       "_origin": "ast",
       "id": "src_app_dashboard_admin_staff_page_jakartadateinputvalue",
       "community": 7,
-      "community_name": "createClient",
+      "community_name": "useAuth",
       "norm_label": "jakartadateinputvalue()"
     },
     {
@@ -1172,7 +1172,7 @@
       "_origin": "ast",
       "id": "src_app_dashboard_admin_staff_page_jakartadatestart",
       "community": 7,
-      "community_name": "createClient",
+      "community_name": "useAuth",
       "norm_label": "jakartadatestart()"
     },
     {
@@ -1184,7 +1184,7 @@
       "_origin": "ast",
       "id": "src_app_dashboard_admin_staff_page_assignablescheduleid",
       "community": 7,
-      "community_name": "createClient",
+      "community_name": "useAuth",
       "norm_label": "assignablescheduleid()"
     },
     {
@@ -1196,7 +1196,7 @@
       "_origin": "ast",
       "id": "src_app_dashboard_admin_staff_page_adminstaffpage",
       "community": 7,
-      "community_name": "createClient",
+      "community_name": "useAuth",
       "norm_label": "adminstaffpage()"
     },
     {
@@ -1207,7 +1207,7 @@
       "_origin": "ast",
       "id": "src_app_dashboard_orders_page",
       "community": 7,
-      "community_name": "createClient",
+      "community_name": "useAuth",
       "norm_label": "orders/page.js"
     },
     {
@@ -1219,7 +1219,7 @@
       "_origin": "ast",
       "id": "src_app_dashboard_orders_page_foodorderspage",
       "community": 7,
-      "community_name": "createClient",
+      "community_name": "useAuth",
       "norm_label": "foodorderspage()"
     },
     {
@@ -1229,7 +1229,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_dashboard_passenger_page",
-      "community": 7,
+      "community": 9,
       "community_name": "createClient",
       "norm_label": "passenger/page.js"
     },
@@ -1240,7 +1240,7 @@
       "source_location": "L53",
       "_origin": "ast",
       "id": "src_app_dashboard_passenger_page_tabs",
-      "community": 7,
+      "community": 9,
       "community_name": "createClient",
       "norm_label": "tabs"
     },
@@ -1252,7 +1252,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_app_dashboard_passenger_page_passengerdashboardcontent",
-      "community": 7,
+      "community": 9,
       "community_name": "createClient",
       "norm_label": "passengerdashboardcontent()"
     },
@@ -1260,11 +1260,11 @@
       "label": "PassengerDashboard()",
       "file_type": "code",
       "source_file": "src/app/dashboard/passenger/page.js",
-      "source_location": "L1510",
+      "source_location": "L1557",
       "_callable": true,
       "_origin": "ast",
       "id": "src_app_dashboard_passenger_page_passengerdashboard",
-      "community": 7,
+      "community": 9,
       "community_name": "createClient",
       "norm_label": "passengerdashboard()"
     },
@@ -1276,7 +1276,7 @@
       "_origin": "ast",
       "id": "src_app_dashboard_reports_page",
       "community": 7,
-      "community_name": "createClient",
+      "community_name": "useAuth",
       "norm_label": "reports/page.js"
     },
     {
@@ -1288,7 +1288,7 @@
       "_origin": "ast",
       "id": "src_app_dashboard_reports_page_passengerreportspage",
       "community": 7,
-      "community_name": "createClient",
+      "community_name": "useAuth",
       "norm_label": "passengerreportspage()"
     },
     {
@@ -1344,8 +1344,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_app_dashboard_staff_page_staffdashboardcontent",
-      "community": 2,
-      "community_name": "admin/page.js",
+      "community": 9,
+      "community_name": "createClient",
       "norm_label": "staffdashboardcontent()"
     },
     {
@@ -1368,7 +1368,7 @@
       "_origin": "ast",
       "id": "src_app_faq_page",
       "community": 8,
-      "community_name": "about/page.js",
+      "community_name": "faq/page.js",
       "norm_label": "faq/page.js"
     },
     {
@@ -1379,7 +1379,7 @@
       "_origin": "ast",
       "id": "src_app_faq_page_faq_categories",
       "community": 8,
-      "community_name": "about/page.js",
+      "community_name": "faq/page.js",
       "norm_label": "faq_categories"
     },
     {
@@ -1390,7 +1390,7 @@
       "_origin": "ast",
       "id": "src_app_faq_page_faq_items",
       "community": 8,
-      "community_name": "about/page.js",
+      "community_name": "faq/page.js",
       "norm_label": "faq_items"
     },
     {
@@ -1402,7 +1402,7 @@
       "_origin": "ast",
       "id": "src_app_faq_page_faqpage",
       "community": 8,
-      "community_name": "about/page.js",
+      "community_name": "faq/page.js",
       "norm_label": "faqpage()"
     },
     {
@@ -1413,7 +1413,7 @@
       "_origin": "ast",
       "id": "src_app_layout",
       "community": 1,
-      "community_name": "app/page.js",
+      "community_name": "MobilePortalHeader.jsx",
       "norm_label": "layout.js"
     },
     {
@@ -1424,7 +1424,7 @@
       "_origin": "ast",
       "id": "src_app_layout_viewport",
       "community": 1,
-      "community_name": "app/page.js",
+      "community_name": "MobilePortalHeader.jsx",
       "norm_label": "viewport"
     },
     {
@@ -1435,7 +1435,7 @@
       "_origin": "ast",
       "id": "src_app_layout_metadata",
       "community": 1,
-      "community_name": "app/page.js",
+      "community_name": "MobilePortalHeader.jsx",
       "norm_label": "metadata"
     },
     {
@@ -1447,7 +1447,7 @@
       "_origin": "ast",
       "id": "src_app_layout_rootlayout",
       "community": 1,
-      "community_name": "app/page.js",
+      "community_name": "MobilePortalHeader.jsx",
       "norm_label": "rootlayout()"
     },
     {
@@ -1458,7 +1458,7 @@
       "_origin": "ast",
       "id": "src_app_page",
       "community": 1,
-      "community_name": "app/page.js",
+      "community_name": "MobilePortalHeader.jsx",
       "norm_label": "app/page.js"
     },
     {
@@ -1469,7 +1469,7 @@
       "_origin": "ast",
       "id": "src_app_page_promo_banners",
       "community": 1,
-      "community_name": "app/page.js",
+      "community_name": "MobilePortalHeader.jsx",
       "norm_label": "promo_banners"
     },
     {
@@ -1480,7 +1480,7 @@
       "_origin": "ast",
       "id": "src_app_page_popular_routes",
       "community": 1,
-      "community_name": "app/page.js",
+      "community_name": "MobilePortalHeader.jsx",
       "norm_label": "popular_routes"
     },
     {
@@ -1491,7 +1491,7 @@
       "_origin": "ast",
       "id": "src_app_page_fleet_classes",
       "community": 1,
-      "community_name": "app/page.js",
+      "community_name": "MobilePortalHeader.jsx",
       "norm_label": "fleet_classes"
     },
     {
@@ -1503,7 +1503,7 @@
       "_origin": "ast",
       "id": "src_app_page_homepage",
       "community": 1,
-      "community_name": "app/page.js",
+      "community_name": "MobilePortalHeader.jsx",
       "norm_label": "homepage()"
     },
     {
@@ -1513,8 +1513,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_trains_page",
-      "community": 1,
-      "community_name": "app/page.js",
+      "community": 5,
+      "community_name": "TrainSearchResults.jsx",
       "norm_label": "trains/page.js"
     },
     {
@@ -1524,8 +1524,8 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "src_app_trains_page_metadata",
-      "community": 1,
-      "community_name": "app/page.js",
+      "community": 5,
+      "community_name": "TrainSearchResults.jsx",
       "norm_label": "metadata"
     },
     {
@@ -1536,8 +1536,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_app_trains_page_firstvalue",
-      "community": 1,
-      "community_name": "app/page.js",
+      "community": 5,
+      "community_name": "TrainSearchResults.jsx",
       "norm_label": "firstvalue()"
     },
     {
@@ -1548,8 +1548,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_app_trains_page_trainspagecontent",
-      "community": 1,
-      "community_name": "app/page.js",
+      "community": 5,
+      "community_name": "TrainSearchResults.jsx",
       "norm_label": "trainspagecontent()"
     },
     {
@@ -1560,8 +1560,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_app_trains_page_trainspage",
-      "community": 1,
-      "community_name": "app/page.js",
+      "community": 5,
+      "community_name": "TrainSearchResults.jsx",
       "norm_label": "trainspage()"
     },
     {
@@ -1571,8 +1571,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_booking_bookingflow",
-      "community": 5,
-      "community_name": "TrainSearchResults.jsx",
+      "community": 9,
+      "community_name": "createClient",
       "norm_label": "bookingflow.jsx"
     },
     {
@@ -1583,8 +1583,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_booking_bookingflow_blankpassenger",
-      "community": 5,
-      "community_name": "TrainSearchResults.jsx",
+      "community": 9,
+      "community_name": "createClient",
       "norm_label": "blankpassenger()"
     },
     {
@@ -1595,8 +1595,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_booking_bookingflow_getseatrows",
-      "community": 5,
-      "community_name": "TrainSearchResults.jsx",
+      "community": 9,
+      "community_name": "createClient",
       "norm_label": "getseatrows()"
     },
     {
@@ -1607,8 +1607,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_booking_bookingflow_bookingflow",
-      "community": 5,
-      "community_name": "TrainSearchResults.jsx",
+      "community": 9,
+      "community_name": "createClient",
       "norm_label": "bookingflow()"
     },
     {
@@ -1618,7 +1618,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_booking_bookingpayment",
-      "community": 7,
+      "community": 9,
       "community_name": "createClient",
       "norm_label": "bookingpayment.jsx"
     },
@@ -1629,7 +1629,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "src_components_booking_bookingpayment_ticket_payment_methods",
-      "community": 7,
+      "community": 9,
       "community_name": "createClient",
       "norm_label": "ticket_payment_methods"
     },
@@ -1641,7 +1641,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_booking_bookingpayment_localdatevalue",
-      "community": 7,
+      "community": 9,
       "community_name": "createClient",
       "norm_label": "localdatevalue()"
     },
@@ -1653,7 +1653,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_booking_bookingpayment_bookingpayment",
-      "community": 7,
+      "community": 9,
       "community_name": "createClient",
       "norm_label": "bookingpayment()"
     },
@@ -1664,8 +1664,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_booking_searchwidget",
-      "community": 1,
-      "community_name": "app/page.js",
+      "community": 5,
+      "community_name": "TrainSearchResults.jsx",
       "norm_label": "searchwidget.jsx"
     },
     {
@@ -1676,8 +1676,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_booking_searchwidget_stationselect",
-      "community": 1,
-      "community_name": "app/page.js",
+      "community": 5,
+      "community_name": "TrainSearchResults.jsx",
       "norm_label": "stationselect()"
     },
     {
@@ -1688,8 +1688,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_booking_searchwidget_formatlocaldate",
-      "community": 1,
-      "community_name": "app/page.js",
+      "community": 5,
+      "community_name": "TrainSearchResults.jsx",
       "norm_label": "formatlocaldate()"
     },
     {
@@ -1700,8 +1700,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_booking_searchwidget_searchwidget",
-      "community": 1,
-      "community_name": "app/page.js",
+      "community": 5,
+      "community_name": "TrainSearchResults.jsx",
       "norm_label": "searchwidget()"
     },
     {
@@ -1758,7 +1758,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_home_mobileportalheader",
-      "community": 9,
+      "community": 1,
       "community_name": "MobilePortalHeader.jsx",
       "norm_label": "mobileportalheader.jsx"
     },
@@ -1766,13 +1766,36 @@
       "label": "MobilePortalHeader()",
       "file_type": "code",
       "source_file": "src/components/home/MobilePortalHeader.jsx",
-      "source_location": "L26",
+      "source_location": "L27",
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_home_mobileportalheader_mobileportalheader",
-      "community": 9,
+      "community": 1,
       "community_name": "MobilePortalHeader.jsx",
       "norm_label": "mobileportalheader()"
+    },
+    {
+      "label": "TrainBumperBanner.jsx",
+      "file_type": "code",
+      "source_file": "src/components/home/TrainBumperBanner.jsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_components_home_trainbumperbanner",
+      "community": 1,
+      "community_name": "MobilePortalHeader.jsx",
+      "norm_label": "trainbumperbanner.jsx"
+    },
+    {
+      "label": "TrainBumperBanner()",
+      "file_type": "code",
+      "source_file": "src/components/home/TrainBumperBanner.jsx",
+      "source_location": "L6",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "src_components_home_trainbumperbanner_trainbumperbanner",
+      "community": 1,
+      "community_name": "MobilePortalHeader.jsx",
+      "norm_label": "trainbumperbanner()"
     },
     {
       "label": "Footer.jsx",
@@ -1782,7 +1805,7 @@
       "_origin": "ast",
       "id": "src_components_layout_footer",
       "community": 8,
-      "community_name": "about/page.js",
+      "community_name": "faq/page.js",
       "norm_label": "footer.jsx"
     },
     {
@@ -1793,7 +1816,7 @@
       "_origin": "ast",
       "id": "src_components_layout_footer_footer_links",
       "community": 8,
-      "community_name": "about/page.js",
+      "community_name": "faq/page.js",
       "norm_label": "footer_links"
     },
     {
@@ -1805,7 +1828,7 @@
       "_origin": "ast",
       "id": "src_components_layout_footer_footer",
       "community": 8,
-      "community_name": "about/page.js",
+      "community_name": "faq/page.js",
       "norm_label": "footer()"
     },
     {
@@ -1816,7 +1839,7 @@
       "_origin": "ast",
       "id": "src_components_layout_navbar",
       "community": 7,
-      "community_name": "createClient",
+      "community_name": "useAuth",
       "norm_label": "navbar.jsx"
     },
     {
@@ -1828,7 +1851,7 @@
       "_origin": "ast",
       "id": "src_components_layout_navbar_publicnavlinks",
       "community": 7,
-      "community_name": "createClient",
+      "community_name": "useAuth",
       "norm_label": "publicnavlinks()"
     },
     {
@@ -1840,7 +1863,7 @@
       "_origin": "ast",
       "id": "src_components_layout_navbar_navbar",
       "community": 7,
-      "community_name": "createClient",
+      "community_name": "useAuth",
       "norm_label": "navbar()"
     },
     {
@@ -1850,8 +1873,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_services_journeystatustimeline",
-      "community": 2,
-      "community_name": "admin/page.js",
+      "community": 9,
+      "community_name": "createClient",
       "norm_label": "journeystatustimeline.jsx"
     },
     {
@@ -1861,8 +1884,8 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "src_components_services_journeystatustimeline_status_colors",
-      "community": 2,
-      "community_name": "admin/page.js",
+      "community": 9,
+      "community_name": "createClient",
       "norm_label": "status_colors"
     },
     {
@@ -1873,8 +1896,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_services_journeystatustimeline_journeystatustimeline",
-      "community": 2,
-      "community_name": "admin/page.js",
+      "community": 9,
+      "community_name": "createClient",
       "norm_label": "journeystatustimeline()"
     },
     {
@@ -1884,7 +1907,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_services_passengerservices",
-      "community": 7,
+      "community": 9,
       "community_name": "createClient",
       "norm_label": "passengerservices.jsx"
     },
@@ -1895,7 +1918,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "src_components_services_passengerservices_report_categories",
-      "community": 7,
+      "community": 9,
       "community_name": "createClient",
       "norm_label": "report_categories"
     },
@@ -1906,7 +1929,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "src_components_services_passengerservices_food_payment_methods",
-      "community": 7,
+      "community": 9,
       "community_name": "createClient",
       "norm_label": "food_payment_methods"
     },
@@ -1917,7 +1940,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "src_components_services_passengerservices_order_status_labels",
-      "community": 7,
+      "community": 9,
       "community_name": "createClient",
       "norm_label": "order_status_labels"
     },
@@ -1928,7 +1951,7 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "src_components_services_passengerservices_report_status_labels",
-      "community": 7,
+      "community": 9,
       "community_name": "createClient",
       "norm_label": "report_status_labels"
     },
@@ -1940,7 +1963,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_services_passengerservices_passengerservices",
-      "community": 7,
+      "community": 9,
       "community_name": "createClient",
       "norm_label": "passengerservices()"
     },
@@ -1952,7 +1975,7 @@
       "_origin": "ast",
       "id": "src_components_services_staffservicedesk",
       "community": 7,
-      "community_name": "createClient",
+      "community_name": "useAuth",
       "norm_label": "staffservicedesk.jsx"
     },
     {
@@ -1963,7 +1986,7 @@
       "_origin": "ast",
       "id": "src_components_services_staffservicedesk_order_transitions",
       "community": 7,
-      "community_name": "createClient",
+      "community_name": "useAuth",
       "norm_label": "order_transitions"
     },
     {
@@ -1974,7 +1997,7 @@
       "_origin": "ast",
       "id": "src_components_services_staffservicedesk_report_transitions",
       "community": 7,
-      "community_name": "createClient",
+      "community_name": "useAuth",
       "norm_label": "report_transitions"
     },
     {
@@ -1985,7 +2008,7 @@
       "_origin": "ast",
       "id": "src_components_services_staffservicedesk_order_status_labels",
       "community": 7,
-      "community_name": "createClient",
+      "community_name": "useAuth",
       "norm_label": "order_status_labels"
     },
     {
@@ -1996,7 +2019,7 @@
       "_origin": "ast",
       "id": "src_components_services_staffservicedesk_report_status_labels",
       "community": 7,
-      "community_name": "createClient",
+      "community_name": "useAuth",
       "norm_label": "report_status_labels"
     },
     {
@@ -2008,7 +2031,7 @@
       "_origin": "ast",
       "id": "src_components_services_staffservicedesk_staffservicedesk",
       "community": 7,
-      "community_name": "createClient",
+      "community_name": "useAuth",
       "norm_label": "staffservicedesk()"
     },
     {
@@ -2076,7 +2099,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_ui_vectorlogos",
-      "community": 9,
+      "community": 1,
       "community_name": "MobilePortalHeader.jsx",
       "norm_label": "vectorlogos.jsx"
     },
@@ -2088,7 +2111,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_vectorlogos_railhubbrandlogo",
-      "community": 9,
+      "community": 1,
       "community_name": "MobilePortalHeader.jsx",
       "norm_label": "railhubbrandlogo()"
     },
@@ -2112,7 +2135,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_vectorlogos_railpaylogo",
-      "community": 9,
+      "community": 1,
       "community_name": "MobilePortalHeader.jsx",
       "norm_label": "railpaylogo()"
     },
@@ -2124,7 +2147,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_vectorlogos_iconantarkota",
-      "community": 9,
+      "community": 1,
       "community_name": "MobilePortalHeader.jsx",
       "norm_label": "iconantarkota()"
     },
@@ -2136,7 +2159,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_vectorlogos_iconlokal",
-      "community": 9,
+      "community": 1,
       "community_name": "MobilePortalHeader.jsx",
       "norm_label": "iconlokal()"
     },
@@ -2148,7 +2171,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_vectorlogos_iconkomuter",
-      "community": 9,
+      "community": 1,
       "community_name": "MobilePortalHeader.jsx",
       "norm_label": "iconkomuter()"
     },
@@ -2160,7 +2183,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_vectorlogos_iconlrt",
-      "community": 9,
+      "community": 1,
       "community_name": "MobilePortalHeader.jsx",
       "norm_label": "iconlrt()"
     },
@@ -2172,7 +2195,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_vectorlogos_iconbandara",
-      "community": 9,
+      "community": 1,
       "community_name": "MobilePortalHeader.jsx",
       "norm_label": "iconbandara()"
     },
@@ -2184,7 +2207,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_vectorlogos_iconspacebyrail",
-      "community": 9,
+      "community": 1,
       "community_name": "MobilePortalHeader.jsx",
       "norm_label": "iconspacebyrail()"
     },
@@ -2196,7 +2219,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_vectorlogos_icongrabfeeder",
-      "community": 9,
+      "community": 1,
       "community_name": "MobilePortalHeader.jsx",
       "norm_label": "icongrabfeeder()"
     },
@@ -2208,7 +2231,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_vectorlogos_iconmultitrip",
-      "community": 9,
+      "community": 1,
       "community_name": "MobilePortalHeader.jsx",
       "norm_label": "iconmultitrip()"
     },
@@ -2220,7 +2243,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_vectorlogos_iconlebihbanyak",
-      "community": 9,
+      "community": 1,
       "community_name": "MobilePortalHeader.jsx",
       "norm_label": "iconlebihbanyak()"
     },
@@ -2232,7 +2255,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_vectorlogos_locomotiveillustration",
-      "community": 9,
+      "community": 1,
       "community_name": "MobilePortalHeader.jsx",
       "norm_label": "locomotiveillustration()"
     },
@@ -2244,7 +2267,7 @@
       "_origin": "ast",
       "id": "src_contexts_authcontext",
       "community": 7,
-      "community_name": "createClient",
+      "community_name": "useAuth",
       "norm_label": "authcontext.js"
     },
     {
@@ -2255,7 +2278,7 @@
       "_origin": "ast",
       "id": "src_contexts_authcontext_authcontext",
       "community": 7,
-      "community_name": "createClient",
+      "community_name": "useAuth",
       "norm_label": "authcontext"
     },
     {
@@ -2267,7 +2290,7 @@
       "_origin": "ast",
       "id": "src_contexts_authcontext_authprovider",
       "community": 1,
-      "community_name": "app/page.js",
+      "community_name": "MobilePortalHeader.jsx",
       "norm_label": "authprovider()"
     },
     {
@@ -2279,7 +2302,7 @@
       "_origin": "ast",
       "id": "src_contexts_authcontext_useauth",
       "community": 7,
-      "community_name": "createClient",
+      "community_name": "useAuth",
       "norm_label": "useauth()"
     },
     {
@@ -2290,7 +2313,7 @@
       "_origin": "ast",
       "id": "src_contexts_langcontext",
       "community": 1,
-      "community_name": "app/page.js",
+      "community_name": "MobilePortalHeader.jsx",
       "norm_label": "langcontext.js"
     },
     {
@@ -2301,7 +2324,7 @@
       "_origin": "ast",
       "id": "src_contexts_langcontext_langcontext",
       "community": 1,
-      "community_name": "app/page.js",
+      "community_name": "MobilePortalHeader.jsx",
       "norm_label": "langcontext"
     },
     {
@@ -2313,7 +2336,7 @@
       "_origin": "ast",
       "id": "src_contexts_langcontext_langprovider",
       "community": 1,
-      "community_name": "app/page.js",
+      "community_name": "MobilePortalHeader.jsx",
       "norm_label": "langprovider()"
     },
     {
@@ -2325,7 +2348,7 @@
       "_origin": "ast",
       "id": "src_contexts_langcontext_uselang",
       "community": 1,
-      "community_name": "app/page.js",
+      "community_name": "MobilePortalHeader.jsx",
       "norm_label": "uselang()"
     },
     {
@@ -2451,7 +2474,7 @@
       "_origin": "ast",
       "id": "src_lib_i18n_translations",
       "community": 1,
-      "community_name": "app/page.js",
+      "community_name": "MobilePortalHeader.jsx",
       "norm_label": "translations.js"
     },
     {
@@ -2462,7 +2485,7 @@
       "_origin": "ast",
       "id": "src_lib_i18n_translations_id",
       "community": 1,
-      "community_name": "app/page.js",
+      "community_name": "MobilePortalHeader.jsx",
       "norm_label": "id"
     },
     {
@@ -2473,7 +2496,7 @@
       "_origin": "ast",
       "id": "src_lib_i18n_translations_en",
       "community": 1,
-      "community_name": "app/page.js",
+      "community_name": "MobilePortalHeader.jsx",
       "norm_label": "en"
     },
     {
@@ -2484,7 +2507,7 @@
       "_origin": "ast",
       "id": "src_lib_i18n_translations_translations",
       "community": 1,
-      "community_name": "app/page.js",
+      "community_name": "MobilePortalHeader.jsx",
       "norm_label": "translations"
     },
     {
@@ -2496,7 +2519,7 @@
       "_origin": "ast",
       "id": "src_lib_i18n_translations_gettranslations",
       "community": 1,
-      "community_name": "app/page.js",
+      "community_name": "MobilePortalHeader.jsx",
       "norm_label": "gettranslations()"
     },
     {
@@ -2693,7 +2716,7 @@
       "_origin": "ast",
       "id": "src_lib_supabase_client",
       "community": 7,
-      "community_name": "createClient",
+      "community_name": "useAuth",
       "norm_label": "client.js"
     },
     {
@@ -2704,7 +2727,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_lib_supabase_client_createclient",
-      "community": 7,
+      "community": 9,
       "community_name": "createClient",
       "norm_label": "createclient()"
     },
@@ -2796,8 +2819,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_utils_formatters",
-      "community": 2,
-      "community_name": "admin/page.js",
+      "community": 9,
+      "community_name": "createClient",
       "norm_label": "formatters.js"
     },
     {
@@ -2808,7 +2831,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_lib_utils_formatters_formatidr",
-      "community": 7,
+      "community": 9,
       "community_name": "createClient",
       "norm_label": "formatidr()"
     },
@@ -2820,8 +2843,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_lib_utils_formatters_formatdate",
-      "community": 2,
-      "community_name": "admin/page.js",
+      "community": 9,
+      "community_name": "createClient",
       "norm_label": "formatdate()"
     },
     {
@@ -2832,8 +2855,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_lib_utils_formatters_formattime",
-      "community": 2,
-      "community_name": "admin/page.js",
+      "community": 9,
+      "community_name": "createClient",
       "norm_label": "formattime()"
     },
     {
@@ -2844,8 +2867,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_lib_utils_formatters_formatduration",
-      "community": 5,
-      "community_name": "TrainSearchResults.jsx",
+      "community": 9,
+      "community_name": "createClient",
       "norm_label": "formatduration()"
     },
     {
@@ -2856,8 +2879,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_lib_utils_formatters_formatshortdate",
-      "community": 2,
-      "community_name": "admin/page.js",
+      "community": 9,
+      "community_name": "createClient",
       "norm_label": "formatshortdate()"
     },
     {
@@ -2868,8 +2891,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_lib_utils_formatters_truncate",
-      "community": 2,
-      "community_name": "admin/page.js",
+      "community": 9,
+      "community_name": "createClient",
       "norm_label": "truncate()"
     },
     {
@@ -2880,8 +2903,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_lib_utils_formatters_generatebookingcode",
-      "community": 2,
-      "community_name": "admin/page.js",
+      "community": 9,
+      "community_name": "createClient",
       "norm_label": "generatebookingcode()"
     },
     {
@@ -2892,8 +2915,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_lib_utils_formatters_cn",
-      "community": 2,
-      "community_name": "admin/page.js",
+      "community": 9,
+      "community_name": "createClient",
       "norm_label": "cn()"
     },
     {
@@ -2904,8 +2927,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_lib_utils_formatters_getbookingstatusinfo",
-      "community": 2,
-      "community_name": "admin/page.js",
+      "community": 9,
+      "community_name": "createClient",
       "norm_label": "getbookingstatusinfo()"
     },
     {
@@ -2916,8 +2939,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_lib_utils_formatters_getschedulestatusinfo",
-      "community": 2,
-      "community_name": "admin/page.js",
+      "community": 9,
+      "community_name": "createClient",
       "norm_label": "getschedulestatusinfo()"
     },
     {
@@ -3771,30 +3794,6 @@
       "_origin": "ast",
       "source": "src_app_about_page",
       "target": "src_app_about_page_timeline",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/app/about/page.js",
-      "source_location": "L5",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "src_app_about_page",
-      "target": "src_components_layout_footer",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/app/about/page.js",
-      "source_location": "L5",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "src_app_about_page",
-      "target": "src_components_layout_footer_footer",
       "confidence_score": 1.0
     },
     {
@@ -5706,7 +5705,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/dashboard/passenger/page.js",
-      "source_location": "L1510",
+      "source_location": "L1557",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_app_dashboard_passenger_page",
@@ -6636,7 +6635,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/app/page.js",
-      "source_location": "L8",
+      "source_location": "L7",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_app_page",
@@ -6648,7 +6647,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/app/page.js",
-      "source_location": "L8",
+      "source_location": "L7",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_app_page",
@@ -6660,7 +6659,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/app/page.js",
-      "source_location": "L9",
+      "source_location": "L8",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_app_page",
@@ -6672,7 +6671,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/app/page.js",
-      "source_location": "L9",
+      "source_location": "L8",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_app_page",
@@ -6684,11 +6683,11 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/app/page.js",
-      "source_location": "L7",
+      "source_location": "L9",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_app_page",
-      "target": "src_components_layout_footer",
+      "target": "src_components_home_trainbumperbanner",
       "confidence_score": 1.0
     },
     {
@@ -6696,11 +6695,11 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/app/page.js",
-      "source_location": "L7",
+      "source_location": "L9",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_app_page",
-      "target": "src_components_layout_footer_footer",
+      "target": "src_components_home_trainbumperbanner_trainbumperbanner",
       "confidence_score": 1.0
     },
     {
@@ -7987,7 +7986,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/home/MobilePortalHeader.jsx",
-      "source_location": "L26",
+      "source_location": "L27",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_home_mobileportalheader",
@@ -8180,7 +8179,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "src/components/home/MobilePortalHeader.jsx",
-      "source_location": "L47",
+      "source_location": "L48",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_home_mobileportalheader_mobileportalheader",
@@ -8192,7 +8191,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "src/components/home/MobilePortalHeader.jsx",
-      "source_location": "L75",
+      "source_location": "L76",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_home_mobileportalheader_mobileportalheader",
@@ -8204,7 +8203,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "src/components/home/MobilePortalHeader.jsx",
-      "source_location": "L90",
+      "source_location": "L91",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_home_mobileportalheader_mobileportalheader",
@@ -8216,7 +8215,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "src/components/home/MobilePortalHeader.jsx",
-      "source_location": "L61",
+      "source_location": "L62",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_home_mobileportalheader_mobileportalheader",
@@ -8228,7 +8227,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "src/components/home/MobilePortalHeader.jsx",
-      "source_location": "L106",
+      "source_location": "L107",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_home_mobileportalheader_mobileportalheader",
@@ -8240,7 +8239,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "src/components/home/MobilePortalHeader.jsx",
-      "source_location": "L54",
+      "source_location": "L55",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_home_mobileportalheader_mobileportalheader",
@@ -8252,7 +8251,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "src/components/home/MobilePortalHeader.jsx",
-      "source_location": "L68",
+      "source_location": "L69",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_home_mobileportalheader_mobileportalheader",
@@ -8264,7 +8263,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "src/components/home/MobilePortalHeader.jsx",
-      "source_location": "L98",
+      "source_location": "L99",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_home_mobileportalheader_mobileportalheader",
@@ -8276,7 +8275,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "src/components/home/MobilePortalHeader.jsx",
-      "source_location": "L82",
+      "source_location": "L83",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_home_mobileportalheader_mobileportalheader",
@@ -8288,7 +8287,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/home/MobilePortalHeader.jsx",
-      "source_location": "L28",
+      "source_location": "L29",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_home_mobileportalheader_mobileportalheader",
@@ -8300,11 +8299,22 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/home/MobilePortalHeader.jsx",
-      "source_location": "L29",
+      "source_location": "L30",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_home_mobileportalheader_mobileportalheader",
       "target": "src_contexts_langcontext_uselang"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/home/TrainBumperBanner.jsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_components_home_trainbumperbanner",
+      "target": "src_components_home_trainbumperbanner_trainbumperbanner",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -10075,5 +10085,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "6eb9470168c9861d75d266638dcb8260edfa3196"
+  "built_at_commit": "d0873268f05071f87ccd2befafc2e20484f4e07f"
 }

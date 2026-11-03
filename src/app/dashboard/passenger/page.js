@@ -1499,6 +1499,53 @@ function PassengerDashboardContent() {
                   </form>
                 </div>
               </section>
+
+              {/* Security & Privacy Settings Card */}
+              <section className="rh-card">
+                <div className="rh-card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <Shield size={20} color="var(--rh-primary)" />
+                    <h3 className="rh-h4" style={{ margin: 0 }}>Keamanan Akun & Kebijakan Privasi</h3>
+                  </div>
+                  <span className="rh-badge rh-badge-success" style={{ fontSize: '0.78rem' }}>
+                    <CheckCircle2 size={13} /> Terlindungi SSL 256-Bit
+                  </span>
+                </div>
+                <div className="rh-card-body" style={{ display: 'grid', gap: '1rem' }}>
+                  <p style={{ margin: 0, fontSize: '0.88rem', color: 'var(--rh-text-2)', lineHeight: 1.6 }}>
+                    Data pribadi, dokumen KTP, serta riwayat e-boarding pass Anda disimpan secara terenkripsi dan dilindungi dengan protokol keamanan modern.
+                  </p>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '0.75rem' }}>
+                    <div style={{ padding: '0.85rem', borderRadius: 10, background: 'var(--rh-surface)', border: '1px solid var(--rh-border)' }}>
+                      <div style={{ fontWeight: 700, fontSize: '0.85rem', color: 'var(--rh-navy)', marginBottom: '0.2rem' }}>
+                        🔒 Keamanan Sesi & Password
+                      </div>
+                      <div style={{ fontSize: '0.78rem', color: 'var(--rh-text-2)' }}>
+                        Otentikasi aman via Supabase Auth dengan token JWT terenkripsi dan proteksi CSRF.
+                      </div>
+                    </div>
+
+                    <div style={{ padding: '0.85rem', borderRadius: 10, background: 'var(--rh-surface)', border: '1px solid var(--rh-border)' }}>
+                      <div style={{ fontWeight: 700, fontSize: '0.85rem', color: 'var(--rh-navy)', marginBottom: '0.2rem' }}>
+                        🛡️ Perlindungan Privasi Data
+                      </div>
+                      <div style={{ fontSize: '0.78rem', color: 'var(--rh-text-2)' }}>
+                        Data identitas KTP hanya digunakan untuk pencetakan e-boarding pass resmi dan tidak diperjualbelikan.
+                      </div>
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem', paddingTop: '0.5rem', borderTop: '1px solid var(--rh-border)' }}>
+                    <span style={{ fontSize: '0.8rem', color: 'var(--rh-text-3)' }}>
+                      Pelajari selengkapnya mengenai regulasi dan arsitektur keamanan:
+                    </span>
+                    <Link href="/about" className="rh-btn rh-btn-ghost rh-btn-sm" style={{ fontWeight: 700, color: 'var(--rh-primary)' }}>
+                      Baca Kebijakan Privasi Lengkap →
+                    </Link>
+                  </div>
+                </div>
+              </section>
             </div>
           )}
         </div>

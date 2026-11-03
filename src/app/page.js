@@ -4,9 +4,9 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import Navbar from '@/components/layout/Navbar'
-import Footer from '@/components/layout/Footer'
 import SearchWidget from '@/components/booking/SearchWidget'
 import MobilePortalHeader from '@/components/home/MobilePortalHeader'
+import TrainBumperBanner from '@/components/home/TrainBumperBanner'
 import { useLang } from '@/contexts/LangContext'
 import { useAuth } from '@/contexts/AuthContext'
 import toast from 'react-hot-toast'
@@ -150,6 +150,9 @@ export default function HomePage() {
     <div>
       <Navbar />
 
+      {/* ── CINEMATIC TRAIN BUMPER (Strict 8:2 Aspect Ratio, Smooth GPU Animation, Zero Lag) ── */}
+      <TrainBumperBanner />
+
       {/* ── HERO & SEARCH SECTION ──────────────────────────── */}
       <section className="rh-hero" style={{ paddingBottom: '2.5rem' }}>
         <div className="rh-pattern-dots" style={{ position: 'absolute', inset: 0, opacity: 0.35 }} />
@@ -266,9 +269,26 @@ export default function HomePage() {
             className="rh-promo-banner"
             style={{
               background: activePromo.gradient,
+              position: 'relative',
+              overflow: 'hidden',
             }}
           >
-            {/* Left Content */}
+            {/* Background decorative watermark */}
+            <div
+              style={{
+                position: 'absolute',
+                right: -25,
+                bottom: -25,
+                opacity: 0.12,
+                pointerEvents: 'none',
+                zIndex: 1,
+              }}
+              aria-hidden="true"
+            >
+              <Train size={200} strokeWidth={1.5} color="#ffffff" />
+            </div>
+
+            {/* Left / Center Content */}
             <div style={{ zIndex: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 'clamp(0.2rem, 0.8vw, 0.45rem)', minWidth: 0 }}>
               <span
                 style={{
@@ -289,12 +309,13 @@ export default function HomePage() {
 
               <h3
                 style={{
-                  fontSize: 'clamp(0.85rem, 2.2vw, 1.45rem)',
+                  fontSize: 'clamp(0.82rem, 2.4vw, 1.35rem)',
                   fontWeight: 900,
                   lineHeight: 1.18,
                   color: 'white',
                   margin: 0,
                   letterSpacing: '-0.02em',
+                  textShadow: '0 1px 3px rgba(0,0,0,0.3)',
                 }}
               >
                 {activePromo.headline}
@@ -347,8 +368,8 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Right Visual: Compact Hospitality Card */}
-            <div style={{ zIndex: 2, display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+            {/* Right Visual: Shown ONLY on Desktop/Tablet, Hidden on Mobile to prevent text collision */}
+            <div className="rh-hide-mobile" style={{ zIndex: 2, display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
               <div
                 className="rh-promo-attendant"
                 style={{
@@ -537,7 +558,7 @@ export default function HomePage() {
       </section>
 
       {/* ── FAST CALL-TO-ACTION (COMPACT) ─────────────────── */}
-      <section style={{ background: 'linear-gradient(135deg, #0F2552 0%, #1A428A 100%)', padding: '2.5rem 0', color: 'white' }}>
+      <section style={{ background: 'linear-gradient(135deg, #0F2552 0%, #1A428A 100%)', padding: '2.5rem 0 calc(5.5rem + env(safe-area-inset-bottom, 0px))', color: 'white' }}>
         <div className="rh-container" style={{ textAlign: 'center', maxWidth: 580 }}>
           <h2 className="rh-h3" style={{ color: 'white', marginBottom: '0.5rem', fontSize: '1.35rem' }}>
             Siap Memulai Perjalanan Anda?
@@ -550,7 +571,7 @@ export default function HomePage() {
               Cari Tiket Sekarang <ChevronRight size={16} />
             </Link>
             <Link
-              href="/faq"
+              href="/about"
               className="rh-btn rh-btn-sm"
               style={{
                 background: 'rgba(255,255,255,0.12)',
@@ -560,13 +581,11 @@ export default function HomePage() {
                 fontSize: '0.85rem',
               }}
             >
-              Pusat Bantuan & FAQ
+              Tentang & Privasi Keamanan
             </Link>
           </div>
         </div>
       </section>
-
-      <Footer />
     </div>
   )
 }

@@ -81,32 +81,32 @@ export default function MobilePortalHeader() {
       title: 'Space By RH',
       href: '/about',
       icon: IconSpaceByRail,
-      bg: '#F8FAFC',
-      border: '1.5px solid #E2E8F0',
+      bg: '#FFFFFF',
+      border: '1px solid rgba(255, 255, 255, 0.4)',
     },
     {
       id: 'grab',
       title: 'Feeder Mobil',
       href: '/contact',
       icon: IconGrabFeeder,
-      bg: '#F8FAFC',
-      border: '1.5px solid #E2E8F0',
+      bg: '#FFFFFF',
+      border: '1px solid rgba(255, 255, 255, 0.4)',
     },
     {
       id: 'kmt',
       title: 'Kartu Multi Trip',
       href: user ? '/dashboard/passenger' : '/auth/login?next=/dashboard/passenger',
       icon: IconMultiTrip,
-      bg: '#F8FAFC',
-      border: '1.5px solid #E2E8F0',
+      bg: '#FFFFFF',
+      border: '1px solid rgba(255, 255, 255, 0.4)',
     },
     {
       id: 'more',
       title: 'Lebih Banyak',
       href: '/faq',
       icon: IconLebihBanyak,
-      bg: '#F8FAFC',
-      border: '1.5px solid #E2E8F0',
+      bg: '#FFFFFF',
+      border: '1px solid rgba(255, 255, 255, 0.4)',
     },
   ]
 
@@ -114,26 +114,28 @@ export default function MobilePortalHeader() {
     <section
       aria-label="Portal Akses Cepat RAILHUB"
       style={{
-        background: 'linear-gradient(180deg, #12306A 0%, #1A428A 45%, #E7ECF6 100%)',
+        background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%)',
+        backdropFilter: 'blur(10px)',
+        border: '1px solid rgba(255, 255, 255, 0.12)',
         color: '#ffffff',
-        padding: '1.15rem 0.85rem 1.25rem',
+        padding: '1.15rem 0.85rem 1.15rem',
         borderRadius: 20,
         marginBottom: '1rem',
-        boxShadow: '0 8px 24px rgba(18, 48, 106, 0.12)',
+        boxShadow: '0 8px 24px rgba(10, 25, 47, 0.25)',
       }}
     >
       <div style={{ maxWidth: 840, margin: '0 auto' }}>
-        {/* Top Greeting Row */}
+        {/* Top Greeting Row (Duplicate Notification & Language Removed) */}
         <div
           style={{
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            marginBottom: '0.85rem',
+            marginBottom: '1.15rem',
           }}
         >
           <div>
-            <div style={{ fontSize: '0.85rem', color: 'rgba(255, 255, 255, 0.85)', fontWeight: 500 }}>
+            <div style={{ fontSize: '0.82rem', color: 'rgba(255, 255, 255, 0.8)', fontWeight: 500 }}>
               {greeting}
             </div>
             <h1
@@ -149,141 +151,89 @@ export default function MobilePortalHeader() {
             </h1>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            {/* My Bookings / Cart */}
-            <Link
-              href={user ? '/dashboard/passenger#my-bookings' : '/auth/login'}
-              style={{
-                width: 38,
-                height: 38,
-                borderRadius: '50%',
-                background: 'rgba(255, 255, 255, 0.15)',
-                backdropFilter: 'blur(8px)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#ffffff',
-                border: '1px solid rgba(255, 255, 255, 0.25)',
-              }}
-              aria-label="Tiket Saya"
-            >
-              <ShoppingBag size={17} />
-            </Link>
-
-            {/* Notifications */}
-            <Link
-              href={user ? '/dashboard/passenger' : '/about'}
-              style={{
-                width: 38,
-                height: 38,
-                borderRadius: '50%',
-                background: 'rgba(255, 255, 255, 0.15)',
-                backdropFilter: 'blur(8px)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#ffffff',
-                border: '1px solid rgba(255, 255, 255, 0.25)',
-              }}
-              aria-label="Pemberitahuan"
-            >
-              <Bell size={17} />
-            </Link>
-
-            {/* Language Flag Badge */}
-            <button
-              type="button"
-              onClick={toggleLang}
-              style={{
-                height: 38,
-                borderRadius: 20,
-                background: 'rgba(255, 255, 255, 0.15)',
-                backdropFilter: 'blur(8px)',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.35rem',
-                padding: '0 0.75rem',
-                color: '#ffffff',
-                border: '1px solid rgba(255, 255, 255, 0.25)',
-                fontSize: '0.78rem',
-                fontWeight: 700,
-                cursor: 'pointer',
-              }}
-              aria-label="Ganti Bahasa"
-            >
-              <span>🇮🇩</span>
-              <span>{lang.toUpperCase()}</span>
-            </button>
-          </div>
+          <Link
+            href={user ? '/dashboard/passenger#my-bookings' : '/auth/login'}
+            style={{
+              height: 34,
+              borderRadius: 17,
+              background: 'rgba(255, 255, 255, 0.12)',
+              backdropFilter: 'blur(8px)',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              padding: '0 0.85rem',
+              color: '#ffffff',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              fontSize: '0.75rem',
+              fontWeight: 700,
+              textDecoration: 'none',
+            }}
+            aria-label="Tiket Saya"
+          >
+            <ShoppingBag size={14} />
+            <span>Tiket Saya</span>
+          </Link>
         </div>
 
         {/* ============================================================
-            SERVICE CATEGORIES (Screenshot 1: 9 Circular Vector Badges in Elevated White Card)
+            SERVICE CATEGORIES (Direct layout, no awkward enclosing shape)
             ============================================================ */}
         <div
           style={{
-            background: '#ffffff',
-            borderRadius: 18,
-            padding: '1.15rem 0.75rem 1rem',
-            marginBottom: '1rem',
-            boxShadow: '0 6px 20px rgba(0, 0, 0, 0.06)',
+            display: 'grid',
+            gridTemplateColumns: 'repeat(5, 1fr)',
+            gap: '1.15rem 0.35rem',
+            textAlign: 'center',
+            marginBottom: '1.25rem',
           }}
         >
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(5, 1fr)',
-              gap: '1.15rem 0.35rem',
-              textAlign: 'center',
-            }}
-          >
-            {SERVICES.map(srv => {
-              const Icon = srv.icon
-              return (
-                <Link
-                  key={srv.id}
-                  href={srv.href}
+          {SERVICES.map(srv => {
+            const Icon = srv.icon
+            return (
+              <Link
+                key={srv.id}
+                href={srv.href}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  textDecoration: 'none',
+                  gap: '0.45rem',
+                }}
+              >
+                <div
                   style={{
+                    width: 50,
+                    height: 50,
+                    borderRadius: '50%',
+                    background: srv.bg,
+                    border: srv.border || 'none',
                     display: 'flex',
-                    flexDirection: 'column',
                     alignItems: 'center',
-                    textDecoration: 'none',
-                    gap: '0.45rem',
+                    justifyContent: 'center',
+                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                    transition: 'transform 0.15s ease',
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)' }}
+                  onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)' }}
+                >
+                  <Icon size={24} />
+                </div>
+                <span
+                  style={{
+                    fontSize: '0.72rem',
+                    fontWeight: 600,
+                    color: '#ffffff',
+                    lineHeight: 1.25,
+                    maxWidth: 68,
+                    textShadow: '0 1px 3px rgba(0, 0, 0, 0.45)',
                   }}
                 >
-                  <div
-                    style={{
-                      width: 50,
-                      height: 50,
-                      borderRadius: '50%',
-                      background: srv.bg,
-                      border: srv.border || 'none',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      boxShadow: '0 4px 10px rgba(0, 0, 0, 0.06)',
-                      transition: 'transform 0.15s ease',
-                    }}
-                    onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)' }}
-                    onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)' }}
-                  >
-                    <Icon size={24} />
-                  </div>
-                  <span
-                    style={{
-                      fontSize: '0.72rem',
-                      fontWeight: 700,
-                      color: '#1E293B',
-                      lineHeight: 1.25,
-                      maxWidth: 68,
-                    }}
-                  >
-                    {srv.title}
-                  </span>
-                </Link>
-              )
-            })}
-          </div>
+                  {srv.title}
+                </span>
+              </Link>
+            )
+          })}
         </div>
 
         {/* ============================================================

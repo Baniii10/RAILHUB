@@ -2,7 +2,6 @@
 
 import Link from 'next/link'
 import Navbar from '@/components/layout/Navbar'
-import Footer from '@/components/layout/Footer'
 import {
   Award,
   CheckCircle2,
@@ -14,6 +13,7 @@ import {
   Globe,
   Layers,
   MapPin,
+  Lock,
   Shield,
   Sparkles,
   Train,
@@ -248,7 +248,70 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <Footer />
+      {/* ── KEBIJAKAN PRIVASI, KEAMANAN & SYARAT KETENTUAN ── */}
+      <section className="rh-section" style={{ background: 'var(--rh-surface)', borderTop: '1px solid var(--rh-border)', paddingBottom: 'calc(5rem + env(safe-area-inset-bottom, 0px))' }}>
+        <div className="rh-container">
+          <div style={{ maxWidth: 700, marginBottom: '2rem' }}>
+            <span className="rh-badge rh-badge-primary" style={{ marginBottom: '0.6rem' }}>
+              <Shield size={13} /> Keamanan & Regulasi
+            </span>
+            <h2 className="rh-h2">Kebijakan Privasi & Keamanan Sistem</h2>
+            <p className="rh-body-lg" style={{ color: 'var(--rh-text-2)', marginTop: '0.5rem' }}>
+              RAILHUB menerapkan protokol enkripsi perbankan dan integritas data atomik untuk melindungi seluruh privasi penumpang dan keaslian tiket.
+            </p>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem' }}>
+            <div className="rh-card" style={{ padding: '1.5rem', background: '#ffffff' }}>
+              <div style={{ width: 42, height: 42, borderRadius: 12, background: 'rgba(26, 66, 138, 0.1)', color: 'var(--rh-primary)', display: 'grid', placeItems: 'center', marginBottom: '1rem' }}>
+                <Shield size={22} />
+              </div>
+              <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--rh-navy)', marginBottom: '0.5rem' }}>
+                Enkripsi Transaksi & Pembayaran
+              </h3>
+              <p style={{ fontSize: '0.875rem', color: 'var(--rh-text-2)', lineHeight: 1.6, margin: 0 }}>
+                Setiap pembayaran tiket menggunakan gateway resmi berstandar PCI-DSS dan enkripsi TLS 256-bit. RAILHUB tidak pernah menyimpan nomor kartu kredit atau detail pembayaran sensitif.
+              </p>
+            </div>
+
+            <div className="rh-card" style={{ padding: '1.5rem', background: '#ffffff' }}>
+              <div style={{ width: 42, height: 42, borderRadius: 12, background: 'rgba(16, 185, 129, 0.1)', color: '#10B981', display: 'grid', placeItems: 'center', marginBottom: '1rem' }}>
+                <CheckCircle2 size={22} />
+              </div>
+              <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--rh-navy)', marginBottom: '0.5rem' }}>
+                Anti-Pemalsuan QR E-Boarding
+              </h3>
+              <p style={{ fontSize: '0.875rem', color: 'var(--rh-text-2)', lineHeight: 1.6, margin: 0 }}>
+                Kode QR e-boarding pass ditandatangani dengan cryptographic hash unik. Hanya kondektur dan petugas resmi terautentikasi yang dapat memvalidasi boarding pass di gerbang stasiun.
+              </p>
+            </div>
+
+            <div className="rh-card" style={{ padding: '1.5rem', background: '#ffffff' }}>
+              <div style={{ width: 42, height: 42, borderRadius: 12, background: 'rgba(255, 140, 0, 0.1)', color: 'var(--rh-accent)', display: 'grid', placeItems: 'center', marginBottom: '1rem' }}>
+                <Lock size={22} />
+              </div>
+              <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--rh-navy)', marginBottom: '0.5rem' }}>
+                Perlindungan Data Penumpang
+              </h3>
+              <p style={{ fontSize: '0.875rem', color: 'var(--rh-text-2)', lineHeight: 1.6, margin: 0 }}>
+                Nomor identitas (NIK/KTP/Paspor), email, dan riwayat perjalanan penumpang disimpan dalam vault database terlindungi RLS (Row Level Security). Data tidak pernah diperjualbelikan kepada pihak ketiga.
+              </p>
+            </div>
+
+            <div className="rh-card" style={{ padding: '1.5rem', background: '#ffffff' }}>
+              <div style={{ width: 42, height: 42, borderRadius: 12, background: 'rgba(56, 189, 248, 0.1)', color: '#0284C7', display: 'grid', placeItems: 'center', marginBottom: '1rem' }}>
+                <Cpu size={22} />
+              </div>
+              <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--rh-navy)', marginBottom: '0.5rem' }}>
+                Simulasi Edukasi Kereta Api
+              </h3>
+              <p style={{ fontSize: '0.875rem', color: 'var(--rh-text-2)', lineHeight: 1.6, margin: 0 }}>
+                RAILHUB merupakan proyek simulasi komputasi web edukasi mahasiswa Kelompok 14. Jadwal, nama armada, dan simulasi e-boarding pass dibuat untuk mendemonstrasikan sistem reservasi pulau Jawa modern.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   )
 }
