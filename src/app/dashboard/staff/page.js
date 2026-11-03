@@ -140,7 +140,7 @@ function StaffDashboardContent() {
       const [ticketRes, updateRes, foodRes, reportRes] = await Promise.all([
         supabase
           .from('tickets')
-          .select('id, ticket_number, is_validated, validated_at, schedule_id, passengers(full_name, identity_number, id_type), seats(seat_number, carriages(carriage_number, class)), schedules(departure_time, trains(name, train_number), routes(name))')
+          .select('id, ticket_number, is_validated, validated_at, schedule_id, passengers(full_name, id_card_number), seats(seat_number, carriages(carriage_number, carriage_class)), schedules(departure_time, trains(name, train_number), routes(name))')
           .in('schedule_id', scheduleIds)
           .order('created_at', { ascending: false }),
         supabase
@@ -318,7 +318,7 @@ function StaffDashboardContent() {
       const matchesSearch = !search || [
         t.ticket_number,
         t.passengers?.full_name,
-        t.passengers?.identity_number,
+        t.passengers?.id_card_number || t.passengers?.identity_number,
         t.seats?.seat_number,
       ].some(v => v?.toLowerCase().includes(search))
 
@@ -719,14 +719,14 @@ function StaffDashboardContent() {
                                 {seat?.seat_number || '—'}
                               </strong>
                               <small style={{ display: 'block', color: 'var(--rh-text-2)' }}>
-                                {carriage?.class || 'Eksekutif'} {carriage?.carriage_number ? `(${carriage.carriage_number})` : ''}
+                                {carriage?.carriage_class || carriage?.class || 'Eksekutif'} {carriage?.carriage_number ? `(${carriage.carriage_number})` : ''}
                               </small>
                             </td>
                             <td style={{ padding: '0.85rem 0.5rem' }}>
                               <strong>{passenger?.full_name || 'Penumpang'}</strong>
-                              {passenger?.identity_number && (
+                              {(passenger?.id_card_number || passenger?.identity_number) && (
                                 <small style={{ display: 'block', color: 'var(--rh-text-3)' }}>
-                                  {passenger?.id_type || 'NIK'}: {passenger.identity_number}
+                                  NIK: {passenger.id_card_number || passenger.identity_number}
                                 </small>
                               )}
                             </td>

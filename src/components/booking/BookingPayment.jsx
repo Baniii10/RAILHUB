@@ -529,13 +529,22 @@ export default function BookingPayment({ bookingId }) {
                           {formatDate(booking.schedules.departure_time)} · {formatTime(booking.schedules.departure_time)}
                         </p>
                       )}
-                      {journey?.schedule && (
-                        <p style={{ display: 'flex', alignItems: 'center', gap: '.45rem', color: 'var(--rh-text-2)', marginTop: '.4rem' }}>
-                          <MapPin size={16} />
-                          {journey.schedule.origin_name} → {journey.schedule.destination_name}
-                          <span>· {journey.schedule.train_name} ({journey.schedule.train_number})</span>
-                        </p>
-                      )}
+                      {(() => {
+                        const origin = journey?.schedule?.origin_name || journey?.schedule?.origin_code || booking.schedules?.routes?.name?.split('—')?.[0]?.trim() || ''
+                        const dest = journey?.schedule?.destination_name || journey?.schedule?.destination_code || booking.schedules?.routes?.name?.split('—')?.[1]?.trim() || ''
+                        const routeStr = origin && dest ? `${origin} → ${dest}` : (booking.schedules?.routes?.name || 'Rute Perjalanan')
+                        const trainName = journey?.schedule?.train_name || booking.schedules?.trains?.name || ''
+                        const trainNum = journey?.schedule?.train_number || booking.schedules?.trains?.train_number || ''
+                        const trainStr = [trainName, trainNum ? `(${trainNum})` : ''].filter(Boolean).join(' ')
+
+                        return (
+                          <p style={{ display: 'flex', alignItems: 'center', gap: '.5rem', color: '#1E293B', fontWeight: 600, marginTop: '.4rem' }}>
+                            <MapPin size={16} style={{ color: 'var(--rh-primary)', flexShrink: 0 }} />
+                            <span>{routeStr}</span>
+                            {trainStr && <span style={{ color: 'var(--rh-text-2)', fontWeight: 500 }}>· {trainStr}</span>}
+                          </p>
+                        )
+                      })()}
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.65rem', marginTop: '1rem' }}>
                         <button
                           className="rh-btn rh-btn-primary"
@@ -724,7 +733,7 @@ export default function BookingPayment({ bookingId }) {
                               <div style={{ minWidth: 0, flex: '1 1 180px' }}>
                                 <strong>E-boarding pass</strong>
                                 <span style={{ display: 'block', color: 'var(--rh-text-2)', marginTop: '.25rem', overflowWrap: 'anywhere' }}>
-                                  {journey?.schedule?.train_name} · {journey?.schedule?.origin_code} → {journey?.schedule?.destination_code}
+                                  {journey?.schedule?.train_name || booking.schedules?.trains?.name || 'KA'} · {(journey?.schedule?.origin_code && journey?.schedule?.destination_code) ? `${journey.schedule.origin_code} → ${journey.schedule.destination_code}` : (booking.schedules?.routes?.name || '')}
                                 </span>
                                 <span style={{ display: 'block', color: 'var(--rh-text-2)', overflowWrap: 'anywhere' }}>
                                   {booking.schedules?.departure_time && formatDate(booking.schedules.departure_time)} · {booking.schedules?.departure_time && formatTime(booking.schedules.departure_time)}

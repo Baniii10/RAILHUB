@@ -97,7 +97,7 @@ export default function MobilePortalHeader() {
       title: 'Space By RH',
       href: '/about',
       icon: IconSpaceByRail,
-      bg: '#ffffff',
+      bg: '#F8FAFC',
       border: '1.5px solid #E2E8F0',
     },
     {
@@ -105,7 +105,7 @@ export default function MobilePortalHeader() {
       title: 'Feeder Mobil',
       href: '/contact',
       icon: IconGrabFeeder,
-      bg: '#ffffff',
+      bg: '#F8FAFC',
       border: '1.5px solid #E2E8F0',
     },
     {
@@ -113,7 +113,7 @@ export default function MobilePortalHeader() {
       title: 'Kartu Multi Trip',
       href: user ? '/dashboard/passenger' : '/auth/login?next=/dashboard/passenger',
       icon: IconMultiTrip,
-      bg: '#ffffff',
+      bg: '#F8FAFC',
       border: '1.5px solid #E2E8F0',
     },
     {
@@ -121,7 +121,7 @@ export default function MobilePortalHeader() {
       title: 'Lebih Banyak',
       href: '/faq',
       icon: IconLebihBanyak,
-      bg: '#ffffff',
+      bg: '#F8FAFC',
       border: '1.5px solid #E2E8F0',
     },
   ]
@@ -403,63 +403,72 @@ export default function MobilePortalHeader() {
         </div>
 
         {/* ============================================================
-            SERVICE CATEGORIES (Screenshot 1 9 Circular Vector Badges)
+            SERVICE CATEGORIES (Screenshot 1: 9 Circular Vector Badges in Elevated White Card)
             ============================================================ */}
         <div
           style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(5, 1fr)',
-            gap: '1rem 0.5rem',
+            background: '#ffffff',
+            borderRadius: 20,
+            padding: '1.25rem 0.85rem 1.1rem',
             marginBottom: '1.5rem',
-            textAlign: 'center',
+            boxShadow: '0 8px 25px rgba(0, 0, 0, 0.08)',
           }}
         >
-          {SERVICES.map(srv => {
-            const Icon = srv.icon
-            return (
-              <Link
-                key={srv.id}
-                href={srv.href}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  textDecoration: 'none',
-                  gap: '0.4rem',
-                }}
-              >
-                <div
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(5, 1fr)',
+              gap: '1.15rem 0.35rem',
+              textAlign: 'center',
+            }}
+          >
+            {SERVICES.map(srv => {
+              const Icon = srv.icon
+              return (
+                <Link
+                  key={srv.id}
+                  href={srv.href}
                   style={{
-                    width: 52,
-                    height: 52,
-                    borderRadius: '50%',
-                    background: srv.bg,
-                    border: srv.border || 'none',
                     display: 'flex',
+                    flexDirection: 'column',
                     alignItems: 'center',
-                    justifyContent: 'center',
-                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
-                    transition: 'transform 0.15s ease',
-                  }}
-                  onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)' }}
-                  onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)' }}
-                >
-                  <Icon size={24} />
-                </div>
-                <span
-                  style={{
-                    fontSize: '0.72rem',
-                    fontWeight: 700,
-                    color: 'var(--rh-navy)',
-                    lineHeight: 1.2,
-                    maxWidth: 64,
+                    textDecoration: 'none',
+                    gap: '0.45rem',
                   }}
                 >
-                  {srv.title}
-                </span>
-              </Link>
-            )
-          })}
+                  <div
+                    style={{
+                      width: 50,
+                      height: 50,
+                      borderRadius: '50%',
+                      background: srv.bg,
+                      border: srv.border || 'none',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      boxShadow: '0 4px 10px rgba(0, 0, 0, 0.06)',
+                      transition: 'transform 0.15s ease',
+                    }}
+                    onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)' }}
+                    onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)' }}
+                  >
+                    <Icon size={24} />
+                  </div>
+                  <span
+                    style={{
+                      fontSize: '0.72rem',
+                      fontWeight: 700,
+                      color: '#1E293B',
+                      lineHeight: 1.25,
+                      maxWidth: 68,
+                    }}
+                  >
+                    {srv.title}
+                  </span>
+                </Link>
+              )
+            })}
+          </div>
         </div>
 
         {/* ============================================================
