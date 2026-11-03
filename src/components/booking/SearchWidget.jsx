@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { MapPin, Calendar, Users, ArrowLeftRight, Search } from 'lucide-react'
 import { useLang } from '@/contexts/LangContext'
@@ -8,8 +8,28 @@ import toast from 'react-hot-toast'
 
 function StationSelect({ label, value, onChange, exclude, placeholder, icon: Icon, stations, loading }) {
   const [open, setOpen] = useState(false)
-  const filtered = stations.filter(s => s.code !== exclude)
+  const [query, setQuery] = useState('')
+  const searchInputRef = useRef(null)
+  const normalizedQuery = query.trim().toLocaleLowerCase('id')
+  const filtered = stations.filter(station => (
+    station.code !== exclude
+    && (!normalizedQuery || [
+      station.name,
+      station.code,
+      station.city,
+      station.province,
+    ].some(value => value?.toLocaleLowerCase('id').includes(normalizedQuery)))
+  ))
   const selected = stations.find(s => s.code === value)
+
+  useEffect(() => {
+    if (open) searchInputRef.current?.focus()
+  }, [open])
+
+  function closePicker() {
+    setOpen(false)
+    setQuery('')
+  }
 
   return (
     <div style={{ position: 'relative', flex: 1 }}>
@@ -18,9 +38,13 @@ function StationSelect({ label, value, onChange, exclude, placeholder, icon: Ico
       </label>
       <button
         type="button"
-        onClick={() => setOpen(v => !v)}
+        onClick={() => {
+          setQuery('')
+          setOpen(v => !v)
+        }}
         disabled={loading}
         aria-expanded={open}
+        aria-haspopup="listbox"
         aria-label={label}
         style={{
           width: '100%', display: 'flex', alignItems: 'center', gap: '0.625rem',
@@ -49,44 +73,65 @@ function StationSelect({ label, value, onChange, exclude, placeholder, icon: Ico
           position: 'absolute', top: 'calc(100% + 6px)', left: 0, right: 0,
           background: 'white', borderRadius: 12, border: '1px solid var(--rh-border)',
           boxShadow: 'var(--shadow-xl)', zIndex: 100, overflow: 'hidden',
-          maxHeight: 280, overflowY: 'auto',
         }}>
-          {filtered.map(s => (
-            <button
-              key={s.code}
-              type="button"
-              onClick={() => { onChange(s.code); setOpen(false) }}
-              style={{
-                width: '100%', padding: '0.75rem 1rem', display: 'flex', alignItems: 'center',
-                gap: '0.75rem', background: value === s.code ? 'var(--rh-primary-light)' : 'transparent',
-                border: 'none', cursor: 'pointer', textAlign: 'left',
-                borderBottom: '1px solid var(--rh-surface)',
-                transition: 'background 0.1s',
+          <div style={{ padding: '0.625rem', borderBottom: '1px solid var(--rh-border)' }}>
+            <input
+              ref={searchInputRef}
+              type="search"
+              value={query}
+              onChange={event => setQuery(event.target.value)}
+              onKeyDown={event => {
+                if (event.key === 'Escape') {
+                  event.stopPropagation()
+                  closePicker()
+                }
               }}
-              onMouseEnter={e => { if (value !== s.code) e.currentTarget.style.background = 'var(--rh-surface)' }}
-              onMouseLeave={e => { if (value !== s.code) e.currentTarget.style.background = 'transparent' }}
-            >
-              <div style={{
-                width: 32, height: 32, borderRadius: 8,
-                background: value === s.code ? 'var(--rh-primary)' : 'var(--rh-surface-2)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: '0.6875rem', fontWeight: 800,
-                color: value === s.code ? 'white' : 'var(--rh-text-3)',
-                flexShrink: 0, fontFamily: 'var(--font-mono)',
-              }}>
-                {s.code}
-              </div>
-              <div>
-                <div style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--rh-text)' }}>{s.name}</div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--rh-text-3)' }}>{s.city}</div>
-              </div>
-            </button>
-          ))}
-          {!loading && filtered.length === 0 && (
-            <p style={{ padding: '0.875rem 1rem', color: 'var(--rh-text-2)', fontSize: '0.875rem' }}>
-              Tidak ada stasiun yang tersedia.
-            </p>
-          )}
+              placeholder="Cari nama, kode, atau kota..."
+              aria-label={`Cari ${label.toLocaleLowerCase('id')}`}
+              className="rh-input"
+              style={{ width: '100%', minWidth: 0, padding: '0.625rem 0.75rem' }}
+            />
+          </div>
+          <div role="listbox" aria-label={`Daftar ${label.toLocaleLowerCase('id')}`} style={{ maxHeight: 230, overflowY: 'auto' }}>
+            {filtered.map(s => (
+              <button
+                key={s.code}
+                type="button"
+                role="option"
+                aria-selected={value === s.code}
+                onClick={() => { onChange(s.code); closePicker() }}
+                style={{
+                  width: '100%', padding: '0.75rem 1rem', display: 'flex', alignItems: 'center',
+                  gap: '0.75rem', background: value === s.code ? 'var(--rh-primary-light)' : 'transparent',
+                  border: 'none', cursor: 'pointer', textAlign: 'left',
+                  borderBottom: '1px solid var(--rh-surface)',
+                  transition: 'background 0.1s',
+                }}
+                onMouseEnter={e => { if (value !== s.code) e.currentTarget.style.background = 'var(--rh-surface)' }}
+                onMouseLeave={e => { if (value !== s.code) e.currentTarget.style.background = 'transparent' }}
+              >
+                <div style={{
+                  width: 32, height: 32, borderRadius: 8,
+                  background: value === s.code ? 'var(--rh-primary)' : 'var(--rh-surface-2)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: '0.6875rem', fontWeight: 800,
+                  color: value === s.code ? 'white' : 'var(--rh-text-3)',
+                  flexShrink: 0, fontFamily: 'var(--font-mono)',
+                }}>
+                  {s.code}
+                </div>
+                <div>
+                  <div style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--rh-text)' }}>{s.name}</div>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--rh-text-3)' }}>{s.city}</div>
+                </div>
+              </button>
+            ))}
+            {filtered.length === 0 && (
+              <p style={{ padding: '0.875rem 1rem', color: 'var(--rh-text-2)', fontSize: '0.875rem' }}>
+                {loading ? 'Memuat stasiun...' : query ? 'Stasiun tidak ditemukan.' : 'Tidak ada stasiun yang tersedia.'}
+              </p>
+            )}
+          </div>
         </div>
       )}
     </div>

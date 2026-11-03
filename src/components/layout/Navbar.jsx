@@ -57,15 +57,18 @@ export default function Navbar() {
 
   const dashboardNavLinks = dashboardRole === 'admin'
     ? [
-        { href: '/dashboard/admin', label: 'Ringkasan' },
-        { href: '/dashboard/admin#staff-assignments', label: 'Penugasan petugas' },
-        { href: '/dashboard/admin#active-assignments', label: 'Penugasan aktif' },
-      ]
+      { href: '/dashboard/admin', label: 'Ringkasan' },
+      { href: '/dashboard/admin/journeys', label: 'Perjalanan mendatang' },
+      { href: '/dashboard/admin/staff', label: 'Pengelolaan petugas' },
+      { href: '/dashboard/orders', label: 'Pesanan makanan' },
+      { href: '/dashboard/reports', label: 'Laporan' },
+    ]
     : dashboardRole === 'conductor'
       ? [
           { href: '/dashboard/staff#staff-journeys', label: 'Perjalanan tugas' },
           { href: '/dashboard/staff#ticket-validation', label: 'Validasi tiket' },
-          { href: '/dashboard/staff#passenger-services', label: 'Layanan penumpang' },
+          { href: '/dashboard/orders', label: 'Pesanan makanan' },
+          { href: '/dashboard/reports', label: 'Laporan' },
         ]
       : null
   const isStaffArea = Boolean(dashboardNavLinks)

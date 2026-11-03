@@ -196,6 +196,12 @@ export default function TrainSearchResults({ origin, destination, date, passenge
   const [detailRow, setDetailRow] = useState(null)
   const detailTriggerRef = useRef(null)
   const closeButtonRef = useRef(null)
+  const bookingSearch = new URLSearchParams({
+    from: origin,
+    to: destination,
+    date,
+    pax: String(passengers),
+  }).toString()
 
   const closeDetails = useCallback(() => {
     setDetailRow(null)
@@ -374,8 +380,8 @@ export default function TrainSearchResults({ origin, destination, date, passenge
                     </button>
                     <Link
                       href={user
-                        ? `/booking/${row.schedule_id}?class=${encodeURIComponent(row.carriage_class)}&pax=${passengers}`
-                        : `/auth/login?next=${encodeURIComponent(`/booking/${row.schedule_id}?class=${encodeURIComponent(row.carriage_class)}&pax=${passengers}`)}`}
+                        ? `/booking/${row.schedule_id}?class=${encodeURIComponent(row.carriage_class)}&${bookingSearch}`
+                        : `/auth/login?next=${encodeURIComponent(`/booking/${row.schedule_id}?class=${encodeURIComponent(row.carriage_class)}&${bookingSearch}`)}`}
                       className="rh-btn rh-btn-primary"
                       aria-label={`${user ? 'Pesan tiket' : 'Masuk untuk memesan'} ${row.train_name}`}
                     >

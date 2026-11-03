@@ -28,7 +28,7 @@ export async function middleware(request) {
   const { data: { user } } = await supabase.auth.getUser()
 
   const { pathname } = request.nextUrl
-  const isAdminPreview = pathname === '/dashboard/admin'
+  const isAdminPreview = ['/dashboard/admin', '/dashboard/admin/journeys', '/dashboard/admin/staff', '/dashboard/reports', '/dashboard/orders'].includes(pathname)
     && request.nextUrl.searchParams.get('preview') === '1'
 
   const requestedNext = request.nextUrl.searchParams.get('next')

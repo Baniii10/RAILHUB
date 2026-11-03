@@ -5,29 +5,42 @@ RAILHUB is a JavaScript Next.js railway travel simulation backed by Supabase. It
 ## Local development
 
 1. Install dependencies with `npm install`.
-2. Configure `.env.local` with `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `NEXT_PUBLIC_APP_URL`, and `NEXT_PUBLIC_WHATSAPP_NUMBER`. Do not commit credentials.
+2. Configure `.env.local` with `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `NEXT_PUBLIC_APP_URL`, and `NEXT_PUBLIC_WHATSAPP_NUMBER`. The current demo payment flow does not need payment gateway keys.
 3. In the Supabase SQL Editor, run the supplied data package's `supabase_schema.sql`, then its `seed.sql`.
 4. Run `supabase\migrations\202610310001_search_train_schedules.sql` after the base schema and seed. The migration exposes a restricted public search RPC and computes class seat availability from database records.
-5. Run `supabase\migrations\202610310002_secure_passenger_booking.sql` to create missing passenger profiles on signup, enable seat selection, atomic passenger booking, payment simulation, ticket issuance, and booking ownership policies.
+5. Run `supabase\migrations\202610310002_secure_passenger_booking.sql` to create missing passenger profiles on signup, enable seat selection, atomic passenger booking, ticket issuance, and booking ownership policies.
 6. Run `supabase\migrations\202610310003_staff_operations.sql` to configure staff journey assignments, ticket validation, and operational status updates.
 7. Run `supabase\migrations\202610310004_passenger_services.sql` to enable the fictional onboard menu, passenger food orders, and assistance/lost-item reports.
 8. Run `supabase\migrations\202610310005_simulated_schedule_calendar.sql` to add daily Gambir–Solo Balapan sample schedules via Yogyakarta for the next 90 days.
 9. Run `supabase\migrations\202610310006_fix_simulated_schedule_times.sql` to set the simulated service to 07:00–16:00 Jakarta time.
 10. Run `supabase\migrations\202610310007_expand_simulated_schedule_calendar.sql` to add daily services for all other seeded routes over the same 90-day period.
-11. Start the app with `npm run dev`.
+11. Run `supabase\migrations\202611010001_ensure_40_seats_per_carriage.sql` to ensure each carriage has 40 seats.
+12. Run `supabase\migrations\202611010002_manage_paid_bookings.sql` to enable ticket rescheduling and cancellation rules.
+13. Run `supabase\migrations\202611010003_food_order_checkout.sql` to record the selected simulated food-order payment method.
+14. Run `supabase\migrations\202611010004_ticket_payment_method.sql` to let passengers select and record a ticket payment method.
+15. Run `supabase\migrations\202611010005_midtrans_sandbox_payments.sql` only if you explicitly want the optional Midtrans Sandbox API and webhook support.
+16. Run `supabase\migrations\202611010006_enable_simulated_payments.sql` to enable demo ticket and food payments after the Midtrans migration has been applied.
+17. Run `supabase\migrations\202611010007_expand_station_catalog.sql` to enable up to 50 active, verified intercity stations from the supplied data package and add simulated connecting schedules using its five train records.
+18. Run `supabase\migrations\202611020001_staff_passenger_journey_flow.sql` to enforce valid journey-status transitions for staff/admin updates; passenger ticket details then show the shared status history.
+19. Start the app with `npm run dev`.
 
 The Supabase URL and anonymous key are public client configuration; never put a service-role key in the browser or in `.env.local` variables prefixed with `NEXT_PUBLIC_`.
 
 ## Current functionality
 
-- Public home page with a station/date/passenger search.
+- Public home page with a station/date/passenger search; authenticated passengers see their own travel dashboard.
 - Station choices loaded from active, bookable Supabase station records.
 - Search results loaded by the `search_train_schedules` database function, with class filtering and price, duration, and departure sorting.
 - Daily simulated schedules for all seeded routes over the next 90 days; these are not official operator timetables.
-- Passenger seat selection, fictional passenger details, atomic booking, simulated payment, and private QR tickets.
-- Passenger dashboard with RLS-protected booking and payment summaries.
+- A catalog capped at 50 active, verified intercity stations from `stations_java.csv`; simulated hub connections use the five train records supplied in `sample_trains.csv`. These added connections, distances, times, and fares are demonstrations, not official routes or schedules.
+- Passenger seat selection, fictional passenger details, atomic booking, simulated demo payment, and private QR tickets.
+- Passenger dashboard with RLS-protected booking and payment summaries; open a ticket to order onboard food and drinks.
+- E-boarding passes unlock two hours before departure. Paid tickets can be rescheduled or cancelled at least 24 hours before departure; rescheduling charges 20% of a positive fare difference, and cancellation records a 20% fee and 80% simulated refund. No real money is processed.
 - Admin database overview and staff assignment; staff dashboard with assigned-journey status updates and one-time ticket validation.
 - Passenger food ordering and journey reports connected to the assigned staff service desk.
+- Food orders use a menu-selection step followed by a simulated payment confirmation; no real payment gateway is contacted.
+- Ticket checkout lets passengers select QRIS, e-wallet, or bank transfer as a demo method. The app marks the simulated payment as successful and issues tickets; no real money is processed.
+- Optional Midtrans Sandbox API and webhook support remains available in the server routes, but is not used by the demo checkout. It requires server-only credentials and a publicly reachable HTTPS notification URL.
 
 ## Create an admin account
 
@@ -41,9 +54,9 @@ WHERE lower(email) = lower('your-account@example.com');
 
 Confirm that the query updated one row. Then sign out and back in to RAILHUB and open `/dashboard/admin`. Never expose a service-role key or grant admin role through the public registration form.
 
-To view the dashboard layout without an account, open `/dashboard/admin?preview=1`. This uses sample data only and disables admin actions; it does not grant access to live admin data.
+To view the dashboard layout without an account, open `/dashboard/admin?preview=1`. The upcoming journeys, staff management, food orders, and passenger reports pages can be previewed at `/dashboard/admin/journeys?preview=1`, `/dashboard/admin/staff?preview=1`, `/dashboard/orders?preview=1`, and `/dashboard/reports?preview=1`. These use sample data only and disable admin actions; they do not grant access to live admin data.
 
-For production, store the schema and all follow-up SQL changes as ordered migrations and apply them to a dedicated Supabase project. Seed data and sample accounts are development-only.
+Apply the migrations above in order before using the application. The Midtrans migration and credentials are only needed if you explicitly enable the optional gateway; the default demo checkout does not process real payments. Seed data and sample accounts are development-only.
 
 ## Validation
 

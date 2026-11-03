@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { AlertCircle, ClipboardList, Utensils } from 'lucide-react'
+import { AlertCircle, ArrowLeft, Banknote, ClipboardList, CreditCard, Minus, Plus, Smartphone, Utensils } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { createClient } from '@/lib/supabase/client'
 import { formatIDR } from '@/lib/utils/formatters'
@@ -12,8 +12,27 @@ const REPORT_CATEGORIES = [
   ['complaint', 'Keluhan perjalanan'],
   ['other', 'Lainnya'],
 ]
+const FOOD_PAYMENT_METHODS = [
+  { value: 'qris', label: 'QRIS', description: 'Metode simulasi demo', icon: CreditCard },
+  { value: 'e_wallet', label: 'E-wallet', description: 'Metode simulasi demo', icon: Smartphone },
+  { value: 'bank_transfer', label: 'Transfer bank', description: 'Metode simulasi demo', icon: Banknote },
+]
+const ORDER_STATUS_LABELS = {
+  pending: 'Menunggu konfirmasi petugas',
+  confirmed: 'Pesanan dikonfirmasi',
+  preparing: 'Pesanan sedang disiapkan',
+  on_the_way: 'Pesanan dalam pengantaran',
+  completed: 'Pesanan selesai',
+  cancelled: 'Pesanan dibatalkan',
+}
+const REPORT_STATUS_LABELS = {
+  pending: 'Menunggu petugas',
+  in_progress: 'Sedang ditangani',
+  resolved: 'Selesai',
+  rejected: 'Tidak dapat ditindaklanjuti',
+}
 
-export default function PassengerServices({ userId }) {
+export default function PassengerServices({ userId, bookingId: initialBookingId, showReports = true }) {
   const [bookings, setBookings] = useState([])
   const [products, setProducts] = useState([])
   const [orders, setOrders] = useState([])
@@ -21,12 +40,16 @@ export default function PassengerServices({ userId }) {
   const [bookingId, setBookingId] = useState('')
   const [passengerId, setPassengerId] = useState('')
   const [quantities, setQuantities] = useState({})
+  const [foodMenuOpen, setFoodMenuOpen] = useState(false)
+  const [foodCheckoutStep, setFoodCheckoutStep] = useState('menu')
+  const [foodPaymentMethod, setFoodPaymentMethod] = useState('qris')
   const [category, setCategory] = useState('assistance')
   const [reportTitle, setReportTitle] = useState('')
   const [reportDescription, setReportDescription] = useState('')
   const [note, setNote] = useState('')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [statusError, setStatusError] = useState('')
   const [submittingFood, setSubmittingFood] = useState(false)
   const [submittingReport, setSubmittingReport] = useState(false)
 
@@ -40,6 +63,7 @@ export default function PassengerServices({ userId }) {
           .from('bookings')
           .select('id, booking_code, status, schedule_id, booking_seats(passenger_id, seat_id, passengers(id, full_name), seats(seat_number))')
           .eq('user_id', userId)
+          .eq('id', initialBookingId)
           .eq('status', 'paid')
           .order('created_at', { ascending: false }),
         supabase
@@ -51,6 +75,7 @@ export default function PassengerServices({ userId }) {
           .from('passenger_reports')
           .select('id, category, title, status, response_note, created_at, bookings(booking_code)')
           .eq('user_id', userId)
+          .eq('booking_id', initialBookingId)
           .order('created_at', { ascending: false })
           .limit(20),
       ])
@@ -58,7 +83,7 @@ export default function PassengerServices({ userId }) {
       if (!active) return
       const failure = bookingResult.error || productResult.error || reportResult.error
       if (failure) {
-        setError(`Layanan perjalanan tidak dapat dimuat: ${failure.message}`)
+        setError(`Menu tiket tidak dapat dimuat: ${failure.message}`)
         setLoading(false)
         return
       }
@@ -67,13 +92,14 @@ export default function PassengerServices({ userId }) {
       setBookings(paidBookings)
       setProducts(productResult.data || [])
       setReports(reportResult.data || [])
-      setBookingId(current => current || paidBookings[0]?.id || '')
-      setPassengerId(current => current || paidBookings[0]?.booking_seats?.[0]?.passenger_id || '')
+      setBookingId(initialBookingId || paidBookings[0]?.id || '')
+      setPassengerId(paidBookings[0]?.booking_seats?.[0]?.passenger_id || '')
+      setOrders([])
 
       if (paidBookings.length > 0) {
         const { data: orderRows, error: orderError } = await supabase
           .from('food_orders')
-          .select('id, order_code, booking_id, status, total_amount, created_at, food_order_items(quantity, unit_price, food_products(name))')
+          .select('id, order_code, booking_id, status, payment_method, total_amount, created_at, food_order_items(quantity, unit_price, food_products(name))')
           .in('booking_id', paidBookings.map(booking => booking.id))
           .order('created_at', { ascending: false })
           .limit(20)
@@ -86,7 +112,45 @@ export default function PassengerServices({ userId }) {
 
     loadServices()
     return () => { active = false }
-  }, [userId])
+  }, [userId, initialBookingId])
+
+  useEffect(() => {
+    let active = true
+    const supabase = createClient()
+
+    async function refreshPassengerUpdates() {
+      if (!initialBookingId) return
+      const [orderResult, reportResult] = await Promise.all([
+        supabase
+          .from('food_orders')
+          .select('id, order_code, booking_id, status, payment_method, total_amount, created_at, food_order_items(quantity, unit_price, food_products(name))')
+          .eq('booking_id', initialBookingId)
+          .order('created_at', { ascending: false })
+          .limit(20),
+        supabase
+          .from('passenger_reports')
+          .select('id, category, title, status, response_note, created_at, bookings(booking_code)')
+          .eq('user_id', userId)
+          .eq('booking_id', initialBookingId)
+          .order('created_at', { ascending: false })
+          .limit(20),
+      ])
+      if (!active) return
+      if (orderResult.error || reportResult.error) {
+        setStatusError(`Status layanan gagal diperbarui: ${orderResult.error?.message || reportResult.error?.message}`)
+        return
+      }
+      setOrders(orderResult.data || [])
+      setReports(reportResult.data || [])
+      setStatusError('')
+    }
+
+    const timer = window.setInterval(refreshPassengerUpdates, 20000)
+    return () => {
+      active = false
+      window.clearInterval(timer)
+    }
+  }, [initialBookingId, userId])
 
   const selectedBooking = bookings.find(booking => booking.id === bookingId)
   const selectedPassengerSeat = selectedBooking?.booking_seats?.find(
@@ -100,16 +164,22 @@ export default function PassengerServices({ userId }) {
     return sum + Number(product?.price || 0) * item.quantity
   }, 0)
 
-  async function submitFoodOrder(event) {
+  function continueToFoodPayment(event) {
     event.preventDefault()
     if (!selectedBooking || !selectedPassengerSeat || selectedItems.length === 0 || submittingFood) {
       toast.error('Pilih perjalanan, penumpang, dan minimal satu menu.')
       return
     }
+    setFoodCheckoutStep('payment')
+  }
 
+  async function submitFoodOrder() {
+    if (!selectedBooking || !selectedPassengerSeat || selectedItems.length === 0 || submittingFood) {
+      toast.error('Periksa kembali penumpang dan menu yang dipilih.')
+      return
+    }
     setSubmittingFood(true)
-    const supabase = createClient()
-    const { error: orderError } = await supabase.rpc('create_passenger_food_order', {
+    const { error: orderError } = await createClient().rpc('create_passenger_food_order', {
       p_booking_id: bookingId,
       p_passenger_id: passengerId,
       p_seat_id: selectedPassengerSeat.seat_id,
@@ -122,12 +192,16 @@ export default function PassengerServices({ userId }) {
       return
     }
 
-    toast.success('Pesanan dikirim ke petugas perjalanan.')
+    const selectedMethod = FOOD_PAYMENT_METHODS.find(method => method.value === foodPaymentMethod)
+    toast.success(`Pembayaran simulasi ${selectedMethod?.label || ''} berhasil. Pesanan dikirim ke petugas.`)
     setQuantities({})
     setNote('')
+    setFoodMenuOpen(false)
+    setFoodCheckoutStep('menu')
+    setFoodPaymentMethod('qris')
     const { data, error: reloadError } = await createClient()
       .from('food_orders')
-      .select('id, order_code, booking_id, status, total_amount, created_at, food_order_items(quantity, unit_price, food_products(name))')
+      .select('id, order_code, booking_id, status, payment_method, total_amount, created_at, food_order_items(quantity, unit_price, food_products(name))')
       .eq('booking_id', bookingId)
       .order('created_at', { ascending: false })
       .limit(20)
@@ -165,22 +239,85 @@ export default function PassengerServices({ userId }) {
 
   return (
     <section id="journey-services" style={{ display: 'grid', gap: '1.25rem', marginTop: '2rem', scrollMarginTop: 96 }}>
-      <h2 className="rh-h3">Layanan perjalanan</h2>
+      <h2 className="rh-h3">Layanan tiket</h2>
       {error && <div role="alert" className="rh-card" style={{ padding: '1rem', color: 'var(--rh-danger)' }}>{error}</div>}
+      {statusError && <div role="alert" className="rh-card" style={{ padding: '1rem', color: 'var(--rh-danger)' }}>{statusError}</div>}
       {loading && <div aria-live="polite" className="rh-card" style={{ padding: '1rem' }}>Memuat menu dan laporan...</div>}
 
-      <article className="rh-card">
-        <div className="rh-card-header">
-          <h3 className="rh-h4"><Utensils size={18} style={{ verticalAlign: 'middle', marginRight: 7 }} />Pesan makanan di kereta</h3>
-          <p style={{ color: 'var(--rh-text-2)', marginTop: '0.25rem' }}>Pesanan terhubung ke kursi dan diterima petugas perjalanan.</p>
+      <article className="rh-card passenger-food-card">
+        <div className="rh-card-header passenger-food-header">
+          <div>
+            <h3 className="rh-h4"><Utensils size={18} style={{ verticalAlign: 'middle', marginRight: 7 }} />Pesan makanan dan minuman</h3>
+            <p style={{ color: 'var(--rh-text-2)', marginTop: '0.25rem' }}>Pilih menu, atur jumlah, lalu pesan untuk perjalanan ini.</p>
+          </div>
+          {bookings.length > 0 && (
+            <button
+              className="rh-btn rh-btn-primary"
+              type="button"
+              onClick={() => setFoodMenuOpen(open => !open)}
+              aria-expanded={foodMenuOpen}
+            >
+              <Utensils size={16} />
+              {foodMenuOpen ? 'Tutup menu' : 'Pesan makanan'}
+            </button>
+          )}
         </div>
-        <div className="rh-card-body">
+        {foodMenuOpen && <div className="rh-card-body">
           {bookings.length === 0 ? (
-            <p style={{ color: 'var(--rh-text-2)' }}>Layanan makanan tersedia untuk booking yang sudah dibayar.</p>
+            <p style={{ color: 'var(--rh-text-2)' }}>Pemesanan menu tersedia untuk tiket yang sudah dibayar dan perjalanan yang masih aktif.</p>
+          ) : foodCheckoutStep === 'payment' ? (
+            <section aria-labelledby="food-payment-title" className="passenger-food-checkout">
+              <button
+                type="button"
+                className="rh-btn rh-btn-ghost rh-btn-sm"
+                onClick={() => setFoodCheckoutStep('menu')}
+                style={{ justifySelf: 'start' }}
+              >
+                <ArrowLeft size={15} /> Kembali ke menu
+              </button>
+              <div>
+                <span className="passenger-section-kicker">LANGKAH 2 · PEMBAYARAN</span>
+                <h4 id="food-payment-title" className="rh-h4" style={{ marginTop: '.25rem' }}>Pilih metode pembayaran</h4>
+                <p style={{ color: 'var(--rh-text-2)', marginTop: '.25rem' }}>
+                  Pembayaran ini simulasi untuk pemesanan menu; tidak ada uang sungguhan yang diproses.
+                </p>
+              </div>
+              <div className="passenger-food-payment-methods" role="radiogroup" aria-label="Metode pembayaran">
+                {FOOD_PAYMENT_METHODS.map(({ value, label, description, icon: Icon }) => (
+                  <button
+                    key={value}
+                    className={`passenger-food-payment-method ${foodPaymentMethod === value ? 'is-selected' : ''}`}
+                    type="button"
+                    role="radio"
+                    aria-checked={foodPaymentMethod === value}
+                    onClick={() => setFoodPaymentMethod(value)}
+                  >
+                    <span className="passenger-food-item-icon"><Icon size={19} /></span>
+                    <span><strong>{label}</strong><small>{description}</small></span>
+                    <span className="passenger-food-payment-radio" />
+                  </button>
+                ))}
+              </div>
+              <div className="passenger-food-payment-summary">
+                <span>{selectedItems.reduce((sum, item) => sum + item.quantity, 0)} item menu</span>
+                <strong>Total {formatIDR(total)}</strong>
+              </div>
+              <button
+                className="rh-btn rh-btn-primary"
+                type="button"
+                onClick={submitFoodOrder}
+                disabled={submittingFood}
+              >
+                {submittingFood ? 'Memproses simulasi...' : `Bayar ${formatIDR(total)}`}
+              </button>
+              <small style={{ color: 'var(--rh-text-2)' }}>
+                Ini pembayaran simulasi untuk demo. Tidak ada uang sungguhan yang diproses.
+              </small>
+            </section>
           ) : (
-            <form onSubmit={submitFoodOrder} style={{ display: 'grid', gap: '1rem' }}>
+            <form onSubmit={continueToFoodPayment} style={{ display: 'grid', gap: '1rem' }}>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: '0.75rem' }}>
-                <label className="rh-input-group">
+                {!initialBookingId && <label className="rh-input-group">
                   <span className="rh-label-text">Perjalanan</span>
                   <select className="rh-input" value={bookingId} onChange={event => {
                     const selected = bookings.find(booking => booking.id === event.target.value)
@@ -189,7 +326,7 @@ export default function PassengerServices({ userId }) {
                   }}>
                     {bookings.map(booking => <option key={booking.id} value={booking.id}>{booking.booking_code}</option>)}
                   </select>
-                </label>
+                </label>}
                 <label className="rh-input-group">
                   <span className="rh-label-text">Penumpang dan kursi</span>
                   <select className="rh-input" value={passengerId} onChange={event => setPassengerId(event.target.value)} required>
@@ -206,39 +343,60 @@ export default function PassengerServices({ userId }) {
                 </label>
               </div>
               {products.length === 0 && <p style={{ color: 'var(--rh-text-2)' }}>Belum ada menu makanan yang aktif.</p>}
-              <div style={{ display: 'grid', gap: '0.5rem' }}>
+              <div className="passenger-food-menu">
                 {products.map(product => (
-                  <label key={product.id} style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', alignItems: 'center', borderBottom: '1px solid var(--rh-border)', padding: '0.65rem 0' }}>
-                    <span style={{ flex: 1 }}>
+                  <article key={product.id} className="passenger-food-item">
+                    <span className="passenger-food-item-icon"><Utensils size={18} /></span>
+                    <span className="passenger-food-item-details">
+                      <small>{product.food_categories?.name}</small>
                       <strong>{product.name}</strong>
-                      <small style={{ display: 'block', color: 'var(--rh-text-2)' }}>{product.food_categories?.name} · {product.description}</small>
+                      <span>{product.description}</span>
                     </span>
-                    <strong>{formatIDR(product.price)}</strong>
-                    <input
-                      aria-label={`Jumlah ${product.name}`}
-                      type="number"
-                      min="0"
-                      max="10"
-                      value={quantities[product.id] || 0}
-                      onChange={event => setQuantities(current => ({
-                        ...current,
-                        [product.id]: Math.max(0, Math.min(10, Number(event.target.value) || 0)),
-                      }))}
-                      className="rh-input"
-                      style={{ width: 82 }}
-                    />
-                  </label>
+                    <strong className="passenger-food-price">{formatIDR(product.price)}</strong>
+                    <div className="passenger-food-quantity" aria-label={`Jumlah ${product.name}`}>
+                      {(quantities[product.id] || 0) > 0 && (
+                        <button
+                          className="passenger-food-quantity-button"
+                          type="button"
+                          aria-label={`Kurangi ${product.name}`}
+                          onClick={() => setQuantities(current => ({
+                            ...current,
+                            [product.id]: Math.max(0, (current[product.id] || 0) - 1),
+                          }))}
+                        >
+                          <Minus size={16} />
+                        </button>
+                      )}
+                      {(quantities[product.id] || 0) > 0 && (
+                        <span className="passenger-food-quantity-count" aria-live="polite">
+                          {quantities[product.id]}
+                        </span>
+                      )}
+                      <button
+                        className="passenger-food-quantity-button passenger-food-quantity-add"
+                        type="button"
+                        aria-label={(quantities[product.id] || 0) > 0 ? `Tambah ${product.name}` : `Pilih ${product.name}`}
+                        disabled={(quantities[product.id] || 0) >= 10}
+                        onClick={() => setQuantities(current => ({
+                          ...current,
+                          [product.id]: Math.min(10, (current[product.id] || 0) + 1),
+                        }))}
+                      >
+                        <Plus size={18} />
+                      </button>
+                    </div>
+                  </article>
                 ))}
               </div>
               <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem' }}>
-                <strong>Total simulasi: {formatIDR(total)}</strong>
+                <strong>Total: {formatIDR(total)}</strong>
                 <button className="rh-btn rh-btn-primary" type="submit" disabled={submittingFood || products.length === 0}>
-                  {submittingFood ? 'Mengirim...' : 'Kirim pesanan'}
+                  Lanjut ke pembayaran
                 </button>
               </div>
             </form>
           )}
-        </div>
+        </div>}
         {orders.length > 0 && (
           <div className="rh-card-footer">
             <strong>Pesanan terakhir</strong>
@@ -246,7 +404,7 @@ export default function PassengerServices({ userId }) {
               {orders.map(order => (
                 <div key={order.id} style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', justifyContent: 'space-between' }}>
                   <span>{order.order_code} · {order.food_order_items?.map(item => `${item.food_products?.name} ×${item.quantity}`).join(', ')}</span>
-                  <strong>{order.status} · {formatIDR(order.total_amount)}</strong>
+                  <strong>{ORDER_STATUS_LABELS[order.status] || order.status} · {order.payment_method?.replace('_', ' ') || 'simulasi'} · {formatIDR(order.total_amount)}</strong>
                 </div>
               ))}
             </div>
@@ -254,7 +412,7 @@ export default function PassengerServices({ userId }) {
         )}
       </article>
 
-      <article className="rh-card">
+      {showReports && <article className="rh-card">
         <div className="rh-card-header">
           <h3 className="rh-h4"><AlertCircle size={18} style={{ verticalAlign: 'middle', marginRight: 7 }} />Bantuan dan laporan perjalanan</h3>
           <p style={{ color: 'var(--rh-text-2)', marginTop: '0.25rem' }}>Kirim permintaan bantuan, barang hilang, atau keluhan untuk ditindaklanjuti petugas.</p>
@@ -300,13 +458,13 @@ export default function PassengerServices({ userId }) {
               {reports.map(report => (
                 <div key={report.id} style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', justifyContent: 'space-between', borderBottom: '1px solid var(--rh-border)', padding: '0.5rem 0' }}>
                   <span>{report.title} · {report.bookings?.booking_code || 'Umum'}</span>
-                  <span><strong>{report.status}</strong>{report.response_note ? ` · ${report.response_note}` : ''}</span>
+                  <span><strong>{REPORT_STATUS_LABELS[report.status] || report.status}</strong>{report.response_note ? ` · ${report.response_note}` : ''}</span>
                 </div>
               ))}
             </div>
           </div>
         )}
-      </article>
+      </article>}
     </section>
   )
 }

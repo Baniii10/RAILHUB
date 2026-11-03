@@ -3,12 +3,11 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { ArrowRight, CalendarDays, Clock3, Compass, Ticket, Train, Utensils, Wallet } from 'lucide-react'
+import { ArrowRight, CalendarDays, Clock3, Compass, Ticket, Train, Wallet } from 'lucide-react'
 import Navbar from '@/components/layout/Navbar'
 import { useAuth } from '@/contexts/AuthContext'
 import { createClient } from '@/lib/supabase/client'
 import { formatDate, formatIDR, formatTime } from '@/lib/utils/formatters'
-import PassengerServices from '@/components/services/PassengerServices'
 import SearchWidget from '@/components/booking/SearchWidget'
 
 export default function PassengerDashboard() {
@@ -129,18 +128,13 @@ export default function PassengerDashboard() {
               <span><strong>Tiket saya</strong><small>Lihat booking</small></span>
               <ArrowRight size={16} />
             </a>
-            <a href="#journey-services" className="passenger-shortcut">
-              <span className="passenger-shortcut-icon passenger-shortcut-gold"><Utensils size={20} /></span>
-              <span><strong>Layanan kereta</strong><small>Makanan & bantuan</small></span>
-              <ArrowRight size={16} />
-            </a>
           </nav>
 
           <section className="passenger-bookings-section" id="my-bookings">
             <div className="passenger-bookings-heading">
               <div>
                 <span className="passenger-section-kicker">PERJALANAN ANDA</span>
-                <h2>Booking saya</h2>
+                <h2>Tiket dan booking saya</h2>
               </div>
               <div className="passenger-booking-count">
                 <span>{bookings.length}</span> booking
@@ -172,7 +166,12 @@ export default function PassengerDashboard() {
                 const payment = payments[booking.id]
                 const isPayable = booking.status === 'pending' && payment?.status === 'pending'
                 return (
-                  <article key={booking.id} className="passenger-booking-card">
+                  <Link
+                    key={booking.id}
+                    className="passenger-booking-card passenger-booking-card-link"
+                    href={`/booking/payment/${booking.id}`}
+                    aria-label={`Buka tiket ${booking.booking_code} untuk ${schedule?.trains?.name || 'perjalanan kereta'}`}
+                  >
                     <div className="passenger-booking-topline">
                       <span className="passenger-booking-code">{booking.booking_code}</span>
                       <span className={`passenger-status passenger-status-${booking.status}`}>
@@ -197,18 +196,15 @@ export default function PassengerDashboard() {
                     </div>
                     <div className="passenger-booking-footer">
                       <div><small>Total perjalanan</small><strong>{formatIDR(booking.total_amount)}</strong></div>
-                      {isPayable ? (
-                        <Link className="rh-btn rh-btn-primary" href={`/booking/payment/${booking.id}`}><Wallet size={16} /> Bayar</Link>
-                      ) : booking.status === 'paid' ? (
-                        <Link className="rh-btn rh-btn-primary" href={`/booking/payment/${booking.id}`}>Lihat tiket <ArrowRight size={16} /></Link>
-                      ) : null}
+                      <span className="passenger-booking-open">
+                        {isPayable ? <><Wallet size={15} /> Buka untuk bayar</> : <>{booking.status === 'paid' ? 'Lihat tiket' : 'Lihat detail'} <ArrowRight size={15} /></>}
+                      </span>
                     </div>
-                  </article>
+                  </Link>
                 )
               })}
             </div>
           </section>
-          {user && profile?.role === 'passenger' && <PassengerServices userId={user.id} />}
         </div>
       </main>
     </>

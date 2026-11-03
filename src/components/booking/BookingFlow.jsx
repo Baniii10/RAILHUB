@@ -35,7 +35,7 @@ function getSeatRows(carriageSeats) {
   return [...rows.entries()].sort(([a], [b]) => a - b)
 }
 
-export default function BookingFlow({ scheduleId, requestedClass, passengerCount }) {
+export default function BookingFlow({ scheduleId, requestedClass, passengerCount, returnTo = '/trains' }) {
   const router = useRouter()
   const { user, profile, loading: authLoading } = useAuth()
   const [journey, setJourney] = useState(null)
@@ -193,7 +193,7 @@ export default function BookingFlow({ scheduleId, requestedClass, passengerCount
       <Navbar />
       <main style={{ minHeight: '100vh', padding: '2.5rem 0 5rem', background: 'var(--rh-surface)' }}>
         <div className="rh-container rh-booking-page">
-          <Link href="/trains" className="rh-btn rh-btn-ghost rh-btn-sm rh-booking-back">
+          <Link href={returnTo} className="rh-btn rh-btn-ghost rh-btn-sm rh-booking-back">
             <ArrowLeft size={16} /> Kembali ke jadwal
           </Link>
           <header className="rh-booking-page-heading">

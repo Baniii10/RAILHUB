@@ -5,6 +5,8 @@ import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import SearchWidget from '@/components/booking/SearchWidget'
 import { useLang } from '@/contexts/LangContext'
+import { useAuth } from '@/contexts/AuthContext'
+import PassengerDashboard from '@/app/dashboard/passenger/page'
 import {
   Shield, Zap, Smartphone, Clock, Star, ChevronRight,
   MapPin, Train, Wifi, Coffee, Utensils, Luggage,
@@ -70,6 +72,22 @@ function SectionTitle({ label, title, subtitle, centered = false }) {
 export default function HomePage() {
   const { t } = useLang()
   const router = useRouter()
+  const { user, profile, loading: authLoading } = useAuth()
+
+  if (authLoading) {
+    return (
+      <>
+        <Navbar />
+        <main className="rh-container" style={{ minHeight: '60vh', display: 'grid', placeItems: 'center' }}>
+          <p aria-live="polite" style={{ color: 'var(--rh-text-2)' }}>Memuat ruang perjalanan...</p>
+        </main>
+      </>
+    )
+  }
+
+  if (user && (!profile || profile.role === 'passenger')) {
+    return <PassengerDashboard />
+  }
 
   function openPopularRoute(event, route) {
     event.preventDefault()

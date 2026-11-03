@@ -17,7 +17,23 @@ const REPORT_TRANSITIONS = {
   in_progress: ['resolved', 'rejected'],
 }
 
-export default function StaffServiceDesk({ scheduleIds }) {
+const ORDER_STATUS_LABELS = {
+  pending: 'Menunggu konfirmasi',
+  confirmed: 'Dikonfirmasi',
+  preparing: 'Sedang disiapkan',
+  on_the_way: 'Dalam pengantaran',
+  completed: 'Selesai',
+  cancelled: 'Dibatalkan',
+}
+
+const REPORT_STATUS_LABELS = {
+  pending: 'Menunggu',
+  in_progress: 'Sedang ditangani',
+  resolved: 'Selesai',
+  rejected: 'Ditolak',
+}
+
+export default function StaffServiceDesk({ scheduleIds, isAdmin = false, showOrders = true, showReports = true }) {
   const [orders, setOrders] = useState([])
   const [reports, setReports] = useState([])
   const [loading, setLoading] = useState(true)
@@ -30,41 +46,60 @@ export default function StaffServiceDesk({ scheduleIds }) {
     const supabase = createClient()
 
     async function loadOperations() {
-      if (scheduleIds.length === 0) {
+      if (isAdmin && new URLSearchParams(window.location.search).get('preview') === '1') {
         setOrders([])
         setReports([])
         setLoading(false)
         return
       }
 
-      const [orderResult, reportResult] = await Promise.all([
-        supabase
+      if (!isAdmin && scheduleIds.length === 0) {
+        setOrders([])
+        setReports([])
+        setLoading(false)
+        return
+      }
+
+      let orderQuery = showOrders
+        ? supabase
           .from('food_orders')
           .select('id, order_code, schedule_id, status, total_amount, note, created_at, passengers(full_name), seats(seat_number), food_order_items(quantity, unit_price, food_products(name))')
-          .in('schedule_id', scheduleIds)
-          .order('created_at', { ascending: true })
-          .limit(100),
-        supabase
+          .order('created_at', { ascending: false })
+          .limit(100)
+        : Promise.resolve({ data: [], error: null })
+      let reportQuery = showReports
+        ? supabase
           .from('passenger_reports')
           .select('id, schedule_id, category, title, description, status, response_note, passenger_name, created_at, bookings(booking_code)')
-          .in('schedule_id', scheduleIds)
-          .order('created_at', { ascending: true })
-          .limit(100),
-      ])
+          .order('created_at', { ascending: false })
+          .limit(100)
+        : Promise.resolve({ data: [], error: null })
+
+      if (!isAdmin) {
+        if (showOrders) orderQuery = orderQuery.in('schedule_id', scheduleIds)
+        if (showReports) reportQuery = reportQuery.in('schedule_id', scheduleIds)
+      }
+
+      const [orderResult, reportResult] = await Promise.all([orderQuery, reportQuery])
 
       if (!active) return
-      if (orderResult.error || reportResult.error) {
-        setError(`Daftar layanan tidak dapat dimuat: ${orderResult.error?.message || reportResult.error?.message}`)
+      if ((showOrders && orderResult.error) || (showReports && reportResult.error)) {
+        setError(`${showOrders ? (showReports ? 'Daftar layanan' : 'Daftar pesanan') : 'Daftar laporan'} tidak dapat dimuat: ${orderResult.error?.message || reportResult.error?.message}`)
       } else {
         setOrders(orderResult.data || [])
         setReports(reportResult.data || [])
+        setError('')
       }
       setLoading(false)
     }
 
     loadOperations()
-    return () => { active = false }
-  }, [scheduleIds])
+    const timer = window.setInterval(loadOperations, 20000)
+    return () => {
+      active = false
+      window.clearInterval(timer)
+    }
+  }, [scheduleIds, isAdmin, showOrders, showReports])
 
   async function updateOrder(order, status) {
     setProcessingId(order.id)
@@ -103,16 +138,18 @@ export default function StaffServiceDesk({ scheduleIds }) {
 
   return (
     <section id="passenger-services" style={{ display: 'grid', gap: '1rem', marginTop: '1.5rem', scrollMarginTop: 96 }}>
-      <h2 className="rh-h3">Layanan penumpang pada perjalanan tugas</h2>
+      <h2 className="rh-h3">{showReports
+        ? (showOrders ? (isAdmin ? 'Layanan penumpang' : 'Layanan penumpang pada perjalanan tugas') : 'Laporan bantuan dan barang hilang')
+        : 'Pesanan makanan'}</h2>
       {error && <div role="alert" className="rh-card" style={{ padding: '1rem', color: 'var(--rh-danger)' }}>{error}</div>}
-      {loading && <div aria-live="polite" className="rh-card" style={{ padding: '1rem' }}>Memuat pesanan dan laporan...</div>}
+      {loading && <div aria-live="polite" className="rh-card" style={{ padding: '1rem' }}>{showOrders && showReports ? 'Memuat pesanan dan laporan...' : showOrders ? 'Memuat pesanan...' : 'Memuat laporan...'}</div>}
 
-      <article className="rh-card">
+      {showOrders && <article className="rh-card">
         <div className="rh-card-header">
           <h3 className="rh-h4"><Utensils size={18} style={{ verticalAlign: 'middle', marginRight: 7 }} />Pesanan makanan</h3>
         </div>
         <div className="rh-card-body">
-          {!loading && orders.length === 0 && <p style={{ color: 'var(--rh-text-2)' }}>Belum ada pesanan untuk perjalanan yang ditugaskan.</p>}
+          {!loading && orders.length === 0 && <p style={{ color: 'var(--rh-text-2)' }}>{isAdmin ? 'Belum ada pesanan makanan.' : 'Belum ada pesanan untuk perjalanan yang ditugaskan.'}</p>}
           <div style={{ display: 'grid', gap: '0.75rem' }}>
             {orders.map(order => {
               const nextStatuses = ORDER_TRANSITIONS[order.status] || []
@@ -125,7 +162,7 @@ export default function StaffServiceDesk({ scheduleIds }) {
                         Kursi {order.seats?.seat_number} · {order.food_order_items?.map(item => `${item.food_products?.name} ×${item.quantity}`).join(', ')}
                       </span>
                       {order.note && <small>Catatan: {order.note}</small>}
-                      <strong style={{ display: 'block', marginTop: '0.35rem' }}>{order.status} · Rp {Number(order.total_amount).toLocaleString('id-ID')}</strong>
+                      <strong style={{ display: 'block', marginTop: '0.35rem' }}>{ORDER_STATUS_LABELS[order.status] || order.status} · Rp {Number(order.total_amount).toLocaleString('id-ID')}</strong>
                     </div>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', alignItems: 'start' }}>
                       {nextStatuses.map(status => (
@@ -141,14 +178,14 @@ export default function StaffServiceDesk({ scheduleIds }) {
             })}
           </div>
         </div>
-      </article>
+      </article>}
 
-      <article className="rh-card">
+      {showReports && <article className="rh-card">
         <div className="rh-card-header">
           <h3 className="rh-h4"><AlertCircle size={18} style={{ verticalAlign: 'middle', marginRight: 7 }} />Laporan bantuan dan barang hilang</h3>
         </div>
         <div className="rh-card-body">
-          {!loading && reports.length === 0 && <p style={{ color: 'var(--rh-text-2)' }}>Belum ada laporan untuk perjalanan yang ditugaskan.</p>}
+          {!loading && reports.length === 0 && <p style={{ color: 'var(--rh-text-2)' }}>{isAdmin ? 'Belum ada laporan penumpang.' : 'Belum ada laporan untuk perjalanan yang ditugaskan.'}</p>}
           <div style={{ display: 'grid', gap: '0.75rem' }}>
             {reports.map(report => {
               const nextStatuses = REPORT_TRANSITIONS[report.status] || []
@@ -161,7 +198,7 @@ export default function StaffServiceDesk({ scheduleIds }) {
                         {report.category.replace('_', ' ')} · {report.passenger_name || 'Penumpang'} · {report.bookings?.booking_code || 'tanpa booking'}
                       </small>
                       <p style={{ margin: '0.5rem 0', whiteSpace: 'pre-wrap' }}>{report.description}</p>
-                      <small>Status: {report.status}{report.response_note ? ` · Respons: ${report.response_note}` : ''}</small>
+                      <small>Status: {REPORT_STATUS_LABELS[report.status] || report.status}{report.response_note ? ` · Respons: ${report.response_note}` : ''}</small>
                     </div>
                     {nextStatuses.length > 0 && (
                       <div style={{ display: 'grid', gap: '0.5rem', minWidth: 220 }}>
@@ -182,7 +219,7 @@ export default function StaffServiceDesk({ scheduleIds }) {
             })}
           </div>
         </div>
-      </article>
+      </article>}
     </section>
   )
 }
