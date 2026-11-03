@@ -144,7 +144,7 @@ export default function HomePage() {
       <Navbar />
 
       {/* ── CINEMATIC TRAIN BUMPER (Strict 8:2 Aspect Ratio, Smooth GPU Animation, Zero Lag) ── */}
-      <div className="rh-hide-mobile"><TrainBumperBanner /></div>
+      <TrainBumperBanner />
 
       {/* ── HERO & SEARCH SECTION ──────────────────────────── */}
       <section className="rh-hero" style={{ paddingBottom: '2.5rem' }}>

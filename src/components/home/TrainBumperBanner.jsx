@@ -14,11 +14,11 @@ export default function TrainBumperBanner() {
 
   return (
     <div
+      className="rh-bumper-banner-wrapper"
       style={{
         width: '100%',
         maxWidth: 1200,
         margin: '0 auto',
-        padding: '0.75rem 1rem 0.5rem',
       }}
     >
       <Link
@@ -34,7 +34,7 @@ export default function TrainBumperBanner() {
           position: 'relative',
           textDecoration: 'none',
           boxShadow: '0 8px 24px rgba(10, 25, 47, 0.35)',
-          background: 'linear-gradient(135deg, #1A428A 0%, #4F4F4F 100%)',
+          background: 'linear-gradient(135deg, #07152B 0%, #0F2552 45%, #1A428A 100%)',
           border: '1px solid rgba(255, 255, 255, 0.12)',
         }}
       >

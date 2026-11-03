@@ -257,38 +257,42 @@ export default function SearchWidget({ compact = false }) {
         {/* Date + Passengers row for seamless mobile scaling */}
         <div className="rh-search-meta-row">
           {/* Date */}
-          <div style={{ flex: '1 1 140px', minWidth: 0 }}>
+          <div style={{ flex: '1 1 160px', minWidth: 0 }}>
             <label style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--rh-text-3)', letterSpacing: '0.06em', textTransform: 'uppercase', display: 'block', marginBottom: '0.375rem' }}>
               {t.hero.date}
             </label>
             <div style={{ position: 'relative' }}>
-              <Calendar size={16} style={{ position: 'absolute', left: '0.875rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--rh-primary)', pointerEvents: 'none' }} />
+              <Calendar size={16} style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--rh-primary)', pointerEvents: 'none', zIndex: 1 }} />
               <input
                 type="date"
                 value={date}
                 onChange={e => setDate(e.target.value)}
-                className="rh-input"
-                style={{ paddingLeft: '2.5rem', width: '100%' }}
+                className="rh-input rh-search-date-input"
+                style={{ paddingLeft: '2.35rem', paddingRight: '0.5rem', width: '100%', fontSize: '0.875rem', fontWeight: 600 }}
               />
             </div>
           </div>
 
           {/* Passengers */}
-          <div style={{ flex: '1 1 100px', minWidth: 0 }}>
+          <div style={{ flex: '1 1 110px', minWidth: 0 }}>
             <label style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--rh-text-3)', letterSpacing: '0.06em', textTransform: 'uppercase', display: 'block', marginBottom: '0.375rem' }}>
               {t.hero.passengers}
             </label>
             <div style={{ position: 'relative' }}>
-              <Users size={16} style={{ position: 'absolute', left: '0.875rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--rh-primary)', pointerEvents: 'none' }} />
-              <input
-                type="number"
-                min={1}
-                max={6}
+              <Users size={16} style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--rh-primary)', pointerEvents: 'none', zIndex: 1 }} />
+              <select
                 value={passengers}
-                onChange={e => setPassengers(Math.max(1, Math.min(6, parseInt(e.target.value) || 1)))}
+                onChange={e => setPassengers(Number(e.target.value))}
                 className="rh-input"
-                style={{ paddingLeft: '2.5rem', width: '100%' }}
-              />
+                style={{ paddingLeft: '2.35rem', width: '100%', fontSize: '0.875rem', fontWeight: 600, cursor: 'pointer' }}
+                aria-label={t.hero.passengers}
+              >
+                {[1, 2, 3, 4, 5, 6].map(n => (
+                  <option key={n} value={n}>
+                    {n} {n === 1 ? 'Penumpang' : 'Penumpang'}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
         </div>

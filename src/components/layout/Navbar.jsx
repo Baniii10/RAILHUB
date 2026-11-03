@@ -504,7 +504,7 @@ export default function Navbar() {
         </div>
       )}
 
-      {activeJourney && dashboardRole === 'passenger' && !isBookingFlow && (
+      {activeJourney && dashboardRole === 'passenger' && !isBookingFlow && !pathname.startsWith('/dashboard/passenger') && (
         <Link
           href="/dashboard/passenger?tab=overview#trip-status"
           className="rh-journey-dock rh-show-mobile-only"
