@@ -198,16 +198,7 @@ export default function HomePage() {
 
             {/* Elevated Search Widget Card */}
             <div className="animate-slide-right">
-              <div className="rh-search-card" style={{ boxShadow: '0 12px 36px rgba(0,0,0,0.22)' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.15rem' }}>
-                  <h2 style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--rh-navy)', margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <Train size={20} style={{ color: 'var(--rh-primary)' }} />
-                    {t.hero.searchTitle}
-                  </h2>
-                  <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--rh-primary)', background: 'var(--rh-primary-light)', padding: '0.2rem 0.6rem', borderRadius: 999 }}>
-                    {lang === 'en' ? 'Schedule' : 'Jadwal'}
-                  </span>
-                </div>
+              <div className="rh-search-card" style={{ boxShadow: '0 12px 36px rgba(0,0,0,0.18)' }}>
                 <SearchWidget />
               </div>
             </div>

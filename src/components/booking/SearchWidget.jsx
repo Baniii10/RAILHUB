@@ -1,143 +1,12 @@
 'use client'
+
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { MapPin, Calendar, Users, ArrowLeftRight, Search } from 'lucide-react'
+import { TrainFront, Calendar, ArrowUpDown, ChevronDown, Search, X, Check, Plus, Minus } from 'lucide-react'
 import { useLang } from '@/contexts/LangContext'
 import { createClient } from '@/lib/supabase/client'
 import { STATIONS_CATALOG } from '@/lib/data/stationsCatalog'
 import toast from 'react-hot-toast'
-
-function StationSelect({ label, value, onChange, exclude, placeholder, icon: Icon, stations, loading }) {
-  const [open, setOpen] = useState(false)
-  const [query, setQuery] = useState('')
-  const searchInputRef = useRef(null)
-  const normalizedQuery = query.trim().toLocaleLowerCase('id')
-  const filtered = stations.filter(station => (
-    station.code !== exclude
-    && (!normalizedQuery || [
-      station.name,
-      station.code,
-      station.city,
-      station.province,
-    ].some(value => value?.toLocaleLowerCase('id').includes(normalizedQuery)))
-  ))
-  const selected = stations.find(s => s.code === value)
-
-  useEffect(() => {
-    if (open) searchInputRef.current?.focus()
-  }, [open])
-
-  function closePicker() {
-    setOpen(false)
-    setQuery('')
-  }
-
-  return (
-    <div style={{ position: 'relative', flex: 1 }}>
-      <label style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--rh-text-3)', letterSpacing: '0.06em', textTransform: 'uppercase', display: 'block', marginBottom: '0.375rem' }}>
-        {label}
-      </label>
-      <button
-        type="button"
-        onClick={() => {
-          setQuery('')
-          setOpen(v => !v)
-        }}
-        disabled={loading}
-        aria-expanded={open}
-        aria-haspopup="listbox"
-        aria-label={label}
-        style={{
-          width: '100%', display: 'flex', alignItems: 'center', gap: '0.625rem',
-          padding: '0.875rem 1rem', background: 'var(--rh-surface)',
-          border: open ? '2px solid var(--rh-primary)' : '2px solid var(--rh-border)',
-          borderRadius: '12px', cursor: 'pointer', textAlign: 'left',
-          transition: 'all 0.15s',
-          boxShadow: open ? '0 0 0 3px rgba(26,66,138,0.12)' : 'none',
-        }}
-      >
-        <Icon size={16} style={{ color: selected ? 'var(--rh-primary)' : 'var(--rh-text-3)', flexShrink: 0 }} />
-        {selected ? (
-          <div style={{ minWidth: 0, flex: 1, overflow: 'hidden' }}>
-            <div style={{ fontSize: '0.9375rem', fontWeight: 600, color: 'var(--rh-text)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{selected.name}</div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--rh-text-3)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{selected.city}</div>
-          </div>
-        ) : (
-          <span style={{ fontSize: '0.9375rem', color: 'var(--rh-text-3)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-            {loading ? 'Memuat stasiun…' : placeholder}
-          </span>
-        )}
-      </button>
-
-      {open && (
-        <div style={{
-          position: 'absolute', top: 'calc(100% + 6px)', left: 0, right: 0,
-          background: 'white', borderRadius: 12, border: '1px solid var(--rh-border)',
-          boxShadow: 'var(--shadow-xl)', zIndex: 100, overflow: 'hidden',
-        }}>
-          <div style={{ padding: '0.625rem', borderBottom: '1px solid var(--rh-border)' }}>
-            <input
-              ref={searchInputRef}
-              type="search"
-              value={query}
-              onChange={event => setQuery(event.target.value)}
-              onKeyDown={event => {
-                if (event.key === 'Escape') {
-                  event.stopPropagation()
-                  closePicker()
-                }
-              }}
-              placeholder="Cari nama, kode, atau kota…"
-              aria-label={`Cari ${label.toLocaleLowerCase('id')}`}
-              className="rh-input"
-              style={{ width: '100%', minWidth: 0, padding: '0.625rem 0.75rem' }}
-            />
-          </div>
-          <div role="listbox" aria-label={`Daftar ${label.toLocaleLowerCase('id')}`} style={{ maxHeight: 230, overflowY: 'auto' }}>
-            {filtered.map(s => (
-              <button
-                key={s.code}
-                type="button"
-                role="option"
-                aria-selected={value === s.code}
-                onClick={() => { onChange(s.code); closePicker() }}
-                style={{
-                  width: '100%', padding: '0.75rem 1rem', display: 'flex', alignItems: 'center',
-                  gap: '0.75rem', background: value === s.code ? 'var(--rh-primary-light)' : 'transparent',
-                  border: 'none', cursor: 'pointer', textAlign: 'left',
-                  borderBottom: '1px solid var(--rh-surface)',
-                  transition: 'background 0.1s',
-                }}
-                onMouseEnter={e => { if (value !== s.code) e.currentTarget.style.background = 'var(--rh-surface)' }}
-                onMouseLeave={e => { if (value !== s.code) e.currentTarget.style.background = 'transparent' }}
-              >
-                <div style={{
-                  width: 32, height: 32, borderRadius: 8,
-                  background: value === s.code ? 'var(--rh-primary)' : 'var(--rh-surface-2)',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: '0.6875rem', fontWeight: 800,
-                  color: value === s.code ? 'white' : 'var(--rh-text-3)',
-                  flexShrink: 0, fontFamily: 'var(--font-mono)',
-                }}>
-                  {s.code}
-                </div>
-                <div>
-                  <div style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--rh-text)' }}>{s.name}</div>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--rh-text-3)' }}>{s.city}</div>
-                </div>
-              </button>
-            ))}
-            {filtered.length === 0 && (
-              <p style={{ padding: '0.875rem 1rem', color: 'var(--rh-text-2)', fontSize: '0.875rem' }}>
-                {loading ? 'Memuat stasiun…' : query ? 'Stasiun tidak ditemukan.' : 'Tidak ada stasiun yang tersedia.'}
-              </p>
-            )}
-          </div>
-        </div>
-      )}
-    </div>
-  )
-}
 
 function formatLocalDate(date) {
   return [
@@ -147,23 +16,81 @@ function formatLocalDate(date) {
   ].join('-')
 }
 
+function formatDisplayDate(dateStr, lang = 'id') {
+  if (!dateStr) return ''
+  try {
+    const d = new Date(dateStr + 'T00:00:00')
+    if (isNaN(d.getTime())) return dateStr
+    if (lang === 'en') {
+      return d.toLocaleDateString('en-US', { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' })
+    }
+    return d.toLocaleDateString('id-ID', { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' })
+  } catch {
+    return dateStr
+  }
+}
+
+function PassengerSeatIcon({ size = 22, color = '#475569', style = {} }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={color}
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      style={{ flexShrink: 0, ...style }}
+      aria-hidden="true"
+    >
+      <circle cx="8" cy="6" r="2.5" />
+      <path d="M7 13h5a2 2 0 0 1 2 2v5" />
+      <path d="M8.5 13V9.5a2 2 0 0 1 2-2h2" />
+      <path d="M4 20h16" />
+    </svg>
+  )
+}
+
+const POPULAR_CODES = ['PSE', 'GMR', 'BD', 'YK', 'SGU', 'SMT', 'ML']
+
 export default function SearchWidget({ compact = false }) {
-  const { t } = useLang()
+  const { lang, t } = useLang()
   const router = useRouter()
+
   const [stations, setStations] = useState(STATIONS_CATALOG)
   const [stationsLoading, setStationsLoading] = useState(false)
   const [stationError, setStationError] = useState('')
 
-  const [origin,      setOrigin]      = useState('PSE')
-  const [destination, setDestination] = useState('SGU')
-  const [date,        setDate]        = useState(() => {
+  // Form State
+  const [origin, setOrigin] = useState('')
+  const [destination, setDestination] = useState('')
+  const [date, setDate] = useState(() => {
     const tomorrow = new Date()
     tomorrow.setDate(tomorrow.getDate() + 1)
     return formatLocalDate(tomorrow)
   })
-  const [passengers,  setPassengers]  = useState(1)
-  const [loading,     setLoading]     = useState(false)
+  const [isRoundTrip, setIsRoundTrip] = useState(false)
+  const [returnDate, setReturnDate] = useState(() => {
+    const after = new Date()
+    after.setDate(after.getDate() + 3)
+    return formatLocalDate(after)
+  })
+  const [adults, setAdults] = useState(1)
+  const [infants, setInfants] = useState(0)
+  const [loading, setLoading] = useState(false)
 
+  // Pickers modal/popover states
+  const [activePicker, setActivePicker] = useState(null) // 'origin' | 'destination' | null
+  const [stationQuery, setStationQuery] = useState('')
+  const [passengerOpen, setPassengerOpen] = useState(false)
+
+  const dateInputRef = useRef(null)
+  const returnDateInputRef = useRef(null)
+  const searchInputRef = useRef(null)
+  const passengerRef = useRef(null)
+
+  // Fetch Supabase stations
   useEffect(() => {
     let active = true
     const supabase = createClient()
@@ -181,7 +108,6 @@ export default function SearchWidget({ compact = false }) {
       if (error) {
         setStationError(error.message)
       } else if (data && data.length > 0) {
-        // Merge with curated 50 stations catalog
         const existingCodes = new Set(data.map(s => s.code))
         const combined = [...data]
         STATIONS_CATALOG.forEach(catStation => {
@@ -198,127 +124,492 @@ export default function SearchWidget({ compact = false }) {
     return () => { active = false }
   }, [])
 
-  function handleSwap() {
+  // Auto-focus search input when modal opens
+  useEffect(() => {
+    if (activePicker) {
+      setStationQuery('')
+      setTimeout(() => searchInputRef.current?.focus(), 60)
+    }
+  }, [activePicker])
+
+  // Close passenger popover on outside click
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (passengerRef.current && !passengerRef.current.contains(e.target)) {
+        setPassengerOpen(false)
+      }
+    }
+    if (passengerOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [passengerOpen])
+
+  function handleSwap(e) {
+    e.stopPropagation()
     const temp = origin
     setOrigin(destination)
     setDestination(temp)
   }
 
+  function handleSelectStation(code) {
+    if (activePicker === 'origin') {
+      setOrigin(code)
+      if (destination === code) setDestination('')
+    } else if (activePicker === 'destination') {
+      setDestination(code)
+      if (origin === code) setOrigin('')
+    }
+    setActivePicker(null)
+    setStationQuery('')
+  }
+
   function handleSearch(e) {
     e.preventDefault()
-    if (!origin)      { toast.error('Pilih stasiun asal'); return }
-    if (!destination) { toast.error('Pilih stasiun tujuan'); return }
-    if (origin === destination) { toast.error('Stasiun asal dan tujuan harus berbeda'); return }
-    if (!date)        { toast.error('Pilih tanggal keberangkatan'); return }
-    if (date < formatLocalDate(new Date())) { toast.error('Tanggal keberangkatan tidak boleh lewat'); return }
+    if (!origin) {
+      toast.error(lang === 'en' ? 'Please select origin station' : 'Pilih stasiun keberangkatan')
+      setActivePicker('origin')
+      return
+    }
+    if (!destination) {
+      toast.error(lang === 'en' ? 'Please select destination station' : 'Pilih stasiun tujuan')
+      setActivePicker('destination')
+      return
+    }
+    if (origin === destination) {
+      toast.error(lang === 'en' ? 'Origin and destination must be different' : 'Stasiun keberangkatan dan tujuan harus berbeda')
+      return
+    }
+    if (!date) {
+      toast.error(lang === 'en' ? 'Please select departure date' : 'Pilih tanggal keberangkatan')
+      return
+    }
+    const todayStr = formatLocalDate(new Date())
+    if (date < todayStr) {
+      toast.error(lang === 'en' ? 'Departure date cannot be in the past' : 'Tanggal keberangkatan tidak boleh lewat')
+      return
+    }
 
     setLoading(true)
-    const params = new URLSearchParams({ from: origin, to: destination, date, pax: passengers })
+    const params = new URLSearchParams({
+      from: origin,
+      to: destination,
+      date,
+      pax: adults,
+    })
+    if (isRoundTrip && returnDate) {
+      params.append('returnDate', returnDate)
+    }
     router.push(`/trains?${params.toString()}`)
   }
 
-  return (
-    <form onSubmit={handleSearch}>
-      <div className="rh-search-grid">
-        {/* Origin + Swap + Destination */}
-        <div className="rh-search-stations-row">
-          <StationSelect
-            label={t.hero.origin}
-            value={origin}
-            onChange={setOrigin}
-            exclude={destination}
-            placeholder="Pilih stasiun asal"
-            icon={MapPin}
-            stations={stations}
-            loading={stationsLoading}
-          />
+  const originStation = stations.find(s => s.code === origin)
+  const destinationStation = stations.find(s => s.code === destination)
 
+  // Filter stations for picker modal
+  const normQuery = stationQuery.trim().toLocaleLowerCase('id')
+  const filteredStations = stations.filter(s => {
+    if (!normQuery) return true
+    return (
+      s.code?.toLocaleLowerCase('id').includes(normQuery) ||
+      s.name?.toLocaleLowerCase('id').includes(normQuery) ||
+      s.city?.toLocaleLowerCase('id').includes(normQuery)
+    )
+  })
+
+  return (
+    <div className="rh-detail-journey-container">
+      {!compact && (
+        <h2 className="rh-detail-journey-heading">
+          {lang === 'en' ? 'Journey Details' : 'Detail Perjalanan'}
+        </h2>
+      )}
+
+      <form onSubmit={handleSearch}>
+        {/* ── CARD 1: ORIGIN & DESTINATION (UNIFIED BOX) ── */}
+        <div className="rh-detail-box rh-detail-box-stations">
+          {/* Keberangkatan */}
           <button
             type="button"
-            onClick={handleSwap}
-            title={t.hero.swap}
-            className="rh-search-swap-btn"
+            className="rh-detail-row-btn"
+            onClick={() => setActivePicker('origin')}
+            aria-label={lang === 'en' ? 'Select departure station' : 'Pilih stasiun keberangkatan'}
           >
-            <ArrowLeftRight size={16} />
+            <TrainFront size={22} className="rh-detail-icon" />
+            <div className="rh-detail-text-col">
+              <span className="rh-detail-label">
+                {lang === 'en' ? 'Departure' : 'Keberangkatan'}
+              </span>
+              <div className="rh-detail-val">
+                {originStation ? (
+                  <span className="rh-detail-selected-text">
+                    <strong>{originStation.name}</strong> ({originStation.code})
+                    <span className="rh-detail-city-hint"> - {originStation.city}</span>
+                  </span>
+                ) : (
+                  <span className="rh-detail-placeholder">
+                    {lang === 'en' ? 'Select station or city' : 'Pilih stasiun atau kota'}
+                  </span>
+                )}
+              </div>
+            </div>
           </button>
 
-          <StationSelect
-            label={t.hero.destination}
-            value={destination}
-            onChange={setDestination}
-            exclude={origin}
-            placeholder="Pilih stasiun tujuan"
-            icon={MapPin}
-            stations={stations}
-            loading={stationsLoading}
-          />
+          {/* Divider with Swap Button */}
+          <div className="rh-detail-divider-wrapper">
+            <div className="rh-detail-divider-line" />
+            <button
+              type="button"
+              onClick={handleSwap}
+              className="rh-detail-swap-btn"
+              title={lang === 'en' ? 'Swap stations' : 'Tukar stasiun'}
+              aria-label={lang === 'en' ? 'Swap departure and destination' : 'Tukar stasiun keberangkatan dan tujuan'}
+            >
+              <ArrowUpDown size={17} strokeWidth={2.4} />
+            </button>
+          </div>
+
+          {/* Tujuan */}
+          <button
+            type="button"
+            className="rh-detail-row-btn"
+            onClick={() => setActivePicker('destination')}
+            aria-label={lang === 'en' ? 'Select destination station' : 'Pilih stasiun tujuan'}
+          >
+            <TrainFront size={22} className="rh-detail-icon" />
+            <div className="rh-detail-text-col">
+              <span className="rh-detail-label">
+                {lang === 'en' ? 'Destination' : 'Tujuan'}
+              </span>
+              <div className="rh-detail-val">
+                {destinationStation ? (
+                  <span className="rh-detail-selected-text">
+                    <strong>{destinationStation.name}</strong> ({destinationStation.code})
+                    <span className="rh-detail-city-hint"> - {destinationStation.city}</span>
+                  </span>
+                ) : (
+                  <span className="rh-detail-placeholder">
+                    {lang === 'en' ? 'Select station or city' : 'Pilih stasiun atau kota'}
+                  </span>
+                )}
+              </div>
+            </div>
+          </button>
         </div>
 
-        {/* Date + Passengers row for seamless mobile scaling */}
-        <div className="rh-search-meta-row">
-          {/* Date */}
-          <div style={{ flex: '1 1 160px', minWidth: 0 }}>
-            <label style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--rh-text-3)', letterSpacing: '0.06em', textTransform: 'uppercase', display: 'block', marginBottom: '0.375rem' }}>
-              {t.hero.date}
-            </label>
-            <div style={{ position: 'relative' }}>
-              <Calendar size={16} style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--rh-primary)', pointerEvents: 'none', zIndex: 1 }} />
+        {/* ── CARD 2: DATE & ROUND TRIP TOGGLE ── */}
+        <div className="rh-detail-box rh-detail-box-date">
+          <div className="rh-detail-date-row">
+            {/* Left: Date Display & Native Picker Trigger */}
+            <div className="rh-detail-date-col">
+              <Calendar size={20} className="rh-detail-icon" />
+              <div className="rh-detail-text-col">
+                <span className="rh-detail-label">
+                  {lang === 'en' ? 'Departure Date' : 'Tanggal Berangkat'}
+                </span>
+                <span className="rh-detail-val-bold">
+                  {formatDisplayDate(date, lang)}
+                </span>
+              </div>
               <input
+                ref={dateInputRef}
                 type="date"
                 value={date}
-                onChange={e => setDate(e.target.value)}
-                className="rh-input rh-search-date-input"
-                style={{ paddingLeft: '2.35rem', paddingRight: '0.5rem', width: '100%', fontSize: '0.875rem', fontWeight: 600 }}
+                min={formatLocalDate(new Date())}
+                onChange={e => {
+                  setDate(e.target.value)
+                  if (isRoundTrip && returnDate < e.target.value) {
+                    setReturnDate(e.target.value)
+                  }
+                }}
+                className="rh-detail-hidden-date-input"
+                aria-label={lang === 'en' ? 'Select departure date' : 'Pilih tanggal keberangkatan'}
               />
             </div>
+
+            {/* Right: Round Trip Toggle */}
+            <div className="rh-detail-toggle-col">
+              <span
+                className="rh-detail-toggle-label"
+                onClick={() => setIsRoundTrip(prev => !prev)}
+              >
+                {lang === 'en' ? 'Round Trip?' : 'Pulang Pergi?'}
+              </span>
+              <button
+                type="button"
+                role="switch"
+                aria-checked={isRoundTrip}
+                onClick={() => setIsRoundTrip(prev => !prev)}
+                className={`rh-detail-toggle-switch ${isRoundTrip ? 'is-active' : ''}`}
+                aria-label={lang === 'en' ? 'Toggle round trip' : 'Aktifkan pulang pergi'}
+              >
+                <span className="rh-detail-toggle-thumb" />
+              </button>
+            </div>
           </div>
 
-          {/* Passengers */}
-          <div style={{ flex: '1 1 110px', minWidth: 0 }}>
-            <label style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--rh-text-3)', letterSpacing: '0.06em', textTransform: 'uppercase', display: 'block', marginBottom: '0.375rem' }}>
-              {t.hero.passengers}
-            </label>
-            <div style={{ position: 'relative' }}>
-              <Users size={16} style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--rh-primary)', pointerEvents: 'none', zIndex: 1 }} />
-              <select
-                value={passengers}
-                onChange={e => setPassengers(Number(e.target.value))}
-                className="rh-input"
-                style={{ paddingLeft: '2.35rem', width: '100%', fontSize: '0.875rem', fontWeight: 600, cursor: 'pointer' }}
-                aria-label={t.hero.passengers}
+          {/* Optional Return Date Row when Round Trip is active */}
+          {isRoundTrip && (
+            <div className="rh-detail-return-row">
+              <div className="rh-detail-date-col" style={{ flex: 1 }}>
+                <Calendar size={20} style={{ color: 'var(--rh-primary)' }} />
+                <div className="rh-detail-text-col">
+                  <span className="rh-detail-label" style={{ color: 'var(--rh-primary)', fontWeight: 600 }}>
+                    {lang === 'en' ? 'Return Date' : 'Tanggal Pulang'}
+                  </span>
+                  <span className="rh-detail-val-bold">
+                    {formatDisplayDate(returnDate, lang)}
+                  </span>
+                </div>
+                <input
+                  ref={returnDateInputRef}
+                  type="date"
+                  value={returnDate}
+                  min={date || formatLocalDate(new Date())}
+                  onChange={e => setReturnDate(e.target.value)}
+                  className="rh-detail-hidden-date-input"
+                  aria-label={lang === 'en' ? 'Select return date' : 'Pilih tanggal pulang'}
+                />
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* ── CARD 3: PASSENGERS ── */}
+        <div className="rh-detail-box-passenger-wrapper" ref={passengerRef}>
+          <div
+            className="rh-detail-box rh-detail-box-passenger"
+            onClick={() => setPassengerOpen(prev => !prev)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setPassengerOpen(v => !v) } }}
+            aria-expanded={passengerOpen}
+            aria-label={lang === 'en' ? 'Select passengers' : 'Pilih jumlah penumpang'}
+          >
+            <div className="rh-detail-passenger-left">
+              <PassengerSeatIcon size={22} color="#475569" />
+              <div className="rh-detail-text-col">
+                <span className="rh-detail-label">
+                  {lang === 'en' ? 'Passengers' : 'Penumpang'}
+                </span>
+                <span className="rh-detail-val-bold">
+                  {lang === 'en'
+                    ? `${adults} Adult${adults > 1 ? 's' : ''}, ${infants} Infant${infants > 1 ? 's' : ''}`
+                    : `${adults} Dewasa, ${infants} Bayi`}
+                </span>
+              </div>
+            </div>
+
+            <ChevronDown
+              size={20}
+              className={`rh-detail-chevron ${passengerOpen ? 'is-open' : ''}`}
+            />
+          </div>
+
+          {/* Passenger Stepper Popover */}
+          {passengerOpen && (
+            <div className="rh-passenger-popover" role="dialog" aria-label="Jumlah Penumpang">
+              <div className="rh-passenger-popover-header">
+                <strong>{lang === 'en' ? 'Select Passengers' : 'Jumlah Penumpang'}</strong>
+                <button
+                  type="button"
+                  className="rh-passenger-close-btn"
+                  onClick={() => setPassengerOpen(false)}
+                >
+                  <X size={16} />
+                </button>
+              </div>
+
+              {/* Adults Counter */}
+              <div className="rh-passenger-row">
+                <div>
+                  <div className="rh-passenger-type-title">{lang === 'en' ? 'Adults' : 'Dewasa'}</div>
+                  <div className="rh-passenger-type-desc">{lang === 'en' ? 'Age 3+ years' : 'Usia 3 tahun ke atas'}</div>
+                </div>
+                <div className="rh-passenger-stepper">
+                  <button
+                    type="button"
+                    disabled={adults <= 1}
+                    onClick={() => {
+                      const next = Math.max(1, adults - 1)
+                      setAdults(next)
+                      if (infants > next) setInfants(next)
+                    }}
+                    className="rh-stepper-btn"
+                    aria-label="Kurangi dewasa"
+                  >
+                    <Minus size={15} />
+                  </button>
+                  <span className="rh-stepper-count">{adults}</span>
+                  <button
+                    type="button"
+                    disabled={adults >= 6}
+                    onClick={() => setAdults(prev => Math.min(6, prev + 1))}
+                    className="rh-stepper-btn"
+                    aria-label="Tambah dewasa"
+                  >
+                    <Plus size={15} />
+                  </button>
+                </div>
+              </div>
+
+              {/* Infants Counter */}
+              <div className="rh-passenger-row">
+                <div>
+                  <div className="rh-passenger-type-title">{lang === 'en' ? 'Infants' : 'Bayi'}</div>
+                  <div className="rh-passenger-type-desc">{lang === 'en' ? 'Under 3 years (no seat)' : 'Di bawah 3 th (tanpa kursi)'}</div>
+                </div>
+                <div className="rh-passenger-stepper">
+                  <button
+                    type="button"
+                    disabled={infants <= 0}
+                    onClick={() => setInfants(prev => Math.max(0, prev - 1))}
+                    className="rh-stepper-btn"
+                    aria-label="Kurangi bayi"
+                  >
+                    <Minus size={15} />
+                  </button>
+                  <span className="rh-stepper-count">{infants}</span>
+                  <button
+                    type="button"
+                    disabled={infants >= adults}
+                    onClick={() => setInfants(prev => Math.min(adults, prev + 1))}
+                    className="rh-stepper-btn"
+                    aria-label="Tambah bayi"
+                  >
+                    <Plus size={15} />
+                  </button>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                className="rh-passenger-done-btn"
+                onClick={() => setPassengerOpen(false)}
               >
-                {[1, 2, 3, 4, 5, 6].map(n => (
-                  <option key={n} value={n}>
-                    {n} {n === 1 ? 'Penumpang' : 'Penumpang'}
-                  </option>
-                ))}
-              </select>
+                {lang === 'en' ? 'Done' : 'Selesai'}
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* ── ACTION BUTTON: CARI KERETA ── */}
+        <button
+          type="submit"
+          disabled={loading || stationsLoading}
+          className="rh-detail-submit-btn"
+        >
+          {loading ? (
+            <span className="rh-spinner rh-spinner-sm" style={{ borderTopColor: 'white', borderColor: 'rgba(255,255,255,0.3)' }} />
+          ) : (
+            lang === 'en' ? 'Search Trains' : 'Cari Kereta'
+          )}
+        </button>
+      </form>
+
+      {/* ── STATION PICKER MODAL (FULL SCREEN SHEET) ── */}
+      {activePicker && (
+        <div className="rh-station-modal-backdrop" onClick={() => setActivePicker(null)}>
+          <div
+            className="rh-station-modal-content"
+            onClick={e => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-label={activePicker === 'origin' ? 'Pilih Stasiun Keberangkatan' : 'Pilih Stasiun Tujuan'}
+          >
+            {/* Modal Header */}
+            <div className="rh-station-modal-header">
+              <div className="rh-station-modal-title">
+                {activePicker === 'origin'
+                  ? (lang === 'en' ? 'Departure Station' : 'Pilih Stasiun Keberangkatan')
+                  : (lang === 'en' ? 'Destination Station' : 'Pilih Stasiun Tujuan')}
+              </div>
+              <button
+                type="button"
+                onClick={() => setActivePicker(null)}
+                className="rh-station-modal-close"
+                aria-label="Tutup"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            {/* Search Input */}
+            <div className="rh-station-modal-search">
+              <Search size={18} className="rh-station-search-icon" />
+              <input
+                ref={searchInputRef}
+                type="search"
+                value={stationQuery}
+                onChange={e => setStationQuery(e.target.value)}
+                placeholder={lang === 'en' ? 'Search station name, city, or code...' : 'Cari nama stasiun, kota, atau kode (misal: PSE, Gambir)...'}
+                className="rh-station-modal-input"
+              />
+            </div>
+
+            {/* Quick Popular Pills */}
+            <div className="rh-station-popular-section">
+              <span className="rh-station-popular-label">{lang === 'en' ? 'Popular:' : 'Populer:'}</span>
+              <div className="rh-station-popular-pills">
+                {POPULAR_CODES.map(code => {
+                  const s = stations.find(item => item.code === code)
+                  if (!s) return null
+                  const isCurrent = (activePicker === 'origin' ? origin : destination) === s.code
+                  return (
+                    <button
+                      key={s.code}
+                      type="button"
+                      onClick={() => handleSelectStation(s.code)}
+                      className={`rh-station-pill ${isCurrent ? 'is-selected' : ''}`}
+                    >
+                      {s.name} ({s.code})
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+
+            {/* Station List */}
+            <div className="rh-station-modal-list" role="listbox">
+              {filteredStations.map(s => {
+                const isSelected = (activePicker === 'origin' ? origin : destination) === s.code
+                return (
+                  <button
+                    key={s.code}
+                    type="button"
+                    role="option"
+                    aria-selected={isSelected}
+                    onClick={() => handleSelectStation(s.code)}
+                    className={`rh-station-item ${isSelected ? 'is-selected' : ''}`}
+                  >
+                    <div className="rh-station-item-code">{s.code}</div>
+                    <div className="rh-station-item-info">
+                      <div className="rh-station-item-name">{s.name}</div>
+                      <div className="rh-station-item-sub">{s.city}{s.province ? `, ${s.province}` : ''}</div>
+                    </div>
+                    {isSelected && (
+                      <Check size={18} className="rh-station-item-check" />
+                    )}
+                  </button>
+                )
+              })}
+
+              {filteredStations.length === 0 && (
+                <div className="rh-station-empty-state">
+                  <p>{lang === 'en' ? 'No station found.' : 'Stasiun tidak ditemukan.'}</p>
+                  <span>{lang === 'en' ? 'Try typing another city name or station code.' : 'Coba ketik kata kunci kota atau kode lainnya.'}</span>
+                </div>
+              )}
             </div>
           </div>
         </div>
+      )}
 
-        {/* Search Button */}
-        <div style={{ flex: '1 0 100%', maxWidth: '100%' }}>
-          <button
-            type="submit"
-            className="rh-btn rh-btn-primary rh-btn-lg rh-search-submit-btn"
-            disabled={loading || stationsLoading || !date}
-            style={{ height: 50, paddingInline: '2rem', gap: '0.5rem', width: '100%' }}
-          >
-            {loading ? (
-              <span className="rh-spinner rh-spinner-sm" style={{ borderTopColor: 'white', borderColor: 'rgba(255,255,255,0.3)' }} />
-            ) : (
-              <Search size={18} />
-            )}
-            {t.hero.search}
-          </button>
-        </div>
-      </div>
       {stationError && (
-        <p role="alert" style={{ margin: '0.75rem 0 0', color: 'var(--rh-danger)', fontSize: '0.875rem' }}>
-          Data stasiun belum tersedia. Jalankan skema dasar dan seed Supabase terlebih dahulu. Detail: {stationError}
+        <p role="alert" style={{ margin: '0.75rem 0 0', color: 'var(--rh-danger)', fontSize: '0.8rem' }}>
+          Data stasiun Supabase offline, menggunakan katalog cadangan resmi.
         </p>
       )}
-    </form>
+    </div>
   )
 }
