@@ -683,35 +683,64 @@ fieldset {
   }
 }
 
-/* Promo banner responsive */
+/* Promo banner responsive (Strict 8:3 Ratio) */
 .rh-promo-banner {
   position: relative;
   width: 100%;
-  aspect-ratio: 8 / 3;
-  min-height: 250px;
-  border-radius: 22px;
+  aspect-ratio: 8 / 3 !important;
+  border-radius: 18px;
   overflow: hidden;
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-md);
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: minmax(0, 1.8fr) minmax(0, 1fr);
   align-items: center;
-  padding: clamp(1.25rem, 3vw, 2.5rem);
-  gap: 1.5rem;
+  padding: clamp(0.65rem, 2.5vw, 1.75rem) clamp(0.85rem, 3.5vw, 2.25rem);
+  gap: clamp(0.5rem, 2vw, 1.25rem);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   .rh-promo-banner {
-    aspect-ratio: auto !important;
-    min-height: auto !important;
-    padding: 1.25rem 1rem !important;
-    border-radius: 18px;
-    grid-template-columns: 1fr !important;
-    gap: 1.25rem;
+    padding: 0.65rem 0.85rem !important;
+    border-radius: 14px;
+    gap: 0.5rem;
+  }
+
+  .rh-promo-subtext {
+    display: none !important;
   }
 
   .rh-promo-attendant {
-    justify-self: stretch !important;
-    max-width: 100% !important;
+    padding: 0.35rem 0.5rem !important;
+    border-radius: 10px !important;
+  }
+}
+
+/* Popular Routes horizontal swipeable track on mobile */
+.rh-popular-routes-track {
+  display: flex;
+  gap: 0.85rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 0.5rem;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.rh-popular-routes-track::-webkit-scrollbar {
+  display: none;
+}
+.rh-popular-routes-track > * {
+  flex: 0 0 clamp(240px, 75vw, 290px);
+  scroll-snap-align: start;
+}
+@media (min-width: 769px) {
+  .rh-popular-routes-track {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    overflow-x: visible;
+    padding-bottom: 0;
+  }
+  .rh-popular-routes-track > * {
+    flex: initial;
   }
 }
 

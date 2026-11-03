@@ -15,15 +15,12 @@ import {
   ChevronLeft,
   MapPin,
   Train,
-  Wifi,
   Sparkles,
   Copy,
-  BatteryCharging,
   Armchair,
-  CheckCircle2,
   Clock,
-  ShieldCheck,
   Compass,
+  CheckCircle2,
 } from 'lucide-react'
 
 const PROMO_BANNERS = [
@@ -75,23 +72,23 @@ const FLEET_CLASSES = [
   {
     title: 'Luxury Sleeper',
     badge: 'Kenyamanan Tertinggi',
-    desc: 'Kursi rebah 140° dengan sekat privat, audio-video on demand, lampu baca personal, dan hidangan gratis.',
-    features: ['Reclining Seat 140°', 'Layar Sentuh Pribadi', 'Complimentary Food & Drink', 'WiFi Super Cepat'],
-    gradient: 'linear-gradient(135deg, #1A428A 0%, #0F2552 100%)',
+    summary: 'Kursi rebah 140° · Layar VOD Pribadi · Bistro Hangat Gratis',
+    icon: Armchair,
+    price: 'Mulai Rp 450.000',
   },
   {
-    title: 'Eksekutif Komersial',
+    title: 'Eksekutif',
     badge: 'Paling Populer',
-    desc: 'Captain seat 2-2 ergonomis dengan ruang kaki sangat lega, stopkontak ganda di setiap kursi, dan AC sentral.',
-    features: ['Captain Seat 2-2 Putar', 'Stopkontak Tiap Kursi', 'Meja Kerja Lipat', 'Akses Kafe Restorasi'],
-    gradient: 'linear-gradient(135deg, #1A428A 0%, #2563EB 100%)',
+    summary: 'Captain Seat 2-2 Putar · Meja Kerja Lipat · WiFi Kabin',
+    icon: Train,
+    price: 'Mulai Rp 250.000',
   },
   {
-    title: 'Ekonomi New Generation',
+    title: 'Ekonomi New Gen',
     badge: 'Terjangkau & Modern',
-    desc: 'Desain kursi modifikasi 2-2 searah laju kereta, sandaran reclining yang nyaman, dan kabin bebas bising.',
-    features: ['Kursi 2-2 Reclining', 'Kabin AC Sejuk & Bersih', 'Layar Informasi Stasiun', 'Toilet Ramah Difabel'],
-    gradient: 'linear-gradient(135deg, #A83232 0%, #CC7000 100%)',
+    summary: 'Kursi 2-2 Reclining · AC Dingin · Kabin Bebas Bising',
+    icon: Sparkles,
+    price: 'Mulai Rp 120.000',
   },
 ]
 
@@ -154,12 +151,12 @@ export default function HomePage() {
       <Navbar />
 
       {/* ── HERO & SEARCH SECTION ──────────────────────────── */}
-      <section className="rh-hero" style={{ paddingBottom: '3rem' }}>
+      <section className="rh-hero" style={{ paddingBottom: '2.5rem' }}>
         <div className="rh-pattern-dots" style={{ position: 'absolute', inset: 0, opacity: 0.35 }} />
 
         <div className="rh-container" style={{ position: 'relative', zIndex: 1 }}>
-          {/* Mobile Super App Portal View (Greeting, RailPay, 9 Service Badges, Live Tracking Banner) */}
-          <div className="rh-show-mobile-only" style={{ marginBottom: '1.25rem', paddingTop: '0.25rem' }}>
+          {/* Mobile Super App Portal View (Greeting, 9 Service Badges, Live Tracking Banner) */}
+          <div className="rh-show-mobile-only" style={{ marginBottom: '1rem', paddingTop: '0.25rem' }}>
             <MobilePortalHeader />
           </div>
 
@@ -227,29 +224,29 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── 3 SLIDING PROMO BANNERS (8:3 Ratio) ──────────── */}
-      <section id="promos" className="rh-section" style={{ background: '#ffffff', paddingTop: '2.5rem', paddingBottom: '2.5rem' }}>
+      {/* ── 3 SLIDING PROMO BANNERS (Strict 8:3 Ratio) ───── */}
+      <section id="promos" className="rh-section" style={{ background: '#ffffff', paddingTop: '2rem', paddingBottom: '2rem' }}>
         <div className="rh-container">
-          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '1rem', marginBottom: '1.25rem' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem', marginBottom: '1rem' }}>
             <div>
-              <span className="rh-badge rh-badge-primary" style={{ marginBottom: '0.35rem' }}>
-                <Sparkles size={13} /> Penawaran Terbatas
+              <span className="rh-badge rh-badge-primary" style={{ marginBottom: '0.25rem' }}>
+                <Sparkles size={12} /> Penawaran Terbatas
               </span>
-              <h2 className="rh-h3" style={{ margin: 0, color: 'var(--rh-navy)' }}>Promo Perjalanan RAILHUB</h2>
+              <h2 className="rh-h3" style={{ margin: 0, color: 'var(--rh-navy)', fontSize: '1.25rem' }}>Promo Perjalanan RAILHUB</h2>
             </div>
 
             {/* Slider controls */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
               <button
                 type="button"
                 className="rh-btn rh-btn-ghost rh-btn-sm"
                 aria-label="Banner sebelumnya"
                 onClick={() => setPromoIndex(prev => (prev - 1 + PROMO_BANNERS.length) % PROMO_BANNERS.length)}
-                style={{ borderRadius: '50%', width: 36, height: 36, padding: 0, display: 'grid', placeItems: 'center' }}
+                style={{ borderRadius: '50%', width: 32, height: 32, padding: 0, display: 'grid', placeItems: 'center' }}
               >
-                <ChevronLeft size={18} />
+                <ChevronLeft size={16} />
               </button>
-              <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--rh-text)' }}>
+              <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--rh-text)' }}>
                 {promoIndex + 1} / {PROMO_BANNERS.length}
               </span>
               <button
@@ -257,47 +254,44 @@ export default function HomePage() {
                 className="rh-btn rh-btn-ghost rh-btn-sm"
                 aria-label="Banner berikutnya"
                 onClick={() => setPromoIndex(prev => (prev + 1) % PROMO_BANNERS.length)}
-                style={{ borderRadius: '50%', width: 36, height: 36, padding: 0, display: 'grid', placeItems: 'center' }}
+                style={{ borderRadius: '50%', width: 32, height: 32, padding: 0, display: 'grid', placeItems: 'center' }}
               >
-                <ChevronRight size={18} />
+                <ChevronRight size={16} />
               </button>
             </div>
           </div>
 
-          {/* Active Promo Card (8:3 ratio) */}
+          {/* Active Promo Banner (Enforces strict 8:3 ratio) */}
           <div
             className="rh-promo-banner"
             style={{
               background: activePromo.gradient,
-              boxShadow: '0 10px 30px rgba(0,0,0,0.12)',
-              borderRadius: 20,
-              padding: 'clamp(1.5rem, 3.5vw, 2.5rem)',
             }}
           >
-            <div style={{ zIndex: 2, display: 'grid', gap: '0.75rem' }}>
+            {/* Left Content */}
+            <div style={{ zIndex: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 'clamp(0.2rem, 0.8vw, 0.45rem)', minWidth: 0 }}>
               <span
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
-                  gap: 6,
-                  justifySelf: 'start',
-                  padding: '0.3rem 0.75rem',
+                  gap: 4,
+                  padding: '0.15rem 0.5rem',
                   borderRadius: 999,
-                  background: 'rgba(255,255,255,0.15)',
+                  background: 'rgba(255,255,255,0.16)',
                   color: activePromo.accentColor,
-                  fontSize: '0.72rem',
+                  fontSize: 'clamp(0.58rem, 1.1vw, 0.72rem)',
                   fontWeight: 800,
-                  letterSpacing: '0.04em',
+                  width: 'fit-content',
                 }}
               >
-                <Sparkles size={13} /> {activePromo.badge}
+                <Sparkles size={11} /> {activePromo.badge}
               </span>
 
               <h3
                 style={{
-                  fontSize: 'clamp(1.3rem, 2.4vw, 1.95rem)',
+                  fontSize: 'clamp(0.85rem, 2.2vw, 1.45rem)',
                   fontWeight: 900,
-                  lineHeight: 1.2,
+                  lineHeight: 1.18,
                   color: 'white',
                   margin: 0,
                   letterSpacing: '-0.02em',
@@ -306,85 +300,100 @@ export default function HomePage() {
                 {activePromo.headline}
               </h3>
 
-              <p style={{ margin: 0, color: 'rgba(255,255,255,0.9)', fontSize: '0.92rem', maxWidth: 540, lineHeight: 1.5 }}>
+              <p
+                className="rh-promo-subtext"
+                style={{
+                  margin: 0,
+                  color: 'rgba(255,255,255,0.88)',
+                  fontSize: '0.82rem',
+                  lineHeight: 1.35,
+                  maxWidth: 480,
+                }}
+              >
                 {activePromo.subtext}
               </p>
 
-              <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '0.75rem', marginTop: '0.35rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', marginTop: '0.1rem', flexWrap: 'wrap' }}>
                 <button
                   type="button"
                   onClick={() => copyPromoCode(activePromo.code)}
-                  className="rh-btn rh-btn-sm"
+                  className="rh-btn"
                   style={{
                     background: 'rgba(255,255,255,0.18)',
                     color: 'white',
                     border: '1px dashed rgba(255,255,255,0.5)',
                     fontFamily: 'var(--font-mono)',
                     fontWeight: 700,
+                    fontSize: 'clamp(0.65rem, 1.2vw, 0.78rem)',
+                    padding: '0.25rem 0.55rem',
+                    borderRadius: 8,
                   }}
-                  title="Klik untuk menyalin kode"
+                  title="Klik untuk menyalin kode promo"
                 >
-                  <Copy size={14} /> {activePromo.code}
+                  <Copy size={12} /> {activePromo.code}
                 </button>
-                <Link href="/trains" className="rh-btn rh-btn-accent rh-btn-sm">
-                  Gunakan Promo <ChevronRight size={15} />
+                <Link
+                  href="/trains"
+                  className="rh-btn rh-btn-accent"
+                  style={{
+                    fontSize: 'clamp(0.65rem, 1.2vw, 0.78rem)',
+                    padding: '0.25rem 0.75rem',
+                    borderRadius: 8,
+                    fontWeight: 700,
+                  }}
+                >
+                  Pakai Promo <ChevronRight size={13} />
                 </Link>
               </div>
             </div>
 
-            {/* Right: Attendant Hospitality Card */}
-            <div
-              className="rh-promo-attendant"
-              style={{
-                zIndex: 2,
-                justifySelf: 'end',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '1rem',
-                background: 'rgba(255,255,255,0.12)',
-                backdropFilter: 'blur(10px)',
-                border: '1px solid rgba(255,255,255,0.22)',
-                borderRadius: 18,
-                padding: '1rem 1.25rem',
-                maxWidth: 320,
-                width: '100%',
-              }}
-            >
+            {/* Right Visual: Compact Hospitality Card */}
+            <div style={{ zIndex: 2, display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
               <div
+                className="rh-promo-attendant"
                 style={{
-                  width: 58,
-                  height: 58,
-                  borderRadius: '50%',
-                  background: 'linear-gradient(135deg, var(--rh-accent), #CC7000)',
-                  display: 'grid',
-                  placeItems: 'center',
-                  flexShrink: 0,
-                  boxShadow: '0 6px 16px rgba(0,0,0,0.25)',
+                  background: 'rgba(255,255,255,0.14)',
+                  backdropFilter: 'blur(8px)',
+                  border: '1px solid rgba(255,255,255,0.22)',
+                  borderRadius: 14,
+                  padding: 'clamp(0.35rem, 1.2vw, 0.65rem) clamp(0.5rem, 1.5vw, 0.85rem)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  maxWidth: 240,
                 }}
               >
-                <svg width="36" height="36" viewBox="0 0 64 64" fill="none" aria-hidden="true">
-                  <circle cx="32" cy="22" r="10" fill="#FFF" />
-                  <path d="M22 18C24 12 40 12 42 18L39 20H25L22 18Z" fill="#0F172A" />
-                  <path d="M16 52C16 41 23 35 32 35C41 35 48 41 48 52H16Z" fill="#FFF" />
-                  <path d="M28 35L32 43L36 35" stroke="#0F172A" strokeWidth="3" strokeLinecap="round" />
-                </svg>
-              </div>
-              <div>
-                <span style={{ fontSize: '0.68rem', fontWeight: 800, textTransform: 'uppercase', color: activePromo.accentColor }}>
-                  Hospitality Onboard
-                </span>
-                <strong style={{ display: 'block', fontSize: '0.95rem', color: 'white', marginTop: 2 }}>
-                  {activePromo.attendantName}
-                </strong>
-                <span style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.85)' }}>
-                  {activePromo.attendantRole}
-                </span>
+                <div
+                  style={{
+                    width: 'clamp(28px, 4.5vw, 42px)',
+                    height: 'clamp(28px, 4.5vw, 42px)',
+                    borderRadius: '50%',
+                    background: 'linear-gradient(135deg, var(--rh-accent), #CC7000)',
+                    display: 'grid',
+                    placeItems: 'center',
+                    flexShrink: 0,
+                  }}
+                >
+                  <svg width="22" height="22" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+                    <circle cx="32" cy="22" r="10" fill="#FFF" />
+                    <path d="M22 18C24 12 40 12 42 18L39 20H25L22 18Z" fill="#0F172A" />
+                    <path d="M16 52C16 41 23 35 32 35C41 35 48 41 48 52H16Z" fill="#FFF" />
+                  </svg>
+                </div>
+                <div style={{ minWidth: 0 }}>
+                  <span style={{ fontSize: 'clamp(0.55rem, 1vw, 0.65rem)', fontWeight: 800, textTransform: 'uppercase', color: activePromo.accentColor, display: 'block' }}>
+                    Hospitality
+                  </span>
+                  <strong style={{ display: 'block', fontSize: 'clamp(0.68rem, 1.2vw, 0.82rem)', color: 'white', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    {activePromo.attendantName}
+                  </strong>
+                </div>
               </div>
             </div>
           </div>
 
           {/* Dots Indicator */}
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', marginTop: '1rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '0.4rem', marginTop: '0.75rem' }}>
             {PROMO_BANNERS.map((banner, idx) => (
               <button
                 key={banner.id}
@@ -392,8 +401,8 @@ export default function HomePage() {
                 aria-label={`Pilih promo ${idx + 1}`}
                 onClick={() => setPromoIndex(idx)}
                 style={{
-                  width: promoIndex === idx ? 28 : 10,
-                  height: 8,
+                  width: promoIndex === idx ? 24 : 8,
+                  height: 6,
                   borderRadius: 999,
                   border: 'none',
                   cursor: 'pointer',
@@ -406,20 +415,23 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── POPULAR ROUTES (DESTINASI FAVORIT) ───────────── */}
-      <section className="rh-section" style={{ background: 'var(--rh-surface)', paddingTop: '2.5rem', paddingBottom: '2.5rem' }}>
+      {/* ── POPULAR ROUTES (Horizontal Swipe on Mobile, Grid on Desktop) ── */}
+      <section className="rh-section" style={{ background: 'var(--rh-surface)', paddingTop: '2rem', paddingBottom: '2rem' }}>
         <div className="rh-container">
-          <div style={{ marginBottom: '1.75rem', textAlign: 'center' }}>
-            <span className="rh-badge rh-badge-primary" style={{ marginBottom: '0.4rem' }}>
-              <Compass size={13} /> Destinasi Terpopuler
+          <div style={{ marginBottom: '1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '0.5rem' }}>
+            <div>
+              <span className="rh-badge rh-badge-primary" style={{ marginBottom: '0.25rem' }}>
+                <Compass size={12} /> Destinasi Terpopuler
+              </span>
+              <h2 className="rh-h3" style={{ margin: 0, color: 'var(--rh-navy)', fontSize: '1.25rem' }}>Rute Favorit Penumpang</h2>
+            </div>
+            <span style={{ fontSize: '0.75rem', color: 'var(--rh-text-3)', fontWeight: 600 }}>
+              Geser untuk rute lainnya →
             </span>
-            <h2 className="rh-h3" style={{ margin: 0, color: 'var(--rh-navy)' }}>Rute Favorit Penumpang</h2>
-            <p style={{ margin: '0.35rem auto 0', color: 'var(--rh-text-2)', fontSize: '0.9rem', maxWidth: 520 }}>
-              Pilih rute unggulan untuk langsung mencari ketersediaan tiket kereta tercepat besok.
-            </p>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))', gap: '1rem' }}>
+          {/* Horizontal swipeable track on mobile to eliminate vertical scrolling */}
+          <div className="rh-popular-routes-track">
             {POPULAR_ROUTES.map((route, i) => (
               <Link
                 key={i}
@@ -429,36 +441,37 @@ export default function HomePage() {
                 style={{
                   display: 'block',
                   textDecoration: 'none',
-                  padding: '1.15rem 1.25rem',
+                  padding: '1rem',
                   background: '#ffffff',
                   border: '1px solid var(--rh-border)',
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+                  boxShadow: '0 2px 6px rgba(0,0,0,0.03)',
+                  borderRadius: 14,
                 }}
               >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
-                  <span style={{ fontSize: '0.68rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--rh-primary)', background: 'var(--rh-primary-light)', padding: '0.15rem 0.55rem', borderRadius: 6 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.6rem' }}>
+                  <span style={{ fontSize: '0.65rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--rh-primary)', background: 'var(--rh-primary-light)', padding: '0.12rem 0.5rem', borderRadius: 6 }}>
                     {route.tag}
                   </span>
-                  <span style={{ fontSize: '0.75rem', color: 'var(--rh-text-2)', display: 'flex', alignItems: 'center', gap: 3 }}>
-                    <Clock size={12} /> {route.duration}
+                  <span style={{ fontSize: '0.72rem', color: 'var(--rh-text-2)', display: 'flex', alignItems: 'center', gap: 3 }}>
+                    <Clock size={11} /> {route.duration}
                   </span>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.75rem' }}>
-                  <div style={{ width: 34, height: 34, borderRadius: 10, background: 'var(--rh-primary-light)', display: 'grid', placeItems: 'center', color: 'var(--rh-primary)', flexShrink: 0 }}>
-                    <Train size={17} />
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem', marginBottom: '0.65rem' }}>
+                  <div style={{ width: 30, height: 30, borderRadius: 8, background: 'var(--rh-primary-light)', display: 'grid', placeItems: 'center', color: 'var(--rh-primary)', flexShrink: 0 }}>
+                    <Train size={15} />
                   </div>
-                  <strong style={{ fontSize: '1rem', color: '#1E293B', letterSpacing: '-0.01em' }}>
+                  <strong style={{ fontSize: '0.92rem', color: '#1E293B', letterSpacing: '-0.01em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                     {route.fromName} → {route.toName}
                   </strong>
                 </div>
 
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px dashed var(--rh-border)', paddingTop: '0.65rem' }}>
-                  <span style={{ fontSize: '0.9rem', color: 'var(--rh-accent-dark)', fontWeight: 800 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px dashed var(--rh-border)', paddingTop: '0.5rem' }}>
+                  <span style={{ fontSize: '0.85rem', color: 'var(--rh-accent-dark)', fontWeight: 800 }}>
                     {route.price}
                   </span>
-                  <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--rh-primary)', display: 'inline-flex', alignItems: 'center', gap: 3 }}>
-                    Cek Kursi <ChevronRight size={14} />
+                  <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--rh-primary)', display: 'inline-flex', alignItems: 'center', gap: 2 }}>
+                    Cek <ChevronRight size={13} />
                   </span>
                 </div>
               </Link>
@@ -467,101 +480,84 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── FLEET & CABIN COMFORT (MINIMALIST SHOWCASE) ───── */}
-      <section className="rh-section" style={{ background: '#ffffff', paddingTop: '2.5rem', paddingBottom: '2.5rem' }}>
+      {/* ── FLEET & CABIN COMFORT (ULTRA-MINIMAL 3 CARDS) ── */}
+      <section className="rh-section" style={{ background: '#ffffff', paddingTop: '2rem', paddingBottom: '2rem' }}>
         <div className="rh-container">
-          <div style={{ marginBottom: '1.75rem', textAlign: 'center' }}>
-            <span className="rh-badge rh-badge-primary" style={{ marginBottom: '0.4rem' }}>
-              <ShieldCheck size={13} /> Standar Layanan
+          <div style={{ marginBottom: '1.25rem', textAlign: 'center' }}>
+            <span className="rh-badge rh-badge-primary" style={{ marginBottom: '0.25rem' }}>
+              <Train size={12} /> Standar Layanan
             </span>
-            <h2 className="rh-h3" style={{ margin: 0, color: 'var(--rh-navy)' }}>Pilihan Kelas Kereta</h2>
-            <p style={{ margin: '0.35rem auto 0', color: 'var(--rh-text-2)', fontSize: '0.9rem', maxWidth: 520 }}>
-              Dirancang untuk kenyamanan perjalanan jarak jauh dengan fasilitas kabin berstandar tinggi.
-            </p>
+            <h2 className="rh-h3" style={{ margin: 0, color: 'var(--rh-navy)', fontSize: '1.25rem' }}>Pilihan Kelas Kereta</h2>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: '1.25rem' }}>
-            {FLEET_CLASSES.map(fc => (
-              <div
-                key={fc.title}
-                className="rh-card"
-                style={{
-                  padding: '1.5rem',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-between',
-                  background: '#ffffff',
-                  border: '1px solid var(--rh-border)',
-                  boxShadow: '0 4px 16px rgba(0,0,0,0.05)',
-                  borderRadius: 18,
-                }}
-              >
-                <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-                    <span style={{ fontSize: '0.7rem', fontWeight: 800, padding: '0.2rem 0.6rem', borderRadius: 999, background: 'var(--rh-primary-light)', color: 'var(--rh-primary)' }}>
-                      {fc.badge}
-                    </span>
-                    <Armchair size={18} style={{ color: 'var(--rh-primary)' }} />
-                  </div>
-
-                  <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--rh-navy)', margin: '0 0 0.5rem' }}>
-                    {fc.title}
-                  </h3>
-
-                  <p style={{ fontSize: '0.85rem', color: 'var(--rh-text-2)', lineHeight: 1.55, margin: '0 0 1.25rem' }}>
-                    {fc.desc}
-                  </p>
-
-                  <div style={{ display: 'grid', gap: '0.5rem', marginBottom: '1.25rem' }}>
-                    {fc.features.map(f => (
-                      <div key={f} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.82rem', color: '#1E293B', fontWeight: 600 }}>
-                        <CheckCircle2 size={15} style={{ color: 'var(--rh-success)', flexShrink: 0 }} />
-                        <span>{f}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
+          {/* Ultra-compact 3-card horizontal grid */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))', gap: '0.75rem' }}>
+            {FLEET_CLASSES.map(fc => {
+              const Icon = fc.icon
+              return (
                 <Link
+                  key={fc.title}
                   href="/trains"
-                  className="rh-btn rh-btn-ghost rh-btn-sm"
-                  style={{ width: '100%', justifyContent: 'center', fontWeight: 700 }}
+                  className="rh-card rh-card-interactive"
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.75rem',
+                    padding: '0.85rem 1rem',
+                    textDecoration: 'none',
+                    background: '#ffffff',
+                    border: '1px solid var(--rh-border)',
+                    borderRadius: 14,
+                  }}
                 >
-                  Pilih Kelas Ini <ChevronRight size={14} />
+                  <div style={{ width: 40, height: 40, borderRadius: 10, background: 'var(--rh-primary-light)', color: 'var(--rh-primary)', display: 'grid', placeItems: 'center', flexShrink: 0 }}>
+                    <Icon size={20} />
+                  </div>
+                  <div style={{ minWidth: 0, flex: 1 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.35rem' }}>
+                      <strong style={{ fontSize: '0.9rem', color: 'var(--rh-navy)' }}>{fc.title}</strong>
+                      <span style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--rh-accent-dark)' }}>{fc.price}</span>
+                    </div>
+                    <span style={{ display: 'block', fontSize: '0.72rem', color: 'var(--rh-text-2)', marginTop: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                      {fc.summary}
+                    </span>
+                  </div>
+                  <ChevronRight size={15} style={{ color: 'var(--rh-text-3)', flexShrink: 0 }} />
                 </Link>
-              </div>
-            ))}
+              )
+            })}
           </div>
 
-          <div style={{ textAlign: 'center', marginTop: '1.75rem' }}>
-            <Link href="/about" className="rh-btn rh-btn-ghost rh-btn-sm" style={{ fontWeight: 700 }}>
-              Pelajari Sejarah & Portofolio Tim RAILHUB <ChevronRight size={15} />
+          <div style={{ textAlign: 'center', marginTop: '1.25rem' }}>
+            <Link href="/about" style={{ fontSize: '0.8rem', color: 'var(--rh-primary)', fontWeight: 700, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 3 }}>
+              Lihat Seluruh Armada & Portofolio Tim <ChevronRight size={14} />
             </Link>
           </div>
         </div>
       </section>
 
       {/* ── FAST CALL-TO-ACTION (COMPACT) ─────────────────── */}
-      <section style={{ background: 'linear-gradient(135deg, #0F2552 0%, #1A428A 100%)', padding: '3.5rem 0', color: 'white' }}>
-        <div className="rh-container" style={{ textAlign: 'center', maxWidth: 640 }}>
-          <h2 className="rh-h2" style={{ color: 'white', marginBottom: '0.75rem' }}>
+      <section style={{ background: 'linear-gradient(135deg, #0F2552 0%, #1A428A 100%)', padding: '2.5rem 0', color: 'white' }}>
+        <div className="rh-container" style={{ textAlign: 'center', maxWidth: 580 }}>
+          <h2 className="rh-h3" style={{ color: 'white', marginBottom: '0.5rem', fontSize: '1.35rem' }}>
             Siap Memulai Perjalanan Anda?
           </h2>
-          <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: '0.98rem', margin: '0 0 1.75rem', lineHeight: 1.6 }}>
+          <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: '0.9rem', margin: '0 0 1.25rem', lineHeight: 1.5 }}>
             Dapatkan pengalaman pesan tiket kereta terbaik dengan e-boarding pass QR dan live tracking stasiun real-time.
           </p>
-          <div style={{ display: 'flex', gap: '0.85rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Link href="/trains" className="rh-btn rh-btn-accent rh-btn-lg">
-              Cari Tiket Sekarang <ChevronRight size={18} />
+          <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <Link href="/trains" className="rh-btn rh-btn-accent rh-btn-sm" style={{ padding: '0.55rem 1.25rem', fontSize: '0.85rem' }}>
+              Cari Tiket Sekarang <ChevronRight size={16} />
             </Link>
             <Link
               href="/faq"
-              className="rh-btn rh-btn-lg"
+              className="rh-btn rh-btn-sm"
               style={{
                 background: 'rgba(255,255,255,0.12)',
                 color: 'white',
                 border: '1px solid rgba(255,255,255,0.25)',
-                backdropFilter: 'blur(8px)',
+                padding: '0.55rem 1.25rem',
+                fontSize: '0.85rem',
               }}
             >
               Pusat Bantuan & FAQ

@@ -1,13 +1,11 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import toast from 'react-hot-toast'
 import { useAuth } from '@/contexts/AuthContext'
 import { useLang } from '@/contexts/LangContext'
 import {
-  RailPayLogo,
   IconAntarKota,
   IconLokal,
   IconKomuter,
@@ -22,19 +20,13 @@ import {
 import {
   Bell,
   ChevronRight,
-  Globe,
-  QrCode,
-  RotateCcw,
-  ShoppingBag,
   Sparkles,
-  Wallet,
 } from 'lucide-react'
 
 export default function MobilePortalHeader() {
   const router = useRouter()
   const { user, profile } = useAuth()
   const { lang, toggleLang } = useLang()
-  const [topUpSimulated, setTopUpSimulated] = useState(false)
 
   // Dynamic time greeting
   const greeting = useMemo(() => {
@@ -46,15 +38,6 @@ export default function MobilePortalHeader() {
   }, [])
 
   const displayName = profile?.full_name?.split(' ')[0] || (user ? 'Pengguna' : 'Tamu')
-
-  function handleTopUp() {
-    toast.success('Simulasi Top Up RailPay: Saldo bertambah Rp 100.000!')
-    setTopUpSimulated(true)
-  }
-
-  function handleScan() {
-    router.push(user ? '/dashboard/staff#ticket-validation' : '/auth/login?next=/dashboard/staff')
-  }
 
   const SERVICES = [
     {
@@ -132,20 +115,20 @@ export default function MobilePortalHeader() {
       style={{
         background: 'linear-gradient(180deg, #12306A 0%, #1A428A 45%, #E7ECF6 100%)',
         color: '#ffffff',
-        padding: '1.5rem 1rem 2rem',
-        borderRadius: 24,
-        marginBottom: '1.75rem',
-        boxShadow: '0 12px 36px rgba(18, 48, 106, 0.15)',
+        padding: '1.15rem 0.85rem 1.25rem',
+        borderRadius: 20,
+        marginBottom: '1rem',
+        boxShadow: '0 8px 24px rgba(18, 48, 106, 0.12)',
       }}
     >
       <div style={{ maxWidth: 840, margin: '0 auto' }}>
-        {/* Top Greeting Row (Screenshot 1) */}
+        {/* Top Greeting Row */}
         <div
           style={{
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            marginBottom: '1.25rem',
+            marginBottom: '0.85rem',
           }}
         >
           <div>
@@ -234,184 +217,15 @@ export default function MobilePortalHeader() {
         </div>
 
         {/* ============================================================
-            RAILPAY WALLET CARD (Screenshot 1)
-            ============================================================ */}
-        <div
-          style={{
-            background: '#ffffff',
-            borderRadius: 18,
-            boxShadow: '0 10px 30px rgba(0, 0, 0, 0.08)',
-            padding: '1.25rem',
-            color: 'var(--rh-navy)',
-            marginBottom: '1.5rem',
-          }}
-        >
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              flexWrap: 'wrap',
-              gap: '1rem',
-              paddingBottom: '0.875rem',
-              borderBottom: '1px solid #F1F5F9',
-            }}
-          >
-            {/* RailPay Logo & User */}
-            <div>
-              <RailPayLogo height={26} />
-              <div
-                style={{
-                  fontSize: '1.15rem',
-                  fontWeight: 800,
-                  marginTop: '0.25rem',
-                  color: 'var(--rh-navy)',
-                }}
-              >
-                {topUpSimulated ? 'Rp 100.000' : (profile?.full_name || 'Tamu')}
-              </div>
-            </div>
-
-            {/* Quick Actions (Scan, Top Up, Riwayat) */}
-            <div style={{ display: 'flex', gap: '0.875rem', alignItems: 'center' }}>
-              <button
-                type="button"
-                onClick={handleScan}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  gap: '0.25rem',
-                  background: 'none',
-                  border: 'none',
-                  cursor: 'pointer',
-                  color: 'var(--rh-navy)',
-                }}
-              >
-                <div
-                  style={{
-                    width: 38,
-                    height: 38,
-                    borderRadius: 12,
-                    background: 'var(--rh-primary-light)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: 'var(--rh-primary)',
-                  }}
-                >
-                  <QrCode size={18} />
-                </div>
-                <span style={{ fontSize: '0.72rem', fontWeight: 700 }}>Scan QR</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={handleTopUp}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  gap: '0.25rem',
-                  background: 'none',
-                  border: 'none',
-                  cursor: 'pointer',
-                  color: 'var(--rh-navy)',
-                }}
-              >
-                <div
-                  style={{
-                    width: 38,
-                    height: 38,
-                    borderRadius: 12,
-                    background: 'rgba(255, 140, 0, 0.12)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: 'var(--rh-accent-dark)',
-                  }}
-                >
-                  <Wallet size={18} />
-                </div>
-                <span style={{ fontSize: '0.72rem', fontWeight: 700 }}>Top Up</span>
-              </button>
-
-              <Link
-                href={user ? '/dashboard/passenger#my-bookings' : '/auth/login'}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  gap: '0.25rem',
-                  textDecoration: 'none',
-                  color: 'var(--rh-text-3)',
-                }}
-              >
-                <div
-                  style={{
-                    width: 38,
-                    height: 38,
-                    borderRadius: 12,
-                    background: '#F1F5F9',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: '#64748B',
-                  }}
-                >
-                  <RotateCcw size={18} />
-                </div>
-                <span style={{ fontSize: '0.72rem', fontWeight: 600 }}>Riwayat</span>
-              </Link>
-            </div>
-          </div>
-
-          {/* Railpoin Badge Footer */}
-          <div
-            style={{
-              paddingTop: '0.75rem',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              fontSize: '0.825rem',
-              color: 'var(--rh-text-2)',
-            }}
-          >
-            <span
-              style={{
-                width: 20,
-                height: 20,
-                borderRadius: '50%',
-                background: 'linear-gradient(135deg, #FF8C00, #FFA834)',
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#ffffff',
-                fontSize: '0.7rem',
-                fontWeight: 800,
-              }}
-            >
-              P
-            </span>
-            <span>
-              <strong>{user ? '1.250' : '0'}</strong> Railpoin
-            </span>
-            <span style={{ marginLeft: 'auto', fontSize: '0.75rem', color: 'var(--rh-primary)', fontWeight: 600 }}>
-              Tukar Poin →
-            </span>
-          </div>
-        </div>
-
-        {/* ============================================================
             SERVICE CATEGORIES (Screenshot 1: 9 Circular Vector Badges in Elevated White Card)
             ============================================================ */}
         <div
           style={{
             background: '#ffffff',
-            borderRadius: 20,
-            padding: '1.25rem 0.85rem 1.1rem',
-            marginBottom: '1.5rem',
-            boxShadow: '0 8px 25px rgba(0, 0, 0, 0.08)',
+            borderRadius: 18,
+            padding: '1.15rem 0.75rem 1rem',
+            marginBottom: '1rem',
+            boxShadow: '0 6px 20px rgba(0, 0, 0, 0.06)',
           }}
         >
           <div
