@@ -21,6 +21,7 @@ import {
   Bell,
   ChevronRight,
   Sparkles,
+  ShoppingBag,
 } from 'lucide-react'
 
 export default function MobilePortalHeader() {
