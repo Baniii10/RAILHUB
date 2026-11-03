@@ -32,7 +32,7 @@ const PROMO_BANNERS = [
     code: 'JELAJAHJAWA25',
     attendantName: 'Kru Layanan Eksekutif',
     attendantRole: 'Siap Melayani di Setiap Gerbong',
-    gradient: 'linear-gradient(125deg, #0B1D42 0%, #1A428A 55%, #2A5CB5 100%)',
+    gradient: 'linear-gradient(125deg, #1A428A 0%, #4F4F4F 100%)',
     accentColor: '#FF8C00',
   },
   {
@@ -43,7 +43,7 @@ const PROMO_BANNERS = [
     code: 'RAILHUBHEMAT75',
     attendantName: 'Pramugari Restorasi Onboard',
     attendantRole: 'Kuliner Hangat Diantar ke Kursi',
-    gradient: 'linear-gradient(125deg, #0F2D3C 0%, #175466 55%, #207D8B 100%)',
+    gradient: 'linear-gradient(125deg, #A83232 0%, #4F4F4F 100%)',
     accentColor: '#FFA834',
   },
   {
@@ -54,7 +54,7 @@ const PROMO_BANNERS = [
     code: 'KELUARGARAIL',
     attendantName: 'Petugas Hospitality Stasiun',
     attendantRole: 'Pendampingan Peron & Boarding',
-    gradient: 'linear-gradient(125deg, #3D1010 0%, #7A2525 55%, #A83232 100%)',
+    gradient: 'linear-gradient(125deg, #4F4F4F 0%, #A83232 100%)',
     accentColor: '#FF8C00',
   },
 ]
@@ -190,7 +190,7 @@ export default function HomePage() {
                 </div>
                 <div style={{ width: 1, background: 'rgba(255,255,255,0.15)' }} />
                 <div>
-                  <strong style={{ display: 'block', fontSize: '1.4rem', color: '#10B981', fontWeight: 800 }}>QR Ready</strong>
+                  <strong style={{ display: 'block', fontSize: '1.4rem', color: 'var(--rh-accent)', fontWeight: 800 }}>QR Ready</strong>
                   <span style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.75)' }}>E-Boarding Pass</span>
                 </div>
               </div>
@@ -381,7 +381,7 @@ export default function HomePage() {
                     width: 'clamp(28px, 4.5vw, 42px)',
                     height: 'clamp(28px, 4.5vw, 42px)',
                     borderRadius: '50%',
-                    background: 'linear-gradient(135deg, var(--rh-accent), #CC7000)',
+                    background: 'var(--rh-accent)',
                     display: 'grid',
                     placeItems: 'center',
                     flexShrink: 0,
@@ -474,7 +474,7 @@ export default function HomePage() {
                   <div style={{ width: 30, height: 30, borderRadius: 8, background: 'var(--rh-primary-light)', display: 'grid', placeItems: 'center', color: 'var(--rh-primary)', flexShrink: 0 }}>
                     <Train size={15} />
                   </div>
-                  <strong style={{ fontSize: '0.92rem', color: '#1E293B', letterSpacing: '-0.01em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  <strong style={{ fontSize: '0.92rem', color: 'var(--rh-charcoal)', letterSpacing: '-0.01em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                     {route.fromName} → {route.toName}
                   </strong>
                 </div>
@@ -550,7 +550,7 @@ export default function HomePage() {
       </section>
 
       {/* ── FAST CALL-TO-ACTION (COMPACT) ─────────────────── */}
-      <section className="home-bottom-cta" style={{ background: 'linear-gradient(135deg, #0F2552 0%, #1A428A 100%)', padding: '2.5rem 0 calc(5.5rem + env(safe-area-inset-bottom, 0px))', color: 'white' }}>
+      <section className="home-bottom-cta" style={{ background: 'var(--rh-primary)', padding: '2.5rem 0 calc(5.5rem + env(safe-area-inset-bottom, 0px))', color: 'white' }}>
         <div className="rh-container" style={{ textAlign: 'center', maxWidth: 580 }}>
           <h2 className="rh-h3" style={{ color: 'white', marginBottom: '0.5rem', fontSize: '1.35rem' }}>
             {lang === 'en' ? 'Ready for Your Next Journey?' : 'Siap Memulai Perjalanan Anda?'}

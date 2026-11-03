@@ -48,7 +48,7 @@ export function RailHubBrandLogo({ size = 32, className = '' }) {
       <defs>
         <linearGradient id="rh-brand-bg" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
           <stop stopColor="#1A428A" />
-          <stop offset="1" stopColor="#0F2552" />
+          <stop offset="1" stopColor="#1A428A" />
         </linearGradient>
       </defs>
     </svg>
@@ -85,7 +85,7 @@ export function RailHubTrainLogo({ height = 22, className = '' }) {
         {/* Aerodynamic wing right (Deep Blue) */}
         <path
           d="M32 19L44 5H52L40 19H32Z"
-          fill="#12306A"
+          fill="#1A428A"
         />
         {/* Accent dot / spark */}
         <circle cx="56" cy="8" r="3" fill="#FF8C00" />
@@ -96,7 +96,7 @@ export function RailHubTrainLogo({ height = 22, className = '' }) {
           fontWeight: 900,
           fontSize: '0.875rem',
           letterSpacing: '-0.02em',
-          background: 'linear-gradient(90deg, #1A428A 0%, #0F2552 60%, #FF8C00 100%)',
+          background: 'linear-gradient(90deg, #1A428A 0%, #4F4F4F 60%, #FF8C00 100%)',
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
         }}
@@ -146,7 +146,7 @@ export function RailPayLogo({ height = 24, className = '' }) {
         <defs>
           <linearGradient id="rp-grad" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
             <stop stopColor="#1A428A" />
-            <stop offset="0.6" stopColor="#2A5CB5" />
+            <stop offset="0.6" stopColor="#1A428A" />
             <stop offset="1" stopColor="#FF8C00" />
           </linearGradient>
         </defs>
@@ -182,9 +182,9 @@ export function IconLokal({ size = 26 }) {
     <svg width={size} height={size} viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
       <rect x="6" y="4" width="16" height="18" rx="4" fill="white" />
       <path d="M8 8H20V13H8V8Z" fill="#FF8C00" />
-      <circle cx="10" cy="17.5" r="1.5" fill="#CC7000" />
-      <circle cx="18" cy="17.5" r="1.5" fill="#CC7000" />
-      <path d="M12 17.5H16" stroke="#CC7000" strokeWidth="1.5" strokeLinecap="round" />
+      <circle cx="10" cy="17.5" r="1.5" fill="#FF8C00" />
+      <circle cx="18" cy="17.5" r="1.5" fill="#FF8C00" />
+      <path d="M12 17.5H16" stroke="#FF8C00" strokeWidth="1.5" strokeLinecap="round" />
       <path d="M9 22L7 25M19 22L21 25" stroke="white" strokeWidth="2" strokeLinecap="round" />
     </svg>
   )
@@ -323,13 +323,13 @@ export function LocomotiveIllustration({ width = 160, height = 90 }) {
       {/* Cabin Windshield Glass */}
       <path
         d="M72 42C74 39 78 37 82 37H110V52H68L72 42Z"
-        fill="#0F2552"
+        fill="#1A428A"
         stroke="#475569"
         strokeWidth="1.5"
       />
       <path
         d="M114 37H136C140 37 144 39 146 42L150 52H114V37Z"
-        fill="#0F2552"
+        fill="#1A428A"
         stroke="#475569"
         strokeWidth="1.5"
       />

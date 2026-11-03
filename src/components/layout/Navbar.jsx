@@ -207,7 +207,7 @@ export default function Navbar() {
         ? [
             { href: '/', label: t.nav.home, icon: Home },
             { href: '/trains', label: lang === 'en' ? 'Schedule' : 'Jadwal', icon: Train },
-            { href: '/dashboard/passenger?tab=tickets', label: lang === 'en' ? 'Journeys' : 'Perjalanan', icon: Ticket },
+            { href: '/dashboard/passenger?tab=overview', label: lang === 'en' ? 'Journey' : 'Perjalanan', icon: Ticket },
             { href: '/dashboard/passenger?tab=account', label: lang === 'en' ? 'Account' : 'Akun', icon: User },
           ]
         : [
@@ -506,7 +506,7 @@ export default function Navbar() {
 
       {activeJourney && dashboardRole === 'passenger' && !isBookingFlow && (
         <Link
-          href="/dashboard/passenger?tab=journey"
+          href="/dashboard/passenger?tab=overview#trip-status"
           className="rh-journey-dock rh-show-mobile-only"
           aria-label={`Buka perjalanan ${journeyRoute}`}
         >
@@ -545,7 +545,8 @@ export default function Navbar() {
             const [baseHref, query = ''] = href.split('?')
             const expectedTab = new URLSearchParams(query).get('tab')
             const currentTab = searchParams.get('tab')
-            const isPassengerJourney = expectedTab === 'tickets' && ['tickets', 'journey', 'onboard'].includes(currentTab)
+            const isPassengerJourney = expectedTab === 'overview'
+              && (!currentTab || ['overview', 'tickets', 'services'].includes(currentTab))
             const active = pathname === baseHref
               && (expectedTab ? currentTab === expectedTab || isPassengerJourney : !currentTab || !baseHref.startsWith('/dashboard/'))
             return (

@@ -538,7 +538,7 @@ export default function BookingPayment({ bookingId }) {
                         const trainStr = [trainName, trainNum ? `(${trainNum})` : ''].filter(Boolean).join(' ')
 
                         return (
-                          <p style={{ display: 'flex', alignItems: 'center', gap: '.5rem', color: '#1E293B', fontWeight: 600, marginTop: '.4rem' }}>
+                          <p style={{ display: 'flex', alignItems: 'center', gap: '.5rem', color: 'var(--rh-charcoal)', fontWeight: 600, marginTop: '.4rem' }}>
                             <MapPin size={16} style={{ color: 'var(--rh-primary)', flexShrink: 0 }} />
                             <span>{routeStr}</span>
                             {trainStr && <span style={{ color: 'var(--rh-text-2)', fontWeight: 500 }}>· {trainStr}</span>}

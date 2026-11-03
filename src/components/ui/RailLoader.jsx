@@ -64,10 +64,10 @@ export function TrainTrackLoader({ text = 'Mencari jadwal terbaik…', subtext =
             <circle cx="34" cy="45" r="3" fill="#FFE500" />
             <circle cx="34" cy="45" r="5" fill="#FFE500" fillOpacity="0.4" />
             {/* Wheels */}
-            <circle cx="50" cy="52" r="3.5" fill="#0F2552" />
-            <circle cx="70" cy="52" r="3.5" fill="#0F2552" />
-            <circle cx="95" cy="52" r="3.5" fill="#0F2552" />
-            <circle cx="115" cy="52" r="3.5" fill="#0F2552" />
+            <circle cx="50" cy="52" r="3.5" fill="#4F4F4F" />
+            <circle cx="70" cy="52" r="3.5" fill="#4F4F4F" />
+            <circle cx="95" cy="52" r="3.5" fill="#4F4F4F" />
+            <circle cx="115" cy="52" r="3.5" fill="#4F4F4F" />
           </g>
         </svg>
 

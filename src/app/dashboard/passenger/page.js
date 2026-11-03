@@ -37,27 +37,25 @@ import {
 } from 'lucide-react'
 import toast from 'react-hot-toast'
 import Navbar from '@/components/layout/Navbar'
-import SearchWidget from '@/components/booking/SearchWidget'
 import PassengerServices from '@/components/services/PassengerServices'
 import { useAuth } from '@/contexts/AuthContext'
 import { createClient } from '@/lib/supabase/client'
 import { formatDate, formatIDR, formatTime } from '@/lib/utils/formatters'
 
 const TABS = [
-  { id: 'overview', label: 'Ringkasan', icon: Compass },
-  { id: 'tickets', label: 'Tiket Saya', icon: Ticket },
-  { id: 'journey', label: 'Tracking Kereta', icon: Radio },
-  { id: 'book', label: 'Pesan Tiket', icon: Train },
-  { id: 'onboard', label: 'Layanan Restorasi', icon: Utensils },
-  { id: 'reports', label: 'Laporan & Kehilangan', icon: AlertCircle },
+  { id: 'overview', label: 'Perjalanan', icon: Compass },
+  { id: 'tickets', label: 'Tiket', icon: Ticket },
+  { id: 'services', label: 'Layanan', icon: Utensils },
   { id: 'account', label: 'Akun', icon: UserRound },
 ]
+
+const TAB_ALIASES = { journey: 'overview', book: 'overview', onboard: 'services', reports: 'services' }
 
 function PassengerDashboardContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { user, profile, loading: authLoading } = useAuth()
-  const requestedTab = searchParams.get('tab')
+  const requestedTab = TAB_ALIASES[searchParams.get('tab')] || searchParams.get('tab')
   const activeTab = TABS.some(tab => tab.id === requestedTab) ? requestedTab : 'overview'
   const [bookings, setBookings] = useState([])
   const [payments, setPayments] = useState({})
@@ -68,11 +66,10 @@ function PassengerDashboardContent() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
-  // Live countdown state
+  // Scheduled departure countdown
   const [countdown, setCountdown] = useState({ hours: 0, minutes: 0, seconds: 0, isDeparted: false })
-  const [tomorrowDate] = useState(() => new Date(Date.now() + 86400000).toISOString().slice(0, 10))
 
-  // Journey simulation progress state
+  // Progress estimate derived from schedule times
   const [journeyProgress, setJourneyProgress] = useState(0)
 
   // Profile real settings
@@ -82,7 +79,7 @@ function PassengerDashboardContent() {
   const [savingProfile, setSavingProfile] = useState(false)
 
   function selectTab(tab) {
-    router.push(`/dashboard/passenger?tab=${tab}`, { scroll: false })
+    router.push(`/dashboard/passenger?tab=${TAB_ALIASES[tab] || tab}`, { scroll: false })
   }
 
   // Auth gate
@@ -306,7 +303,7 @@ function PassengerDashboardContent() {
       <main className="passenger-dashboard" style={{ background: 'var(--rh-surface)', minHeight: '100vh', paddingBottom: '6rem' }}>
         {/* ── TOP HEADER / GREETING BAR ── */}
         <section style={{
-          background: 'linear-gradient(135deg, #0F2552 0%, #16346F 50%, #1A428A 100%)',
+          background: 'var(--rh-primary)',
           color: 'white',
           padding: '2.5rem 0 2rem',
           borderBottom: '1px solid rgba(255,255,255,0.1)',
@@ -329,12 +326,17 @@ function PassengerDashboardContent() {
 
             </div>
 
-            <label className="dashboard-tab-select rh-show-mobile-only">
-              <span>Menu perjalanan</span>
-              <select value={activeTab} onChange={event => selectTab(event.target.value)}>
-                {TABS.map(tab => <option key={tab.id} value={tab.id}>{tab.label}</option>)}
-              </select>
-            </label>
+            <nav className="passenger-mobile-tabs rh-show-mobile-only" aria-label="Menu penumpang">
+              {TABS.map(tab => {
+                const TabIcon = tab.icon
+                return (
+                  <button key={tab.id} type="button" className={activeTab === tab.id ? 'is-active' : ''} onClick={() => selectTab(tab.id)} aria-current={activeTab === tab.id ? 'page' : undefined}>
+                    <TabIcon size={17} aria-hidden="true" />
+                    <span>{tab.label}</span>
+                  </button>
+                )
+              })}
+            </nav>
 
             {/* ── DESKTOP DASHBOARD NAVIGATION ── */}
             <nav className="passenger-tabs-nav" aria-label="Menu Dashboard Penumpang">
@@ -379,10 +381,10 @@ function PassengerDashboardContent() {
               ════════════════════════════════════════════════ */}
           {activeTab === 'overview' && (
             <div style={{ display: 'grid', gap: '1.75rem' }}>
-              {/* Highlight Card: Upcoming Active Journey & Live Countdown */}
+              {/* Upcoming journey */}
               {activePaidBooking && (
                 <section className="rh-card" style={{
-                  background: 'linear-gradient(135deg, #1A428A 0%, #16346F 100%)',
+                  background: 'var(--rh-primary)',
                   color: 'white',
                   borderRadius: 20,
                   overflow: 'hidden',
@@ -431,7 +433,7 @@ function PassengerDashboardContent() {
                         </div>
                       </div>
 
-                      {/* Live Automatic Departure Countdown */}
+                      {/* Departure countdown */}
                       <div style={{
                         background: 'rgba(0,0,0,0.25)',
                         borderRadius: 16,
@@ -468,14 +470,13 @@ function PassengerDashboardContent() {
                         )}
 
                         <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', marginTop: '1rem', flexWrap: 'wrap' }}>
-                          <button
-                            type="button"
-                            onClick={() => selectTab('journey')}
+                          <a
+                            href="#trip-status"
                             className="rh-btn rh-btn-sm"
-                            style={{ background: 'var(--rh-accent)', color: '#0F2552', fontWeight: 800, flex: '1 1 140px' }}
+                            style={{ background: 'var(--rh-accent)', color: 'var(--rh-charcoal)', fontWeight: 800, flex: '1 1 140px' }}
                           >
                             <Radio size={14} /> Status Perjalanan
-                          </button>
+                          </a>
                           <button
                             type="button"
                             onClick={() => selectTab('tickets')}
@@ -486,7 +487,7 @@ function PassengerDashboardContent() {
                           </button>
                           <button
                             type="button"
-                            onClick={() => selectTab('onboard')}
+                            onClick={() => selectTab('services')}
                             className="rh-btn rh-btn-sm"
                             style={{ background: 'rgba(255,255,255,0.18)', color: 'white', border: '1px solid rgba(255,255,255,0.3)', flex: '1 1 140px' }}
                           >
@@ -498,61 +499,6 @@ function PassengerDashboardContent() {
                   </div>
                 </section>
               )}
-
-              {/* Quick Actions Bar */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 140px), 1fr))', gap: '1rem' }}>
-                <button
-                  type="button"
-                  onClick={() => selectTab('journey')}
-                  className="rh-card rh-card-interactive"
-                  style={{ padding: '1.25rem', textAlign: 'left', border: '1px solid var(--rh-border)', cursor: 'pointer', background: 'white' }}
-                >
-                  <div style={{ width: 40, height: 40, borderRadius: 12, background: 'var(--rh-primary-light)', color: 'var(--rh-primary)', display: 'grid', placeItems: 'center', marginBottom: '0.75rem' }}>
-                    <Radio size={20} />
-                  </div>
-                  <strong style={{ display: 'block', fontSize: '0.98rem' }}>Status Perjalanan</strong>
-                  <span style={{ fontSize: '0.8rem', color: 'var(--rh-text-2)' }}>Lihat jadwal dan estimasi progres</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => selectTab('tickets')}
-                  className="rh-card rh-card-interactive"
-                  style={{ padding: '1.25rem', textAlign: 'left', border: '1px solid var(--rh-border)', cursor: 'pointer', background: 'white' }}
-                >
-                  <div style={{ width: 40, height: 40, borderRadius: 12, background: 'rgba(255,140,0,0.14)', color: 'var(--rh-accent-dark)', display: 'grid', placeItems: 'center', marginBottom: '0.75rem' }}>
-                    <Ticket size={20} />
-                  </div>
-                  <strong style={{ display: 'block', fontSize: '0.98rem' }}>E-Boarding Pass QR</strong>
-                  <span style={{ fontSize: '0.8rem', color: 'var(--rh-text-2)' }}>Tiket digital siap scan kondektur</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => selectTab('onboard')}
-                  className="rh-card rh-card-interactive"
-                  style={{ padding: '1.25rem', textAlign: 'left', border: '1px solid var(--rh-border)', cursor: 'pointer', background: 'white' }}
-                >
-                  <div style={{ width: 40, height: 40, borderRadius: 12, background: 'rgba(168,50,50,0.14)', color: 'var(--rh-secondary)', display: 'grid', placeItems: 'center', marginBottom: '0.75rem' }}>
-                    <Utensils size={20} />
-                  </div>
-                  <strong style={{ display: 'block', fontSize: '0.98rem' }}>Pesan Makanan Onboard</strong>
-                  <span style={{ fontSize: '0.8rem', color: 'var(--rh-text-2)' }}>Kuliner hangat diantar ke kursi Anda</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => selectTab('account')}
-                  className="rh-card rh-card-interactive"
-                  style={{ padding: '1.25rem', textAlign: 'left', border: '1px solid var(--rh-border)', cursor: 'pointer', background: 'white' }}
-                >
-                  <div style={{ width: 40, height: 40, borderRadius: 12, background: 'rgba(16,185,129,0.14)', color: '#10B981', display: 'grid', placeItems: 'center', marginBottom: '0.75rem' }}>
-                    <ShieldCheck size={20} />
-                  </div>
-                  <strong style={{ display: 'block', fontSize: '0.98rem' }}>Verifikasi KTP</strong>
-                  <span style={{ fontSize: '0.8rem', color: 'var(--rh-text-2)' }}>Cek status akun dan validasi identitas</span>
-                </button>
-              </div>
 
               {/* Recent Bookings Overview Table */}
               <section className="rh-card">
@@ -570,7 +516,7 @@ function PassengerDashboardContent() {
                     <div style={{ textAlign: 'center', padding: '2rem 1rem', color: 'var(--rh-text-2)' }}>
                       <Train size={32} style={{ marginBottom: 8, color: 'var(--rh-primary)' }} />
                       <p>Belum ada tiket atau perjalanan yang dipesan.</p>
-                      <button type="button" onClick={() => selectTab('book')} className="rh-btn rh-btn-primary rh-btn-sm" style={{ marginTop: '0.5rem' }}>
+                      <button type="button" onClick={() => router.push('/trains')} className="rh-btn rh-btn-primary rh-btn-sm" style={{ marginTop: '0.5rem' }}>
                         Cari & Pesan Tiket
                       </button>
                     </div>
@@ -629,7 +575,7 @@ function PassengerDashboardContent() {
                     Tunjukkan kode QR tiket digital kepada petugas kondektur saat proses boarding dan pemeriksaan di atas kereta.
                   </p>
                 </div>
-                <button type="button" onClick={() => selectTab('book')} className="rh-btn rh-btn-primary rh-btn-sm">
+                <button type="button" onClick={() => router.push('/trains')} className="rh-btn rh-btn-primary rh-btn-sm">
                   <Train size={15} /> Pesan Tiket Baru
                 </button>
               </div>
@@ -639,7 +585,7 @@ function PassengerDashboardContent() {
                   <Ticket size={40} style={{ color: 'var(--rh-primary)', marginBottom: 12 }} />
                   <h3>Belum Ada Tiket</h3>
                   <p>Anda belum memiliki tiket aktif. Cari jadwal dan pilih kursi sekarang.</p>
-                  <button type="button" onClick={() => selectTab('book')} className="rh-btn rh-btn-primary" style={{ marginTop: '0.75rem' }}>
+                  <button type="button" onClick={() => router.push('/trains')} className="rh-btn rh-btn-primary" style={{ marginTop: '0.75rem' }}>
                     Cari Tiket Kereta
                   </button>
                 </div>
@@ -652,7 +598,7 @@ function PassengerDashboardContent() {
                     return (
                       <article key={booking.id} className="rh-card" style={{ overflow: 'hidden' }}>
                         <div style={{
-                          background: isPaid ? 'linear-gradient(135deg, #1A428A 0%, #12306A 100%)' : 'var(--rh-navy)',
+                          background: 'var(--rh-primary)',
                           color: 'white',
                           padding: '1.25rem',
                           display: 'flex',
@@ -698,7 +644,7 @@ function PassengerDashboardContent() {
                               </Link>
                               <button
                                 type="button"
-                                onClick={() => selectTab('journey')}
+                                onClick={() => selectTab('overview')}
                                 className="rh-btn rh-btn-ghost rh-btn-sm"
                               >
                                 <Radio size={14} /> Tracking Kereta
@@ -808,22 +754,8 @@ function PassengerDashboardContent() {
             </div>
           )}
 
-          {/* ════════════════════════════════════════════════
-              TAB 3: MY JOURNEY (LIVE TRACKING ALA GRAB)
-              ════════════════════════════════════════════════ */}
-          {activeTab === 'journey' && (
-            <div style={{ display: 'grid', gap: '1.25rem' }}>
-              {!activePaidBooking ? (
-                <section className="rh-card">
-                  <div className="rh-card-body" style={{ textAlign: 'center', padding: '2rem 1rem' }}>
-                    <Train size={34} aria-hidden="true" style={{ color: 'var(--rh-primary)', marginBottom: 8 }} />
-                    <h2 className="rh-h4">Belum ada perjalanan aktif</h2>
-                    <p style={{ color: 'var(--rh-text-2)' }}>Perjalanan yang sudah dibayar akan tampil di sini.</p>
-                    <button type="button" onClick={() => selectTab('book')} className="rh-btn rh-btn-primary">Cari tiket</button>
-                  </div>
-                </section>
-              ) : (
-                <>
+          {activeTab === 'overview' && activePaidBooking && (
+            <div id="trip-status" style={{ display: 'grid', gap: '1.25rem', scrollMarginTop: 112 }}>
                   <div className="passenger-journey-heading">
                     <div>
                       <span className="rh-badge rh-badge-primary">Status perjalanan</span>
@@ -839,7 +771,7 @@ function PassengerDashboardContent() {
                       <button type="button" onClick={handleShareJourney} className="rh-btn rh-btn-ghost rh-btn-sm">
                         <Share2 size={15} aria-hidden="true" /> Bagikan
                       </button>
-                      <button type="button" onClick={() => selectTab('onboard')} className="rh-btn rh-btn-primary rh-btn-sm">
+                      <button type="button" onClick={() => selectTab('services')} className="rh-btn rh-btn-primary rh-btn-sm">
                         <Utensils size={15} aria-hidden="true" /> Layanan kereta
                       </button>
                     </div>
@@ -878,105 +810,22 @@ function PassengerDashboardContent() {
                       </span>
                     </div>
                   </section>
-                </>
-              )}
             </div>
           )}
 
-          {/* ════════════════════════════════════════════════
-              TAB 4: BOOK TICKET
-              ════════════════════════════════════════════════ */}
-          {activeTab === 'book' && (
-            <div style={{ display: 'grid', gap: '1.5rem' }}>
+          {activeTab === 'services' && (
+            <div style={{ display: 'grid', gap: '1rem' }}>
               <div>
-                <h2 className="rh-h3" style={{ margin: 0 }}>Pencarian Jadwal & Pemesanan Tiket</h2>
+                <h2 className="rh-h3" style={{ margin: 0 }}>Layanan Perjalanan</h2>
                 <p style={{ margin: '0.25rem 0 0', color: 'var(--rh-text-2)', fontSize: '0.9rem' }}>
-                  Pilih stasiun asal, tujuan, tanggal keberangkatan, dan jumlah penumpang (hingga 6 orang sekaligus).
+                  Pesan makanan atau laporkan kendala perjalanan dari satu tempat.
                 </p>
               </div>
-
-              <div className="rh-search-card" style={{ boxShadow: 'var(--shadow-md)', border: '1px solid var(--rh-border)' }}>
-                <SearchWidget />
-              </div>
-
-              {/* Popular quick routes */}
-              <div className="rh-card" style={{ padding: '1.5rem' }}>
-                <h3 className="rh-h4" style={{ marginBottom: '1rem' }}>Rute Favorit Penumpang</h3>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 200px), 1fr))', gap: '0.85rem' }}>
-                  {[
-                    { from: 'GMR', to: 'SGU', name: 'Gambir → Surabaya', price: 'Rp 350.000' },
-                    { from: 'GMR', to: 'YK', name: 'Gambir → Yogyakarta', price: 'Rp 250.000' },
-                    { from: 'GMR', to: 'BD', name: 'Gambir → Bandung', price: 'Rp 150.000' },
-                    { from: 'BD', to: 'SLO', name: 'Bandung → Solo', price: 'Rp 195.000' },
-                  ].map(r => (
-                    <Link
-                      key={r.name}
-                      href={`/trains?from=${r.from}&to=${r.to}&date=${tomorrowDate}&pax=1`}
-                      className="rh-card rh-card-interactive"
-                      style={{ padding: '0.85rem 1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', textDecoration: 'none' }}
-                    >
-                      <div>
-                        <strong style={{ fontSize: '0.9rem', color: 'var(--rh-text)' }}>{r.name}</strong>
-                        <span style={{ display: 'block', fontSize: '0.78rem', color: 'var(--rh-primary)', fontWeight: 700 }}>{r.price}</span>
-                      </div>
-                      <ChevronRight size={16} color="var(--rh-text-3)" />
-                    </Link>
-                  ))}
-                </div>
-              </div>
+              {user && <PassengerServices userId={user.id} bookingId={activePaidBooking?.id} />}
             </div>
           )}
 
-          {/* ════════════════════════════════════════════════
-              TAB 5: ONBOARD SERVICES (RESTORASI MAKANAN & BANTUAN)
-              ════════════════════════════════════════════════ */}
-          {activeTab === 'onboard' && (
-            <div style={{ display: 'grid', gap: '1.5rem' }}>
-              <div>
-                <h2 className="rh-h3" style={{ margin: 0 }}>Layanan Restorasi & Makanan di Kereta</h2>
-                <p style={{ margin: '0.25rem 0 0', color: 'var(--rh-text-2)', fontSize: '0.9rem' }}>
-                  Pesan makanan hangat dan minuman khas kereta api. Petugas pramugari akan mengantarkan pesanan langsung ke nomor kursi Anda.
-                </p>
-              </div>
 
-              {user && (
-                <PassengerServices
-                  userId={user.id}
-                  bookingId={activePaidBooking?.id}
-                  showReports={false}
-                />
-              )}
-            </div>
-          )}
-
-          {/* ════════════════════════════════════════════════
-              TAB 6: MY REPORTS (LAPORAN KEHILANGAN & KENDALA)
-              ════════════════════════════════════════════════ */}
-          {activeTab === 'reports' && (
-            <div style={{ display: 'grid', gap: '1.5rem' }}>
-              <div>
-                <h2 className="rh-h3" style={{ margin: 0 }}>Pusat Bantuan & Laporan Barang Hilang (Lost & Found)</h2>
-                <p style={{ margin: '0.25rem 0 0', color: 'var(--rh-text-2)', fontSize: '0.9rem' }}>
-                  Laporkan barang tertinggal di gerbong kereta atau kendala layanan perjalanan. Petugas kondektur dan customer service akan menindaklanjuti.
-                </p>
-              </div>
-
-              {user && (
-                <PassengerServices
-                  userId={user.id}
-                  bookingId={activePaidBooking?.id}
-                  showReports={true}
-                />
-              )}
-            </div>
-          )}
-
-          {/* ════════════════════════════════════════════════
-              TAB 7: REWARDS & PENCAPAIAN
-              ════════════════════════════════════════════════ */}
-          {/* ════════════════════════════════════════════════
-              TAB 8: MY ACCOUNT & KTP VERIFICATION
-              ════════════════════════════════════════════════ */}
           {activeTab === 'account' && (
             <div style={{ display: 'grid', gap: '1.5rem', maxWidth: 800 }}>
               <div>

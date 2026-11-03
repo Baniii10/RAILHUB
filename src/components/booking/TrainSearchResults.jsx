@@ -243,7 +243,7 @@ export default function TrainSearchResults({ origin, destination, date, passenge
           ============================================================ */}
       <header
         style={{
-          background: 'linear-gradient(135deg, #1A428A 0%, #0F2552 100%)',
+          background: 'var(--rh-primary)',
           color: '#ffffff',
           borderRadius: 16,
           padding: '1.25rem 1.25rem',
@@ -330,13 +330,13 @@ export default function TrainSearchResults({ origin, destination, date, passenge
               borderTop: '1px solid rgba(255, 255, 255, 0.2)',
             }}
           >
-            <div style={{ background: '#ffffff', borderRadius: 14, padding: '1.25rem', color: '#1f2937' }}>
+            <div style={{ background: '#ffffff', borderRadius: 14, padding: '1.25rem', color: 'var(--rh-charcoal)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
                 <strong style={{ fontSize: '0.95rem', color: 'var(--rh-navy)' }}>Ubah Pencarian Tiket</strong>
                 <button
                   type="button"
                   onClick={() => setShowSearchModal(false)}
-                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#6b7280' }}
+                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--rh-text-3)' }}
                 >
                   <X size={18} />
                 </button>
@@ -594,8 +594,8 @@ export default function TrainSearchResults({ origin, destination, date, passenge
                             fontWeight: 700,
                             padding: '0.2rem 0.55rem',
                             borderRadius: 6,
-                            background: '#FFF1EE',
-                            color: '#E04A26',
+                            background: 'var(--rh-secondary-light)',
+                            color: 'var(--rh-secondary)',
                             border: '1px solid #FFD9D1',
                           }}
                         >
@@ -609,8 +609,8 @@ export default function TrainSearchResults({ origin, destination, date, passenge
                             fontWeight: 700,
                             padding: '0.2rem 0.55rem',
                             borderRadius: 6,
-                            background: '#FFF9E6',
-                            color: '#B45309',
+                            background: 'var(--rh-warning-light)',
+                            color: 'var(--rh-accent-dark)',
                             border: '1px solid #FDE68A',
                           }}
                         >
@@ -624,8 +624,8 @@ export default function TrainSearchResults({ origin, destination, date, passenge
                             fontWeight: 700,
                             padding: '0.2rem 0.55rem',
                             borderRadius: 6,
-                            background: '#EFF6FF',
-                            color: '#1D4ED8',
+                            background: 'var(--rh-primary-light)',
+                            color: 'var(--rh-primary)',
                             border: '1px solid #BFDBFE',
                           }}
                         >
@@ -639,8 +639,8 @@ export default function TrainSearchResults({ origin, destination, date, passenge
                             fontWeight: 700,
                             padding: '0.2rem 0.55rem',
                             borderRadius: 6,
-                            background: '#ECFDF5',
-                            color: '#047857',
+                            background: 'var(--rh-primary-light)',
+                            color: 'var(--rh-primary)',
                             border: '1px solid #A7F3D0',
                           }}
                         >

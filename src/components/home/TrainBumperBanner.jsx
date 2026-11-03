@@ -34,7 +34,7 @@ export default function TrainBumperBanner() {
           position: 'relative',
           textDecoration: 'none',
           boxShadow: '0 8px 24px rgba(10, 25, 47, 0.35)',
-          background: 'linear-gradient(135deg, #07152B 0%, #0F2552 45%, #1A428A 100%)',
+          background: 'linear-gradient(135deg, #1A428A 0%, #4F4F4F 100%)',
           border: '1px solid rgba(255, 255, 255, 0.12)',
         }}
       >
@@ -105,7 +105,7 @@ export default function TrainBumperBanner() {
 
             <linearGradient id="trainBodyGrad" x1="0" y1="0" x2="1" y2="0">
               <stop offset="0%" stopColor="#1A428A" />
-              <stop offset="60%" stopColor="#2A5CB5" />
+              <stop offset="60%" stopColor="#1A428A" />
               <stop offset="85%" stopColor="#E2E8F0" />
               <stop offset="100%" stopColor="#FF8C00" />
             </linearGradient>

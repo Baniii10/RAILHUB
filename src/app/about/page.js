@@ -219,7 +219,7 @@ export default function AboutPage() {
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
                     <div style={{
                       width: 48, height: 48, borderRadius: 14,
-                      background: 'linear-gradient(135deg, var(--rh-primary), hsl(215,90%,38%))',
+                      background: 'linear-gradient(135deg, var(--rh-primary), var(--rh-charcoal))',
                       color: 'white', display: 'grid', placeItems: 'center', fontWeight: 800, fontSize: '1.1rem',
                     }}>
                       {member.name[0]}
@@ -275,7 +275,7 @@ export default function AboutPage() {
             </div>
 
             <div className="rh-card" style={{ padding: '1.5rem', background: '#ffffff' }}>
-              <div style={{ width: 42, height: 42, borderRadius: 12, background: 'rgba(16, 185, 129, 0.1)', color: '#10B981', display: 'grid', placeItems: 'center', marginBottom: '1rem' }}>
+              <div style={{ width: 42, height: 42, borderRadius: 12, background: 'var(--rh-warning-light)', color: 'var(--rh-accent-dark)', display: 'grid', placeItems: 'center', marginBottom: '1rem' }}>
                 <CheckCircle2 size={22} />
               </div>
               <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--rh-navy)', marginBottom: '0.5rem' }}>
@@ -299,7 +299,7 @@ export default function AboutPage() {
             </div>
 
             <div className="rh-card" style={{ padding: '1.5rem', background: '#ffffff' }}>
-              <div style={{ width: 42, height: 42, borderRadius: 12, background: 'rgba(56, 189, 248, 0.1)', color: '#0284C7', display: 'grid', placeItems: 'center', marginBottom: '1rem' }}>
+              <div style={{ width: 42, height: 42, borderRadius: 12, background: 'var(--rh-primary-light)', color: 'var(--rh-primary)', display: 'grid', placeItems: 'center', marginBottom: '1rem' }}>
                 <Cpu size={22} />
               </div>
               <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--rh-navy)', marginBottom: '0.5rem' }}>
