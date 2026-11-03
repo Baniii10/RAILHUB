@@ -2,13 +2,16 @@ export const MISSING_SUPABASE_ENV_MESSAGE =
   'Konfigurasi Supabase belum diatur. Tambahkan NEXT_PUBLIC_SUPABASE_URL dan NEXT_PUBLIC_SUPABASE_ANON_KEY pada file .env.local.'
 
 export function getSupabaseEnv() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim() || ''
+  const url =
+    process.env.NEXT_PUBLIC_SUPABASE_URL?.trim() ||
+    'https://youqixjjsdhgmkzdjjck.supabase.co'
   const anonKey =
     (
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
       process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
       process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY
-    )?.trim() || ''
+    )?.trim() ||
+    'sb_publishable_SuiQ5-bcUKMUiqQWZpBT-Q_iYYLydQD'
 
   const hasValidUrl =
     (url.startsWith('https://') || url.startsWith('http://')) &&
