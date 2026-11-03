@@ -21,6 +21,7 @@
   --rh-surface: hsl(220, 15%, 97%);
   --rh-surface-2: hsl(220, 12%, 93%);
   --rh-border: hsl(220, 15%, 88%);
+  --rh-bg: hsl(220, 15%, 97%);
   --rh-text: #2B2B2B;
   --rh-text-2: #4F4F4F;
   --rh-text-3: #7A7A7A;
@@ -81,6 +82,7 @@ html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: clip;
 }
 
 body {
@@ -89,6 +91,8 @@ body {
   color: var(--rh-text);
   line-height: 1.6;
   min-height: 100vh;
+  overflow-x: clip;
+  width: 100%;
 }
 
 a {
@@ -96,9 +100,13 @@ a {
   text-decoration: none;
 }
 
-img {
+img, video, canvas, svg {
   max-width: 100%;
   height: auto;
+}
+
+fieldset {
+  min-width: 0;
 }
 
 /* ============================================================
@@ -124,7 +132,11 @@ img {
   width: 100%;
   max-width: 1280px;
   margin: 0 auto;
-  padding: 0 1.5rem;
+  padding: 0 1rem;
+}
+
+@media (min-width: 640px) {
+  .rh-container { padding: 0 1.5rem; }
 }
 
 @media (min-width: 768px) {
@@ -136,7 +148,13 @@ img {
 }
 
 .rh-section {
-  padding: 5rem 0;
+  padding: 3rem 0;
+}
+
+@media (min-width: 768px) {
+  .rh-section {
+    padding: 5rem 0;
+  }
 }
 
 /* ============================================================
@@ -174,6 +192,17 @@ img {
   padding: 1rem 1.5rem;
   background: var(--rh-surface);
   border-top: 1px solid var(--rh-border);
+}
+
+@media (max-width: 639px) {
+  .rh-card-body,
+  .rh-card-header {
+    padding: 1.15rem 1rem;
+  }
+
+  .rh-card-footer {
+    padding: 0.85rem 1rem;
+  }
 }
 
 /* ============================================================
@@ -552,6 +581,12 @@ img {
   overflow: hidden;
 }
 
+@media (max-width: 768px) {
+  .rh-hero {
+    padding: 2.75rem 0 3.5rem;
+  }
+}
+
 .rh-hero::before {
   content: '';
   position: absolute;
@@ -566,6 +601,118 @@ img {
   box-shadow: var(--shadow-xl);
   position: relative;
   z-index: 2;
+}
+
+@media (max-width: 640px) {
+  .rh-search-card {
+    padding: 1.15rem 1rem;
+    border-radius: var(--radius-lg);
+  }
+}
+
+/* Search widget responsive components */
+.rh-search-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  align-items: flex-end;
+}
+
+.rh-search-stations-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-end;
+  flex: 2 1 340px;
+  min-width: 0;
+  width: 100%;
+}
+
+.rh-search-swap-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: var(--rh-primary-light);
+  border: 2px solid #B5C3DE;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--rh-primary);
+  transition: all 0.2s;
+  margin-bottom: 2px;
+}
+
+.rh-search-swap-btn:hover {
+  background: var(--rh-primary);
+  color: white;
+}
+
+.rh-search-meta-row {
+  display: flex;
+  gap: 0.85rem;
+  flex: 1 1 280px;
+  min-width: 0;
+  width: 100%;
+}
+
+@media (max-width: 640px) {
+  .rh-search-stations-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.4rem;
+  }
+
+  .rh-search-swap-btn {
+    align-self: center;
+    margin: -0.35rem 0;
+    width: 36px;
+    height: 36px;
+    z-index: 2;
+  }
+
+  .rh-search-meta-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  .rh-search-submit-btn {
+    width: 100% !important;
+  }
+}
+
+/* Promo banner responsive */
+.rh-promo-banner {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 8 / 3;
+  min-height: 250px;
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  align-items: center;
+  padding: clamp(1.25rem, 3vw, 2.5rem);
+  gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .rh-promo-banner {
+    aspect-ratio: auto !important;
+    min-height: auto !important;
+    padding: 1.25rem 1rem !important;
+    border-radius: 18px;
+    grid-template-columns: 1fr !important;
+    gap: 1.25rem;
+  }
+
+  .rh-promo-attendant {
+    justify-self: stretch !important;
+    max-width: 100% !important;
+  }
 }
 
 /* ============================================================
@@ -602,6 +749,58 @@ img {
 
 .rh-train-result-actions {
   justify-content: flex-end;
+}
+
+.rh-train-route-mid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 55px;
+  max-width: 140px;
+  padding: 0 0.35rem;
+}
+
+.rh-train-route-duration {
+  font-size: 0.78rem;
+  color: var(--rh-text-3);
+  white-space: nowrap;
+}
+
+.rh-train-route-line {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 0.25rem;
+  color: var(--rh-primary);
+  margin-top: 0.2rem;
+}
+
+.rh-train-route-line-dash {
+  flex: 1;
+  height: 1.5px;
+  background: repeating-linear-gradient(90deg, var(--rh-border) 0 4px, transparent 4px 7px);
+}
+
+@media (max-width: 640px) {
+  .rh-train-result-actions {
+    width: 100%;
+    justify-content: space-between;
+    align-items: stretch;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .rh-train-result-buttons {
+    width: 100%;
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .rh-train-result-buttons .rh-btn {
+    flex: 1;
+    justify-content: center;
+  }
 }
 
 .rh-train-details-backdrop {
@@ -1480,6 +1679,7 @@ img {
 }
 .passenger-food-header {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
@@ -1487,7 +1687,7 @@ img {
 .passenger-food-header p { margin-bottom: 0; }
 .passenger-food-menu {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
   gap: .75rem;
 }
 .passenger-food-item {
@@ -1499,6 +1699,21 @@ img {
   border: 1px solid var(--rh-border);
   border-radius: 14px;
   background: white;
+}
+@media (max-width: 520px) {
+  .passenger-food-item {
+    flex-wrap: wrap;
+    gap: 0.65rem;
+  }
+  .passenger-food-item-details {
+    flex: 1 1 calc(100% - 60px);
+  }
+  .passenger-food-price {
+    margin-left: 54px;
+  }
+  .passenger-food-quantity {
+    margin-left: auto;
+  }
 }
 .passenger-food-item-icon {
   display: grid;
@@ -1712,6 +1927,7 @@ img {
 
 .rh-booking-steps {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 0.75rem;
   margin: 0 0 1rem;
@@ -1948,6 +2164,7 @@ img {
 
   .rh-booking-trip-heading {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: 0.75rem;
     padding-bottom: 1rem;
@@ -2106,6 +2323,10 @@ img {
   @media (max-width: 560px) {
     .rh-booking-trip-card {
       padding: 1rem;
+    }
+
+    .rh-booking-trip-heading .rh-badge {
+      margin-left: 0;
     }
 
     .rh-booking-trip-route {
@@ -2329,6 +2550,25 @@ img {
   font-weight: 700;
 }
 
+@media (max-width: 480px) {
+  .rh-seat-map {
+    min-width: 0;
+  }
+
+  .rh-seat-map-column-labels,
+  .rh-seat-map-row {
+    grid-template-columns: 22px repeat(2, 36px) 18px repeat(2, 36px);
+    gap: 0.35rem;
+  }
+
+  .rh-seat-map-seat,
+  .rh-seat-empty-cell {
+    width: 36px;
+    height: 36px;
+    font-size: 0.7rem;
+  }
+}
+
 .rh-seat-map-seat {
   cursor: pointer;
   transition: transform var(--transition-fast), background var(--transition-fast), box-shadow var(--transition-fast);
@@ -2410,9 +2650,91 @@ img {
 }
 
 @media (max-width: 768px) {
-  body { padding-bottom: 4.5rem; }
+  body {
+    padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
+  }
 }
 
+
+/* ============================================================
+   PASSENGER DASHBOARD RESPONSIVE ENHANCEMENTS
+   ============================================================ */
+.passenger-tabs-nav {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1.75rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.passenger-tabs-nav::-webkit-scrollbar {
+  display: none;
+}
+.passenger-tab-btn {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.passenger-track-labels {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.85rem;
+  font-size: 0.85rem;
+}
+.passenger-track-status-pill {
+  text-align: center;
+  color: var(--rh-accent);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+@media (max-width: 640px) {
+  .passenger-track-labels {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+  .passenger-track-status-pill {
+    grid-column: 1 / -1;
+    order: -1;
+    text-align: center;
+    background: rgba(255, 140, 0, 0.15);
+    border: 1px solid rgba(255, 140, 0, 0.3);
+    padding: 0.4rem 0.75rem;
+    border-radius: 999px;
+  }
+}
+
+.passenger-stop-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 14px;
+}
+.passenger-stop-times {
+  text-align: right;
+  flex-shrink: 0;
+}
+@media (max-width: 580px) {
+  .passenger-stop-item {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .passenger-stop-times {
+    width: 100%;
+    text-align: left;
+    margin-left: calc(32px + 0.75rem);
+    padding-top: 0.5rem;
+    border-top: 1px dashed var(--rh-border);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    font-size: 0.8rem;
+  }
+}
 
 /* ============================================================
    GATE SCANNER (petugas)

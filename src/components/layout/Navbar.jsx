@@ -300,7 +300,7 @@ export default function Navbar() {
                     className="rh-card animate-scale-in"
                     style={{
                       position: 'absolute', top: 'calc(100% + 8px)', right: 0,
-                      width: 310, zIndex: 'var(--z-dropdown)', padding: '0.75rem',
+                      width: 'min(320px, calc(100vw - 1.5rem))', zIndex: 'var(--z-dropdown)', padding: '0.75rem',
                     }}
                   >
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '0.5rem', marginBottom: '0.5rem', borderBottom: '1px solid var(--rh-border)' }}>
@@ -434,7 +434,7 @@ export default function Navbar() {
             className="animate-slide-right"
             style={{
               position: 'absolute', right: 0, top: 0, bottom: 0,
-              width: 280, background: 'var(--rh-white)',
+              width: 'min(300px, 85vw)', background: 'var(--rh-white)',
               padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.5rem',
               overflowY: 'auto',
             }}

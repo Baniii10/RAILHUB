@@ -371,13 +371,7 @@ function PassengerDashboardContent() {
             </div>
 
             {/* ── 8 MENU TABS NAVIGATION ── */}
-            <nav style={{
-              display: 'flex',
-              gap: '0.5rem',
-              marginTop: '1.75rem',
-              overflowX: 'auto',
-              paddingBottom: '0.35rem',
-            }} aria-label="Menu Dashboard Penumpang">
+            <nav className="passenger-tabs-nav" aria-label="Menu Dashboard Penumpang">
               {TABS.map(tab => {
                 const TabIcon = tab.icon
                 const isActive = activeTab === tab.id
@@ -386,7 +380,7 @@ function PassengerDashboardContent() {
                     key={tab.id}
                     type="button"
                     onClick={() => setActiveTab(tab.id)}
-                    className="rh-btn rh-btn-sm"
+                    className="rh-btn rh-btn-sm passenger-tab-btn"
                     style={{
                       background: isActive ? 'white' : 'rgba(255,255,255,0.12)',
                       color: isActive ? 'var(--rh-primary)' : 'white',
@@ -442,7 +436,7 @@ function PassengerDashboardContent() {
                       </span>
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1.5rem', alignItems: 'center' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))', gap: '1.5rem', alignItems: 'center' }}>
                       <div>
                         <h2 style={{ fontSize: '1.5rem', fontWeight: 800, margin: '0 0 0.25rem', color: 'white' }}>
                           {activePaidBooking.schedules?.trains?.name || 'KA Argo Bromo Anggrek'}
@@ -510,7 +504,7 @@ function PassengerDashboardContent() {
                             type="button"
                             onClick={() => setActiveTab('journey')}
                             className="rh-btn rh-btn-sm"
-                            style={{ background: 'var(--rh-accent)', color: '#0F2552', fontWeight: 800 }}
+                            style={{ background: 'var(--rh-accent)', color: '#0F2552', fontWeight: 800, flex: '1 1 140px' }}
                           >
                             <Radio size={14} /> Live Tracking Kereta
                           </button>
@@ -518,7 +512,7 @@ function PassengerDashboardContent() {
                             type="button"
                             onClick={() => setActiveTab('tickets')}
                             className="rh-btn rh-btn-sm"
-                            style={{ background: 'white', color: 'var(--rh-primary)', fontWeight: 800 }}
+                            style={{ background: 'white', color: 'var(--rh-primary)', fontWeight: 800, flex: '1 1 140px' }}
                           >
                             <QrCode size={14} /> QR E-Boarding Pass
                           </button>
@@ -526,7 +520,7 @@ function PassengerDashboardContent() {
                             type="button"
                             onClick={() => setActiveTab('onboard')}
                             className="rh-btn rh-btn-sm"
-                            style={{ background: 'rgba(255,255,255,0.18)', color: 'white', border: '1px solid rgba(255,255,255,0.3)' }}
+                            style={{ background: 'rgba(255,255,255,0.18)', color: 'white', border: '1px solid rgba(255,255,255,0.3)', flex: '1 1 140px' }}
                           >
                             <Utensils size={14} /> Pesan Makan
                           </button>
@@ -538,7 +532,7 @@ function PassengerDashboardContent() {
               )}
 
               {/* Quick Actions Bar */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 140px), 1fr))', gap: '1rem' }}>
                 <button
                   type="button"
                   onClick={() => setActiveTab('journey')}
@@ -750,7 +744,7 @@ function PassengerDashboardContent() {
                               <strong style={{ fontSize: '0.9rem', display: 'block', marginBottom: '0.75rem' }}>
                                 Tiket Digital Penumpang ({relatedTickets.length} orang):
                               </strong>
-                              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '0.85rem' }}>
+                              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 250px), 1fr))', gap: '0.85rem' }}>
                                 {relatedTickets.map((t, idx) => {
                                   const qrImage = qrCodes[t.ticket_number]
                                   return (
@@ -968,12 +962,12 @@ function PassengerDashboardContent() {
                   </div>
 
                   {/* Track end labels */}
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.85rem', fontSize: '0.85rem' }}>
+                  <div className="passenger-track-labels">
                     <div style={{ textAlign: 'left' }}>
                       <strong style={{ display: 'block' }}>Gambir (GMR)</strong>
                       <small style={{ color: 'rgba(255,255,255,0.7)' }}>Berangkat 08:00 WIB</small>
                     </div>
-                    <div style={{ textAlign: 'center', color: 'var(--rh-accent)', fontSize: '0.8rem' }}>
+                    <div className="passenger-track-status-pill">
                       <span>Sedang Berjalan di Antara Cirebon — Semarang</span>
                     </div>
                     <div style={{ textAlign: 'right' }}>
@@ -1035,12 +1029,7 @@ function PassengerDashboardContent() {
                       const isPassed = stop.status === 'passed'
                       const isCurrent = stop.status === 'current'
                       return (
-                        <div key={stop.name} style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '1rem',
-                          padding: '1rem',
-                          borderRadius: 14,
+                        <div key={stop.name} className="passenger-stop-item" style={{
                           background: isCurrent ? 'var(--rh-primary-light)' : 'white',
                           border: isCurrent ? '2px solid var(--rh-primary)' : '1px solid var(--rh-border)',
                           position: 'relative',
@@ -1083,14 +1072,14 @@ function PassengerDashboardContent() {
                           </div>
 
                           {/* Times */}
-                          <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                            <div style={{ fontSize: '0.85rem', color: 'var(--rh-text-2)' }}>
+                          <div className="passenger-stop-times">
+                            <div>
                               Datang: <strong style={{ color: 'var(--rh-text)' }}>{stop.arrival}</strong>
                             </div>
-                            <div style={{ fontSize: '0.85rem', color: 'var(--rh-text-2)' }}>
+                            <div>
                               Berangkat: <strong style={{ color: 'var(--rh-text)' }}>{stop.departure}</strong>
                             </div>
-                            <small style={{ fontSize: '0.72rem', color: 'var(--rh-text-3)' }}>Berhenti {stop.stop}</small>
+                            <small style={{ color: 'var(--rh-text-3)' }}>Berhenti {stop.stop}</small>
                           </div>
                         </div>
                       )
@@ -1108,7 +1097,7 @@ function PassengerDashboardContent() {
                   </p>
                 </div>
                 <div className="rh-card-body">
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.85rem' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 150px), 1fr))', gap: '0.85rem' }}>
                     {[
                       { icon: Wifi, title: 'WiFi Onboard Gratis', desc: 'Koneksi internet stabil sepanjang lintasan' },
                       { icon: Utensils, title: 'Bistro & Kereta Makan', desc: 'Pesan makanan dari tempat duduk Anda' },
@@ -1149,7 +1138,7 @@ function PassengerDashboardContent() {
               {/* Popular quick routes */}
               <div className="rh-card" style={{ padding: '1.5rem' }}>
                 <h3 className="rh-h4" style={{ marginBottom: '1rem' }}>Rute Favorit Penumpang</h3>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '0.85rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 200px), 1fr))', gap: '0.85rem' }}>
                   {[
                     { from: 'GMR', to: 'SGU', name: 'Gambir → Surabaya', price: 'Rp 350.000' },
                     { from: 'GMR', to: 'YK', name: 'Gambir → Yogyakarta', price: 'Rp 250.000' },

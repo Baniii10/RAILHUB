@@ -324,9 +324,9 @@ export default function BookingFlow({ scheduleId, requestedClass, passengerCount
                         </div>
                         <div className="rh-card-body" style={{ display: 'grid', gap: '1rem' }}>
                           {passengers.map((passenger, index) => (
-                            <fieldset key={index} style={{ border: '1px solid var(--rh-border)', borderRadius: 12, padding: '1rem' }}>
+                            <fieldset key={index} style={{ border: '1px solid var(--rh-border)', borderRadius: 12, padding: '1rem', minWidth: 0 }}>
                               <legend style={{ fontWeight: 700, padding: '0 0.4rem' }}>Penumpang {index + 1}</legend>
-                              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))', gap: '0.75rem' }}>
+                              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 180px), 1fr))', gap: '0.75rem' }}>
                                 <label className="rh-input-group">
                                   <span className="rh-label-text">Nama lengkap <span aria-hidden="true">*</span></span>
                                   <input

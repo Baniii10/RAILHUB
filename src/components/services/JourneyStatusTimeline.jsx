@@ -88,7 +88,7 @@ export default function JourneyStatusTimeline({ scheduleId }) {
                     <small style={{ display: 'flex', alignItems: 'center', gap: 5, color: 'var(--rh-text-2)' }}>
                       <Clock3 size={12} />{formatDate(update.created_at)} · {formatTime(update.created_at)}
                     </small>
-                    {update.note && <p style={{ margin: '0.25rem 0 0', whiteSpace: 'pre-wrap' }}>{update.note}</p>}
+                    {update.note && <p style={{ margin: '0.25rem 0 0', whiteSpace: 'pre-wrap', overflowWrap: 'anywhere' }}>{update.note}</p>}
                   </li>
                 ))}
               </ol>

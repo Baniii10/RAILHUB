@@ -57,12 +57,12 @@ function StationSelect({ label, value, onChange, exclude, placeholder, icon: Ico
       >
         <Icon size={16} style={{ color: selected ? 'var(--rh-primary)' : 'var(--rh-text-3)', flexShrink: 0 }} />
         {selected ? (
-          <div>
-            <div style={{ fontSize: '0.9375rem', fontWeight: 600, color: 'var(--rh-text)' }}>{selected.name}</div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--rh-text-3)' }}>{selected.city}</div>
+          <div style={{ minWidth: 0, flex: 1, overflow: 'hidden' }}>
+            <div style={{ fontSize: '0.9375rem', fontWeight: 600, color: 'var(--rh-text)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{selected.name}</div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--rh-text-3)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{selected.city}</div>
           </div>
         ) : (
-          <span style={{ fontSize: '0.9375rem', color: 'var(--rh-text-3)' }}>
+          <span style={{ fontSize: '0.9375rem', color: 'var(--rh-text-3)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
             {loading ? 'Memuat stasiun...' : placeholder}
           </span>
         )}
@@ -210,14 +210,9 @@ export default function SearchWidget({ compact = false }) {
 
   return (
     <form onSubmit={handleSearch}>
-      <div style={{
-        display: 'flex',
-        flexWrap: 'wrap',
-        gap: '1rem',
-        alignItems: 'flex-end',
-      }}>
+      <div className="rh-search-grid">
         {/* Origin + Swap + Destination */}
-        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-end', flex: '2 1 340px', minWidth: 0 }}>
+        <div className="rh-search-stations-row">
           <StationSelect
             label={t.hero.origin}
             value={origin}
@@ -233,15 +228,7 @@ export default function SearchWidget({ compact = false }) {
             type="button"
             onClick={handleSwap}
             title={t.hero.swap}
-            style={{
-              width: 40, height: 40, borderRadius: '50%', flexShrink: 0,
-              background: 'var(--rh-primary-light)', border: '2px solid #B5C3DE',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              cursor: 'pointer', color: 'var(--rh-primary)',
-              transition: 'all 0.2s', marginBottom: 2,
-            }}
-            onMouseEnter={e => { e.currentTarget.style.background = 'var(--rh-primary)'; e.currentTarget.style.color = 'white' }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'var(--rh-primary-light)'; e.currentTarget.style.color = 'var(--rh-primary)' }}
+            className="rh-search-swap-btn"
           >
             <ArrowLeftRight size={16} />
           </button>
@@ -258,49 +245,52 @@ export default function SearchWidget({ compact = false }) {
           />
         </div>
 
-        {/* Date */}
-        <div style={{ flex: '1 1 160px', minWidth: 140 }}>
-          <label style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--rh-text-3)', letterSpacing: '0.06em', textTransform: 'uppercase', display: 'block', marginBottom: '0.375rem' }}>
-            {t.hero.date}
-          </label>
-          <div style={{ position: 'relative' }}>
-            <Calendar size={16} style={{ position: 'absolute', left: '0.875rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--rh-primary)', pointerEvents: 'none' }} />
-            <input
-              type="date"
-              value={date}
-              onChange={e => setDate(e.target.value)}
-              className="rh-input"
-              style={{ paddingLeft: '2.5rem' }}
-            />
+        {/* Date + Passengers row for seamless mobile scaling */}
+        <div className="rh-search-meta-row">
+          {/* Date */}
+          <div style={{ flex: '1 1 140px', minWidth: 0 }}>
+            <label style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--rh-text-3)', letterSpacing: '0.06em', textTransform: 'uppercase', display: 'block', marginBottom: '0.375rem' }}>
+              {t.hero.date}
+            </label>
+            <div style={{ position: 'relative' }}>
+              <Calendar size={16} style={{ position: 'absolute', left: '0.875rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--rh-primary)', pointerEvents: 'none' }} />
+              <input
+                type="date"
+                value={date}
+                onChange={e => setDate(e.target.value)}
+                className="rh-input"
+                style={{ paddingLeft: '2.5rem', width: '100%' }}
+              />
+            </div>
           </div>
-        </div>
 
-        {/* Passengers */}
-        <div style={{ flex: '1 1 120px', minWidth: 100 }}>
-          <label style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--rh-text-3)', letterSpacing: '0.06em', textTransform: 'uppercase', display: 'block', marginBottom: '0.375rem' }}>
-            {t.hero.passengers}
-          </label>
-          <div style={{ position: 'relative' }}>
-            <Users size={16} style={{ position: 'absolute', left: '0.875rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--rh-primary)', pointerEvents: 'none' }} />
-            <input
-              type="number"
-              min={1}
-              max={6}
-              value={passengers}
-              onChange={e => setPassengers(Math.max(1, Math.min(6, parseInt(e.target.value) || 1)))}
-              className="rh-input"
-              style={{ paddingLeft: '2.5rem' }}
-            />
+          {/* Passengers */}
+          <div style={{ flex: '1 1 100px', minWidth: 0 }}>
+            <label style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--rh-text-3)', letterSpacing: '0.06em', textTransform: 'uppercase', display: 'block', marginBottom: '0.375rem' }}>
+              {t.hero.passengers}
+            </label>
+            <div style={{ position: 'relative' }}>
+              <Users size={16} style={{ position: 'absolute', left: '0.875rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--rh-primary)', pointerEvents: 'none' }} />
+              <input
+                type="number"
+                min={1}
+                max={6}
+                value={passengers}
+                onChange={e => setPassengers(Math.max(1, Math.min(6, parseInt(e.target.value) || 1)))}
+                className="rh-input"
+                style={{ paddingLeft: '2.5rem', width: '100%' }}
+              />
+            </div>
           </div>
         </div>
 
         {/* Search Button */}
-        <div style={{ flex: '0 0 auto', paddingBottom: 2 }}>
+        <div style={{ flex: '1 0 100%', maxWidth: '100%' }}>
           <button
             type="submit"
-            className="rh-btn rh-btn-primary rh-btn-lg"
+            className="rh-btn rh-btn-primary rh-btn-lg rh-search-submit-btn"
             disabled={loading || stationsLoading || !date}
-            style={{ height: 50, paddingInline: '2rem', gap: '0.5rem', minWidth: 160 }}
+            style={{ height: 50, paddingInline: '2rem', gap: '0.5rem', width: '100%' }}
           >
             {loading ? (
               <span className="rh-spinner rh-spinner-sm" style={{ borderTopColor: 'white', borderColor: 'rgba(255,255,255,0.3)' }} />

@@ -222,7 +222,7 @@ export default function HomePage() {
         <main className="rh-container" style={{ minHeight: '70vh', padding: '2.5rem 1.5rem' }} aria-busy="true" aria-live="polite">
           <div style={{ display: 'grid', gap: '1.25rem' }}>
             <div className="rh-skeleton" style={{ height: 260, borderRadius: 20 }} />
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))', gap: '1rem' }}>
               <div className="rh-skeleton" style={{ height: 140, borderRadius: 16 }} />
               <div className="rh-skeleton" style={{ height: 140, borderRadius: 16 }} />
               <div className="rh-skeleton" style={{ height: 140, borderRadius: 16 }} />
@@ -274,7 +274,7 @@ export default function HomePage() {
         }} />
 
         <div className="rh-container" style={{ position: 'relative', zIndex: 1 }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(310px, 1fr))', gap: '3rem', alignItems: 'center' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 310px), 1fr))', gap: 'clamp(1.5rem, 4vw, 3rem)', alignItems: 'center' }}>
             {/* Left: Headlines */}
             <div className="animate-fade-in">
               <div className="rh-badge" style={{
@@ -331,7 +331,7 @@ export default function HomePage() {
       {/* ── KAI APP / RAILHUB MOBILE REFERENCE QUICK SERVICES & LIVE TRACKING ── */}
       <section style={{ background: 'var(--rh-surface)', padding: '1.75rem 0', borderBottom: '1px solid var(--rh-border)' }}>
         <div className="rh-container">
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.25rem', alignItems: 'stretch' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: '1.25rem', alignItems: 'stretch' }}>
             {/* Left: RailPay & RailPoints Wallet Card (KAI Pay mockup from Reference Image 2) */}
             <div className="rh-card" style={{
               background: 'linear-gradient(135deg, #1A428A 0%, #12306A 100%)',
@@ -342,7 +342,7 @@ export default function HomePage() {
               justifyContent: 'space-between',
               boxShadow: 'var(--shadow-md)',
             }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '0.75rem' }}>
                 <div>
                   <span style={{ fontSize: '0.72rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'rgba(255,255,255,0.75)' }}>
                     Dompet Digital Kereta Api
@@ -436,8 +436,8 @@ export default function HomePage() {
           {/* Quick Service Category Icons (Access by KAI layout: Antar Kota, Lokal, Komuter, LRT, Bandara) */}
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))',
-            gap: '0.85rem',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 120px), 1fr))',
+            gap: '0.75rem',
             marginTop: '1.25rem',
           }}>
             {[
@@ -524,21 +524,9 @@ export default function HomePage() {
           </div>
 
           <div
+            className="rh-promo-banner"
             style={{
-              position: 'relative',
-              width: '100%',
-              aspectRatio: '8 / 3',
-              minHeight: 250,
-              borderRadius: 22,
-              overflow: 'hidden',
               background: activePromo.gradient,
-              color: 'white',
-              boxShadow: 'var(--shadow-lg)',
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-              alignItems: 'center',
-              padding: 'clamp(1.25rem, 3vw, 2.5rem)',
-              gap: '1.5rem',
             }}
           >
             <div style={{ zIndex: 2, display: 'grid', gap: '0.75rem' }}>
@@ -583,19 +571,23 @@ export default function HomePage() {
             </div>
 
             {/* Right visual: Pramugari / Hospitality Crew Card */}
-            <div style={{
-              zIndex: 2,
-              justifySelf: 'end',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '1rem',
-              background: 'rgba(255,255,255,0.12)',
-              backdropFilter: 'blur(10px)',
-              border: '1px solid rgba(255,255,255,0.22)',
-              borderRadius: 18,
-              padding: '1rem 1.25rem',
-              maxWidth: 340,
-            }}>
+            <div
+              className="rh-promo-attendant"
+              style={{
+                zIndex: 2,
+                justifySelf: 'end',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '1rem',
+                background: 'rgba(255,255,255,0.12)',
+                backdropFilter: 'blur(10px)',
+                border: '1px solid rgba(255,255,255,0.22)',
+                borderRadius: 18,
+                padding: '1rem 1.25rem',
+                maxWidth: 340,
+                width: '100%',
+              }}
+            >
               <div style={{
                 width: 68,
                 height: 68,
@@ -657,7 +649,7 @@ export default function HomePage() {
             title="Destinasi Favorit Penumpang"
             centered
           />
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))', gap: '1rem' }}>
             {POPULAR_ROUTES.map((route, i) => (
               <Link
                 key={i}
@@ -700,7 +692,7 @@ export default function HomePage() {
             title="Kereta Unggulan & Detail Fasilitas Kabin"
             centered
           />
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '1.15rem', marginBottom: '1.5rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 200px), 1fr))', gap: '1.15rem', marginBottom: '1.5rem' }}>
             {TRAINS.map((train) => {
               const isSelected = selectedTrain.number === train.number
               return (
@@ -745,14 +737,14 @@ export default function HomePage() {
           <div className="rh-card" style={{ overflow: 'hidden' }}>
             <div style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))',
               gap: '1.5rem',
-              padding: '1.5rem',
+              padding: 'clamp(1rem, 3vw, 1.5rem)',
               alignItems: 'center',
             }}>
               <div style={{
                 borderRadius: 16,
-                padding: '2rem 1.5rem',
+                padding: 'clamp(1.25rem, 3vw, 2rem)',
                 background: 'linear-gradient(135deg, var(--rh-navy) 0%, #16346F 100%)',
                 color: 'white',
                 display: 'grid',
@@ -782,7 +774,7 @@ export default function HomePage() {
 
               <div style={{ display: 'grid', gap: '0.85rem' }}>
                 <strong style={{ fontSize: '1.05rem' }}>Fasilitas Unggulan {selectedTrain.name}:</strong>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))', gap: '0.6rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 190px), 1fr))', gap: '0.6rem' }}>
                   {selectedTrain.facilities.map(fac => (
                     <div key={fac} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.6rem 0.85rem', borderRadius: 10, background: 'var(--rh-surface)', fontWeight: 600, fontSize: '0.875rem' }}>
                       <CheckCircle size={16} style={{ color: 'var(--rh-success)', flexShrink: 0 }} />
@@ -809,7 +801,7 @@ export default function HomePage() {
             title="Suasana Kabin & Pengalaman Perjalanan"
             centered
           />
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.25rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 250px), 1fr))', gap: '1.25rem' }}>
             {GALLERY_ITEMS.map(({ tag, title, caption, icon: Icon, tone }) => (
               <article key={title} className="rh-card" style={{ overflow: 'hidden' }}>
                 <div style={{
@@ -851,7 +843,7 @@ export default function HomePage() {
             </div>
             <h2 className="rh-h2" style={{ color: 'white', maxWidth: 500, margin: '0 auto' }}>Pengalaman Perjalanan yang Berbeda</h2>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '1.5rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 220px), 1fr))', gap: '1.5rem' }}>
             {FEATURES.map(({ icon: Icon, title, desc }) => (
               <div key={title} style={{
                 padding: '1.75rem',
@@ -882,7 +874,7 @@ export default function HomePage() {
             title="Apa Kata Penumpang?"
             centered
           />
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))', gap: '1.5rem' }}>
             {TESTIMONIALS.map(({ name, city, rating, text }) => (
               <div key={name} className="rh-card rh-card-interactive">
                 <div className="rh-card-body">

@@ -106,17 +106,17 @@ function TrainDetailsDialog({ row, date, onClose, closeButtonRef }) {
         </div>
 
         <div className="rh-train-details-route">
-          <div>
+          <div style={{ minWidth: 0, overflowWrap: 'anywhere' }}>
             <span className="rh-train-details-label">Berangkat</span>
             <strong>{formatTime(row.departure_time)}</strong>
-            <span>{row.origin_name}</span>
+            <span style={{ fontWeight: 650 }}>{row.origin_name}</span>
             <small>{row.origin_code} · {row.origin_city || 'Indonesia'}</small>
           </div>
           <div className="rh-train-details-route-line" aria-hidden="true">→</div>
-          <div>
+          <div style={{ minWidth: 0, overflowWrap: 'anywhere' }}>
             <span className="rh-train-details-label">Tiba</span>
             <strong>{formatTime(row.arrival_time)}</strong>
-            <span>{row.destination_name}</span>
+            <span style={{ fontWeight: 650 }}>{row.destination_name}</span>
             <small>{row.destination_code} · {row.destination_city || 'Indonesia'}</small>
           </div>
         </div>
@@ -271,9 +271,9 @@ export default function TrainSearchResults({ origin, destination, date, passenge
 
       <div className="rh-card" style={{ marginBottom: '1rem' }}>
         <div className="rh-card-body" style={{
-          display: 'flex', flexWrap: 'wrap', gap: '1rem', alignItems: 'end',
+          display: 'flex', flexWrap: 'wrap', gap: '0.75rem', alignItems: 'end',
         }}>
-          <label style={{ display: 'grid', gap: '0.375rem', minWidth: 190 }}>
+          <label style={{ display: 'grid', gap: '0.375rem', flex: '1 1 160px', minWidth: 'min(100%, 160px)' }}>
             <span className="rh-label-text">Urutkan berdasarkan</span>
             <select className="rh-input" value={sort} onChange={event => setSort(event.target.value)}>
               <option value="departure">Waktu keberangkatan</option>
@@ -281,7 +281,7 @@ export default function TrainSearchResults({ origin, destination, date, passenge
               <option value="duration">Durasi tercepat</option>
             </select>
           </label>
-          <label style={{ display: 'grid', gap: '0.375rem', minWidth: 190 }}>
+          <label style={{ display: 'grid', gap: '0.375rem', flex: '1 1 160px', minWidth: 'min(100%, 160px)' }}>
             <span className="rh-label-text">Kelas kereta</span>
             <select className="rh-input" value={classFilter} onChange={event => setClassFilter(event.target.value)}>
               <option value="all">Semua kelas</option>
@@ -290,7 +290,7 @@ export default function TrainSearchResults({ origin, destination, date, passenge
               ))}
             </select>
           </label>
-          <span aria-live="polite" style={{ marginLeft: 'auto', color: 'var(--rh-text-2)', fontSize: '0.9rem' }}>
+          <span aria-live="polite" style={{ marginLeft: 'auto', color: 'var(--rh-text-2)', fontSize: '0.85rem', width: '100%', textAlign: 'right' }}>
             {loading ? 'Memuat jadwal...' : `${filteredRows.length} pilihan kelas tersedia`}
           </span>
         </div>
@@ -318,7 +318,7 @@ export default function TrainSearchResults({ origin, destination, date, passenge
         {filteredRows.map(row => (
           <article key={`${row.schedule_id}-${row.carriage_class}`} className="rh-card">
             <div className="rh-card-body" style={{ display: 'grid', gap: '1.25rem' }}>
-              <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+              <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
                 <div className="rh-logo-mark"><Train size={18} /></div>
                 <div>
                   <h2 style={{ fontSize: '1.05rem', fontWeight: 700, margin: 0 }}>{row.train_name}</h2>
@@ -332,39 +332,42 @@ export default function TrainSearchResults({ origin, destination, date, passenge
               </div>
 
               <div style={{
-                display: 'grid', gridTemplateColumns: '1fr auto 1fr', gap: '1rem', alignItems: 'center',
+                display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) auto minmax(0, 1fr)', gap: '0.75rem', alignItems: 'center',
               }}>
-                <div>
-                  <strong style={{ display: 'block', fontSize: '1.25rem' }}>{formatTime(row.departure_time)}</strong>
-                  <span style={{ fontWeight: 600 }}>{row.origin_name}</span>
-                  <small style={{ display: 'block', color: 'var(--rh-text-3)' }}>{row.origin_code} · {row.origin_city || 'Indonesia'}</small>
+                <div style={{ minWidth: 0 }}>
+                  <strong style={{ display: 'block', fontSize: '1.25rem', overflowWrap: 'anywhere' }}>{formatTime(row.departure_time)}</strong>
+                  <span style={{ fontWeight: 600, display: 'block', overflowWrap: 'anywhere', fontSize: '0.92rem' }}>{row.origin_name}</span>
+                  <small style={{ display: 'block', color: 'var(--rh-text-3)', overflowWrap: 'anywhere' }}>{row.origin_code} · {row.origin_city || 'Indonesia'}</small>
                 </div>
-                <div style={{ textAlign: 'center', color: 'var(--rh-text-3)', minWidth: 95 }}>
-                  <span style={{ display: 'block', fontSize: '0.8125rem' }}>
+                <div className="rh-train-route-mid">
+                  <span className="rh-train-route-duration">
                     {formatDuration(row.departure_time, row.arrival_time)}
                   </span>
-                  <span aria-hidden="true">────────</span>
-                  <span style={{ display: 'block' }}><MapPin size={14} style={{ verticalAlign: 'middle' }} /></span>
+                  <div className="rh-train-route-line" aria-hidden="true">
+                    <span className="rh-train-route-line-dash" />
+                    <MapPin size={13} style={{ flexShrink: 0 }} />
+                    <span className="rh-train-route-line-dash" />
+                  </div>
                 </div>
-                <div style={{ textAlign: 'right' }}>
-                  <strong style={{ display: 'block', fontSize: '1.25rem' }}>{formatTime(row.arrival_time)}</strong>
-                  <span style={{ fontWeight: 600 }}>{row.destination_name}</span>
-                  <small style={{ display: 'block', color: 'var(--rh-text-3)' }}>{row.destination_code} · {row.destination_city || 'Indonesia'}</small>
+                <div style={{ textAlign: 'right', minWidth: 0 }}>
+                  <strong style={{ display: 'block', fontSize: '1.25rem', overflowWrap: 'anywhere' }}>{formatTime(row.arrival_time)}</strong>
+                  <span style={{ fontWeight: 600, display: 'block', overflowWrap: 'anywhere', fontSize: '0.92rem' }}>{row.destination_name}</span>
+                  <small style={{ display: 'block', color: 'var(--rh-text-3)', overflowWrap: 'anywhere' }}>{row.destination_code} · {row.destination_city || 'Indonesia'}</small>
                 </div>
               </div>
 
               <div style={{
                 borderTop: '1px solid var(--rh-border)', paddingTop: '1rem',
                 display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between',
-                gap: '1rem', alignItems: 'center',
+                gap: '0.75rem 1rem', alignItems: 'center',
               }}>
-                <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', color: 'var(--rh-text-2)', fontSize: '0.875rem' }}>
+                <div style={{ display: 'flex', gap: '0.75rem 1.25rem', flexWrap: 'wrap', color: 'var(--rh-text-2)', fontSize: '0.85rem' }}>
                   <span><Clock3 size={15} style={{ verticalAlign: 'middle', marginRight: 4 }} /> {row.distance_km ? `${row.distance_km} km` : 'Perjalanan antarkota'}</span>
                   <span><Users size={15} style={{ verticalAlign: 'middle', marginRight: 4 }} /> {row.available_seats} kursi tersedia</span>
                 </div>
                 <div className="rh-train-result-actions">
-                  <div style={{ textAlign: 'right' }}>
-                    <small style={{ display: 'block', color: 'var(--rh-text-3)' }}>Mulai dari / penumpang</small>
+                  <div className="rh-train-result-price">
+                    <small style={{ display: 'block', color: 'var(--rh-text-3)' }}>Mulai dari / orang</small>
                     <strong style={{ color: 'var(--rh-primary)', fontSize: '1.2rem' }}>{formatIDR(row.price)}</strong>
                   </div>
                   <div className="rh-train-result-buttons">

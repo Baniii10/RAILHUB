@@ -400,11 +400,11 @@ export default function BookingPayment({ bookingId }) {
             <>
               <section className="rh-card" style={{ marginBottom: '1rem' }}>
                 <div className="rh-card-body" style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', alignItems: 'center' }}>
-                  <div style={{ flex: 1 }}>
+                  <div style={{ flex: '1 1 180px', minWidth: 0 }}>
                     <span style={{ color: 'var(--rh-text-2)', fontSize: '0.875rem' }}>Kode booking</span>
                     <strong className="rh-mono" style={{ display: 'block', fontSize: '1.15rem' }}>{booking.booking_code}</strong>
                   </div>
-                  <div style={{ textAlign: 'right' }}>
+                  <div style={{ minWidth: 0, textAlign: 'right' }}>
                     <span style={{ color: 'var(--rh-text-2)', fontSize: '0.875rem' }}>Total pembayaran</span>
                     <strong style={{ display: 'block', color: 'var(--rh-primary)', fontSize: '1.25rem' }}>{formatIDR(booking.total_amount)}</strong>
                   </div>
@@ -673,12 +673,12 @@ export default function BookingPayment({ bookingId }) {
                               {qrCodes[ticket.ticket_number]
                                 ? <Image src={qrCodes[ticket.ticket_number]} alt={`QR e-boarding pass ${ticket.ticket_number}`} width={168} height={168} unoptimized />
                                 : <div aria-label="Membuat QR e-boarding pass" style={{ width: 168, height: 168, display: 'grid', placeItems: 'center' }}><Ticket size={24} /></div>}
-                              <div>
+                              <div style={{ minWidth: 0, flex: '1 1 180px' }}>
                                 <strong>E-boarding pass</strong>
-                                <span style={{ display: 'block', color: 'var(--rh-text-2)', marginTop: '.25rem' }}>
+                                <span style={{ display: 'block', color: 'var(--rh-text-2)', marginTop: '.25rem', overflowWrap: 'anywhere' }}>
                                   {journey?.schedule?.train_name} · {journey?.schedule?.origin_code} → {journey?.schedule?.destination_code}
                                 </span>
-                                <span style={{ display: 'block', color: 'var(--rh-text-2)' }}>
+                                <span style={{ display: 'block', color: 'var(--rh-text-2)', overflowWrap: 'anywhere' }}>
                                   {booking.schedules?.departure_time && formatDate(booking.schedules.departure_time)} · {booking.schedules?.departure_time && formatTime(booking.schedules.departure_time)}
                                 </span>
                               </div>
