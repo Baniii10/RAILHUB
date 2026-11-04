@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { TrainFront, Calendar, ArrowUpDown, ChevronDown, Search, X, Check, Plus, Minus } from 'lucide-react'
+import { TrainFront, Calendar, ArrowUpDown, ChevronDown, Search, X, Check, Plus, Minus, ArrowLeft } from 'lucide-react'
 import { useLang } from '@/contexts/LangContext'
 import { createClient } from '@/lib/supabase/client'
 import { STATIONS_CATALOG } from '@/lib/data/stationsCatalog'
@@ -155,6 +155,9 @@ export default function SearchWidget({ compact = false }) {
   }
 
   function handleSelectStation(code) {
+    if (typeof document !== 'undefined' && document.activeElement) {
+      document.activeElement.blur()
+    }
     if (activePicker === 'origin') {
       setOrigin(code)
       if (destination === code) setDestination('')
@@ -539,11 +542,17 @@ export default function SearchWidget({ compact = false }) {
               </div>
               <button
                 type="button"
-                onClick={() => setActivePicker(null)}
+                onClick={() => {
+                  if (typeof document !== 'undefined' && document.activeElement) {
+                    document.activeElement.blur()
+                  }
+                  setActivePicker(null)
+                }}
                 className="rh-station-modal-close"
                 aria-label="Tutup"
               >
-                <X size={20} />
+                <ArrowLeft size={20} className="rh-show-mobile-only" />
+                <X size={20} className="rh-hide-mobile" />
               </button>
             </div>
 
@@ -555,14 +564,35 @@ export default function SearchWidget({ compact = false }) {
                 type="search"
                 value={stationQuery}
                 onChange={e => setStationQuery(e.target.value)}
-                onFocus={e => {
-                  setTimeout(() => {
-                    e.target.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
-                  }, 120)
-                }}
                 placeholder={lang === 'en' ? 'Search station name, city, or code...' : 'Cari nama stasiun, kota, atau kode (misal: PSE, Gambir)...'}
                 className="rh-station-modal-input"
+                style={{ paddingRight: stationQuery ? '2.5rem' : '1rem' }}
               />
+              {stationQuery && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setStationQuery('')
+                    searchInputRef.current?.focus()
+                  }}
+                  style={{
+                    position: 'absolute',
+                    right: '1.75rem',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    background: 'none',
+                    border: 'none',
+                    color: '#94a3b8',
+                    cursor: 'pointer',
+                    padding: '4px',
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
+                  aria-label="Hapus kata kunci"
+                >
+                  <X size={16} />
+                </button>
+              )}
             </div>
 
             {/* Quick Popular Pills */}

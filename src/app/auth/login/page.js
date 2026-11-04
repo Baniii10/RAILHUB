@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { Train, Mail, Lock, Eye, EyeOff, AlertCircle, Send } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useLang } from '@/contexts/LangContext'
+import TrainBumperBanner from '@/components/home/TrainBumperBanner'
 import toast from 'react-hot-toast'
 
 function GoogleIcon({ size = 18 }) {
@@ -165,6 +166,11 @@ export default function LoginPage() {
           <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.9375rem' }}>
             {lang === 'en' ? 'Integrated Railway Platform for Java' : 'Platform Kereta Api Terpadu Pulau Jawa'}
           </p>
+        </div>
+
+        {/* Cinematic Train Bumper Banner */}
+        <div style={{ marginBottom: '1.25rem' }}>
+          <TrainBumperBanner />
         </div>
 
         {/* Card */}

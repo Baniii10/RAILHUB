@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { Train, Mail, Lock, Eye, EyeOff, User, Phone, AlertCircle, CheckCircle, Send, ArrowRight } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useLang } from '@/contexts/LangContext'
+import TrainBumperBanner from '@/components/home/TrainBumperBanner'
 import toast from 'react-hot-toast'
 
 function GoogleIcon({ size = 18 }) {
@@ -167,6 +168,11 @@ export default function RegisterPage() {
             <div className="rh-logo-mark"><Train size={20} strokeWidth={2.5} /></div>
             <span style={{ fontSize: '1.5rem' }}>RAILHUB</span>
           </Link>
+        </div>
+
+        {/* Cinematic Train Bumper Banner */}
+        <div style={{ marginBottom: '1.25rem' }}>
+          <TrainBumperBanner />
         </div>
 
         <div className="rh-card">
