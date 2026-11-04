@@ -39,6 +39,7 @@ import toast from 'react-hot-toast'
 import Navbar from '@/components/layout/Navbar'
 import EBoardingPass from '@/components/booking/EBoardingPass'
 import PassengerServices from '@/components/services/PassengerServices'
+import LiveJourneyMapTracker from '@/components/journey/LiveJourneyMapTracker'
 import { useAuth } from '@/contexts/AuthContext'
 import { createClient } from '@/lib/supabase/client'
 import { formatDate, formatIDR, formatTime } from '@/lib/utils/formatters'
@@ -378,128 +379,18 @@ function PassengerDashboardContent() {
           )}
 
           {/* ════════════════════════════════════════════════
-              TAB 1: OVERVIEW
+              TAB 1: OVERVIEW (PELACAKAN PERJALANAN AKTIF)
               ════════════════════════════════════════════════ */}
           {activeTab === 'overview' && (
             <div style={{ display: 'grid', gap: '1.75rem' }}>
-              {/* Upcoming journey */}
-              {activePaidBooking && (
-                <section className="rh-card" style={{
-                  background: 'var(--rh-primary)',
-                  color: 'white',
-                  borderRadius: 20,
-                  overflow: 'hidden',
-                  boxShadow: 'var(--shadow-xl)',
-                  border: '1px solid rgba(255,255,255,0.15)',
-                }}>
-                  <div style={{ padding: 'clamp(1.25rem, 3vw, 2rem)' }}>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
-                      <span style={{
-                        background: 'rgba(255,255,255,0.18)', padding: '0.3rem 0.8rem', borderRadius: 999,
-                        fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--rh-accent)'
-                      }}>
-                        Perjalanan Aktif Terdekat
-                      </span>
-                      <span className="rh-mono" style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.9)' }}>
-                        Kode Booking: <strong>{activePaidBooking.booking_code}</strong>
-                      </span>
-                    </div>
-
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))', gap: '1.5rem', alignItems: 'center' }}>
-                      <div>
-                        <h2 style={{ fontSize: '1.5rem', fontWeight: 800, margin: '0 0 0.25rem', color: 'white' }}>
-                          {activePaidBooking.schedules?.trains?.name || 'Kereta Anda'}
-                        </h2>
-                        <span style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.85)' }}>
-                          {activePaidBooking.schedules?.trains?.train_number || 'Nomor belum tersedia'} · {activePaidBooking.schedules?.routes?.name || 'Rute belum tersedia'}
-                        </span>
-
-                        <div style={{ display: 'flex', gap: '1.5rem', marginTop: '1.25rem', flexWrap: 'wrap' }}>
-                          <div>
-                            <small style={{ display: 'block', fontSize: '0.72rem', color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase' }}>Status Jadwal</small>
-                            <strong style={{ fontSize: '1.1rem', color: 'var(--rh-accent)', textTransform: 'capitalize' }}>{activePaidBooking.schedules?.status || 'Terjadwal'}</strong>
-                          </div>
-                          <div>
-                            <small style={{ display: 'block', fontSize: '0.72rem', color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase' }}>Gerbong & Kursi</small>
-                            <strong style={{ fontSize: '1.1rem', color: 'white' }}>
-                              {activeTicket ? `${activeTicket.seats?.carriages?.carriage_class || 'Kelas'} ${activeTicket.seats?.carriages?.carriage_number || ''} · ${activeTicket.seats?.seat_number || '—'}` : 'Lihat tiket'}
-                            </strong>
-                          </div>
-                          <div>
-                            <small style={{ display: 'block', fontSize: '0.72rem', color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase' }}>Keberangkatan</small>
-                            <strong style={{ fontSize: '1.1rem', color: 'white' }}>
-                              {activePaidBooking.schedules?.departure_time ? formatTime(activePaidBooking.schedules.departure_time) : 'Belum tersedia'}
-                            </strong>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Departure countdown */}
-                      <div style={{
-                        background: 'rgba(0,0,0,0.25)',
-                        borderRadius: 16,
-                        padding: '1.25rem',
-                        border: '1px solid rgba(255,255,255,0.15)',
-                        textAlign: 'center',
-                      }}>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, fontSize: '0.8rem', color: 'var(--rh-accent)', fontWeight: 800, marginBottom: '0.5rem' }}>
-                          <Clock3 size={16} /> HITUNG MUNDUR KEBERANGKATAN
-                        </div>
-                        {countdown.isDeparted ? (
-                          <div style={{ padding: '0.5rem 0' }}>
-                            <span className="rh-badge rh-badge-success" style={{ fontSize: '0.9rem', padding: '0.4rem 1rem' }}>
-                              Kereta Telah Berangkat / Sedang Berjalan
-                            </span>
-                          </div>
-                        ) : (
-                          <div style={{ display: 'flex', justifyContent: 'center', gap: '0.75rem', margin: '0.5rem 0' }}>
-                            <div>
-                              <div style={{ fontSize: '1.75rem', fontWeight: 900, fontFamily: 'var(--font-mono)' }}>{String(countdown.hours).padStart(2, '0')}</div>
-                              <small style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.7)' }}>JAM</small>
-                            </div>
-                            <div style={{ fontSize: '1.5rem', fontWeight: 700 }}>:</div>
-                            <div>
-                              <div style={{ fontSize: '1.75rem', fontWeight: 900, fontFamily: 'var(--font-mono)' }}>{String(countdown.minutes).padStart(2, '0')}</div>
-                              <small style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.7)' }}>MENIT</small>
-                            </div>
-                            <div style={{ fontSize: '1.5rem', fontWeight: 700 }}>:</div>
-                            <div>
-                              <div style={{ fontSize: '1.75rem', fontWeight: 900, fontFamily: 'var(--font-mono)', color: 'var(--rh-accent)' }}>{String(countdown.seconds).padStart(2, '0')}</div>
-                              <small style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.7)' }}>DETIK</small>
-                            </div>
-                          </div>
-                        )}
-
-                        <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', marginTop: '1rem', flexWrap: 'wrap' }}>
-                          <a
-                            href="#trip-status"
-                            className="rh-btn rh-btn-sm"
-                            style={{ background: 'var(--rh-accent)', color: 'var(--rh-charcoal)', fontWeight: 800, flex: '1 1 140px' }}
-                          >
-                            <Radio size={14} /> Status Perjalanan
-                          </a>
-                          <button
-                            type="button"
-                            onClick={() => selectTab('tickets')}
-                            className="rh-btn rh-btn-sm"
-                            style={{ background: 'white', color: 'var(--rh-primary)', fontWeight: 800, flex: '1 1 140px' }}
-                          >
-                            <QrCode size={14} /> QR E-Boarding Pass
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => selectTab('services')}
-                            className="rh-btn rh-btn-sm"
-                            style={{ background: 'rgba(255,255,255,0.18)', color: 'white', border: '1px solid rgba(255,255,255,0.3)', flex: '1 1 140px' }}
-                          >
-                            <Utensils size={14} /> Pesan Makan
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </section>
-              )}
+              {/* Interactive Transit Progress Map & Draggable Bottom Sheet */}
+              <LiveJourneyMapTracker
+                booking={activePaidBooking}
+                ticket={activeTicket}
+                countdown={countdown}
+                journeyProgress={journeyProgress}
+                onSelectTab={selectTab}
+              />
 
               {/* Recent Bookings Overview Table */}
               <section className="rh-card">

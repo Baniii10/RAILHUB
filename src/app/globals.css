@@ -1985,6 +1985,31 @@ input[type="checkbox"]:focus-visible {
   }
 }
 
+/* Live Journey Tracker (GoSend/Tokopedia Inspired Interactive Transit Map + Draggable Sheet) */
+.rh-live-tracker-viewport {
+  position: relative;
+  width: 100%;
+  height: calc(100vh - 140px);
+  min-height: 580px;
+  max-height: 860px;
+  border-radius: 24px;
+  overflow: hidden;
+  background: #0b1329;
+}
+
+@media (max-width: 640px) {
+  .rh-live-tracker-viewport {
+    height: calc(100dvh - 120px);
+    min-height: 520px;
+    border-radius: 18px;
+  }
+}
+
+.rh-tracker-bottom-sheet {
+  touch-action: pan-y;
+  overscroll-behavior-y: contain;
+}
+
 /* Minimalist Footer container styling (safe mobile bottom nav clearance, zero white gap) */
 .rh-footer-container {
   padding-top: 1.75rem;
