@@ -1232,6 +1232,17 @@ input[type="checkbox"]:focus-visible {
   min-width: 0;
 }
 
+.rh-detail-date-trigger {
+  align-self: stretch;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  appearance: none;
+}
+
 .rh-detail-val-bold {
   font-size: 0.98rem;
   font-weight: 700;
@@ -1240,13 +1251,11 @@ input[type="checkbox"]:focus-visible {
 }
 
 .rh-detail-hidden-date-input {
-  position: absolute;
-  inset: 0;
+  position: fixed;
+  width: 1px;
+  height: 1px;
   opacity: 0;
-  width: 100%;
-  height: 100%;
-  cursor: pointer;
-  z-index: 2;
+  pointer-events: none;
 }
 
 .rh-detail-toggle-col {

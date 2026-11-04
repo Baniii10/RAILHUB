@@ -92,6 +92,19 @@ export default function SearchWidget({ compact = false }) {
   const searchInputRef = useRef(null)
   const passengerRef = useRef(null)
 
+  function openDatePicker(inputRef) {
+    const input = inputRef.current
+    if (!input) return
+
+    if (typeof input.showPicker === 'function') {
+      input.showPicker()
+      return
+    }
+
+    input.focus()
+    input.click()
+  }
+
   useEffect(() => {
     setMounted(true)
   }, [])
@@ -313,7 +326,12 @@ export default function SearchWidget({ compact = false }) {
         <div className="rh-detail-box rh-detail-box-date">
           <div className="rh-detail-date-row">
             {/* Left: Date Display & Native Picker Trigger */}
-            <div className="rh-detail-date-col">
+            <button
+              type="button"
+              className="rh-detail-date-col rh-detail-date-trigger"
+              onClick={() => openDatePicker(dateInputRef)}
+              aria-label={lang === 'en' ? 'Select departure date' : 'Pilih tanggal keberangkatan'}
+            >
               <Calendar size={20} className="rh-detail-icon" />
               <div className="rh-detail-text-col">
                 <span className="rh-detail-label">
@@ -323,21 +341,22 @@ export default function SearchWidget({ compact = false }) {
                   {formatDisplayDate(date, lang)}
                 </span>
               </div>
-              <input
-                ref={dateInputRef}
-                type="date"
-                value={date}
-                min={formatLocalDate(new Date())}
-                onChange={e => {
-                  setDate(e.target.value)
-                  if (isRoundTrip && returnDate < e.target.value) {
-                    setReturnDate(e.target.value)
-                  }
-                }}
-                className="rh-detail-hidden-date-input"
-                aria-label={lang === 'en' ? 'Select departure date' : 'Pilih tanggal keberangkatan'}
-              />
-            </div>
+            </button>
+            <input
+              ref={dateInputRef}
+              type="date"
+              value={date}
+              min={formatLocalDate(new Date())}
+              onChange={e => {
+                setDate(e.target.value)
+                if (isRoundTrip && returnDate < e.target.value) {
+                  setReturnDate(e.target.value)
+                }
+              }}
+              className="rh-detail-hidden-date-input"
+              tabIndex={-1}
+              aria-hidden="true"
+            />
 
             {/* Right: Round Trip Toggle */}
             <div className="rh-detail-toggle-col">
@@ -363,7 +382,13 @@ export default function SearchWidget({ compact = false }) {
           {/* Optional Return Date Row when Round Trip is active */}
           {isRoundTrip && (
             <div className="rh-detail-return-row">
-              <div className="rh-detail-date-col" style={{ flex: 1 }}>
+              <button
+                type="button"
+                className="rh-detail-date-col rh-detail-date-trigger"
+                style={{ flex: 1 }}
+                onClick={() => openDatePicker(returnDateInputRef)}
+                aria-label={lang === 'en' ? 'Select return date' : 'Pilih tanggal pulang'}
+              >
                 <Calendar size={20} style={{ color: 'var(--rh-primary)' }} />
                 <div className="rh-detail-text-col">
                   <span className="rh-detail-label" style={{ color: 'var(--rh-primary)', fontWeight: 600 }}>
@@ -373,16 +398,17 @@ export default function SearchWidget({ compact = false }) {
                     {formatDisplayDate(returnDate, lang)}
                   </span>
                 </div>
-                <input
-                  ref={returnDateInputRef}
-                  type="date"
-                  value={returnDate}
-                  min={date || formatLocalDate(new Date())}
-                  onChange={e => setReturnDate(e.target.value)}
-                  className="rh-detail-hidden-date-input"
-                  aria-label={lang === 'en' ? 'Select return date' : 'Pilih tanggal pulang'}
-                />
-              </div>
+              </button>
+              <input
+                ref={returnDateInputRef}
+                type="date"
+                value={returnDate}
+                min={date || formatLocalDate(new Date())}
+                onChange={e => setReturnDate(e.target.value)}
+                className="rh-detail-hidden-date-input"
+                tabIndex={-1}
+                aria-hidden="true"
+              />
             </div>
           )}
         </div>
