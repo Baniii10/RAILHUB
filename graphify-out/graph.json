@@ -1273,8 +1273,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agent_skills_impeccable_scripts_live_browser_cursorforinsertaxis",
-      "community": 6,
-      "community_name": ".agent/skills/impeccable/scripts/live-browser.js",
+      "community": 79,
+      "community_name": "initGlobalBar",
       "norm_label": "cursorforinsertaxis()"
     },
     {
@@ -1429,8 +1429,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agent_skills_impeccable_scripts_live_browser_setpageinteractioncursor",
-      "community": 6,
-      "community_name": ".agent/skills/impeccable/scripts/live-browser.js",
+      "community": 79,
+      "community_name": "initGlobalBar",
       "norm_label": "setpageinteractioncursor()"
     },
     {
@@ -1441,8 +1441,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agent_skills_impeccable_scripts_live_browser_syncpageinteractioncursor",
-      "community": 6,
-      "community_name": ".agent/skills/impeccable/scripts/live-browser.js",
+      "community": 79,
+      "community_name": "initGlobalBar",
       "norm_label": "syncpageinteractioncursor()"
     },
     {
@@ -3649,8 +3649,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agent_skills_impeccable_scripts_live_browser_stripsvelteblockregions",
-      "community": 6,
-      "community_name": ".agent/skills/impeccable/scripts/live-browser.js",
+      "community": 184,
+      "community_name": "resolveLiveInjectionAnchor",
       "norm_label": "stripsvelteblockregions()"
     },
     {
@@ -3661,8 +3661,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agent_skills_impeccable_scripts_live_browser_stripsveltekeydelimiters",
-      "community": 6,
-      "community_name": ".agent/skills/impeccable/scripts/live-browser.js",
+      "community": 184,
+      "community_name": "resolveLiveInjectionAnchor",
       "norm_label": "stripsveltekeydelimiters()"
     },
     {
@@ -3805,8 +3805,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agent_skills_impeccable_scripts_live_browser_showmounterrorcard",
-      "community": 24,
-      "community_name": "connectSSE",
+      "community": 59,
+      "community_name": "showToast",
       "norm_label": "showmounterrorcard()"
     },
     {
@@ -3865,8 +3865,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agent_skills_impeccable_scripts_live_browser_abortsveltecomponentinjection",
-      "community": 24,
-      "community_name": "connectSSE",
+      "community": 59,
+      "community_name": "showToast",
       "norm_label": "abortsveltecomponentinjection()"
     },
     {
@@ -3973,8 +3973,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agent_skills_impeccable_scripts_live_browser_expressiontextmatcher",
-      "community": 6,
-      "community_name": ".agent/skills/impeccable/scripts/live-browser.js",
+      "community": 184,
+      "community_name": "resolveLiveInjectionAnchor",
       "norm_label": "expressiontextmatcher()"
     },
     {
@@ -4009,8 +4009,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agent_skills_impeccable_scripts_live_browser_escaperegexp",
-      "community": 6,
-      "community_name": ".agent/skills/impeccable/scripts/live-browser.js",
+      "community": 184,
+      "community_name": "resolveLiveInjectionAnchor",
       "norm_label": "escaperegexp()"
     },
     {
@@ -4117,8 +4117,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agent_skills_impeccable_scripts_live_browser_removevariantstatestylesheet",
-      "community": 24,
-      "community_name": "connectSSE",
+      "community": 59,
+      "community_name": "showToast",
       "norm_label": "removevariantstatestylesheet()"
     },
     {
@@ -4129,8 +4129,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agent_skills_impeccable_scripts_live_browser_discardstatestyleid",
-      "community": 59,
-      "community_name": "showToast",
+      "community": 6,
+      "community_name": ".agent/skills/impeccable/scripts/live-browser.js",
       "norm_label": "discardstatestyleid()"
     },
     {
@@ -4141,8 +4141,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agent_skills_impeccable_scripts_live_browser_showoriginalduringdiscard",
-      "community": 59,
-      "community_name": "showToast",
+      "community": 6,
+      "community_name": ".agent/skills/impeccable/scripts/live-browser.js",
       "norm_label": "showoriginalduringdiscard()"
     },
     {
@@ -4153,8 +4153,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agent_skills_impeccable_scripts_live_browser_removediscardstatestylesheet",
-      "community": 59,
-      "community_name": "showToast",
+      "community": 6,
+      "community_name": ".agent/skills/impeccable/scripts/live-browser.js",
       "norm_label": "removediscardstatestylesheet()"
     },
     {
@@ -4165,8 +4165,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agent_skills_impeccable_scripts_live_browser_discardedwrappers",
-      "community": 59,
-      "community_name": "showToast",
+      "community": 6,
+      "community_name": ".agent/skills/impeccable/scripts/live-browser.js",
       "norm_label": "discardedwrappers()"
     },
     {
@@ -4177,8 +4177,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agent_skills_impeccable_scripts_live_browser_releasediscardedstaticwrapper",
-      "community": 59,
-      "community_name": "showToast",
+      "community": 6,
+      "community_name": ".agent/skills/impeccable/scripts/live-browser.js",
       "norm_label": "releasediscardedstaticwrapper()"
     },
     {
@@ -4189,8 +4189,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agent_skills_impeccable_scripts_live_browser_releasediscardedstaticwrappers",
-      "community": 59,
-      "community_name": "showToast",
+      "community": 6,
+      "community_name": ".agent/skills/impeccable/scripts/live-browser.js",
       "norm_label": "releasediscardedstaticwrappers()"
     },
     {
@@ -4201,8 +4201,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agent_skills_impeccable_scripts_live_browser_watchfordiscardedframeworkwrapperremoval",
-      "community": 59,
-      "community_name": "showToast",
+      "community": 6,
+      "community_name": ".agent/skills/impeccable/scripts/live-browser.js",
       "norm_label": "watchfordiscardedframeworkwrapperremoval()"
     },
     {
@@ -5713,8 +5713,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agent_skills_impeccable_scripts_live_browser_pagechatcollapsedwidthpx",
-      "community": 79,
-      "community_name": "initGlobalBar",
+      "community": 63,
+      "community_name": "initPageChat",
       "norm_label": "pagechatcollapsedwidthpx()"
     },
     {
@@ -5725,8 +5725,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agent_skills_impeccable_scripts_live_browser_pagechatexpandedwidth",
-      "community": 79,
-      "community_name": "initGlobalBar",
+      "community": 63,
+      "community_name": "initPageChat",
       "norm_label": "pagechatexpandedwidth()"
     },
     {
@@ -5737,8 +5737,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agent_skills_impeccable_scripts_live_browser_syncpagechatexpandedwidth",
-      "community": 79,
-      "community_name": "initGlobalBar",
+      "community": 63,
+      "community_name": "initPageChat",
       "norm_label": "syncpagechatexpandedwidth()"
     },
     {
@@ -8614,8 +8614,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_normalizemanualcontexttext",
-      "community": 16,
-      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
+      "community": 148,
+      "community_name": "normalizeManualContextText",
       "norm_label": "normalizemanualcontexttext()"
     },
     {
@@ -9214,8 +9214,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_cursorforplaceholderedge",
-      "community": 16,
-      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
+      "community": 53,
+      "community_name": "buildInsertConfigureRow",
       "norm_label": "cursorforplaceholderedge()"
     },
     {
@@ -9382,8 +9382,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_findinsertanchorindom",
-      "community": 25,
-      "community_name": "connectSSE",
+      "community": 16,
+      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
       "norm_label": "findinsertanchorindom()"
     },
     {
@@ -9442,8 +9442,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_buildplaceholderresizehandles",
-      "community": 16,
-      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
+      "community": 53,
+      "community_name": "buildInsertConfigureRow",
       "norm_label": "buildplaceholderresizehandles()"
     },
     {
@@ -10174,8 +10174,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_documentrefsegment",
-      "community": 16,
-      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
+      "community": 148,
+      "community_name": "normalizeManualContextText",
       "norm_label": "documentrefsegment()"
     },
     {
@@ -10186,8 +10186,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_documentrefidsuffix",
-      "community": 16,
-      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
+      "community": 148,
+      "community_name": "normalizeManualContextText",
       "norm_label": "documentrefidsuffix()"
     },
     {
@@ -10198,8 +10198,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_documentrefclasssuffix",
-      "community": 16,
-      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
+      "community": 148,
+      "community_name": "normalizeManualContextText",
       "norm_label": "documentrefclasssuffix()"
     },
     {
@@ -10210,8 +10210,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_normalizedocumentreftoken",
-      "community": 16,
-      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
+      "community": 148,
+      "community_name": "normalizeManualContextText",
       "norm_label": "normalizedocumentreftoken()"
     },
     {
@@ -10222,8 +10222,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_indexamongsametag",
-      "community": 16,
-      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
+      "community": 148,
+      "community_name": "normalizeManualContextText",
       "norm_label": "indexamongsametag()"
     },
     {
@@ -10246,8 +10246,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_nearbyeditabletextsformanualedit",
-      "community": 16,
-      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
+      "community": 148,
+      "community_name": "normalizeManualContextText",
       "norm_label": "nearbyeditabletextsformanualedit()"
     },
     {
@@ -10570,8 +10570,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_onpendingtrashclick",
-      "community": 16,
-      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
+      "community": 148,
+      "community_name": "normalizeManualContextText",
       "norm_label": "onpendingtrashclick()"
     },
     {
@@ -10666,8 +10666,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_restorediscardedmanualedits",
-      "community": 16,
-      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
+      "community": 148,
+      "community_name": "normalizeManualContextText",
       "norm_label": "restorediscardedmanualedits()"
     },
     {
@@ -10678,8 +10678,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_canrestoremanualeditelement",
-      "community": 16,
-      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
+      "community": 148,
+      "community_name": "normalizeManualContextText",
       "norm_label": "canrestoremanualeditelement()"
     },
     {
@@ -10690,8 +10690,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_mixedtextwraprestorehint",
-      "community": 16,
-      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
+      "community": 148,
+      "community_name": "normalizeManualContextText",
       "norm_label": "mixedtextwraprestorehint()"
     },
     {
@@ -10702,8 +10702,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_restoremixedtextnodemanualedit",
-      "community": 16,
-      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
+      "community": 148,
+      "community_name": "normalizeManualContextText",
       "norm_label": "restoremixedtextnodemanualedit()"
     },
     {
@@ -10714,8 +10714,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_directmixedtextrestorenodes",
-      "community": 16,
-      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
+      "community": 148,
+      "community_name": "normalizeManualContextText",
       "norm_label": "directmixedtextrestorenodes()"
     },
     {
@@ -10726,8 +10726,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_findmanualeditrestoreelement",
-      "community": 16,
-      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
+      "community": 148,
+      "community_name": "normalizeManualContextText",
       "norm_label": "findmanualeditrestoreelement()"
     },
     {
@@ -10738,8 +10738,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_querymanualeditref",
-      "community": 16,
-      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
+      "community": 148,
+      "community_name": "normalizeManualContextText",
       "norm_label": "querymanualeditref()"
     },
     {
@@ -10750,8 +10750,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_parsemanualeditrefsegment",
-      "community": 16,
-      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
+      "community": 148,
+      "community_name": "normalizeManualContextText",
       "norm_label": "parsemanualeditrefsegment()"
     },
     {
@@ -10762,8 +10762,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_elementmatchesmanualrefsegment",
-      "community": 16,
-      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
+      "community": 148,
+      "community_name": "normalizeManualContextText",
       "norm_label": "elementmatchesmanualrefsegment()"
     },
     {
@@ -10774,8 +10774,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_cssident",
-      "community": 16,
-      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
+      "community": 148,
+      "community_name": "normalizeManualContextText",
       "norm_label": "cssident()"
     },
     {
@@ -11146,8 +11146,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_parseoriginalmarkupelement",
-      "community": 158,
-      "community_name": "resolveLiveInjectionAnchor",
+      "community": 16,
+      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
       "norm_label": "parseoriginalmarkupelement()"
     },
     {
@@ -11158,8 +11158,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_normalizeelementclassname",
-      "community": 158,
-      "community_name": "resolveLiveInjectionAnchor",
+      "community": 16,
+      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
       "norm_label": "normalizeelementclassname()"
     },
     {
@@ -11182,8 +11182,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_isusableinjectionanchor",
-      "community": 158,
-      "community_name": "resolveLiveInjectionAnchor",
+      "community": 16,
+      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
       "norm_label": "isusableinjectionanchor()"
     },
     {
@@ -11194,8 +11194,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_elementmatchesoriginalmarkup",
-      "community": 158,
-      "community_name": "resolveLiveInjectionAnchor",
+      "community": 16,
+      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
       "norm_label": "elementmatchesoriginalmarkup()"
     },
     {
@@ -11206,8 +11206,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_findliveelementfromanchorsnapshot",
-      "community": 158,
-      "community_name": "resolveLiveInjectionAnchor",
+      "community": 16,
+      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
       "norm_label": "findliveelementfromanchorsnapshot()"
     },
     {
@@ -11218,8 +11218,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_findliveelementfororiginalmarkup",
-      "community": 158,
-      "community_name": "resolveLiveInjectionAnchor",
+      "community": 16,
+      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
       "norm_label": "findliveelementfororiginalmarkup()"
     },
     {
@@ -11230,8 +11230,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_resolveliveinjectionanchor",
-      "community": 158,
-      "community_name": "resolveLiveInjectionAnchor",
+      "community": 16,
+      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
       "norm_label": "resolveliveinjectionanchor()"
     },
     {
@@ -11242,8 +11242,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_issvelteinsertmanifest",
-      "community": 25,
-      "community_name": "connectSSE",
+      "community": 16,
+      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
       "norm_label": "issvelteinsertmanifest()"
     },
     {
@@ -11254,8 +11254,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_findliveelementforsveltemanifest",
-      "community": 25,
-      "community_name": "connectSSE",
+      "community": 16,
+      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
       "norm_label": "findliveelementforsveltemanifest()"
     },
     {
@@ -11290,8 +11290,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_detectdevserverbase",
-      "community": 60,
-      "community_name": "showToast",
+      "community": 16,
+      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
       "norm_label": "detectdevserverbase()"
     },
     {
@@ -11302,8 +11302,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_componentmodulecandidates",
-      "community": 60,
-      "community_name": "showToast",
+      "community": 16,
+      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
       "norm_label": "componentmodulecandidates()"
     },
     {
@@ -11314,8 +11314,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_importfirstreachable",
-      "community": 60,
-      "community_name": "showToast",
+      "community": 16,
+      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
       "norm_label": "importfirstreachable()"
     },
     {
@@ -11326,8 +11326,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_probepreviewtree",
-      "community": 60,
-      "community_name": "showToast",
+      "community": 16,
+      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
       "norm_label": "probepreviewtree()"
     },
     {
@@ -11338,8 +11338,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_loadsvelteruntime",
-      "community": 60,
-      "community_name": "showToast",
+      "community": 16,
+      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
       "norm_label": "loadsvelteruntime()"
     },
     {
@@ -11362,8 +11362,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_removesveltecomponentvariantstyle",
-      "community": 60,
-      "community_name": "showToast",
+      "community": 16,
+      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
       "norm_label": "removesveltecomponentvariantstyle()"
     },
     {
@@ -11446,8 +11446,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_buildsveltepropvaluesfromliveelement",
-      "community": 158,
-      "community_name": "resolveLiveInjectionAnchor",
+      "community": 16,
+      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
       "norm_label": "buildsveltepropvaluesfromliveelement()"
     },
     {
@@ -11458,8 +11458,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_buildsveltepropvaluesv2",
-      "community": 158,
-      "community_name": "resolveLiveInjectionAnchor",
+      "community": 16,
+      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
       "norm_label": "buildsveltepropvaluesv2()"
     },
     {
@@ -11470,8 +11470,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_cssescapeident",
-      "community": 158,
-      "community_name": "resolveLiveInjectionAnchor",
+      "community": 16,
+      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
       "norm_label": "cssescapeident()"
     },
     {
@@ -11482,8 +11482,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_collectvisibletexts",
-      "community": 158,
-      "community_name": "resolveLiveInjectionAnchor",
+      "community": 16,
+      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
       "norm_label": "collectvisibletexts()"
     },
     {
@@ -11494,8 +11494,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_stripsvelteblockregions",
-      "community": 158,
-      "community_name": "resolveLiveInjectionAnchor",
+      "community": 16,
+      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
       "norm_label": "stripsvelteblockregions()"
     },
     {
@@ -11506,8 +11506,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_stripsveltekeydelimiters",
-      "community": 158,
-      "community_name": "resolveLiveInjectionAnchor",
+      "community": 16,
+      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
       "norm_label": "stripsveltekeydelimiters()"
     },
     {
@@ -11518,8 +11518,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_clonewithoutelements",
-      "community": 158,
-      "community_name": "resolveLiveInjectionAnchor",
+      "community": 16,
+      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
       "norm_label": "clonewithoutelements()"
     },
     {
@@ -11530,8 +11530,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_mountsveltecomponentvariant",
-      "community": 60,
-      "community_name": "showToast",
+      "community": 16,
+      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
       "norm_label": "mountsveltecomponentvariant()"
     },
     {
@@ -11542,8 +11542,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_describemountfailure",
-      "community": 60,
-      "community_name": "showToast",
+      "community": 16,
+      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
       "norm_label": "describemountfailure()"
     },
     {
@@ -11554,8 +11554,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_teardownsveltecomponentsession",
-      "community": 60,
-      "community_name": "showToast",
+      "community": 25,
+      "community_name": "connectSSE",
       "norm_label": "teardownsveltecomponentsession()"
     },
     {
@@ -11566,8 +11566,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_applyoriginalattrstosvelteanchor",
-      "community": 60,
-      "community_name": "showToast",
+      "community": 16,
+      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
       "norm_label": "applyoriginalattrstosvelteanchor()"
     },
     {
@@ -11578,8 +11578,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_commitacceptedsveltecomponenttodom",
-      "community": 60,
-      "community_name": "showToast",
+      "community": 16,
+      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
       "norm_label": "commitacceptedsveltecomponenttodom()"
     },
     {
@@ -11602,8 +11602,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_waitforsveltecomponenttargetandretry",
-      "community": 25,
-      "community_name": "connectSSE",
+      "community": 16,
+      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
       "norm_label": "waitforsveltecomponenttargetandretry()"
     },
     {
@@ -11614,8 +11614,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_reportvariantmounted",
-      "community": 60,
-      "community_name": "showToast",
+      "community": 16,
+      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
       "norm_label": "reportvariantmounted()"
     },
     {
@@ -11626,8 +11626,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_reportvariantmountfailed",
-      "community": 60,
-      "community_name": "showToast",
+      "community": 16,
+      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
       "norm_label": "reportvariantmountfailed()"
     },
     {
@@ -11806,8 +11806,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_buildsvelteexpressiontextmap",
-      "community": 158,
-      "community_name": "resolveLiveInjectionAnchor",
+      "community": 16,
+      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
       "norm_label": "buildsvelteexpressiontextmap()"
     },
     {
@@ -11818,8 +11818,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_expressiontextmatcher",
-      "community": 158,
-      "community_name": "resolveLiveInjectionAnchor",
+      "community": 16,
+      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
       "norm_label": "expressiontextmatcher()"
     },
     {
@@ -11830,8 +11830,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_collecttextnodes",
-      "community": 158,
-      "community_name": "resolveLiveInjectionAnchor",
+      "community": 16,
+      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
       "norm_label": "collecttextnodes()"
     },
     {
@@ -11842,8 +11842,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_normalizepreviewtext",
-      "community": 158,
-      "community_name": "resolveLiveInjectionAnchor",
+      "community": 16,
+      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
       "norm_label": "normalizepreviewtext()"
     },
     {
@@ -11854,8 +11854,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_escaperegexp",
-      "community": 158,
-      "community_name": "resolveLiveInjectionAnchor",
+      "community": 16,
+      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
       "norm_label": "escaperegexp()"
     },
     {
@@ -12070,8 +12070,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_startscrolllock",
-      "community": 32,
-      "community_name": "setLiveState",
+      "community": 25,
+      "community_name": "connectSSE",
       "norm_label": "startscrolllock()"
     },
     {
@@ -12082,8 +12082,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_stopscrolllock",
-      "community": 32,
-      "community_name": "setLiveState",
+      "community": 25,
+      "community_name": "connectSSE",
       "norm_label": "stopscrolllock()"
     },
     {
@@ -12610,8 +12610,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_loadmodernscreenshot",
-      "community": 16,
-      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
+      "community": 130,
+      "community_name": "captureElementToBlob",
       "norm_label": "loadmodernscreenshot()"
     },
     {
@@ -12658,8 +12658,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_istransparentcolor",
-      "community": 16,
-      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
+      "community": 130,
+      "community_name": "captureElementToBlob",
       "norm_label": "istransparentcolor()"
     },
     {
@@ -12670,8 +12670,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_resolvecanvasbackground",
-      "community": 16,
-      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
+      "community": 130,
+      "community_name": "captureElementToBlob",
       "norm_label": "resolvecanvasbackground()"
     },
     {
@@ -12682,8 +12682,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_capturechromenodes",
-      "community": 16,
-      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
+      "community": 130,
+      "community_name": "captureElementToBlob",
       "norm_label": "capturechromenodes()"
     },
     {
@@ -12694,8 +12694,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_hidecapturechromeforshaderproxy",
-      "community": 16,
-      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
+      "community": 130,
+      "community_name": "captureElementToBlob",
       "norm_label": "hidecapturechromeforshaderproxy()"
     },
     {
@@ -12706,8 +12706,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_shoulduseancestorcropshaderproxy",
-      "community": 16,
-      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
+      "community": 130,
+      "community_name": "captureElementToBlob",
       "norm_label": "shoulduseancestorcropshaderproxy()"
     },
     {
@@ -12718,8 +12718,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_paintsshaderproxysurface",
-      "community": 16,
-      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
+      "community": 130,
+      "community_name": "captureElementToBlob",
       "norm_label": "paintsshaderproxysurface()"
     },
     {
@@ -12730,8 +12730,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_findshaderproxycaptureroot",
-      "community": 16,
-      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
+      "community": 130,
+      "community_name": "captureElementToBlob",
       "norm_label": "findshaderproxycaptureroot()"
     },
     {
@@ -12742,8 +12742,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_captureelementfromrenderedancestor",
-      "community": 16,
-      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
+      "community": 130,
+      "community_name": "captureElementToBlob",
       "norm_label": "captureelementfromrenderedancestor()"
     },
     {
@@ -12754,8 +12754,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_captureelementtoblob",
-      "community": 16,
-      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
+      "community": 130,
+      "community_name": "captureElementToBlob",
       "norm_label": "captureelementtoblob()"
     },
     {
@@ -12778,8 +12778,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_csscolortorgb01",
-      "community": 16,
-      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
+      "community": 130,
+      "community_name": "captureElementToBlob",
       "norm_label": "csscolortorgb01()"
     },
     {
@@ -12790,8 +12790,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_resolvepaperrgb",
-      "community": 16,
-      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
+      "community": 130,
+      "community_name": "captureElementToBlob",
       "norm_label": "resolvepaperrgb()"
     },
     {
@@ -12802,8 +12802,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_paintsbackdrop",
-      "community": 16,
-      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
+      "community": 130,
+      "community_name": "captureElementToBlob",
       "norm_label": "paintsbackdrop()"
     },
     {
@@ -12814,8 +12814,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_findbackdropancestor",
-      "community": 16,
-      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
+      "community": 130,
+      "community_name": "captureElementToBlob",
       "norm_label": "findbackdropancestor()"
     },
     {
@@ -12826,8 +12826,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_averagergb01",
-      "community": 16,
-      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
+      "community": 130,
+      "community_name": "captureElementToBlob",
       "norm_label": "averagergb01()"
     },
     {
@@ -12838,8 +12838,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_dominantrgb01",
-      "community": 16,
-      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
+      "community": 130,
+      "community_name": "captureElementToBlob",
       "norm_label": "dominantrgb01()"
     },
     {
@@ -12850,8 +12850,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_samplesurroundingrgb",
-      "community": 16,
-      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
+      "community": 130,
+      "community_name": "captureElementToBlob",
       "norm_label": "samplesurroundingrgb()"
     },
     {
@@ -12862,8 +12862,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_compileshader",
-      "community": 16,
-      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
+      "community": 130,
+      "community_name": "captureElementToBlob",
       "norm_label": "compileshader()"
     },
     {
@@ -12910,8 +12910,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_showshaderbitmapfallback",
-      "community": 16,
-      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
+      "community": 130,
+      "community_name": "captureElementToBlob",
       "norm_label": "showshaderbitmapfallback()"
     },
     {
@@ -12922,8 +12922,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_showshaderoverlay",
-      "community": 16,
-      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
+      "community": 130,
+      "community_name": "captureElementToBlob",
       "norm_label": "showshaderoverlay()"
     },
     {
@@ -12946,8 +12946,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_maybecompleteacceptedsession",
-      "community": 60,
-      "community_name": "showToast",
+      "community": 16,
+      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
       "norm_label": "maybecompleteacceptedsession()"
     },
     {
@@ -12970,8 +12970,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_snapshotacceptedvariantdom",
-      "community": 16,
-      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
+      "community": 148,
+      "community_name": "normalizeManualContextText",
       "norm_label": "snapshotacceptedvariantdom()"
     },
     {
@@ -12982,8 +12982,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_impeccable_scripts_live_browser_selectorforacceptedroot",
-      "community": 16,
-      "community_name": ".agents/skills/impeccable/scripts/live-browser.js",
+      "community": 148,
+      "community_name": "normalizeManualContextText",
       "norm_label": "selectorforacceptedroot()"
     },
     {
@@ -23872,8 +23872,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_writescrolly",
-      "community": 34,
-      "community_name": "setLiveState",
+      "community": 28,
+      "community_name": "connectSSE",
       "norm_label": "writescrolly()"
     },
     {
@@ -23968,8 +23968,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_initannotoverlay",
-      "community": 130,
-      "community_name": "onAnnotDown",
+      "community": 18,
+      "community_name": ".cursor/skills/impeccable/scripts/live-browser.js",
       "norm_label": "initannotoverlay()"
     },
     {
@@ -23980,8 +23980,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_updateclearchip",
-      "community": 130,
-      "community_name": "onAnnotDown",
+      "community": 18,
+      "community_name": ".cursor/skills/impeccable/scripts/live-browser.js",
       "norm_label": "updateclearchip()"
     },
     {
@@ -24040,8 +24040,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_redrawstrokes",
-      "community": 130,
-      "community_name": "onAnnotDown",
+      "community": 18,
+      "community_name": ".cursor/skills/impeccable/scripts/live-browser.js",
       "norm_label": "redrawstrokes()"
     },
     {
@@ -24052,8 +24052,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_localcoords",
-      "community": 130,
-      "community_name": "onAnnotDown",
+      "community": 18,
+      "community_name": ".cursor/skills/impeccable/scripts/live-browser.js",
       "norm_label": "localcoords()"
     },
     {
@@ -24064,8 +24064,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_onannotdown",
-      "community": 130,
-      "community_name": "onAnnotDown",
+      "community": 18,
+      "community_name": ".cursor/skills/impeccable/scripts/live-browser.js",
       "norm_label": "onannotdown()"
     },
     {
@@ -24076,8 +24076,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_onannotmove",
-      "community": 130,
-      "community_name": "onAnnotDown",
+      "community": 18,
+      "community_name": ".cursor/skills/impeccable/scripts/live-browser.js",
       "norm_label": "onannotmove()"
     },
     {
@@ -24088,8 +24088,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_pointstopath",
-      "community": 130,
-      "community_name": "onAnnotDown",
+      "community": 18,
+      "community_name": ".cursor/skills/impeccable/scripts/live-browser.js",
       "norm_label": "pointstopath()"
     },
     {
@@ -24100,8 +24100,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_onannotup",
-      "community": 130,
-      "community_name": "onAnnotDown",
+      "community": 18,
+      "community_name": ".cursor/skills/impeccable/scripts/live-browser.js",
       "norm_label": "onannotup()"
     },
     {
@@ -24112,8 +24112,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_renderallpins",
-      "community": 130,
-      "community_name": "onAnnotDown",
+      "community": 18,
+      "community_name": ".cursor/skills/impeccable/scripts/live-browser.js",
       "norm_label": "renderallpins()"
     },
     {
@@ -24124,8 +24124,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_buildpinelement",
-      "community": 130,
-      "community_name": "onAnnotDown",
+      "community": 18,
+      "community_name": ".cursor/skills/impeccable/scripts/live-browser.js",
       "norm_label": "buildpinelement()"
     },
     {
@@ -24136,8 +24136,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_begineditpin",
-      "community": 130,
-      "community_name": "onAnnotDown",
+      "community": 18,
+      "community_name": ".cursor/skills/impeccable/scripts/live-browser.js",
       "norm_label": "begineditpin()"
     },
     {
@@ -24148,8 +24148,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_isimekeydown",
-      "community": 130,
-      "community_name": "onAnnotDown",
+      "community": 18,
+      "community_name": ".cursor/skills/impeccable/scripts/live-browser.js",
       "norm_label": "isimekeydown()"
     },
     {
@@ -24160,8 +24160,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_onannotinputkey",
-      "community": 130,
-      "community_name": "onAnnotDown",
+      "community": 18,
+      "community_name": ".cursor/skills/impeccable/scripts/live-browser.js",
       "norm_label": "onannotinputkey()"
     },
     {
@@ -24172,8 +24172,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_finalizeeditingpin",
-      "community": 130,
-      "community_name": "onAnnotDown",
+      "community": 18,
+      "community_name": ".cursor/skills/impeccable/scripts/live-browser.js",
       "norm_label": "finalizeeditingpin()"
     },
     {
@@ -24184,8 +24184,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_canceleditingpin",
-      "community": 130,
-      "community_name": "onAnnotDown",
+      "community": 18,
+      "community_name": ".cursor/skills/impeccable/scripts/live-browser.js",
       "norm_label": "canceleditingpin()"
     },
     {
@@ -24196,8 +24196,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_buildannotationsforcapture",
-      "community": 130,
-      "community_name": "onAnnotDown",
+      "community": 18,
+      "community_name": ".cursor/skills/impeccable/scripts/live-browser.js",
       "norm_label": "buildannotationsforcapture()"
     },
     {
@@ -24304,8 +24304,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_normalizemanualcontexttext",
-      "community": 18,
-      "community_name": ".cursor/skills/impeccable/scripts/live-browser.js",
+      "community": 154,
+      "community_name": "normalizeManualContextText",
       "norm_label": "normalizemanualcontexttext()"
     },
     {
@@ -24340,8 +24340,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_showbar",
-      "community": 34,
-      "community_name": "setLiveState",
+      "community": 55,
+      "community_name": "buildInsertConfigureRow",
       "norm_label": "showbar()"
     },
     {
@@ -24400,8 +24400,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_syncconfigureinputchrome",
-      "community": 66,
-      "community_name": "initPageChat",
+      "community": 55,
+      "community_name": "buildInsertConfigureRow",
       "norm_label": "syncconfigureinputchrome()"
     },
     {
@@ -24808,8 +24808,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_cursorforinsertaxis",
-      "community": 18,
-      "community_name": ".cursor/skills/impeccable/scripts/live-browser.js",
+      "community": 82,
+      "community_name": "initGlobalBar",
       "norm_label": "cursorforinsertaxis()"
     },
     {
@@ -24832,8 +24832,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_placeholderwidthisimplicit",
-      "community": 130,
-      "community_name": "onAnnotDown",
+      "community": 18,
+      "community_name": ".cursor/skills/impeccable/scripts/live-browser.js",
       "norm_label": "placeholderwidthisimplicit()"
     },
     {
@@ -24856,8 +24856,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_materializeplaceholderwidth",
-      "community": 130,
-      "community_name": "onAnnotDown",
+      "community": 18,
+      "community_name": ".cursor/skills/impeccable/scripts/live-browser.js",
       "norm_label": "materializeplaceholderwidth()"
     },
     {
@@ -24892,8 +24892,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_clampplaceholdersize",
-      "community": 130,
-      "community_name": "onAnnotDown",
+      "community": 18,
+      "community_name": ".cursor/skills/impeccable/scripts/live-browser.js",
       "norm_label": "clampplaceholdersize()"
     },
     {
@@ -24916,8 +24916,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_resizeplaceholderfromedge",
-      "community": 130,
-      "community_name": "onAnnotDown",
+      "community": 18,
+      "community_name": ".cursor/skills/impeccable/scripts/live-browser.js",
       "norm_label": "resizeplaceholderfromedge()"
     },
     {
@@ -24964,8 +24964,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_setpageinteractioncursor",
-      "community": 18,
-      "community_name": ".cursor/skills/impeccable/scripts/live-browser.js",
+      "community": 82,
+      "community_name": "initGlobalBar",
       "norm_label": "setpageinteractioncursor()"
     },
     {
@@ -24976,8 +24976,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_syncpageinteractioncursor",
-      "community": 18,
-      "community_name": ".cursor/skills/impeccable/scripts/live-browser.js",
+      "community": 82,
+      "community_name": "initGlobalBar",
       "norm_label": "syncpageinteractioncursor()"
     },
     {
@@ -25060,8 +25060,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_buildinsertplaceholdersnapshotfromdom",
-      "community": 34,
-      "community_name": "setLiveState",
+      "community": 55,
+      "community_name": "buildInsertConfigureRow",
       "norm_label": "buildinsertplaceholdersnapshotfromdom()"
     },
     {
@@ -25108,8 +25108,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_applyplaceholderdimensions",
-      "community": 130,
-      "community_name": "onAnnotDown",
+      "community": 18,
+      "community_name": ".cursor/skills/impeccable/scripts/live-browser.js",
       "norm_label": "applyplaceholderdimensions()"
     },
     {
@@ -25156,8 +25156,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_startplaceholderedgeresize",
-      "community": 130,
-      "community_name": "onAnnotDown",
+      "community": 18,
+      "community_name": ".cursor/skills/impeccable/scripts/live-browser.js",
       "norm_label": "startplaceholderedgeresize()"
     },
     {
@@ -25324,8 +25324,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_cyclingshownvariant",
-      "community": 55,
-      "community_name": "buildInsertConfigureRow",
+      "community": 44,
+      "community_name": "showToast",
       "norm_label": "cyclingshownvariant()"
     },
     {
@@ -25336,8 +25336,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_cyclingcountertext",
-      "community": 55,
-      "community_name": "buildInsertConfigureRow",
+      "community": 44,
+      "community_name": "showToast",
       "norm_label": "cyclingcountertext()"
     },
     {
@@ -25480,8 +25480,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_recoveremptycycling",
-      "community": 28,
-      "community_name": "connectSSE",
+      "community": 44,
+      "community_name": "showToast",
       "norm_label": "recoveremptycycling()"
     },
     {
@@ -25864,8 +25864,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_documentrefsegment",
-      "community": 18,
-      "community_name": ".cursor/skills/impeccable/scripts/live-browser.js",
+      "community": 154,
+      "community_name": "normalizeManualContextText",
       "norm_label": "documentrefsegment()"
     },
     {
@@ -25876,8 +25876,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_documentrefidsuffix",
-      "community": 18,
-      "community_name": ".cursor/skills/impeccable/scripts/live-browser.js",
+      "community": 154,
+      "community_name": "normalizeManualContextText",
       "norm_label": "documentrefidsuffix()"
     },
     {
@@ -25888,8 +25888,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_documentrefclasssuffix",
-      "community": 18,
-      "community_name": ".cursor/skills/impeccable/scripts/live-browser.js",
+      "community": 154,
+      "community_name": "normalizeManualContextText",
       "norm_label": "documentrefclasssuffix()"
     },
     {
@@ -25900,8 +25900,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_normalizedocumentreftoken",
-      "community": 18,
-      "community_name": ".cursor/skills/impeccable/scripts/live-browser.js",
+      "community": 154,
+      "community_name": "normalizeManualContextText",
       "norm_label": "normalizedocumentreftoken()"
     },
     {
@@ -25912,8 +25912,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_indexamongsametag",
-      "community": 18,
-      "community_name": ".cursor/skills/impeccable/scripts/live-browser.js",
+      "community": 154,
+      "community_name": "normalizeManualContextText",
       "norm_label": "indexamongsametag()"
     },
     {
@@ -25936,8 +25936,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_nearbyeditabletextsformanualedit",
-      "community": 18,
-      "community_name": ".cursor/skills/impeccable/scripts/live-browser.js",
+      "community": 154,
+      "community_name": "normalizeManualContextText",
       "norm_label": "nearbyeditabletextsformanualedit()"
     },
     {
@@ -26260,8 +26260,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_onpendingtrashclick",
-      "community": 18,
-      "community_name": ".cursor/skills/impeccable/scripts/live-browser.js",
+      "community": 154,
+      "community_name": "normalizeManualContextText",
       "norm_label": "onpendingtrashclick()"
     },
     {
@@ -26356,8 +26356,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_restorediscardedmanualedits",
-      "community": 18,
-      "community_name": ".cursor/skills/impeccable/scripts/live-browser.js",
+      "community": 154,
+      "community_name": "normalizeManualContextText",
       "norm_label": "restorediscardedmanualedits()"
     },
     {
@@ -26368,8 +26368,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_canrestoremanualeditelement",
-      "community": 18,
-      "community_name": ".cursor/skills/impeccable/scripts/live-browser.js",
+      "community": 154,
+      "community_name": "normalizeManualContextText",
       "norm_label": "canrestoremanualeditelement()"
     },
     {
@@ -26380,8 +26380,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_mixedtextwraprestorehint",
-      "community": 18,
-      "community_name": ".cursor/skills/impeccable/scripts/live-browser.js",
+      "community": 154,
+      "community_name": "normalizeManualContextText",
       "norm_label": "mixedtextwraprestorehint()"
     },
     {
@@ -26392,8 +26392,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_restoremixedtextnodemanualedit",
-      "community": 18,
-      "community_name": ".cursor/skills/impeccable/scripts/live-browser.js",
+      "community": 154,
+      "community_name": "normalizeManualContextText",
       "norm_label": "restoremixedtextnodemanualedit()"
     },
     {
@@ -26404,8 +26404,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_directmixedtextrestorenodes",
-      "community": 18,
-      "community_name": ".cursor/skills/impeccable/scripts/live-browser.js",
+      "community": 154,
+      "community_name": "normalizeManualContextText",
       "norm_label": "directmixedtextrestorenodes()"
     },
     {
@@ -26416,8 +26416,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_findmanualeditrestoreelement",
-      "community": 18,
-      "community_name": ".cursor/skills/impeccable/scripts/live-browser.js",
+      "community": 154,
+      "community_name": "normalizeManualContextText",
       "norm_label": "findmanualeditrestoreelement()"
     },
     {
@@ -26428,8 +26428,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_querymanualeditref",
-      "community": 18,
-      "community_name": ".cursor/skills/impeccable/scripts/live-browser.js",
+      "community": 154,
+      "community_name": "normalizeManualContextText",
       "norm_label": "querymanualeditref()"
     },
     {
@@ -26440,8 +26440,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_parsemanualeditrefsegment",
-      "community": 18,
-      "community_name": ".cursor/skills/impeccable/scripts/live-browser.js",
+      "community": 154,
+      "community_name": "normalizeManualContextText",
       "norm_label": "parsemanualeditrefsegment()"
     },
     {
@@ -26452,8 +26452,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_elementmatchesmanualrefsegment",
-      "community": 18,
-      "community_name": ".cursor/skills/impeccable/scripts/live-browser.js",
+      "community": 154,
+      "community_name": "normalizeManualContextText",
       "norm_label": "elementmatchesmanualrefsegment()"
     },
     {
@@ -26464,8 +26464,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_cssident",
-      "community": 18,
-      "community_name": ".cursor/skills/impeccable/scripts/live-browser.js",
+      "community": 154,
+      "community_name": "normalizeManualContextText",
       "norm_label": "cssident()"
     },
     {
@@ -26788,8 +26788,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_synccyclingcontrols",
-      "community": 55,
-      "community_name": "buildInsertConfigureRow",
+      "community": 44,
+      "community_name": "showToast",
       "norm_label": "synccyclingcontrols()"
     },
     {
@@ -27340,8 +27340,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_showmounterrorcard",
-      "community": 44,
-      "community_name": "showToast",
+      "community": 28,
+      "community_name": "connectSSE",
       "norm_label": "showmounterrorcard()"
     },
     {
@@ -27400,8 +27400,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_abortsveltecomponentinjection",
-      "community": 44,
-      "community_name": "showToast",
+      "community": 28,
+      "community_name": "connectSSE",
       "norm_label": "abortsveltecomponentinjection()"
     },
     {
@@ -27412,8 +27412,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_resetsveltecomponentsession",
-      "community": 28,
-      "community_name": "connectSSE",
+      "community": 34,
+      "community_name": "setLiveState",
       "norm_label": "resetsveltecomponentsession()"
     },
     {
@@ -27652,8 +27652,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_removevariantstatestylesheet",
-      "community": 44,
-      "community_name": "showToast",
+      "community": 34,
+      "community_name": "setLiveState",
       "norm_label": "removevariantstatestylesheet()"
     },
     {
@@ -27760,8 +27760,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_startscrolllock",
-      "community": 34,
-      "community_name": "setLiveState",
+      "community": 28,
+      "community_name": "connectSSE",
       "norm_label": "startscrolllock()"
     },
     {
@@ -27832,8 +27832,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_startscrolltracking",
-      "community": 34,
-      "community_name": "setLiveState",
+      "community": 28,
+      "community_name": "connectSSE",
       "norm_label": "startscrolltracking()"
     },
     {
@@ -27904,8 +27904,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_applylivebarpreference",
-      "community": 18,
-      "community_name": ".cursor/skills/impeccable/scripts/live-browser.js",
+      "community": 82,
+      "community_name": "initGlobalBar",
       "norm_label": "applylivebarpreference()"
     },
     {
@@ -27916,8 +27916,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_setlivebarhidden",
-      "community": 18,
-      "community_name": ".cursor/skills/impeccable/scripts/live-browser.js",
+      "community": 82,
+      "community_name": "initGlobalBar",
       "norm_label": "setlivebarhidden()"
     },
     {
@@ -28288,8 +28288,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_handleinsertcreate",
-      "community": 34,
-      "community_name": "setLiveState",
+      "community": 55,
+      "community_name": "buildInsertConfigureRow",
       "norm_label": "handleinsertcreate()"
     },
     {
@@ -28456,8 +28456,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_captureandemit",
-      "community": 34,
-      "community_name": "setLiveState",
+      "community": 18,
+      "community_name": ".cursor/skills/impeccable/scripts/live-browser.js",
       "norm_label": "captureandemit()"
     },
     {
@@ -28660,8 +28660,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_snapshotacceptedvariantdom",
-      "community": 18,
-      "community_name": ".cursor/skills/impeccable/scripts/live-browser.js",
+      "community": 154,
+      "community_name": "normalizeManualContextText",
       "norm_label": "snapshotacceptedvariantdom()"
     },
     {
@@ -28672,8 +28672,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_selectorforacceptedroot",
-      "community": 18,
-      "community_name": ".cursor/skills/impeccable/scripts/live-browser.js",
+      "community": 154,
+      "community_name": "normalizeManualContextText",
       "norm_label": "selectorforacceptedroot()"
     },
     {
@@ -29032,8 +29032,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_dismisstoast",
-      "community": 44,
-      "community_name": "showToast",
+      "community": 55,
+      "community_name": "buildInsertConfigureRow",
       "norm_label": "dismisstoast()"
     },
     {
@@ -29248,8 +29248,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_pagechatcollapsedwidthpx",
-      "community": 82,
-      "community_name": "initGlobalBar",
+      "community": 66,
+      "community_name": "initPageChat",
       "norm_label": "pagechatcollapsedwidthpx()"
     },
     {
@@ -29260,8 +29260,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_pagechatexpandedwidth",
-      "community": 82,
-      "community_name": "initGlobalBar",
+      "community": 66,
+      "community_name": "initPageChat",
       "norm_label": "pagechatexpandedwidth()"
     },
     {
@@ -29272,8 +29272,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "cursor_skills_impeccable_scripts_live_browser_syncpagechatexpandedwidth",
-      "community": 82,
-      "community_name": "initGlobalBar",
+      "community": 66,
+      "community_name": "initPageChat",
       "norm_label": "syncpagechatexpandedwidth()"
     },
     {
@@ -31765,8 +31765,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "gemini_skills_impeccable_scripts_live_browser_shouldshowhighlighttagtooltip",
-      "community": 131,
-      "community_name": "actOnAgentTarget",
+      "community": 20,
+      "community_name": ".gemini/skills/impeccable/scripts/live-browser.js",
       "norm_label": "shouldshowhighlighttagtooltip()"
     },
     {
@@ -31777,8 +31777,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "gemini_skills_impeccable_scripts_live_browser_hidehighlighttagtooltip",
-      "community": 131,
-      "community_name": "actOnAgentTarget",
+      "community": 20,
+      "community_name": ".gemini/skills/impeccable/scripts/live-browser.js",
       "norm_label": "hidehighlighttagtooltip()"
     },
     {
@@ -31789,8 +31789,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "gemini_skills_impeccable_scripts_live_browser_showhighlight",
-      "community": 131,
-      "community_name": "actOnAgentTarget",
+      "community": 20,
+      "community_name": ".gemini/skills/impeccable/scripts/live-browser.js",
       "norm_label": "showhighlight()"
     },
     {
@@ -32569,8 +32569,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "gemini_skills_impeccable_scripts_live_browser_layoutflowchildren",
-      "community": 69,
-      "community_name": "initGlobalBar",
+      "community": 20,
+      "community_name": ".gemini/skills/impeccable/scripts/live-browser.js",
       "norm_label": "layoutflowchildren()"
     },
     {
@@ -32653,8 +32653,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "gemini_skills_impeccable_scripts_live_browser_cursorforinsertaxis",
-      "community": 69,
-      "community_name": "initGlobalBar",
+      "community": 20,
+      "community_name": ".gemini/skills/impeccable/scripts/live-browser.js",
       "norm_label": "cursorforinsertaxis()"
     },
     {
@@ -32809,8 +32809,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "gemini_skills_impeccable_scripts_live_browser_setpageinteractioncursor",
-      "community": 69,
-      "community_name": "initGlobalBar",
+      "community": 20,
+      "community_name": ".gemini/skills/impeccable/scripts/live-browser.js",
       "norm_label": "setpageinteractioncursor()"
     },
     {
@@ -32821,8 +32821,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "gemini_skills_impeccable_scripts_live_browser_syncpageinteractioncursor",
-      "community": 69,
-      "community_name": "initGlobalBar",
+      "community": 20,
+      "community_name": ".gemini/skills/impeccable/scripts/live-browser.js",
       "norm_label": "syncpageinteractioncursor()"
     },
     {
@@ -35185,8 +35185,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "gemini_skills_impeccable_scripts_live_browser_showmounterrorcard",
-      "community": 46,
-      "community_name": "showToast",
+      "community": 29,
+      "community_name": "connectSSE",
       "norm_label": "showmounterrorcard()"
     },
     {
@@ -35245,8 +35245,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "gemini_skills_impeccable_scripts_live_browser_abortsveltecomponentinjection",
-      "community": 46,
-      "community_name": "showToast",
+      "community": 29,
+      "community_name": "connectSSE",
       "norm_label": "abortsveltecomponentinjection()"
     },
     {
@@ -35497,8 +35497,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "gemini_skills_impeccable_scripts_live_browser_removevariantstatestylesheet",
-      "community": 46,
-      "community_name": "showToast",
+      "community": 29,
+      "community_name": "connectSSE",
       "norm_label": "removevariantstatestylesheet()"
     },
     {
@@ -36037,8 +36037,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "gemini_skills_impeccable_scripts_live_browser_handlemousemove",
-      "community": 69,
-      "community_name": "initGlobalBar",
+      "community": 20,
+      "community_name": ".gemini/skills/impeccable/scripts/live-browser.js",
       "norm_label": "handlemousemove()"
     },
     {
@@ -37093,8 +37093,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "gemini_skills_impeccable_scripts_live_browser_pagechatcollapsedwidthpx",
-      "community": 61,
-      "community_name": "initPageChat",
+      "community": 69,
+      "community_name": "initGlobalBar",
       "norm_label": "pagechatcollapsedwidthpx()"
     },
     {
@@ -37105,8 +37105,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "gemini_skills_impeccable_scripts_live_browser_pagechatexpandedwidth",
-      "community": 61,
-      "community_name": "initPageChat",
+      "community": 69,
+      "community_name": "initGlobalBar",
       "norm_label": "pagechatexpandedwidth()"
     },
     {
@@ -37117,8 +37117,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "gemini_skills_impeccable_scripts_live_browser_syncpagechatexpandedwidth",
-      "community": 61,
-      "community_name": "initPageChat",
+      "community": 69,
+      "community_name": "initGlobalBar",
       "norm_label": "syncpagechatexpandedwidth()"
     },
     {
@@ -39562,8 +39562,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_writescrolly",
-      "community": 23,
-      "community_name": "connectSSE",
+      "community": 58,
+      "community_name": "setLiveState",
       "norm_label": "writescrolly()"
     },
     {
@@ -39586,8 +39586,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_clearscrolly",
-      "community": 23,
-      "community_name": "connectSSE",
+      "community": 70,
+      "community_name": "showToast",
       "norm_label": "clearscrolly()"
     },
     {
@@ -39610,8 +39610,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_shouldshowhighlighttagtooltip",
-      "community": 133,
-      "community_name": "actOnAgentTarget",
+      "community": 22,
+      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
       "norm_label": "shouldshowhighlighttagtooltip()"
     },
     {
@@ -39622,8 +39622,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_hidehighlighttagtooltip",
-      "community": 133,
-      "community_name": "actOnAgentTarget",
+      "community": 22,
+      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
       "norm_label": "hidehighlighttagtooltip()"
     },
     {
@@ -39634,8 +39634,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_showhighlight",
-      "community": 133,
-      "community_name": "actOnAgentTarget",
+      "community": 22,
+      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
       "norm_label": "showhighlight()"
     },
     {
@@ -40030,8 +40030,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_showbar",
-      "community": 37,
-      "community_name": "buildInsertConfigureRow",
+      "community": 58,
+      "community_name": "setLiveState",
       "norm_label": "showbar()"
     },
     {
@@ -40090,8 +40090,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_syncconfigureinputchrome",
-      "community": 37,
-      "community_name": "buildInsertConfigureRow",
+      "community": 62,
+      "community_name": "initPageChat",
       "norm_label": "syncconfigureinputchrome()"
     },
     {
@@ -40414,8 +40414,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_layoutflowchildren",
-      "community": 83,
-      "community_name": "initGlobalBar",
+      "community": 22,
+      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
       "norm_label": "layoutflowchildren()"
     },
     {
@@ -40498,8 +40498,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_cursorforinsertaxis",
-      "community": 83,
-      "community_name": "initGlobalBar",
+      "community": 22,
+      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
       "norm_label": "cursorforinsertaxis()"
     },
     {
@@ -40522,8 +40522,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_placeholderwidthisimplicit",
-      "community": 22,
-      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
+      "community": 166,
+      "community_name": "onAnnotDown",
       "norm_label": "placeholderwidthisimplicit()"
     },
     {
@@ -40546,8 +40546,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_materializeplaceholderwidth",
-      "community": 22,
-      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
+      "community": 166,
+      "community_name": "onAnnotDown",
       "norm_label": "materializeplaceholderwidth()"
     },
     {
@@ -40654,8 +40654,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_setpageinteractioncursor",
-      "community": 83,
-      "community_name": "initGlobalBar",
+      "community": 22,
+      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
       "norm_label": "setpageinteractioncursor()"
     },
     {
@@ -40666,8 +40666,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_syncpageinteractioncursor",
-      "community": 83,
-      "community_name": "initGlobalBar",
+      "community": 22,
+      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
       "norm_label": "syncpageinteractioncursor()"
     },
     {
@@ -40702,8 +40702,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_deferredrecoverysuperseded",
-      "community": 259,
-      "community_name": "scheduleAcceptCleanup",
+      "community": 70,
+      "community_name": "showToast",
       "norm_label": "deferredrecoverysuperseded()"
     },
     {
@@ -40750,8 +40750,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_buildinsertplaceholdersnapshotfromdom",
-      "community": 37,
-      "community_name": "buildInsertConfigureRow",
+      "community": 58,
+      "community_name": "setLiveState",
       "norm_label": "buildinsertplaceholdersnapshotfromdom()"
     },
     {
@@ -40798,8 +40798,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_applyplaceholderdimensions",
-      "community": 23,
-      "community_name": "connectSSE",
+      "community": 166,
+      "community_name": "onAnnotDown",
       "norm_label": "applyplaceholderdimensions()"
     },
     {
@@ -40846,8 +40846,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_startplaceholderedgeresize",
-      "community": 22,
-      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
+      "community": 166,
+      "community_name": "onAnnotDown",
       "norm_label": "startplaceholderedgeresize()"
     },
     {
@@ -41170,8 +41170,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_recoveremptycycling",
-      "community": 70,
-      "community_name": "showToast",
+      "community": 23,
+      "community_name": "connectSSE",
       "norm_label": "recoveremptycycling()"
     },
     {
@@ -41242,8 +41242,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_applyparamvalue",
-      "community": 23,
-      "community_name": "connectSSE",
+      "community": 22,
+      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
       "norm_label": "applyparamvalue()"
     },
     {
@@ -41254,8 +41254,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_applyparamdefaults",
-      "community": 23,
-      "community_name": "connectSSE",
+      "community": 22,
+      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
       "norm_label": "applyparamdefaults()"
     },
     {
@@ -41302,8 +41302,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_isvalidsavedparamvalue",
-      "community": 23,
-      "community_name": "connectSSE",
+      "community": 22,
+      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
       "norm_label": "isvalidsavedparamvalue()"
     },
     {
@@ -41314,8 +41314,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_applysavedparamvalues",
-      "community": 23,
-      "community_name": "connectSSE",
+      "community": 22,
+      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
       "norm_label": "applysavedparamvalues()"
     },
     {
@@ -41326,8 +41326,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_formatrangevalue",
-      "community": 23,
-      "community_name": "connectSSE",
+      "community": 83,
+      "community_name": "initGlobalBar",
       "norm_label": "formatrangevalue()"
     },
     {
@@ -41338,8 +41338,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_buildparamspanel",
-      "community": 23,
-      "community_name": "connectSSE",
+      "community": 83,
+      "community_name": "initGlobalBar",
       "norm_label": "buildparamspanel()"
     },
     {
@@ -42502,8 +42502,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_issveltecomponentmanifestpath",
-      "community": 70,
-      "community_name": "showToast",
+      "community": 23,
+      "community_name": "connectSSE",
       "norm_label": "issveltecomponentmanifestpath()"
     },
     {
@@ -42526,8 +42526,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_parseoriginalmarkupelement",
-      "community": 22,
-      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
+      "community": 155,
+      "community_name": "resolveLiveInjectionAnchor",
       "norm_label": "parseoriginalmarkupelement()"
     },
     {
@@ -42538,8 +42538,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_normalizeelementclassname",
-      "community": 22,
-      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
+      "community": 155,
+      "community_name": "resolveLiveInjectionAnchor",
       "norm_label": "normalizeelementclassname()"
     },
     {
@@ -42562,8 +42562,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_isusableinjectionanchor",
-      "community": 22,
-      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
+      "community": 155,
+      "community_name": "resolveLiveInjectionAnchor",
       "norm_label": "isusableinjectionanchor()"
     },
     {
@@ -42574,8 +42574,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_elementmatchesoriginalmarkup",
-      "community": 22,
-      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
+      "community": 155,
+      "community_name": "resolveLiveInjectionAnchor",
       "norm_label": "elementmatchesoriginalmarkup()"
     },
     {
@@ -42586,8 +42586,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_findliveelementfromanchorsnapshot",
-      "community": 22,
-      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
+      "community": 155,
+      "community_name": "resolveLiveInjectionAnchor",
       "norm_label": "findliveelementfromanchorsnapshot()"
     },
     {
@@ -42598,8 +42598,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_findliveelementfororiginalmarkup",
-      "community": 22,
-      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
+      "community": 155,
+      "community_name": "resolveLiveInjectionAnchor",
       "norm_label": "findliveelementfororiginalmarkup()"
     },
     {
@@ -42610,8 +42610,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_resolveliveinjectionanchor",
-      "community": 22,
-      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
+      "community": 155,
+      "community_name": "resolveLiveInjectionAnchor",
       "norm_label": "resolveliveinjectionanchor()"
     },
     {
@@ -42826,8 +42826,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_buildsveltepropvaluesfromliveelement",
-      "community": 22,
-      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
+      "community": 155,
+      "community_name": "resolveLiveInjectionAnchor",
       "norm_label": "buildsveltepropvaluesfromliveelement()"
     },
     {
@@ -42838,8 +42838,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_buildsveltepropvaluesv2",
-      "community": 22,
-      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
+      "community": 155,
+      "community_name": "resolveLiveInjectionAnchor",
       "norm_label": "buildsveltepropvaluesv2()"
     },
     {
@@ -42850,8 +42850,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_cssescapeident",
-      "community": 22,
-      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
+      "community": 155,
+      "community_name": "resolveLiveInjectionAnchor",
       "norm_label": "cssescapeident()"
     },
     {
@@ -42862,8 +42862,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_collectvisibletexts",
-      "community": 22,
-      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
+      "community": 155,
+      "community_name": "resolveLiveInjectionAnchor",
       "norm_label": "collectvisibletexts()"
     },
     {
@@ -42874,8 +42874,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_stripsvelteblockregions",
-      "community": 22,
-      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
+      "community": 155,
+      "community_name": "resolveLiveInjectionAnchor",
       "norm_label": "stripsvelteblockregions()"
     },
     {
@@ -42886,8 +42886,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_stripsveltekeydelimiters",
-      "community": 22,
-      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
+      "community": 155,
+      "community_name": "resolveLiveInjectionAnchor",
       "norm_label": "stripsveltekeydelimiters()"
     },
     {
@@ -42898,8 +42898,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_clonewithoutelements",
-      "community": 22,
-      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
+      "community": 155,
+      "community_name": "resolveLiveInjectionAnchor",
       "norm_label": "clonewithoutelements()"
     },
     {
@@ -43102,8 +43102,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_resetsveltecomponentsession",
-      "community": 70,
-      "community_name": "showToast",
+      "community": 23,
+      "community_name": "connectSSE",
       "norm_label": "resetsveltecomponentsession()"
     },
     {
@@ -43126,8 +43126,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_isjsxsourcefile",
-      "community": 70,
-      "community_name": "showToast",
+      "community": 23,
+      "community_name": "connectSSE",
       "norm_label": "isjsxsourcefile()"
     },
     {
@@ -43174,8 +43174,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_injectvariantsfromsource",
-      "community": 70,
-      "community_name": "showToast",
+      "community": 23,
+      "community_name": "connectSSE",
       "norm_label": "injectvariantsfromsource()"
     },
     {
@@ -43186,8 +43186,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_buildsvelteexpressiontextmap",
-      "community": 22,
-      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
+      "community": 155,
+      "community_name": "resolveLiveInjectionAnchor",
       "norm_label": "buildsvelteexpressiontextmap()"
     },
     {
@@ -43198,8 +43198,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_expressiontextmatcher",
-      "community": 22,
-      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
+      "community": 155,
+      "community_name": "resolveLiveInjectionAnchor",
       "norm_label": "expressiontextmatcher()"
     },
     {
@@ -43210,8 +43210,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_collecttextnodes",
-      "community": 22,
-      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
+      "community": 155,
+      "community_name": "resolveLiveInjectionAnchor",
       "norm_label": "collecttextnodes()"
     },
     {
@@ -43222,8 +43222,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_normalizepreviewtext",
-      "community": 22,
-      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
+      "community": 155,
+      "community_name": "resolveLiveInjectionAnchor",
       "norm_label": "normalizepreviewtext()"
     },
     {
@@ -43234,8 +43234,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_escaperegexp",
-      "community": 22,
-      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
+      "community": 155,
+      "community_name": "resolveLiveInjectionAnchor",
       "norm_label": "escaperegexp()"
     },
     {
@@ -43306,8 +43306,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_variantstateselector",
-      "community": 23,
-      "community_name": "connectSSE",
+      "community": 22,
+      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
       "norm_label": "variantstateselector()"
     },
     {
@@ -43318,8 +43318,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_variantparamdecls",
-      "community": 23,
-      "community_name": "connectSSE",
+      "community": 22,
+      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
       "norm_label": "variantparamdecls()"
     },
     {
@@ -43330,8 +43330,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_updatevariantstatestylesheet",
-      "community": 23,
-      "community_name": "connectSSE",
+      "community": 22,
+      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
       "norm_label": "updatevariantstatestylesheet()"
     },
     {
@@ -43450,8 +43450,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_startscrolllock",
-      "community": 23,
-      "community_name": "connectSSE",
+      "community": 58,
+      "community_name": "setLiveState",
       "norm_label": "startscrolllock()"
     },
     {
@@ -43462,8 +43462,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_stopscrolllock",
-      "community": 70,
-      "community_name": "showToast",
+      "community": 58,
+      "community_name": "setLiveState",
       "norm_label": "stopscrolllock()"
     },
     {
@@ -43834,8 +43834,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_checkpointpayload",
-      "community": 148,
-      "community_name": "captureElementToBlob",
+      "community": 23,
+      "community_name": "connectSSE",
       "norm_label": "checkpointpayload()"
     },
     {
@@ -43846,8 +43846,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_sendcheckpoint",
-      "community": 148,
-      "community_name": "captureElementToBlob",
+      "community": 23,
+      "community_name": "connectSSE",
       "norm_label": "sendcheckpoint()"
     },
     {
@@ -43882,8 +43882,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_handlemousemove",
-      "community": 83,
-      "community_name": "initGlobalBar",
+      "community": 22,
+      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
       "norm_label": "handlemousemove()"
     },
     {
@@ -43978,8 +43978,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_handleinsertcreate",
-      "community": 37,
-      "community_name": "buildInsertConfigureRow",
+      "community": 58,
+      "community_name": "setLiveState",
       "norm_label": "handleinsertcreate()"
     },
     {
@@ -43990,8 +43990,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_loadmodernscreenshot",
-      "community": 148,
-      "community_name": "captureElementToBlob",
+      "community": 22,
+      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
       "norm_label": "loadmodernscreenshot()"
     },
     {
@@ -44038,8 +44038,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_istransparentcolor",
-      "community": 148,
-      "community_name": "captureElementToBlob",
+      "community": 22,
+      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
       "norm_label": "istransparentcolor()"
     },
     {
@@ -44050,8 +44050,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_resolvecanvasbackground",
-      "community": 148,
-      "community_name": "captureElementToBlob",
+      "community": 22,
+      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
       "norm_label": "resolvecanvasbackground()"
     },
     {
@@ -44086,8 +44086,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_shoulduseancestorcropshaderproxy",
-      "community": 148,
-      "community_name": "captureElementToBlob",
+      "community": 22,
+      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
       "norm_label": "shoulduseancestorcropshaderproxy()"
     },
     {
@@ -44098,8 +44098,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_paintsshaderproxysurface",
-      "community": 148,
-      "community_name": "captureElementToBlob",
+      "community": 22,
+      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
       "norm_label": "paintsshaderproxysurface()"
     },
     {
@@ -44110,8 +44110,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_findshaderproxycaptureroot",
-      "community": 148,
-      "community_name": "captureElementToBlob",
+      "community": 22,
+      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
       "norm_label": "findshaderproxycaptureroot()"
     },
     {
@@ -44122,8 +44122,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_captureelementfromrenderedancestor",
-      "community": 148,
-      "community_name": "captureElementToBlob",
+      "community": 22,
+      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
       "norm_label": "captureelementfromrenderedancestor()"
     },
     {
@@ -44134,8 +44134,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_captureelementtoblob",
-      "community": 148,
-      "community_name": "captureElementToBlob",
+      "community": 22,
+      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
       "norm_label": "captureelementtoblob()"
     },
     {
@@ -44146,8 +44146,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_captureandemit",
-      "community": 148,
-      "community_name": "captureElementToBlob",
+      "community": 58,
+      "community_name": "setLiveState",
       "norm_label": "captureandemit()"
     },
     {
@@ -44158,8 +44158,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_csscolortorgb01",
-      "community": 148,
-      "community_name": "captureElementToBlob",
+      "community": 22,
+      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
       "norm_label": "csscolortorgb01()"
     },
     {
@@ -44170,8 +44170,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_resolvepaperrgb",
-      "community": 148,
-      "community_name": "captureElementToBlob",
+      "community": 22,
+      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
       "norm_label": "resolvepaperrgb()"
     },
     {
@@ -44182,8 +44182,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_paintsbackdrop",
-      "community": 148,
-      "community_name": "captureElementToBlob",
+      "community": 22,
+      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
       "norm_label": "paintsbackdrop()"
     },
     {
@@ -44194,8 +44194,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_findbackdropancestor",
-      "community": 148,
-      "community_name": "captureElementToBlob",
+      "community": 22,
+      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
       "norm_label": "findbackdropancestor()"
     },
     {
@@ -44206,8 +44206,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_averagergb01",
-      "community": 148,
-      "community_name": "captureElementToBlob",
+      "community": 22,
+      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
       "norm_label": "averagergb01()"
     },
     {
@@ -44218,8 +44218,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_dominantrgb01",
-      "community": 148,
-      "community_name": "captureElementToBlob",
+      "community": 22,
+      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
       "norm_label": "dominantrgb01()"
     },
     {
@@ -44230,8 +44230,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_samplesurroundingrgb",
-      "community": 148,
-      "community_name": "captureElementToBlob",
+      "community": 22,
+      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
       "norm_label": "samplesurroundingrgb()"
     },
     {
@@ -44242,8 +44242,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_compileshader",
-      "community": 148,
-      "community_name": "captureElementToBlob",
+      "community": 22,
+      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
       "norm_label": "compileshader()"
     },
     {
@@ -44290,8 +44290,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_showshaderbitmapfallback",
-      "community": 148,
-      "community_name": "captureElementToBlob",
+      "community": 22,
+      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
       "norm_label": "showshaderbitmapfallback()"
     },
     {
@@ -44302,8 +44302,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_showshaderoverlay",
-      "community": 148,
-      "community_name": "captureElementToBlob",
+      "community": 22,
+      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
       "norm_label": "showshaderoverlay()"
     },
     {
@@ -44314,8 +44314,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_handleaccept",
-      "community": 23,
-      "community_name": "connectSSE",
+      "community": 70,
+      "community_name": "showToast",
       "norm_label": "handleaccept()"
     },
     {
@@ -44338,8 +44338,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_scheduleacceptcleanup",
-      "community": 259,
-      "community_name": "scheduleAcceptCleanup",
+      "community": 70,
+      "community_name": "showToast",
       "norm_label": "scheduleacceptcleanup()"
     },
     {
@@ -44350,8 +44350,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_snapshotacceptedvariantdom",
-      "community": 23,
-      "community_name": "connectSSE",
+      "community": 22,
+      "community_name": ".hermes/skills/impeccable/scripts/live-browser.js",
       "norm_label": "snapshotacceptedvariantdom()"
     },
     {
@@ -44374,8 +44374,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_accepteddomalreadyclean",
-      "community": 259,
-      "community_name": "scheduleAcceptCleanup",
+      "community": 70,
+      "community_name": "showToast",
       "norm_label": "accepteddomalreadyclean()"
     },
     {
@@ -44386,8 +44386,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_ensureaccepteddomclean",
-      "community": 259,
-      "community_name": "scheduleAcceptCleanup",
+      "community": 70,
+      "community_name": "showToast",
       "norm_label": "ensureaccepteddomclean()"
     },
     {
@@ -44398,8 +44398,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_findacceptedruntimewrappers",
-      "community": 259,
-      "community_name": "scheduleAcceptCleanup",
+      "community": 70,
+      "community_name": "showToast",
       "norm_label": "findacceptedruntimewrappers()"
     },
     {
@@ -44410,8 +44410,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_restoreaccepteddomfromsnapshot",
-      "community": 259,
-      "community_name": "scheduleAcceptCleanup",
+      "community": 70,
+      "community_name": "showToast",
       "norm_label": "restoreaccepteddomfromsnapshot()"
     },
     {
@@ -44422,8 +44422,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_reloadaftermissingaccepteddom",
-      "community": 259,
-      "community_name": "scheduleAcceptCleanup",
+      "community": 70,
+      "community_name": "showToast",
       "norm_label": "reloadaftermissingaccepteddom()"
     },
     {
@@ -44482,8 +44482,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_resetsessionfilemeta",
-      "community": 70,
-      "community_name": "showToast",
+      "community": 58,
+      "community_name": "setLiveState",
       "norm_label": "resetsessionfilemeta()"
     },
     {
@@ -44722,8 +44722,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_dismisstoast",
-      "community": 37,
-      "community_name": "buildInsertConfigureRow",
+      "community": 70,
+      "community_name": "showToast",
       "norm_label": "dismisstoast()"
     },
     {
@@ -44746,8 +44746,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_handledwrapperreloadkey",
-      "community": 259,
-      "community_name": "scheduleAcceptCleanup",
+      "community": 70,
+      "community_name": "showToast",
       "norm_label": "handledwrapperreloadkey()"
     },
     {
@@ -44758,8 +44758,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_clearhandledwrapperreloadstamp",
-      "community": 259,
-      "community_name": "scheduleAcceptCleanup",
+      "community": 70,
+      "community_name": "showToast",
       "norm_label": "clearhandledwrapperreloadstamp()"
     },
     {
@@ -44770,8 +44770,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_schedulehandledruntimewrapperreload",
-      "community": 259,
-      "community_name": "scheduleAcceptCleanup",
+      "community": 70,
+      "community_name": "showToast",
       "norm_label": "schedulehandledruntimewrapperreload()"
     },
     {
@@ -44782,8 +44782,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_watchforhandledruntimewrapper",
-      "community": 259,
-      "community_name": "scheduleAcceptCleanup",
+      "community": 70,
+      "community_name": "showToast",
       "norm_label": "watchforhandledruntimewrapper()"
     },
     {
@@ -44938,8 +44938,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_pagechatcollapsedwidthpx",
-      "community": 62,
-      "community_name": "initPageChat",
+      "community": 83,
+      "community_name": "initGlobalBar",
       "norm_label": "pagechatcollapsedwidthpx()"
     },
     {
@@ -44950,8 +44950,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_pagechatexpandedwidth",
-      "community": 62,
-      "community_name": "initPageChat",
+      "community": 83,
+      "community_name": "initGlobalBar",
       "norm_label": "pagechatexpandedwidth()"
     },
     {
@@ -44962,8 +44962,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "hermes_skills_impeccable_scripts_live_browser_syncpagechatexpandedwidth",
-      "community": 62,
-      "community_name": "initPageChat",
+      "community": 83,
+      "community_name": "initGlobalBar",
       "norm_label": "syncpagechatexpandedwidth()"
     },
     {
@@ -47455,8 +47455,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "kiro_skills_impeccable_scripts_live_browser_shouldshowhighlighttagtooltip",
-      "community": 19,
-      "community_name": ".kiro/skills/impeccable/scripts/live-browser.js",
+      "community": 163,
+      "community_name": "actOnAgentTarget",
       "norm_label": "shouldshowhighlighttagtooltip()"
     },
     {
@@ -47467,8 +47467,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "kiro_skills_impeccable_scripts_live_browser_hidehighlighttagtooltip",
-      "community": 19,
-      "community_name": ".kiro/skills/impeccable/scripts/live-browser.js",
+      "community": 163,
+      "community_name": "actOnAgentTarget",
       "norm_label": "hidehighlighttagtooltip()"
     },
     {
@@ -47479,8 +47479,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "kiro_skills_impeccable_scripts_live_browser_showhighlight",
-      "community": 19,
-      "community_name": ".kiro/skills/impeccable/scripts/live-browser.js",
+      "community": 163,
+      "community_name": "actOnAgentTarget",
       "norm_label": "showhighlight()"
     },
     {
@@ -48259,8 +48259,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "kiro_skills_impeccable_scripts_live_browser_layoutflowchildren",
-      "community": 19,
-      "community_name": ".kiro/skills/impeccable/scripts/live-browser.js",
+      "community": 84,
+      "community_name": "initGlobalBar",
       "norm_label": "layoutflowchildren()"
     },
     {
@@ -48343,8 +48343,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "kiro_skills_impeccable_scripts_live_browser_cursorforinsertaxis",
-      "community": 19,
-      "community_name": ".kiro/skills/impeccable/scripts/live-browser.js",
+      "community": 84,
+      "community_name": "initGlobalBar",
       "norm_label": "cursorforinsertaxis()"
     },
     {
@@ -48499,8 +48499,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "kiro_skills_impeccable_scripts_live_browser_setpageinteractioncursor",
-      "community": 19,
-      "community_name": ".kiro/skills/impeccable/scripts/live-browser.js",
+      "community": 84,
+      "community_name": "initGlobalBar",
       "norm_label": "setpageinteractioncursor()"
     },
     {
@@ -48511,8 +48511,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "kiro_skills_impeccable_scripts_live_browser_syncpageinteractioncursor",
-      "community": 19,
-      "community_name": ".kiro/skills/impeccable/scripts/live-browser.js",
+      "community": 84,
+      "community_name": "initGlobalBar",
       "norm_label": "syncpageinteractioncursor()"
     },
     {
@@ -50371,8 +50371,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "kiro_skills_impeccable_scripts_live_browser_parseoriginalmarkupelement",
-      "community": 164,
-      "community_name": "resolveLiveInjectionAnchor",
+      "community": 19,
+      "community_name": ".kiro/skills/impeccable/scripts/live-browser.js",
       "norm_label": "parseoriginalmarkupelement()"
     },
     {
@@ -50383,8 +50383,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "kiro_skills_impeccable_scripts_live_browser_normalizeelementclassname",
-      "community": 164,
-      "community_name": "resolveLiveInjectionAnchor",
+      "community": 19,
+      "community_name": ".kiro/skills/impeccable/scripts/live-browser.js",
       "norm_label": "normalizeelementclassname()"
     },
     {
@@ -50407,8 +50407,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "kiro_skills_impeccable_scripts_live_browser_isusableinjectionanchor",
-      "community": 164,
-      "community_name": "resolveLiveInjectionAnchor",
+      "community": 19,
+      "community_name": ".kiro/skills/impeccable/scripts/live-browser.js",
       "norm_label": "isusableinjectionanchor()"
     },
     {
@@ -50419,8 +50419,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "kiro_skills_impeccable_scripts_live_browser_elementmatchesoriginalmarkup",
-      "community": 164,
-      "community_name": "resolveLiveInjectionAnchor",
+      "community": 19,
+      "community_name": ".kiro/skills/impeccable/scripts/live-browser.js",
       "norm_label": "elementmatchesoriginalmarkup()"
     },
     {
@@ -50431,8 +50431,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "kiro_skills_impeccable_scripts_live_browser_findliveelementfromanchorsnapshot",
-      "community": 164,
-      "community_name": "resolveLiveInjectionAnchor",
+      "community": 19,
+      "community_name": ".kiro/skills/impeccable/scripts/live-browser.js",
       "norm_label": "findliveelementfromanchorsnapshot()"
     },
     {
@@ -50443,8 +50443,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "kiro_skills_impeccable_scripts_live_browser_findliveelementfororiginalmarkup",
-      "community": 164,
-      "community_name": "resolveLiveInjectionAnchor",
+      "community": 19,
+      "community_name": ".kiro/skills/impeccable/scripts/live-browser.js",
       "norm_label": "findliveelementfororiginalmarkup()"
     },
     {
@@ -50455,8 +50455,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "kiro_skills_impeccable_scripts_live_browser_resolveliveinjectionanchor",
-      "community": 164,
-      "community_name": "resolveLiveInjectionAnchor",
+      "community": 19,
+      "community_name": ".kiro/skills/impeccable/scripts/live-browser.js",
       "norm_label": "resolveliveinjectionanchor()"
     },
     {
@@ -50671,8 +50671,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "kiro_skills_impeccable_scripts_live_browser_buildsveltepropvaluesfromliveelement",
-      "community": 164,
-      "community_name": "resolveLiveInjectionAnchor",
+      "community": 19,
+      "community_name": ".kiro/skills/impeccable/scripts/live-browser.js",
       "norm_label": "buildsveltepropvaluesfromliveelement()"
     },
     {
@@ -50683,8 +50683,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "kiro_skills_impeccable_scripts_live_browser_buildsveltepropvaluesv2",
-      "community": 164,
-      "community_name": "resolveLiveInjectionAnchor",
+      "community": 19,
+      "community_name": ".kiro/skills/impeccable/scripts/live-browser.js",
       "norm_label": "buildsveltepropvaluesv2()"
     },
     {
@@ -50695,8 +50695,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "kiro_skills_impeccable_scripts_live_browser_cssescapeident",
-      "community": 164,
-      "community_name": "resolveLiveInjectionAnchor",
+      "community": 19,
+      "community_name": ".kiro/skills/impeccable/scripts/live-browser.js",
       "norm_label": "cssescapeident()"
     },
     {
@@ -50707,8 +50707,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "kiro_skills_impeccable_scripts_live_browser_collectvisibletexts",
-      "community": 164,
-      "community_name": "resolveLiveInjectionAnchor",
+      "community": 19,
+      "community_name": ".kiro/skills/impeccable/scripts/live-browser.js",
       "norm_label": "collectvisibletexts()"
     },
     {
@@ -50719,8 +50719,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "kiro_skills_impeccable_scripts_live_browser_stripsvelteblockregions",
-      "community": 164,
-      "community_name": "resolveLiveInjectionAnchor",
+      "community": 19,
+      "community_name": ".kiro/skills/impeccable/scripts/live-browser.js",
       "norm_label": "stripsvelteblockregions()"
     },
     {
@@ -50731,8 +50731,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "kiro_skills_impeccable_scripts_live_browser_stripsveltekeydelimiters",
-      "community": 164,
-      "community_name": "resolveLiveInjectionAnchor",
+      "community": 19,
+      "community_name": ".kiro/skills/impeccable/scripts/live-browser.js",
       "norm_label": "stripsveltekeydelimiters()"
     },
     {
@@ -50743,8 +50743,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "kiro_skills_impeccable_scripts_live_browser_clonewithoutelements",
-      "community": 164,
-      "community_name": "resolveLiveInjectionAnchor",
+      "community": 19,
+      "community_name": ".kiro/skills/impeccable/scripts/live-browser.js",
       "norm_label": "clonewithoutelements()"
     },
     {
@@ -51031,8 +51031,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "kiro_skills_impeccable_scripts_live_browser_buildsvelteexpressiontextmap",
-      "community": 164,
-      "community_name": "resolveLiveInjectionAnchor",
+      "community": 19,
+      "community_name": ".kiro/skills/impeccable/scripts/live-browser.js",
       "norm_label": "buildsvelteexpressiontextmap()"
     },
     {
@@ -51043,8 +51043,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "kiro_skills_impeccable_scripts_live_browser_expressiontextmatcher",
-      "community": 164,
-      "community_name": "resolveLiveInjectionAnchor",
+      "community": 19,
+      "community_name": ".kiro/skills/impeccable/scripts/live-browser.js",
       "norm_label": "expressiontextmatcher()"
     },
     {
@@ -51055,8 +51055,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "kiro_skills_impeccable_scripts_live_browser_collecttextnodes",
-      "community": 164,
-      "community_name": "resolveLiveInjectionAnchor",
+      "community": 19,
+      "community_name": ".kiro/skills/impeccable/scripts/live-browser.js",
       "norm_label": "collecttextnodes()"
     },
     {
@@ -51067,8 +51067,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "kiro_skills_impeccable_scripts_live_browser_normalizepreviewtext",
-      "community": 164,
-      "community_name": "resolveLiveInjectionAnchor",
+      "community": 19,
+      "community_name": ".kiro/skills/impeccable/scripts/live-browser.js",
       "norm_label": "normalizepreviewtext()"
     },
     {
@@ -51079,8 +51079,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "kiro_skills_impeccable_scripts_live_browser_escaperegexp",
-      "community": 164,
-      "community_name": "resolveLiveInjectionAnchor",
+      "community": 19,
+      "community_name": ".kiro/skills/impeccable/scripts/live-browser.js",
       "norm_label": "escaperegexp()"
     },
     {
@@ -51727,8 +51727,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "kiro_skills_impeccable_scripts_live_browser_handlemousemove",
-      "community": 19,
-      "community_name": ".kiro/skills/impeccable/scripts/live-browser.js",
+      "community": 84,
+      "community_name": "initGlobalBar",
       "norm_label": "handlemousemove()"
     },
     {
@@ -52783,8 +52783,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "kiro_skills_impeccable_scripts_live_browser_pagechatcollapsedwidthpx",
-      "community": 84,
-      "community_name": "initGlobalBar",
+      "community": 67,
+      "community_name": "initPageChat",
       "norm_label": "pagechatcollapsedwidthpx()"
     },
     {
@@ -52795,8 +52795,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "kiro_skills_impeccable_scripts_live_browser_pagechatexpandedwidth",
-      "community": 84,
-      "community_name": "initGlobalBar",
+      "community": 67,
+      "community_name": "initPageChat",
       "norm_label": "pagechatexpandedwidth()"
     },
     {
@@ -52807,8 +52807,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "kiro_skills_impeccable_scripts_live_browser_syncpagechatexpandedwidth",
-      "community": 84,
-      "community_name": "initGlobalBar",
+      "community": 67,
+      "community_name": "initPageChat",
       "norm_label": "syncpagechatexpandedwidth()"
     },
     {
@@ -55300,8 +55300,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_shouldshowhighlighttagtooltip",
-      "community": 21,
-      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
+      "community": 165,
+      "community_name": "actOnAgentTarget",
       "norm_label": "shouldshowhighlighttagtooltip()"
     },
     {
@@ -55312,8 +55312,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_hidehighlighttagtooltip",
-      "community": 21,
-      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
+      "community": 165,
+      "community_name": "actOnAgentTarget",
       "norm_label": "hidehighlighttagtooltip()"
     },
     {
@@ -55324,8 +55324,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_showhighlight",
-      "community": 21,
-      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
+      "community": 165,
+      "community_name": "actOnAgentTarget",
       "norm_label": "showhighlight()"
     },
     {
@@ -55684,8 +55684,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_normalizemanualcontexttext",
-      "community": 155,
-      "community_name": "normalizeManualContextText",
+      "community": 21,
+      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
       "norm_label": "normalizemanualcontexttext()"
     },
     {
@@ -56104,8 +56104,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_layoutflowchildren",
-      "community": 21,
-      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
+      "community": 85,
+      "community_name": "initGlobalBar",
       "norm_label": "layoutflowchildren()"
     },
     {
@@ -56188,8 +56188,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_cursorforinsertaxis",
-      "community": 21,
-      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
+      "community": 85,
+      "community_name": "initGlobalBar",
       "norm_label": "cursorforinsertaxis()"
     },
     {
@@ -56284,8 +56284,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_cursorforplaceholderedge",
-      "community": 39,
-      "community_name": "buildInsertConfigureRow",
+      "community": 21,
+      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
       "norm_label": "cursorforplaceholderedge()"
     },
     {
@@ -56344,8 +56344,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_setpageinteractioncursor",
-      "community": 21,
-      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
+      "community": 85,
+      "community_name": "initGlobalBar",
       "norm_label": "setpageinteractioncursor()"
     },
     {
@@ -56356,8 +56356,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_syncpageinteractioncursor",
-      "community": 21,
-      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
+      "community": 85,
+      "community_name": "initGlobalBar",
       "norm_label": "syncpageinteractioncursor()"
     },
     {
@@ -56392,8 +56392,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_deferredrecoverysuperseded",
-      "community": 94,
-      "community_name": "showToast",
+      "community": 8,
+      "community_name": "resolveLiveInjectionAnchor",
       "norm_label": "deferredrecoverysuperseded()"
     },
     {
@@ -56452,8 +56452,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_findinsertanchorindom",
-      "community": 21,
-      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
+      "community": 26,
+      "community_name": "connectSSE",
       "norm_label": "findinsertanchorindom()"
     },
     {
@@ -56512,8 +56512,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_buildplaceholderresizehandles",
-      "community": 39,
-      "community_name": "buildInsertConfigureRow",
+      "community": 21,
+      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
       "norm_label": "buildplaceholderresizehandles()"
     },
     {
@@ -57244,8 +57244,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_documentrefsegment",
-      "community": 155,
-      "community_name": "normalizeManualContextText",
+      "community": 21,
+      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
       "norm_label": "documentrefsegment()"
     },
     {
@@ -57256,8 +57256,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_documentrefidsuffix",
-      "community": 155,
-      "community_name": "normalizeManualContextText",
+      "community": 21,
+      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
       "norm_label": "documentrefidsuffix()"
     },
     {
@@ -57268,8 +57268,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_documentrefclasssuffix",
-      "community": 155,
-      "community_name": "normalizeManualContextText",
+      "community": 21,
+      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
       "norm_label": "documentrefclasssuffix()"
     },
     {
@@ -57280,8 +57280,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_normalizedocumentreftoken",
-      "community": 155,
-      "community_name": "normalizeManualContextText",
+      "community": 21,
+      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
       "norm_label": "normalizedocumentreftoken()"
     },
     {
@@ -57292,8 +57292,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_indexamongsametag",
-      "community": 155,
-      "community_name": "normalizeManualContextText",
+      "community": 21,
+      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
       "norm_label": "indexamongsametag()"
     },
     {
@@ -57316,8 +57316,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_nearbyeditabletextsformanualedit",
-      "community": 155,
-      "community_name": "normalizeManualContextText",
+      "community": 21,
+      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
       "norm_label": "nearbyeditabletextsformanualedit()"
     },
     {
@@ -57640,8 +57640,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_onpendingtrashclick",
-      "community": 155,
-      "community_name": "normalizeManualContextText",
+      "community": 21,
+      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
       "norm_label": "onpendingtrashclick()"
     },
     {
@@ -57736,8 +57736,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_restorediscardedmanualedits",
-      "community": 155,
-      "community_name": "normalizeManualContextText",
+      "community": 21,
+      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
       "norm_label": "restorediscardedmanualedits()"
     },
     {
@@ -57748,8 +57748,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_canrestoremanualeditelement",
-      "community": 155,
-      "community_name": "normalizeManualContextText",
+      "community": 21,
+      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
       "norm_label": "canrestoremanualeditelement()"
     },
     {
@@ -57760,8 +57760,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_mixedtextwraprestorehint",
-      "community": 155,
-      "community_name": "normalizeManualContextText",
+      "community": 21,
+      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
       "norm_label": "mixedtextwraprestorehint()"
     },
     {
@@ -57772,8 +57772,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_restoremixedtextnodemanualedit",
-      "community": 155,
-      "community_name": "normalizeManualContextText",
+      "community": 21,
+      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
       "norm_label": "restoremixedtextnodemanualedit()"
     },
     {
@@ -57784,8 +57784,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_directmixedtextrestorenodes",
-      "community": 155,
-      "community_name": "normalizeManualContextText",
+      "community": 21,
+      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
       "norm_label": "directmixedtextrestorenodes()"
     },
     {
@@ -57796,8 +57796,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_findmanualeditrestoreelement",
-      "community": 155,
-      "community_name": "normalizeManualContextText",
+      "community": 21,
+      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
       "norm_label": "findmanualeditrestoreelement()"
     },
     {
@@ -57808,8 +57808,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_querymanualeditref",
-      "community": 155,
-      "community_name": "normalizeManualContextText",
+      "community": 21,
+      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
       "norm_label": "querymanualeditref()"
     },
     {
@@ -57820,8 +57820,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_parsemanualeditrefsegment",
-      "community": 155,
-      "community_name": "normalizeManualContextText",
+      "community": 21,
+      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
       "norm_label": "parsemanualeditrefsegment()"
     },
     {
@@ -57832,8 +57832,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_elementmatchesmanualrefsegment",
-      "community": 155,
-      "community_name": "normalizeManualContextText",
+      "community": 21,
+      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
       "norm_label": "elementmatchesmanualrefsegment()"
     },
     {
@@ -57844,8 +57844,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_cssident",
-      "community": 155,
-      "community_name": "normalizeManualContextText",
+      "community": 21,
+      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
       "norm_label": "cssident()"
     },
     {
@@ -58216,8 +58216,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_parseoriginalmarkupelement",
-      "community": 21,
-      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
+      "community": 8,
+      "community_name": "resolveLiveInjectionAnchor",
       "norm_label": "parseoriginalmarkupelement()"
     },
     {
@@ -58228,8 +58228,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_normalizeelementclassname",
-      "community": 21,
-      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
+      "community": 8,
+      "community_name": "resolveLiveInjectionAnchor",
       "norm_label": "normalizeelementclassname()"
     },
     {
@@ -58252,8 +58252,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_isusableinjectionanchor",
-      "community": 21,
-      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
+      "community": 8,
+      "community_name": "resolveLiveInjectionAnchor",
       "norm_label": "isusableinjectionanchor()"
     },
     {
@@ -58264,8 +58264,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_elementmatchesoriginalmarkup",
-      "community": 21,
-      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
+      "community": 8,
+      "community_name": "resolveLiveInjectionAnchor",
       "norm_label": "elementmatchesoriginalmarkup()"
     },
     {
@@ -58276,8 +58276,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_findliveelementfromanchorsnapshot",
-      "community": 21,
-      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
+      "community": 8,
+      "community_name": "resolveLiveInjectionAnchor",
       "norm_label": "findliveelementfromanchorsnapshot()"
     },
     {
@@ -58288,8 +58288,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_findliveelementfororiginalmarkup",
-      "community": 21,
-      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
+      "community": 8,
+      "community_name": "resolveLiveInjectionAnchor",
       "norm_label": "findliveelementfororiginalmarkup()"
     },
     {
@@ -58300,8 +58300,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_resolveliveinjectionanchor",
-      "community": 21,
-      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
+      "community": 8,
+      "community_name": "resolveLiveInjectionAnchor",
       "norm_label": "resolveliveinjectionanchor()"
     },
     {
@@ -58312,8 +58312,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_issvelteinsertmanifest",
-      "community": 21,
-      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
+      "community": 26,
+      "community_name": "connectSSE",
       "norm_label": "issvelteinsertmanifest()"
     },
     {
@@ -58324,8 +58324,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_findliveelementforsveltemanifest",
-      "community": 21,
-      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
+      "community": 26,
+      "community_name": "connectSSE",
       "norm_label": "findliveelementforsveltemanifest()"
     },
     {
@@ -58360,8 +58360,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_detectdevserverbase",
-      "community": 21,
-      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
+      "community": 94,
+      "community_name": "showToast",
       "norm_label": "detectdevserverbase()"
     },
     {
@@ -58372,8 +58372,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_componentmodulecandidates",
-      "community": 21,
-      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
+      "community": 94,
+      "community_name": "showToast",
       "norm_label": "componentmodulecandidates()"
     },
     {
@@ -58384,8 +58384,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_importfirstreachable",
-      "community": 21,
-      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
+      "community": 94,
+      "community_name": "showToast",
       "norm_label": "importfirstreachable()"
     },
     {
@@ -58396,8 +58396,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_probepreviewtree",
-      "community": 21,
-      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
+      "community": 94,
+      "community_name": "showToast",
       "norm_label": "probepreviewtree()"
     },
     {
@@ -58408,8 +58408,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_loadsvelteruntime",
-      "community": 21,
-      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
+      "community": 94,
+      "community_name": "showToast",
       "norm_label": "loadsvelteruntime()"
     },
     {
@@ -58432,8 +58432,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_removesveltecomponentvariantstyle",
-      "community": 21,
-      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
+      "community": 94,
+      "community_name": "showToast",
       "norm_label": "removesveltecomponentvariantstyle()"
     },
     {
@@ -58600,8 +58600,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_mountsveltecomponentvariant",
-      "community": 21,
-      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
+      "community": 94,
+      "community_name": "showToast",
       "norm_label": "mountsveltecomponentvariant()"
     },
     {
@@ -58612,8 +58612,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_describemountfailure",
-      "community": 21,
-      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
+      "community": 94,
+      "community_name": "showToast",
       "norm_label": "describemountfailure()"
     },
     {
@@ -58624,8 +58624,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_teardownsveltecomponentsession",
-      "community": 26,
-      "community_name": "connectSSE",
+      "community": 94,
+      "community_name": "showToast",
       "norm_label": "teardownsveltecomponentsession()"
     },
     {
@@ -58636,8 +58636,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_applyoriginalattrstosvelteanchor",
-      "community": 21,
-      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
+      "community": 8,
+      "community_name": "resolveLiveInjectionAnchor",
       "norm_label": "applyoriginalattrstosvelteanchor()"
     },
     {
@@ -58648,8 +58648,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_commitacceptedsveltecomponenttodom",
-      "community": 21,
-      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
+      "community": 8,
+      "community_name": "resolveLiveInjectionAnchor",
       "norm_label": "commitacceptedsveltecomponenttodom()"
     },
     {
@@ -58672,8 +58672,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_waitforsveltecomponenttargetandretry",
-      "community": 21,
-      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
+      "community": 26,
+      "community_name": "connectSSE",
       "norm_label": "waitforsveltecomponenttargetandretry()"
     },
     {
@@ -58684,8 +58684,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_reportvariantmounted",
-      "community": 21,
-      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
+      "community": 94,
+      "community_name": "showToast",
       "norm_label": "reportvariantmounted()"
     },
     {
@@ -58696,8 +58696,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_reportvariantmountfailed",
-      "community": 21,
-      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
+      "community": 94,
+      "community_name": "showToast",
       "norm_label": "reportvariantmountfailed()"
     },
     {
@@ -58720,8 +58720,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_showmounterrorcard",
-      "community": 26,
-      "community_name": "connectSSE",
+      "community": 94,
+      "community_name": "showToast",
       "norm_label": "showmounterrorcard()"
     },
     {
@@ -58780,8 +58780,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_abortsveltecomponentinjection",
-      "community": 26,
-      "community_name": "connectSSE",
+      "community": 94,
+      "community_name": "showToast",
       "norm_label": "abortsveltecomponentinjection()"
     },
     {
@@ -59032,8 +59032,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_removevariantstatestylesheet",
-      "community": 26,
-      "community_name": "connectSSE",
+      "community": 94,
+      "community_name": "showToast",
       "norm_label": "removevariantstatestylesheet()"
     },
     {
@@ -59140,8 +59140,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_startscrolllock",
-      "community": 26,
-      "community_name": "connectSSE",
+      "community": 38,
+      "community_name": "setLiveState",
       "norm_label": "startscrolllock()"
     },
     {
@@ -59152,8 +59152,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_stopscrolllock",
-      "community": 26,
-      "community_name": "connectSSE",
+      "community": 38,
+      "community_name": "setLiveState",
       "norm_label": "stopscrolllock()"
     },
     {
@@ -59572,8 +59572,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_handlemousemove",
-      "community": 21,
-      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
+      "community": 85,
+      "community_name": "initGlobalBar",
       "norm_label": "handlemousemove()"
     },
     {
@@ -59680,8 +59680,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_loadmodernscreenshot",
-      "community": 154,
-      "community_name": "captureElementToBlob",
+      "community": 21,
+      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
       "norm_label": "loadmodernscreenshot()"
     },
     {
@@ -59728,8 +59728,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_istransparentcolor",
-      "community": 154,
-      "community_name": "captureElementToBlob",
+      "community": 21,
+      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
       "norm_label": "istransparentcolor()"
     },
     {
@@ -59740,8 +59740,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_resolvecanvasbackground",
-      "community": 154,
-      "community_name": "captureElementToBlob",
+      "community": 21,
+      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
       "norm_label": "resolvecanvasbackground()"
     },
     {
@@ -59752,8 +59752,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_capturechromenodes",
-      "community": 154,
-      "community_name": "captureElementToBlob",
+      "community": 21,
+      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
       "norm_label": "capturechromenodes()"
     },
     {
@@ -59764,8 +59764,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_hidecapturechromeforshaderproxy",
-      "community": 154,
-      "community_name": "captureElementToBlob",
+      "community": 21,
+      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
       "norm_label": "hidecapturechromeforshaderproxy()"
     },
     {
@@ -59776,8 +59776,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_shoulduseancestorcropshaderproxy",
-      "community": 154,
-      "community_name": "captureElementToBlob",
+      "community": 21,
+      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
       "norm_label": "shoulduseancestorcropshaderproxy()"
     },
     {
@@ -59788,8 +59788,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_paintsshaderproxysurface",
-      "community": 154,
-      "community_name": "captureElementToBlob",
+      "community": 21,
+      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
       "norm_label": "paintsshaderproxysurface()"
     },
     {
@@ -59800,8 +59800,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_findshaderproxycaptureroot",
-      "community": 154,
-      "community_name": "captureElementToBlob",
+      "community": 21,
+      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
       "norm_label": "findshaderproxycaptureroot()"
     },
     {
@@ -59812,8 +59812,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_captureelementfromrenderedancestor",
-      "community": 154,
-      "community_name": "captureElementToBlob",
+      "community": 21,
+      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
       "norm_label": "captureelementfromrenderedancestor()"
     },
     {
@@ -59824,8 +59824,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_captureelementtoblob",
-      "community": 154,
-      "community_name": "captureElementToBlob",
+      "community": 21,
+      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
       "norm_label": "captureelementtoblob()"
     },
     {
@@ -59848,8 +59848,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_csscolortorgb01",
-      "community": 154,
-      "community_name": "captureElementToBlob",
+      "community": 21,
+      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
       "norm_label": "csscolortorgb01()"
     },
     {
@@ -59860,8 +59860,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_resolvepaperrgb",
-      "community": 154,
-      "community_name": "captureElementToBlob",
+      "community": 21,
+      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
       "norm_label": "resolvepaperrgb()"
     },
     {
@@ -59872,8 +59872,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_paintsbackdrop",
-      "community": 154,
-      "community_name": "captureElementToBlob",
+      "community": 21,
+      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
       "norm_label": "paintsbackdrop()"
     },
     {
@@ -59884,8 +59884,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_findbackdropancestor",
-      "community": 154,
-      "community_name": "captureElementToBlob",
+      "community": 21,
+      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
       "norm_label": "findbackdropancestor()"
     },
     {
@@ -59896,8 +59896,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_averagergb01",
-      "community": 154,
-      "community_name": "captureElementToBlob",
+      "community": 21,
+      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
       "norm_label": "averagergb01()"
     },
     {
@@ -59908,8 +59908,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_dominantrgb01",
-      "community": 154,
-      "community_name": "captureElementToBlob",
+      "community": 21,
+      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
       "norm_label": "dominantrgb01()"
     },
     {
@@ -59920,8 +59920,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_samplesurroundingrgb",
-      "community": 154,
-      "community_name": "captureElementToBlob",
+      "community": 21,
+      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
       "norm_label": "samplesurroundingrgb()"
     },
     {
@@ -59932,8 +59932,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_compileshader",
-      "community": 154,
-      "community_name": "captureElementToBlob",
+      "community": 21,
+      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
       "norm_label": "compileshader()"
     },
     {
@@ -59980,8 +59980,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_showshaderbitmapfallback",
-      "community": 154,
-      "community_name": "captureElementToBlob",
+      "community": 21,
+      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
       "norm_label": "showshaderbitmapfallback()"
     },
     {
@@ -59992,8 +59992,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_showshaderoverlay",
-      "community": 154,
-      "community_name": "captureElementToBlob",
+      "community": 21,
+      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
       "norm_label": "showshaderoverlay()"
     },
     {
@@ -60016,8 +60016,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_maybecompleteacceptedsession",
-      "community": 21,
-      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
+      "community": 8,
+      "community_name": "resolveLiveInjectionAnchor",
       "norm_label": "maybecompleteacceptedsession()"
     },
     {
@@ -60028,8 +60028,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_scheduleacceptcleanup",
-      "community": 94,
-      "community_name": "showToast",
+      "community": 8,
+      "community_name": "resolveLiveInjectionAnchor",
       "norm_label": "scheduleacceptcleanup()"
     },
     {
@@ -60040,8 +60040,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_snapshotacceptedvariantdom",
-      "community": 155,
-      "community_name": "normalizeManualContextText",
+      "community": 21,
+      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
       "norm_label": "snapshotacceptedvariantdom()"
     },
     {
@@ -60052,8 +60052,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_selectorforacceptedroot",
-      "community": 155,
-      "community_name": "normalizeManualContextText",
+      "community": 21,
+      "community_name": ".opencode/skills/impeccable/scripts/live-browser.js",
       "norm_label": "selectorforacceptedroot()"
     },
     {
@@ -60064,8 +60064,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_accepteddomalreadyclean",
-      "community": 94,
-      "community_name": "showToast",
+      "community": 8,
+      "community_name": "resolveLiveInjectionAnchor",
       "norm_label": "accepteddomalreadyclean()"
     },
     {
@@ -60076,8 +60076,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_ensureaccepteddomclean",
-      "community": 94,
-      "community_name": "showToast",
+      "community": 8,
+      "community_name": "resolveLiveInjectionAnchor",
       "norm_label": "ensureaccepteddomclean()"
     },
     {
@@ -60088,8 +60088,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_findacceptedruntimewrappers",
-      "community": 94,
-      "community_name": "showToast",
+      "community": 8,
+      "community_name": "resolveLiveInjectionAnchor",
       "norm_label": "findacceptedruntimewrappers()"
     },
     {
@@ -60100,8 +60100,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_restoreaccepteddomfromsnapshot",
-      "community": 94,
-      "community_name": "showToast",
+      "community": 8,
+      "community_name": "resolveLiveInjectionAnchor",
       "norm_label": "restoreaccepteddomfromsnapshot()"
     },
     {
@@ -60112,8 +60112,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_reloadaftermissingaccepteddom",
-      "community": 94,
-      "community_name": "showToast",
+      "community": 8,
+      "community_name": "resolveLiveInjectionAnchor",
       "norm_label": "reloadaftermissingaccepteddom()"
     },
     {
@@ -60436,8 +60436,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_handledwrapperreloadkey",
-      "community": 94,
-      "community_name": "showToast",
+      "community": 8,
+      "community_name": "resolveLiveInjectionAnchor",
       "norm_label": "handledwrapperreloadkey()"
     },
     {
@@ -60448,8 +60448,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_clearhandledwrapperreloadstamp",
-      "community": 94,
-      "community_name": "showToast",
+      "community": 8,
+      "community_name": "resolveLiveInjectionAnchor",
       "norm_label": "clearhandledwrapperreloadstamp()"
     },
     {
@@ -60460,8 +60460,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_schedulehandledruntimewrapperreload",
-      "community": 94,
-      "community_name": "showToast",
+      "community": 8,
+      "community_name": "resolveLiveInjectionAnchor",
       "norm_label": "schedulehandledruntimewrapperreload()"
     },
     {
@@ -60472,8 +60472,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_watchforhandledruntimewrapper",
-      "community": 94,
-      "community_name": "showToast",
+      "community": 8,
+      "community_name": "resolveLiveInjectionAnchor",
       "norm_label": "watchforhandledruntimewrapper()"
     },
     {
@@ -60628,8 +60628,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_pagechatcollapsedwidthpx",
-      "community": 85,
-      "community_name": "initGlobalBar",
+      "community": 68,
+      "community_name": "initPageChat",
       "norm_label": "pagechatcollapsedwidthpx()"
     },
     {
@@ -60640,8 +60640,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_pagechatexpandedwidth",
-      "community": 85,
-      "community_name": "initGlobalBar",
+      "community": 68,
+      "community_name": "initPageChat",
       "norm_label": "pagechatexpandedwidth()"
     },
     {
@@ -60652,8 +60652,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "opencode_skills_impeccable_scripts_live_browser_syncpagechatexpandedwidth",
-      "community": 85,
-      "community_name": "initGlobalBar",
+      "community": 68,
+      "community_name": "initPageChat",
       "norm_label": "syncpagechatexpandedwidth()"
     },
     {
@@ -63343,7 +63343,7 @@
       "_origin": "ast",
       "id": "src_app_about_page",
       "community": 7,
-      "community_name": "createClient",
+      "community_name": "useAuth",
       "norm_label": "about/page.js"
     },
     {
@@ -63354,7 +63354,7 @@
       "_origin": "ast",
       "id": "src_app_about_page_timeline",
       "community": 7,
-      "community_name": "createClient",
+      "community_name": "useAuth",
       "norm_label": "timeline"
     },
     {
@@ -63365,7 +63365,7 @@
       "_origin": "ast",
       "id": "src_app_about_page_team_members",
       "community": 7,
-      "community_name": "createClient",
+      "community_name": "useAuth",
       "norm_label": "team_members"
     },
     {
@@ -63376,7 +63376,7 @@
       "_origin": "ast",
       "id": "src_app_about_page_fleet_portfolio",
       "community": 7,
-      "community_name": "createClient",
+      "community_name": "useAuth",
       "norm_label": "fleet_portfolio"
     },
     {
@@ -63388,7 +63388,7 @@
       "_origin": "ast",
       "id": "src_app_about_page_aboutpage",
       "community": 7,
-      "community_name": "createClient",
+      "community_name": "useAuth",
       "norm_label": "aboutpage()"
     },
     {
@@ -63561,8 +63561,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_auth_login_page",
-      "community": 7,
-      "community_name": "createClient",
+      "community": 1,
+      "community_name": "app/page.js",
       "norm_label": "login/page.js"
     },
     {
@@ -63573,20 +63573,31 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_app_auth_login_page_googleicon",
-      "community": 7,
-      "community_name": "createClient",
+      "community": 1,
+      "community_name": "app/page.js",
       "norm_label": "googleicon()"
+    },
+    {
+      "label": "DEMO_ACCOUNTS",
+      "file_type": "code",
+      "source_file": "src/app/auth/login/page.js",
+      "source_location": "L24",
+      "_origin": "ast",
+      "id": "src_app_auth_login_page_demo_accounts",
+      "community": 1,
+      "community_name": "app/page.js",
+      "norm_label": "demo_accounts"
     },
     {
       "label": "LoginPage()",
       "file_type": "code",
       "source_file": "src/app/auth/login/page.js",
-      "source_location": "L24",
+      "source_location": "L67",
       "_callable": true,
       "_origin": "ast",
       "id": "src_app_auth_login_page_loginpage",
-      "community": 7,
-      "community_name": "createClient",
+      "community": 1,
+      "community_name": "app/page.js",
       "norm_label": "loginpage()"
     },
     {
@@ -63596,8 +63607,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_auth_register_page",
-      "community": 7,
-      "community_name": "createClient",
+      "community": 1,
+      "community_name": "app/page.js",
       "norm_label": "register/page.js"
     },
     {
@@ -63608,8 +63619,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_app_auth_register_page_googleicon",
-      "community": 7,
-      "community_name": "createClient",
+      "community": 1,
+      "community_name": "app/page.js",
       "norm_label": "googleicon()"
     },
     {
@@ -63620,8 +63631,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_app_auth_register_page_registerpage",
-      "community": 7,
-      "community_name": "createClient",
+      "community": 1,
+      "community_name": "app/page.js",
       "norm_label": "registerpage()"
     },
     {
@@ -63667,7 +63678,7 @@
       "_origin": "ast",
       "id": "src_app_booking_payment_bookingid_page",
       "community": 9,
-      "community_name": "useAuth",
+      "community_name": "createClient",
       "norm_label": "[bookingid]/page.js"
     },
     {
@@ -63679,7 +63690,7 @@
       "_origin": "ast",
       "id": "src_app_booking_payment_bookingid_page_paymentpagecontent",
       "community": 9,
-      "community_name": "useAuth",
+      "community_name": "createClient",
       "norm_label": "paymentpagecontent()"
     },
     {
@@ -63691,7 +63702,7 @@
       "_origin": "ast",
       "id": "src_app_booking_payment_bookingid_page_paymentpage",
       "community": 9,
-      "community_name": "useAuth",
+      "community_name": "createClient",
       "norm_label": "paymentpage()"
     },
     {
@@ -63701,8 +63712,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_contact_page",
-      "community": 8,
-      "community_name": "faq/page.js",
+      "community": 7,
+      "community_name": "useAuth",
       "norm_label": "contact/page.js"
     },
     {
@@ -63712,8 +63723,8 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "src_app_contact_page_station_desks",
-      "community": 8,
-      "community_name": "faq/page.js",
+      "community": 7,
+      "community_name": "useAuth",
       "norm_label": "station_desks"
     },
     {
@@ -63724,8 +63735,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_app_contact_page_contactpage",
-      "community": 8,
-      "community_name": "faq/page.js",
+      "community": 7,
+      "community_name": "useAuth",
       "norm_label": "contactpage()"
     },
     {
@@ -63736,7 +63747,7 @@
       "_origin": "ast",
       "id": "src_app_dashboard_admin_journeys_page",
       "community": 2,
-      "community_name": "dashboard/staff/page.js",
+      "community_name": "admin/page.js",
       "norm_label": "journeys/page.js"
     },
     {
@@ -63747,7 +63758,7 @@
       "_origin": "ast",
       "id": "src_app_dashboard_admin_journeys_page_statuscolors",
       "community": 2,
-      "community_name": "dashboard/staff/page.js",
+      "community_name": "admin/page.js",
       "norm_label": "statuscolors"
     },
     {
@@ -63759,7 +63770,7 @@
       "_origin": "ast",
       "id": "src_app_dashboard_admin_journeys_page_jakartadateinputvalue",
       "community": 2,
-      "community_name": "dashboard/staff/page.js",
+      "community_name": "admin/page.js",
       "norm_label": "jakartadateinputvalue()"
     },
     {
@@ -63771,7 +63782,7 @@
       "_origin": "ast",
       "id": "src_app_dashboard_admin_journeys_page_adddatedays",
       "community": 2,
-      "community_name": "dashboard/staff/page.js",
+      "community_name": "admin/page.js",
       "norm_label": "adddatedays()"
     },
     {
@@ -63783,7 +63794,7 @@
       "_origin": "ast",
       "id": "src_app_dashboard_admin_journeys_page_jakartadatestart",
       "community": 2,
-      "community_name": "dashboard/staff/page.js",
+      "community_name": "admin/page.js",
       "norm_label": "jakartadatestart()"
     },
     {
@@ -63795,7 +63806,7 @@
       "_origin": "ast",
       "id": "src_app_dashboard_admin_journeys_page_splitintochunks",
       "community": 2,
-      "community_name": "dashboard/staff/page.js",
+      "community_name": "admin/page.js",
       "norm_label": "splitintochunks()"
     },
     {
@@ -63807,7 +63818,7 @@
       "_origin": "ast",
       "id": "src_app_dashboard_admin_journeys_page_statusbadge",
       "community": 2,
-      "community_name": "dashboard/staff/page.js",
+      "community_name": "admin/page.js",
       "norm_label": "statusbadge()"
     },
     {
@@ -63819,7 +63830,7 @@
       "_origin": "ast",
       "id": "src_app_dashboard_admin_journeys_page_adminjourneyspage",
       "community": 2,
-      "community_name": "dashboard/staff/page.js",
+      "community_name": "admin/page.js",
       "norm_label": "adminjourneyspage()"
     },
     {
@@ -63829,8 +63840,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_dashboard_admin_page",
-      "community": 9,
-      "community_name": "useAuth",
+      "community": 2,
+      "community_name": "admin/page.js",
       "norm_label": "admin/page.js"
     },
     {
@@ -63840,8 +63851,8 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "src_app_dashboard_admin_page_emptystats",
-      "community": 9,
-      "community_name": "useAuth",
+      "community": 2,
+      "community_name": "admin/page.js",
       "norm_label": "emptystats"
     },
     {
@@ -63851,8 +63862,8 @@
       "source_location": "L44",
       "_origin": "ast",
       "id": "src_app_dashboard_admin_page_bookingstatuslabels",
-      "community": 9,
-      "community_name": "useAuth",
+      "community": 2,
+      "community_name": "admin/page.js",
       "norm_label": "bookingstatuslabels"
     },
     {
@@ -63862,8 +63873,8 @@
       "source_location": "L52",
       "_origin": "ast",
       "id": "src_app_dashboard_admin_page_paymentstatuslabels",
-      "community": 9,
-      "community_name": "useAuth",
+      "community": 2,
+      "community_name": "admin/page.js",
       "norm_label": "paymentstatuslabels"
     },
     {
@@ -63873,8 +63884,8 @@
       "source_location": "L60",
       "_origin": "ast",
       "id": "src_app_dashboard_admin_page_statuscolors",
-      "community": 9,
-      "community_name": "useAuth",
+      "community": 2,
+      "community_name": "admin/page.js",
       "norm_label": "statuscolors"
     },
     {
@@ -63886,7 +63897,7 @@
       "_origin": "ast",
       "id": "src_app_dashboard_admin_page_statusbadge",
       "community": 2,
-      "community_name": "dashboard/staff/page.js",
+      "community_name": "admin/page.js",
       "norm_label": "statusbadge()"
     },
     {
@@ -63896,8 +63907,8 @@
       "source_location": "L82",
       "_origin": "ast",
       "id": "src_app_dashboard_admin_page_admin_tabs",
-      "community": 9,
-      "community_name": "useAuth",
+      "community": 2,
+      "community_name": "admin/page.js",
       "norm_label": "admin_tabs"
     },
     {
@@ -63909,7 +63920,7 @@
       "_origin": "ast",
       "id": "src_app_dashboard_admin_page_admindashboardcontent",
       "community": 9,
-      "community_name": "useAuth",
+      "community_name": "createClient",
       "norm_label": "admindashboardcontent()"
     },
     {
@@ -63920,8 +63931,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_app_dashboard_admin_page_admindashboard",
-      "community": 9,
-      "community_name": "useAuth",
+      "community": 2,
+      "community_name": "admin/page.js",
       "norm_label": "admindashboard()"
     },
     {
@@ -63931,7 +63942,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_dashboard_admin_staff_page",
-      "community": 7,
+      "community": 9,
       "community_name": "createClient",
       "norm_label": "admin/staff/page.js"
     },
@@ -63943,7 +63954,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_app_dashboard_admin_staff_page_jakartadateinputvalue",
-      "community": 7,
+      "community": 9,
       "community_name": "createClient",
       "norm_label": "jakartadateinputvalue()"
     },
@@ -63955,7 +63966,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_app_dashboard_admin_staff_page_jakartadatestart",
-      "community": 7,
+      "community": 9,
       "community_name": "createClient",
       "norm_label": "jakartadatestart()"
     },
@@ -63967,7 +63978,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_app_dashboard_admin_staff_page_assignablescheduleid",
-      "community": 7,
+      "community": 9,
       "community_name": "createClient",
       "norm_label": "assignablescheduleid()"
     },
@@ -63979,7 +63990,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_app_dashboard_admin_staff_page_adminstaffpage",
-      "community": 7,
+      "community": 9,
       "community_name": "createClient",
       "norm_label": "adminstaffpage()"
     },
@@ -63991,7 +64002,7 @@
       "_origin": "ast",
       "id": "src_app_dashboard_orders_page",
       "community": 7,
-      "community_name": "createClient",
+      "community_name": "useAuth",
       "norm_label": "orders/page.js"
     },
     {
@@ -64002,7 +64013,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_app_dashboard_orders_page_foodorderspage",
-      "community": 9,
+      "community": 7,
       "community_name": "useAuth",
       "norm_label": "foodorderspage()"
     },
@@ -64014,7 +64025,7 @@
       "_origin": "ast",
       "id": "src_app_dashboard_passenger_page",
       "community": 9,
-      "community_name": "useAuth",
+      "community_name": "createClient",
       "norm_label": "passenger/page.js"
     },
     {
@@ -64025,7 +64036,7 @@
       "_origin": "ast",
       "id": "src_app_dashboard_passenger_page_tabs",
       "community": 9,
-      "community_name": "useAuth",
+      "community_name": "createClient",
       "norm_label": "tabs"
     },
     {
@@ -64036,7 +64047,7 @@
       "_origin": "ast",
       "id": "src_app_dashboard_passenger_page_tab_aliases",
       "community": 9,
-      "community_name": "useAuth",
+      "community_name": "createClient",
       "norm_label": "tab_aliases"
     },
     {
@@ -64048,7 +64059,7 @@
       "_origin": "ast",
       "id": "src_app_dashboard_passenger_page_passengerdashboardcontent",
       "community": 9,
-      "community_name": "useAuth",
+      "community_name": "createClient",
       "norm_label": "passengerdashboardcontent()"
     },
     {
@@ -64060,7 +64071,7 @@
       "_origin": "ast",
       "id": "src_app_dashboard_passenger_page_passengerdashboard",
       "community": 9,
-      "community_name": "useAuth",
+      "community_name": "createClient",
       "norm_label": "passengerdashboard()"
     },
     {
@@ -64071,7 +64082,7 @@
       "_origin": "ast",
       "id": "src_app_dashboard_reports_page",
       "community": 7,
-      "community_name": "createClient",
+      "community_name": "useAuth",
       "norm_label": "reports/page.js"
     },
     {
@@ -64082,7 +64093,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_app_dashboard_reports_page_passengerreportspage",
-      "community": 9,
+      "community": 7,
       "community_name": "useAuth",
       "norm_label": "passengerreportspage()"
     },
@@ -64094,7 +64105,7 @@
       "_origin": "ast",
       "id": "src_app_dashboard_staff_page",
       "community": 2,
-      "community_name": "dashboard/staff/page.js",
+      "community_name": "admin/page.js",
       "norm_label": "dashboard/staff/page.js"
     },
     {
@@ -64105,7 +64116,7 @@
       "_origin": "ast",
       "id": "src_app_dashboard_staff_page_status_colors",
       "community": 2,
-      "community_name": "dashboard/staff/page.js",
+      "community_name": "admin/page.js",
       "norm_label": "status_colors"
     },
     {
@@ -64117,7 +64128,7 @@
       "_origin": "ast",
       "id": "src_app_dashboard_staff_page_journeystatus",
       "community": 2,
-      "community_name": "dashboard/staff/page.js",
+      "community_name": "admin/page.js",
       "norm_label": "journeystatus()"
     },
     {
@@ -64128,7 +64139,7 @@
       "_origin": "ast",
       "id": "src_app_dashboard_staff_page_tabs",
       "community": 2,
-      "community_name": "dashboard/staff/page.js",
+      "community_name": "admin/page.js",
       "norm_label": "tabs"
     },
     {
@@ -64140,19 +64151,19 @@
       "_origin": "ast",
       "id": "src_app_dashboard_staff_page_staffdashboardcontent",
       "community": 9,
-      "community_name": "useAuth",
+      "community_name": "createClient",
       "norm_label": "staffdashboardcontent()"
     },
     {
       "label": "StaffDashboard()",
       "file_type": "code",
       "source_file": "src/app/dashboard/staff/page.js",
-      "source_location": "L1203",
+      "source_location": "L1221",
       "_callable": true,
       "_origin": "ast",
       "id": "src_app_dashboard_staff_page_staffdashboard",
       "community": 2,
-      "community_name": "dashboard/staff/page.js",
+      "community_name": "admin/page.js",
       "norm_label": "staffdashboard()"
     },
     {
@@ -64162,8 +64173,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_faq_page",
-      "community": 8,
-      "community_name": "faq/page.js",
+      "community": 7,
+      "community_name": "useAuth",
       "norm_label": "faq/page.js"
     },
     {
@@ -64173,8 +64184,8 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "src_app_faq_page_faq_categories",
-      "community": 8,
-      "community_name": "faq/page.js",
+      "community": 7,
+      "community_name": "useAuth",
       "norm_label": "faq_categories"
     },
     {
@@ -64184,8 +64195,8 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "src_app_faq_page_faq_items",
-      "community": 8,
-      "community_name": "faq/page.js",
+      "community": 7,
+      "community_name": "useAuth",
       "norm_label": "faq_items"
     },
     {
@@ -64196,8 +64207,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_app_faq_page_faqpage",
-      "community": 8,
-      "community_name": "faq/page.js",
+      "community": 7,
+      "community_name": "useAuth",
       "norm_label": "faqpage()"
     },
     {
@@ -64207,8 +64218,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_layout",
-      "community": 1,
-      "community_name": "app/page.js",
+      "community": 158,
+      "community_name": "AuthContext.js",
       "norm_label": "layout.js"
     },
     {
@@ -64218,8 +64229,8 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "src_app_layout_montserrat",
-      "community": 1,
-      "community_name": "app/page.js",
+      "community": 158,
+      "community_name": "AuthContext.js",
       "norm_label": "montserrat"
     },
     {
@@ -64229,8 +64240,8 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "src_app_layout_robotomono",
-      "community": 1,
-      "community_name": "app/page.js",
+      "community": 158,
+      "community_name": "AuthContext.js",
       "norm_label": "robotomono"
     },
     {
@@ -64240,8 +64251,8 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "src_app_layout_viewport",
-      "community": 1,
-      "community_name": "app/page.js",
+      "community": 158,
+      "community_name": "AuthContext.js",
       "norm_label": "viewport"
     },
     {
@@ -64251,8 +64262,8 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "src_app_layout_metadata",
-      "community": 1,
-      "community_name": "app/page.js",
+      "community": 158,
+      "community_name": "AuthContext.js",
       "norm_label": "metadata"
     },
     {
@@ -64263,8 +64274,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_app_layout_rootlayout",
-      "community": 1,
-      "community_name": "app/page.js",
+      "community": 158,
+      "community_name": "AuthContext.js",
       "norm_label": "rootlayout()"
     },
     {
@@ -64364,8 +64375,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_trains_page",
-      "community": 5,
-      "community_name": "TrainSearchResults.jsx",
+      "community": 1,
+      "community_name": "app/page.js",
       "norm_label": "trains/page.js"
     },
     {
@@ -64375,8 +64386,8 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_app_trains_page_metadata",
-      "community": 5,
-      "community_name": "TrainSearchResults.jsx",
+      "community": 1,
+      "community_name": "app/page.js",
       "norm_label": "metadata"
     },
     {
@@ -64387,8 +64398,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_app_trains_page_firstvalue",
-      "community": 5,
-      "community_name": "TrainSearchResults.jsx",
+      "community": 1,
+      "community_name": "app/page.js",
       "norm_label": "firstvalue()"
     },
     {
@@ -64399,8 +64410,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_app_trains_page_trainspagecontent",
-      "community": 5,
-      "community_name": "TrainSearchResults.jsx",
+      "community": 1,
+      "community_name": "app/page.js",
       "norm_label": "trainspagecontent()"
     },
     {
@@ -64411,8 +64422,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_app_trains_page_trainspage",
-      "community": 5,
-      "community_name": "TrainSearchResults.jsx",
+      "community": 1,
+      "community_name": "app/page.js",
       "norm_label": "trainspage()"
     },
     {
@@ -64422,8 +64433,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_auth_mobiletrainillustration",
-      "community": 7,
-      "community_name": "createClient",
+      "community": 1,
+      "community_name": "app/page.js",
       "norm_label": "mobiletrainillustration.jsx"
     },
     {
@@ -64434,8 +64445,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_auth_mobiletrainillustration_mobiletrainillustration",
-      "community": 7,
-      "community_name": "createClient",
+      "community": 1,
+      "community_name": "app/page.js",
       "norm_label": "mobiletrainillustration()"
     },
     {
@@ -64493,7 +64504,7 @@
       "_origin": "ast",
       "id": "src_components_booking_bookingpayment",
       "community": 9,
-      "community_name": "useAuth",
+      "community_name": "createClient",
       "norm_label": "bookingpayment.jsx"
     },
     {
@@ -64504,7 +64515,7 @@
       "_origin": "ast",
       "id": "src_components_booking_bookingpayment_ticket_payment_methods",
       "community": 9,
-      "community_name": "useAuth",
+      "community_name": "createClient",
       "norm_label": "ticket_payment_methods"
     },
     {
@@ -64516,7 +64527,7 @@
       "_origin": "ast",
       "id": "src_components_booking_bookingpayment_localdatevalue",
       "community": 9,
-      "community_name": "useAuth",
+      "community_name": "createClient",
       "norm_label": "localdatevalue()"
     },
     {
@@ -64528,7 +64539,7 @@
       "_origin": "ast",
       "id": "src_components_booking_bookingpayment_bookingpayment",
       "community": 9,
-      "community_name": "useAuth",
+      "community_name": "createClient",
       "norm_label": "bookingpayment()"
     },
     {
@@ -64539,7 +64550,7 @@
       "_origin": "ast",
       "id": "src_components_booking_eboardingpass",
       "community": 9,
-      "community_name": "useAuth",
+      "community_name": "createClient",
       "norm_label": "eboardingpass.jsx"
     },
     {
@@ -64551,7 +64562,7 @@
       "_origin": "ast",
       "id": "src_components_booking_eboardingpass_routeparts",
       "community": 9,
-      "community_name": "useAuth",
+      "community_name": "createClient",
       "norm_label": "routeparts()"
     },
     {
@@ -64563,7 +64574,7 @@
       "_origin": "ast",
       "id": "src_components_booking_eboardingpass_eboardingpass",
       "community": 9,
-      "community_name": "useAuth",
+      "community_name": "createClient",
       "norm_label": "eboardingpass()"
     },
     {
@@ -64573,8 +64584,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_booking_searchwidget",
-      "community": 5,
-      "community_name": "TrainSearchResults.jsx",
+      "community": 1,
+      "community_name": "app/page.js",
       "norm_label": "searchwidget.jsx"
     },
     {
@@ -64585,8 +64596,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_booking_searchwidget_formatlocaldate",
-      "community": 5,
-      "community_name": "TrainSearchResults.jsx",
+      "community": 1,
+      "community_name": "app/page.js",
       "norm_label": "formatlocaldate()"
     },
     {
@@ -64597,8 +64608,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_booking_searchwidget_formatdisplaydate",
-      "community": 5,
-      "community_name": "TrainSearchResults.jsx",
+      "community": 1,
+      "community_name": "app/page.js",
       "norm_label": "formatdisplaydate()"
     },
     {
@@ -64609,8 +64620,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_booking_searchwidget_passengerseaticon",
-      "community": 5,
-      "community_name": "TrainSearchResults.jsx",
+      "community": 1,
+      "community_name": "app/page.js",
       "norm_label": "passengerseaticon()"
     },
     {
@@ -64620,8 +64631,8 @@
       "source_location": "L56",
       "_origin": "ast",
       "id": "src_components_booking_searchwidget_popular_codes",
-      "community": 5,
-      "community_name": "TrainSearchResults.jsx",
+      "community": 1,
+      "community_name": "app/page.js",
       "norm_label": "popular_codes"
     },
     {
@@ -64632,8 +64643,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_booking_searchwidget_searchwidget",
-      "community": 5,
-      "community_name": "TrainSearchResults.jsx",
+      "community": 1,
+      "community_name": "app/page.js",
       "norm_label": "searchwidget()"
     },
     {
@@ -64690,8 +64701,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_booking_trainspagechrome",
-      "community": 5,
-      "community_name": "TrainSearchResults.jsx",
+      "community": 1,
+      "community_name": "app/page.js",
       "norm_label": "trainspagechrome.jsx"
     },
     {
@@ -64702,8 +64713,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_booking_trainspagechrome_trainspagechrome",
-      "community": 5,
-      "community_name": "TrainSearchResults.jsx",
+      "community": 1,
+      "community_name": "app/page.js",
       "norm_label": "trainspagechrome()"
     },
     {
@@ -64794,7 +64805,7 @@
       "_origin": "ast",
       "id": "src_components_journey_livejourneymaptracker",
       "community": 9,
-      "community_name": "useAuth",
+      "community_name": "createClient",
       "norm_label": "livejourneymaptracker.jsx"
     },
     {
@@ -64806,7 +64817,7 @@
       "_origin": "ast",
       "id": "src_components_journey_livejourneymaptracker_generatetransitstops",
       "community": 9,
-      "community_name": "useAuth",
+      "community_name": "createClient",
       "norm_label": "generatetransitstops()"
     },
     {
@@ -64818,7 +64829,7 @@
       "_origin": "ast",
       "id": "src_components_journey_livejourneymaptracker_livejourneymaptracker",
       "community": 9,
-      "community_name": "useAuth",
+      "community_name": "createClient",
       "norm_label": "livejourneymaptracker()"
     },
     {
@@ -64828,8 +64839,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_layout_footer",
-      "community": 8,
-      "community_name": "faq/page.js",
+      "community": 7,
+      "community_name": "useAuth",
       "norm_label": "footer.jsx"
     },
     {
@@ -64839,8 +64850,8 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "src_components_layout_footer_footer_links",
-      "community": 8,
-      "community_name": "faq/page.js",
+      "community": 7,
+      "community_name": "useAuth",
       "norm_label": "footer_links"
     },
     {
@@ -64851,8 +64862,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_layout_footer_footer",
-      "community": 8,
-      "community_name": "faq/page.js",
+      "community": 7,
+      "community_name": "useAuth",
       "norm_label": "footer()"
     },
     {
@@ -64863,7 +64874,7 @@
       "_origin": "ast",
       "id": "src_components_layout_navbar",
       "community": 7,
-      "community_name": "createClient",
+      "community_name": "useAuth",
       "norm_label": "navbar.jsx"
     },
     {
@@ -64875,7 +64886,7 @@
       "_origin": "ast",
       "id": "src_components_layout_navbar_publicnavlinks",
       "community": 7,
-      "community_name": "createClient",
+      "community_name": "useAuth",
       "norm_label": "publicnavlinks()"
     },
     {
@@ -64887,7 +64898,7 @@
       "_origin": "ast",
       "id": "src_components_layout_navbar_navbar",
       "community": 7,
-      "community_name": "createClient",
+      "community_name": "useAuth",
       "norm_label": "navbar()"
     },
     {
@@ -64897,8 +64908,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_layout_routetransition",
-      "community": 1,
-      "community_name": "app/page.js",
+      "community": 158,
+      "community_name": "AuthContext.js",
       "norm_label": "routetransition.jsx"
     },
     {
@@ -64909,8 +64920,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_layout_routetransition_routetransition",
-      "community": 1,
-      "community_name": "app/page.js",
+      "community": 158,
+      "community_name": "AuthContext.js",
       "norm_label": "routetransition()"
     },
     {
@@ -64921,7 +64932,7 @@
       "_origin": "ast",
       "id": "src_components_services_journeystatustimeline",
       "community": 9,
-      "community_name": "useAuth",
+      "community_name": "createClient",
       "norm_label": "journeystatustimeline.jsx"
     },
     {
@@ -64932,7 +64943,7 @@
       "_origin": "ast",
       "id": "src_components_services_journeystatustimeline_status_colors",
       "community": 9,
-      "community_name": "useAuth",
+      "community_name": "createClient",
       "norm_label": "status_colors"
     },
     {
@@ -64944,7 +64955,7 @@
       "_origin": "ast",
       "id": "src_components_services_journeystatustimeline_journeystatustimeline",
       "community": 9,
-      "community_name": "useAuth",
+      "community_name": "createClient",
       "norm_label": "journeystatustimeline()"
     },
     {
@@ -64955,7 +64966,7 @@
       "_origin": "ast",
       "id": "src_components_services_passengerservices",
       "community": 9,
-      "community_name": "useAuth",
+      "community_name": "createClient",
       "norm_label": "passengerservices.jsx"
     },
     {
@@ -64966,7 +64977,7 @@
       "_origin": "ast",
       "id": "src_components_services_passengerservices_report_categories",
       "community": 9,
-      "community_name": "useAuth",
+      "community_name": "createClient",
       "norm_label": "report_categories"
     },
     {
@@ -64977,7 +64988,7 @@
       "_origin": "ast",
       "id": "src_components_services_passengerservices_food_payment_methods",
       "community": 9,
-      "community_name": "useAuth",
+      "community_name": "createClient",
       "norm_label": "food_payment_methods"
     },
     {
@@ -64988,7 +64999,7 @@
       "_origin": "ast",
       "id": "src_components_services_passengerservices_order_status_labels",
       "community": 9,
-      "community_name": "useAuth",
+      "community_name": "createClient",
       "norm_label": "order_status_labels"
     },
     {
@@ -64999,7 +65010,7 @@
       "_origin": "ast",
       "id": "src_components_services_passengerservices_report_status_labels",
       "community": 9,
-      "community_name": "useAuth",
+      "community_name": "createClient",
       "norm_label": "report_status_labels"
     },
     {
@@ -65011,7 +65022,7 @@
       "_origin": "ast",
       "id": "src_components_services_passengerservices_passengerservices",
       "community": 9,
-      "community_name": "useAuth",
+      "community_name": "createClient",
       "norm_label": "passengerservices()"
     },
     {
@@ -65022,7 +65033,7 @@
       "_origin": "ast",
       "id": "src_components_services_staffservicedesk",
       "community": 7,
-      "community_name": "createClient",
+      "community_name": "useAuth",
       "norm_label": "staffservicedesk.jsx"
     },
     {
@@ -65033,7 +65044,7 @@
       "_origin": "ast",
       "id": "src_components_services_staffservicedesk_order_transitions",
       "community": 7,
-      "community_name": "createClient",
+      "community_name": "useAuth",
       "norm_label": "order_transitions"
     },
     {
@@ -65044,7 +65055,7 @@
       "_origin": "ast",
       "id": "src_components_services_staffservicedesk_report_transitions",
       "community": 7,
-      "community_name": "createClient",
+      "community_name": "useAuth",
       "norm_label": "report_transitions"
     },
     {
@@ -65055,7 +65066,7 @@
       "_origin": "ast",
       "id": "src_components_services_staffservicedesk_order_status_labels",
       "community": 7,
-      "community_name": "createClient",
+      "community_name": "useAuth",
       "norm_label": "order_status_labels"
     },
     {
@@ -65066,7 +65077,7 @@
       "_origin": "ast",
       "id": "src_components_services_staffservicedesk_report_status_labels",
       "community": 7,
-      "community_name": "createClient",
+      "community_name": "useAuth",
       "norm_label": "report_status_labels"
     },
     {
@@ -65078,7 +65089,7 @@
       "_origin": "ast",
       "id": "src_components_services_staffservicedesk_staffservicedesk",
       "community": 7,
-      "community_name": "createClient",
+      "community_name": "useAuth",
       "norm_label": "staffservicedesk()"
     },
     {
@@ -65089,7 +65100,7 @@
       "_origin": "ast",
       "id": "src_components_staff_ticketscanner",
       "community": 2,
-      "community_name": "dashboard/staff/page.js",
+      "community_name": "admin/page.js",
       "norm_label": "ticketscanner.jsx"
     },
     {
@@ -65101,7 +65112,7 @@
       "_origin": "ast",
       "id": "src_components_staff_ticketscanner_ticketscanner",
       "community": 2,
-      "community_name": "dashboard/staff/page.js",
+      "community_name": "admin/page.js",
       "norm_label": "ticketscanner()"
     },
     {
@@ -65313,8 +65324,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_contexts_authcontext",
-      "community": 1,
-      "community_name": "app/page.js",
+      "community": 158,
+      "community_name": "AuthContext.js",
       "norm_label": "authcontext.js"
     },
     {
@@ -65324,8 +65335,8 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_contexts_authcontext_authcontext",
-      "community": 1,
-      "community_name": "app/page.js",
+      "community": 158,
+      "community_name": "AuthContext.js",
       "norm_label": "authcontext"
     },
     {
@@ -65336,8 +65347,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_contexts_authcontext_authprovider",
-      "community": 1,
-      "community_name": "app/page.js",
+      "community": 158,
+      "community_name": "AuthContext.js",
       "norm_label": "authprovider()"
     },
     {
@@ -65348,7 +65359,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_contexts_authcontext_useauth",
-      "community": 9,
+      "community": 7,
       "community_name": "useAuth",
       "norm_label": "useauth()"
     },
@@ -65429,8 +65440,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_contexts_langcontext_uselang",
-      "community": 7,
-      "community_name": "createClient",
+      "community": 1,
+      "community_name": "app/page.js",
       "norm_label": "uselang()"
     },
     {
@@ -65612,7 +65623,7 @@
       "_origin": "ast",
       "id": "src_lib_operations_journey_status",
       "community": 2,
-      "community_name": "dashboard/staff/page.js",
+      "community_name": "admin/page.js",
       "norm_label": "journey-status.js"
     },
     {
@@ -65623,7 +65634,7 @@
       "_origin": "ast",
       "id": "src_lib_operations_journey_status_journey_statuses",
       "community": 2,
-      "community_name": "dashboard/staff/page.js",
+      "community_name": "admin/page.js",
       "norm_label": "journey_statuses"
     },
     {
@@ -65634,7 +65645,7 @@
       "_origin": "ast",
       "id": "src_lib_operations_journey_status_next_journey_statuses",
       "community": 2,
-      "community_name": "dashboard/staff/page.js",
+      "community_name": "admin/page.js",
       "norm_label": "next_journey_statuses"
     },
     {
@@ -65646,7 +65657,7 @@
       "_origin": "ast",
       "id": "src_lib_operations_journey_status_getnextjourneystatuses",
       "community": 2,
-      "community_name": "dashboard/staff/page.js",
+      "community_name": "admin/page.js",
       "norm_label": "getnextjourneystatuses()"
     },
     {
@@ -65658,7 +65669,7 @@
       "_origin": "ast",
       "id": "src_lib_operations_journey_status_getjourneystatuslabel",
       "community": 2,
-      "community_name": "dashboard/staff/page.js",
+      "community_name": "admin/page.js",
       "norm_label": "getjourneystatuslabel()"
     },
     {
@@ -65797,7 +65808,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_supabase_client",
-      "community": 7,
+      "community": 9,
       "community_name": "createClient",
       "norm_label": "client.js"
     },
@@ -65809,7 +65820,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_lib_supabase_client_createclient",
-      "community": 7,
+      "community": 9,
       "community_name": "createClient",
       "norm_label": "createclient()"
     },
@@ -65902,7 +65913,7 @@
       "_origin": "ast",
       "id": "src_lib_utils_formatters",
       "community": 9,
-      "community_name": "useAuth",
+      "community_name": "createClient",
       "norm_label": "formatters.js"
     },
     {
@@ -65914,7 +65925,7 @@
       "_origin": "ast",
       "id": "src_lib_utils_formatters_formatidr",
       "community": 9,
-      "community_name": "useAuth",
+      "community_name": "createClient",
       "norm_label": "formatidr()"
     },
     {
@@ -65926,7 +65937,7 @@
       "_origin": "ast",
       "id": "src_lib_utils_formatters_formatdate",
       "community": 9,
-      "community_name": "useAuth",
+      "community_name": "createClient",
       "norm_label": "formatdate()"
     },
     {
@@ -65938,7 +65949,7 @@
       "_origin": "ast",
       "id": "src_lib_utils_formatters_formattime",
       "community": 9,
-      "community_name": "useAuth",
+      "community_name": "createClient",
       "norm_label": "formattime()"
     },
     {
@@ -65962,7 +65973,7 @@
       "_origin": "ast",
       "id": "src_lib_utils_formatters_formatshortdate",
       "community": 9,
-      "community_name": "useAuth",
+      "community_name": "createClient",
       "norm_label": "formatshortdate()"
     },
     {
@@ -65974,7 +65985,7 @@
       "_origin": "ast",
       "id": "src_lib_utils_formatters_truncate",
       "community": 9,
-      "community_name": "useAuth",
+      "community_name": "createClient",
       "norm_label": "truncate()"
     },
     {
@@ -65986,7 +65997,7 @@
       "_origin": "ast",
       "id": "src_lib_utils_formatters_generatebookingcode",
       "community": 9,
-      "community_name": "useAuth",
+      "community_name": "createClient",
       "norm_label": "generatebookingcode()"
     },
     {
@@ -65998,7 +66009,7 @@
       "_origin": "ast",
       "id": "src_lib_utils_formatters_cn",
       "community": 9,
-      "community_name": "useAuth",
+      "community_name": "createClient",
       "norm_label": "cn()"
     },
     {
@@ -66010,7 +66021,7 @@
       "_origin": "ast",
       "id": "src_lib_utils_formatters_getbookingstatusinfo",
       "community": 9,
-      "community_name": "useAuth",
+      "community_name": "createClient",
       "norm_label": "getbookingstatusinfo()"
     },
     {
@@ -66022,7 +66033,7 @@
       "_origin": "ast",
       "id": "src_lib_utils_formatters_getschedulestatusinfo",
       "community": 9,
-      "community_name": "useAuth",
+      "community_name": "createClient",
       "norm_label": "getschedulestatusinfo()"
     },
     {
@@ -313673,6 +313684,17 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/auth/login/page.js",
+      "source_location": "L24",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_app_auth_login_page",
+      "target": "src_app_auth_login_page_demo_accounts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/auth/login/page.js",
       "source_location": "L13",
       "weight": 1.0,
       "_origin": "ast",
@@ -313684,7 +313706,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/auth/login/page.js",
-      "source_location": "L24",
+      "source_location": "L67",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_app_auth_login_page",
@@ -313793,7 +313815,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/app/auth/login/page.js",
-      "source_location": "L25",
+      "source_location": "L68",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_app_auth_login_page_loginpage",
@@ -313805,7 +313827,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/app/auth/login/page.js",
-      "source_location": "L27",
+      "source_location": "L70",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_app_auth_login_page_loginpage",
@@ -315581,7 +315603,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/dashboard/staff/page.js",
-      "source_location": "L1203",
+      "source_location": "L1221",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_app_dashboard_staff_page",
@@ -315842,7 +315864,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/app/dashboard/staff/page.js",
-      "source_location": "L860",
+      "source_location": "L878",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_app_dashboard_staff_page_staffdashboardcontent",
@@ -315854,7 +315876,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/app/dashboard/staff/page.js",
-      "source_location": "L808",
+      "source_location": "L826",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_app_dashboard_staff_page_staffdashboardcontent",
@@ -315878,7 +315900,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/app/dashboard/staff/page.js",
-      "source_location": "L523",
+      "source_location": "L541",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_app_dashboard_staff_page_staffdashboardcontent",
@@ -315890,7 +315912,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/app/dashboard/staff/page.js",
-      "source_location": "L1101",
+      "source_location": "L1119",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_app_dashboard_staff_page_staffdashboardcontent",
@@ -315902,7 +315924,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/app/dashboard/staff/page.js",
-      "source_location": "L524",
+      "source_location": "L542",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_app_dashboard_staff_page_staffdashboardcontent",
@@ -368124,5 +368146,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "e0d9a01cc4140c12c67317747c127b96f8800299"
+  "built_at_commit": "a3b546dcbe3905a1fd1447a3879504b3321e2c5c"
 }

@@ -20,8 +20,8 @@
     "semantic_hash": ""
   },
   "src/app/about/page.js": {
-    "mtime": 1793730001.128985,
-    "ast_hash": "d724cbc2a5b081d764737eacc3cd5ef5",
+    "mtime": 1793735076.9188468,
+    "ast_hash": "7e263f84dbca63852f9d16cb87c13b50",
     "semantic_hash": ""
   },
   "src/app/api/payments/midtrans/notification/route.js": {
@@ -35,113 +35,113 @@
     "semantic_hash": ""
   },
   "src/app/auth/callback/route.js": {
-    "mtime": 1793710316.925116,
-    "ast_hash": "66bbd2077b49559c4cb0f314d9110322",
+    "mtime": 1793816755.8385036,
+    "ast_hash": "f8d1c02f2439eff0d7a94a80b7fd5c4b",
     "semantic_hash": ""
   },
   "src/app/auth/login/page.js": {
-    "mtime": 1793710316.9264903,
-    "ast_hash": "e963b24f7f58ae9f267cade3218938d6",
+    "mtime": 1793816733.6782768,
+    "ast_hash": "4723276f19687c6d689b60da81cfd4c8",
     "semantic_hash": ""
   },
   "src/app/auth/register/page.js": {
-    "mtime": 1793710316.9274957,
-    "ast_hash": "7dedc33b46dff952efc616a7a98a9cc2",
+    "mtime": 1793816743.4494104,
+    "ast_hash": "d3950fa6bd953701a47fcff522f7f685",
     "semantic_hash": ""
   },
   "src/app/booking/[scheduleId]/page.js": {
-    "mtime": 1793724210.5672429,
-    "ast_hash": "c98dcedd0773df6047c9402f7f858a9a",
+    "mtime": 1793733137.573948,
+    "ast_hash": "1b559175a0d0d518c45fb7919cea13e0",
     "semantic_hash": ""
   },
   "src/app/booking/payment/[bookingId]/page.js": {
-    "mtime": 1793710316.929493,
-    "ast_hash": "de968808f484f0426bad2c9c60d4d85f",
+    "mtime": 1793733137.5749476,
+    "ast_hash": "04689db42ccc3cff7947b2cfea374c50",
     "semantic_hash": ""
   },
   "src/app/contact/page.js": {
-    "mtime": 1793702715.3485088,
-    "ast_hash": "64ccdf0755336b5a88a03bcff1034877",
+    "mtime": 1793733147.5732052,
+    "ast_hash": "48c805923b0e62ea370774cf0e9fa8a6",
     "semantic_hash": ""
   },
   "src/app/dashboard/admin/journeys/page.js": {
-    "mtime": 1793710316.931497,
-    "ast_hash": "77facfe5510cafd04f06449d1f5abd86",
+    "mtime": 1793733142.9117432,
+    "ast_hash": "4bf2797970f6f7d6e07d70b14968216c",
     "semantic_hash": ""
   },
   "src/app/dashboard/admin/page.js": {
-    "mtime": 1793705479.7607944,
-    "ast_hash": "35a009a71e2ce47049548deac536cc5a",
+    "mtime": 1793817450.5807176,
+    "ast_hash": "90c7ad0501e7d58826d7cba2104f7000",
     "semantic_hash": ""
   },
   "src/app/dashboard/admin/staff/page.js": {
-    "mtime": 1793710316.932786,
-    "ast_hash": "b52d577a2de37893c17096134d29a931",
+    "mtime": 1793817428.0148852,
+    "ast_hash": "d2f6446c07628e84dad09b0393fe9266",
     "semantic_hash": ""
   },
   "src/app/dashboard/orders/page.js": {
-    "mtime": 1793710316.9337854,
-    "ast_hash": "b77f599f8d8ff92546d7b0942b5f9984",
+    "mtime": 1793733137.5764575,
+    "ast_hash": "39c865f44d4eec549fb234ef61a8c243",
     "semantic_hash": ""
   },
   "src/app/dashboard/passenger/page.js": {
-    "mtime": 1793729983.1713028,
-    "ast_hash": "67acbc798abe610b204f0a0e40716cd5",
+    "mtime": 1793817713.720759,
+    "ast_hash": "c0022fa9792c571810fbf18f7640ed77",
     "semantic_hash": ""
   },
   "src/app/dashboard/reports/page.js": {
-    "mtime": 1793710316.934794,
-    "ast_hash": "fde0a0bb4ad7499c4174f2128cc0ba8d",
+    "mtime": 1793733137.5778003,
+    "ast_hash": "f4d3d1f3adc3887fd80c751d480e80e9",
     "semantic_hash": ""
   },
   "src/app/dashboard/staff/page.js": {
-    "mtime": 1793726485.3642483,
-    "ast_hash": "fac921c7b607055be330819f37203084",
+    "mtime": 1793775107.1992145,
+    "ast_hash": "03f17c199ddec172e23275ab126fc93c",
     "semantic_hash": ""
   },
   "src/app/faq/page.js": {
-    "mtime": 1793702715.410025,
-    "ast_hash": "3003aed1c101689c24120c45292d0c6b",
+    "mtime": 1793733400.063761,
+    "ast_hash": "f0a08d7e9aa28e24e8533a1d9b5b5a91",
     "semantic_hash": ""
   },
   "src/app/layout.js": {
-    "mtime": 1793710013.097079,
-    "ast_hash": "0bb49d4b761189293f201281ce87bde4",
+    "mtime": 1793773576.9609084,
+    "ast_hash": "ce458ba5777207631b6035148d909e43",
     "semantic_hash": ""
   },
   "src/app/page.js": {
-    "mtime": 1793730068.9248683,
-    "ast_hash": "f7c3b3fe4f8d61a49ff48ef2d40fcf4d",
+    "mtime": 1793781596.394733,
+    "ast_hash": "82eb46d372b11012f5a55e283b08b81e",
     "semantic_hash": ""
   },
   "src/app/trains/page.js": {
-    "mtime": 1793705133.6426892,
-    "ast_hash": "c560bdbda270c1bb7a666d8d099c1f42",
+    "mtime": 1793733683.9097075,
+    "ast_hash": "826f8e92bad1e3ed5185dbb75d57e5a1",
     "semantic_hash": ""
   },
   "src/components/booking/BookingFlow.jsx": {
-    "mtime": 1793724311.761826,
-    "ast_hash": "601f5b4c4a22bfaae5061ca9719b0c86",
+    "mtime": 1793772871.84428,
+    "ast_hash": "a200f0b50b0c5f11b1ecbe29781702c2",
     "semantic_hash": ""
   },
   "src/components/booking/BookingPayment.jsx": {
-    "mtime": 1793726535.1671062,
-    "ast_hash": "2beeaf565c1e7f9c496508baa6164481",
+    "mtime": 1793772753.2823038,
+    "ast_hash": "37e9498f950ea74c0710d85db8ff7658",
     "semantic_hash": ""
   },
   "src/components/booking/SearchWidget.jsx": {
-    "mtime": 1793724004.6333992,
-    "ast_hash": "8b9da4fc8d0db6528cf9874eec3a3957",
+    "mtime": 1793817370.6543784,
+    "ast_hash": "ab72a0716c5101121a4c38d452f452f8",
     "semantic_hash": ""
   },
   "src/components/booking/TrainSearchResults.jsx": {
-    "mtime": 1793723982.0690122,
-    "ast_hash": "e05a947b235bd266f4d9d67d366f60d9",
+    "mtime": 1793735076.9199405,
+    "ast_hash": "0b0ca20148c0538f6504e51638380ed4",
     "semantic_hash": ""
   },
   "src/components/home/MobilePortalHeader.jsx": {
-    "mtime": 1793730115.6846225,
-    "ast_hash": "6e1045eb18f337b6f7acc32a58e0cbaf",
+    "mtime": 1793733257.24189,
+    "ast_hash": "472051e8b78c51ad4effc447c50fbdab",
     "semantic_hash": ""
   },
   "src/components/layout/Footer.jsx": {
@@ -150,23 +150,23 @@
     "semantic_hash": ""
   },
   "src/components/layout/Navbar.jsx": {
-    "mtime": 1793724122.4501944,
-    "ast_hash": "46f5f1d070c246bef57a1c1d5ce1c30f",
+    "mtime": 1793786408.5826192,
+    "ast_hash": "cb2d72d4d2547d65ff25fa7620554b7d",
     "semantic_hash": ""
   },
   "src/components/services/JourneyStatusTimeline.jsx": {
-    "mtime": 1793726494.1801908,
-    "ast_hash": "ef86b80d5c4f8cb492c3260403376739",
+    "mtime": 1793733137.5828,
+    "ast_hash": "aa74f48b78c626d81c03e3a3d83d4336",
     "semantic_hash": ""
   },
   "src/components/services/PassengerServices.jsx": {
-    "mtime": 1793710316.9378624,
-    "ast_hash": "f07428eca3c490cfbb25d074832c4fe9",
+    "mtime": 1793733137.594347,
+    "ast_hash": "9149aca526f60af467063a85367b5fa5",
     "semantic_hash": ""
   },
   "src/components/services/StaffServiceDesk.jsx": {
-    "mtime": 1793710316.938856,
-    "ast_hash": "8d7e4682eb4b100e6812e35a185b5bf6",
+    "mtime": 1793733142.9079363,
+    "ast_hash": "ce8c0982e230225ed27c7245b58d97ae",
     "semantic_hash": ""
   },
   "src/components/staff/TicketScanner.jsx": {
@@ -175,13 +175,13 @@
     "semantic_hash": ""
   },
   "src/components/ui/RailLoader.jsx": {
-    "mtime": 1793724515.629015,
-    "ast_hash": "83a90954c2f41458e11a5f90bc56b374",
+    "mtime": 1793734899.270567,
+    "ast_hash": "e3a4b3a7c97c0c186af6cc61efe3c5e5",
     "semantic_hash": ""
   },
   "src/components/ui/VectorLogos.jsx": {
-    "mtime": 1793724515.6314466,
-    "ast_hash": "3a361c2eb2339ca16ead31eb4d2c38c9",
+    "mtime": 1793734899.2681813,
+    "ast_hash": "3ab18f9ab8f71486279aec3beaaf57cf",
     "semantic_hash": ""
   },
   "src/contexts/AuthContext.js": {
@@ -190,8 +190,8 @@
     "semantic_hash": ""
   },
   "src/contexts/LangContext.js": {
-    "mtime": 1793710316.9413178,
-    "ast_hash": "c27f9661dbed6f1d69fe50c7f079143d",
+    "mtime": 1793733525.266637,
+    "ast_hash": "f6f8339eb4706f8a866fed8960e975ce",
     "semantic_hash": ""
   },
   "src/lib/data/schedulesEngine.js": {
@@ -205,8 +205,8 @@
     "semantic_hash": ""
   },
   "src/lib/i18n/translations.js": {
-    "mtime": 1793710316.9428105,
-    "ast_hash": "175ad6d3acb16f510a0cac40b3eeae7a",
+    "mtime": 1793732765.7649698,
+    "ast_hash": "9025f961cb26e4960eaeecaf1dc22005",
     "semantic_hash": ""
   },
   "src/lib/operations/journey-status.js": {
@@ -242,11 +242,6 @@
   "src/lib/utils/formatters.js": {
     "mtime": 1793710316.9499786,
     "ast_hash": "aab780c6541395bff66ca58d72e85746",
-    "semantic_hash": ""
-  },
-  "src/middleware.js": {
-    "mtime": 1793710316.9509926,
-    "ast_hash": "6c719e2eb10e133226c58122cac20703",
     "semantic_hash": ""
   },
   "AGENTS.md": {
@@ -300,8 +295,2183 @@
     "semantic_hash": ""
   },
   "src/components/home/TrainBumperBanner.jsx": {
-    "mtime": 1793730037.881511,
-    "ast_hash": "ef7c8f1414e378e7649980b26b250d40",
+    "mtime": 1793735780.1000297,
+    "ast_hash": "0889358f5188d63a92d172886260edac",
+    "semantic_hash": ""
+  },
+  ".agent/skills/impeccable/scripts/impeccable": {
+    "mtime": 1793780350.299173,
+    "ast_hash": "e9cf79ef9820250542df0232f6c69237",
+    "semantic_hash": ""
+  },
+  ".agent/skills/impeccable/scripts/live-browser-dom.js": {
+    "mtime": 1793780350.3067174,
+    "ast_hash": "5727f418039223d9113c0d88cf1be10d",
+    "semantic_hash": ""
+  },
+  ".agent/skills/impeccable/scripts/live-browser-ignores.js": {
+    "mtime": 1793780350.307717,
+    "ast_hash": "eb8a3d924d40aaebff40b68fffec5ecb",
+    "semantic_hash": ""
+  },
+  ".agent/skills/impeccable/scripts/live-browser-session.js": {
+    "mtime": 1793780350.308714,
+    "ast_hash": "2ebb35b3612e9af6f483b95c5d42141a",
+    "semantic_hash": ""
+  },
+  ".agent/skills/impeccable/scripts/live-browser.js": {
+    "mtime": 1793780350.309718,
+    "ast_hash": "9aee8ac14289aaace90df5fb4efbc844",
+    "semantic_hash": ""
+  },
+  ".agent/skills/impeccable/scripts/modern-screenshot.umd.js": {
+    "mtime": 1793780350.313712,
+    "ast_hash": "4fe5f9e490ab4f107afc707d7eafc819",
+    "semantic_hash": ""
+  },
+  ".agents/skills/impeccable/scripts/impeccable": {
+    "mtime": 1793780350.7710788,
+    "ast_hash": "e9cf79ef9820250542df0232f6c69237",
+    "semantic_hash": ""
+  },
+  ".agents/skills/impeccable/scripts/live-browser-dom.js": {
+    "mtime": 1793780350.7816234,
+    "ast_hash": "5727f418039223d9113c0d88cf1be10d",
+    "semantic_hash": ""
+  },
+  ".agents/skills/impeccable/scripts/live-browser-ignores.js": {
+    "mtime": 1793780350.7826276,
+    "ast_hash": "eb8a3d924d40aaebff40b68fffec5ecb",
+    "semantic_hash": ""
+  },
+  ".agents/skills/impeccable/scripts/live-browser-session.js": {
+    "mtime": 1793780350.7826276,
+    "ast_hash": "2ebb35b3612e9af6f483b95c5d42141a",
+    "semantic_hash": ""
+  },
+  ".agents/skills/impeccable/scripts/live-browser.js": {
+    "mtime": 1793780350.7851615,
+    "ast_hash": "9aee8ac14289aaace90df5fb4efbc844",
+    "semantic_hash": ""
+  },
+  ".agents/skills/impeccable/scripts/modern-screenshot.umd.js": {
+    "mtime": 1793780350.7861624,
+    "ast_hash": "4fe5f9e490ab4f107afc707d7eafc819",
+    "semantic_hash": ""
+  },
+  ".claude/skills/impeccable/scripts/impeccable": {
+    "mtime": 1793780350.503279,
+    "ast_hash": "e9cf79ef9820250542df0232f6c69237",
+    "semantic_hash": ""
+  },
+  ".claude/skills/impeccable/scripts/live-browser-dom.js": {
+    "mtime": 1793780350.5098183,
+    "ast_hash": "5727f418039223d9113c0d88cf1be10d",
+    "semantic_hash": ""
+  },
+  ".claude/skills/impeccable/scripts/live-browser-ignores.js": {
+    "mtime": 1793780350.5108178,
+    "ast_hash": "eb8a3d924d40aaebff40b68fffec5ecb",
+    "semantic_hash": ""
+  },
+  ".claude/skills/impeccable/scripts/live-browser-session.js": {
+    "mtime": 1793780350.513821,
+    "ast_hash": "2ebb35b3612e9af6f483b95c5d42141a",
+    "semantic_hash": ""
+  },
+  ".claude/skills/impeccable/scripts/live-browser.js": {
+    "mtime": 1793780350.5183377,
+    "ast_hash": "9aee8ac14289aaace90df5fb4efbc844",
+    "semantic_hash": ""
+  },
+  ".claude/skills/impeccable/scripts/modern-screenshot.umd.js": {
+    "mtime": 1793780350.5203507,
+    "ast_hash": "4fe5f9e490ab4f107afc707d7eafc819",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/impeccable/scripts/impeccable": {
+    "mtime": 1793780350.9852552,
+    "ast_hash": "e9cf79ef9820250542df0232f6c69237",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/impeccable/scripts/live-browser-dom.js": {
+    "mtime": 1793780350.9927883,
+    "ast_hash": "5727f418039223d9113c0d88cf1be10d",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/impeccable/scripts/live-browser-ignores.js": {
+    "mtime": 1793780350.9937892,
+    "ast_hash": "eb8a3d924d40aaebff40b68fffec5ecb",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/impeccable/scripts/live-browser-session.js": {
+    "mtime": 1793780350.9957905,
+    "ast_hash": "2ebb35b3612e9af6f483b95c5d42141a",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/impeccable/scripts/live-browser.js": {
+    "mtime": 1793780351.0003448,
+    "ast_hash": "9aee8ac14289aaace90df5fb4efbc844",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/impeccable/scripts/modern-screenshot.umd.js": {
+    "mtime": 1793780351.0023344,
+    "ast_hash": "4fe5f9e490ab4f107afc707d7eafc819",
+    "semantic_hash": ""
+  },
+  ".gemini/skills/impeccable/scripts/impeccable": {
+    "mtime": 1793780351.198629,
+    "ast_hash": "e9cf79ef9820250542df0232f6c69237",
+    "semantic_hash": ""
+  },
+  ".gemini/skills/impeccable/scripts/live-browser-dom.js": {
+    "mtime": 1793780351.2021513,
+    "ast_hash": "5727f418039223d9113c0d88cf1be10d",
+    "semantic_hash": ""
+  },
+  ".gemini/skills/impeccable/scripts/live-browser-ignores.js": {
+    "mtime": 1793780351.220222,
+    "ast_hash": "eb8a3d924d40aaebff40b68fffec5ecb",
+    "semantic_hash": ""
+  },
+  ".gemini/skills/impeccable/scripts/live-browser-session.js": {
+    "mtime": 1793780351.2372825,
+    "ast_hash": "2ebb35b3612e9af6f483b95c5d42141a",
+    "semantic_hash": ""
+  },
+  ".gemini/skills/impeccable/scripts/live-browser.js": {
+    "mtime": 1793780351.2412853,
+    "ast_hash": "9aee8ac14289aaace90df5fb4efbc844",
+    "semantic_hash": ""
+  },
+  ".gemini/skills/impeccable/scripts/modern-screenshot.umd.js": {
+    "mtime": 1793780351.24481,
+    "ast_hash": "4fe5f9e490ab4f107afc707d7eafc819",
+    "semantic_hash": ""
+  },
+  ".hermes/skills/impeccable/scripts/impeccable": {
+    "mtime": 1793780351.5006044,
+    "ast_hash": "e9cf79ef9820250542df0232f6c69237",
+    "semantic_hash": ""
+  },
+  ".hermes/skills/impeccable/scripts/live-browser-dom.js": {
+    "mtime": 1793780351.5026212,
+    "ast_hash": "5727f418039223d9113c0d88cf1be10d",
+    "semantic_hash": ""
+  },
+  ".hermes/skills/impeccable/scripts/live-browser-ignores.js": {
+    "mtime": 1793780351.505616,
+    "ast_hash": "eb8a3d924d40aaebff40b68fffec5ecb",
+    "semantic_hash": ""
+  },
+  ".hermes/skills/impeccable/scripts/live-browser-session.js": {
+    "mtime": 1793780351.5066168,
+    "ast_hash": "2ebb35b3612e9af6f483b95c5d42141a",
+    "semantic_hash": ""
+  },
+  ".hermes/skills/impeccable/scripts/live-browser.js": {
+    "mtime": 1793780351.508621,
+    "ast_hash": "9aee8ac14289aaace90df5fb4efbc844",
+    "semantic_hash": ""
+  },
+  ".hermes/skills/impeccable/scripts/modern-screenshot.umd.js": {
+    "mtime": 1793780351.5101237,
+    "ast_hash": "4fe5f9e490ab4f107afc707d7eafc819",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/impeccable/scripts/impeccable": {
+    "mtime": 1793780351.8686676,
+    "ast_hash": "e9cf79ef9820250542df0232f6c69237",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/impeccable/scripts/live-browser-dom.js": {
+    "mtime": 1793780351.8721824,
+    "ast_hash": "5727f418039223d9113c0d88cf1be10d",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/impeccable/scripts/live-browser-ignores.js": {
+    "mtime": 1793780351.8752124,
+    "ast_hash": "eb8a3d924d40aaebff40b68fffec5ecb",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/impeccable/scripts/live-browser-session.js": {
+    "mtime": 1793780351.8812172,
+    "ast_hash": "2ebb35b3612e9af6f483b95c5d42141a",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/impeccable/scripts/live-browser.js": {
+    "mtime": 1793780351.8942637,
+    "ast_hash": "9aee8ac14289aaace90df5fb4efbc844",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/impeccable/scripts/modern-screenshot.umd.js": {
+    "mtime": 1793780351.9002886,
+    "ast_hash": "4fe5f9e490ab4f107afc707d7eafc819",
+    "semantic_hash": ""
+  },
+  ".opencode/skills/impeccable/scripts/impeccable": {
+    "mtime": 1793780352.1158848,
+    "ast_hash": "e9cf79ef9820250542df0232f6c69237",
+    "semantic_hash": ""
+  },
+  ".opencode/skills/impeccable/scripts/live-browser-dom.js": {
+    "mtime": 1793780352.123425,
+    "ast_hash": "5727f418039223d9113c0d88cf1be10d",
+    "semantic_hash": ""
+  },
+  ".opencode/skills/impeccable/scripts/live-browser-ignores.js": {
+    "mtime": 1793780352.1274204,
+    "ast_hash": "eb8a3d924d40aaebff40b68fffec5ecb",
+    "semantic_hash": ""
+  },
+  ".opencode/skills/impeccable/scripts/live-browser-session.js": {
+    "mtime": 1793780352.1289296,
+    "ast_hash": "2ebb35b3612e9af6f483b95c5d42141a",
+    "semantic_hash": ""
+  },
+  ".opencode/skills/impeccable/scripts/live-browser.js": {
+    "mtime": 1793780352.138954,
+    "ast_hash": "9aee8ac14289aaace90df5fb4efbc844",
+    "semantic_hash": ""
+  },
+  ".opencode/skills/impeccable/scripts/modern-screenshot.umd.js": {
+    "mtime": 1793780352.1470168,
+    "ast_hash": "4fe5f9e490ab4f107afc707d7eafc819",
+    "semantic_hash": ""
+  },
+  "src/app/loading.js": {
+    "mtime": 1793732465.1210663,
+    "ast_hash": "224b82ed4a6928cc68bc55f9b1a97980",
+    "semantic_hash": ""
+  },
+  "src/components/auth/MobileTrainIllustration.jsx": {
+    "mtime": 1793812577.3136182,
+    "ast_hash": "5391d71ceac85a433e40fa28edc76324",
+    "semantic_hash": ""
+  },
+  "src/components/booking/EBoardingPass.jsx": {
+    "mtime": 1793772805.587757,
+    "ast_hash": "d4fdd3470e32f17a486435a29be6cd28",
+    "semantic_hash": ""
+  },
+  "src/components/booking/TrainsPageChrome.jsx": {
+    "mtime": 1793733683.9082549,
+    "ast_hash": "24e10a390a31468b6f30c6d82fa8d5e9",
+    "semantic_hash": ""
+  },
+  "src/components/home/FeaturedServicesSlider.jsx": {
+    "mtime": 1793782322.3775797,
+    "ast_hash": "6a8e9af05257fe27402f889970cd7115",
+    "semantic_hash": ""
+  },
+  "src/components/journey/LiveJourneyMapTracker.jsx": {
+    "mtime": 1793787089.0075984,
+    "ast_hash": "349c7c2b0b6d8b5b39f22dfb90b61aea",
+    "semantic_hash": ""
+  },
+  "src/components/layout/RouteTransition.jsx": {
+    "mtime": 1793733996.3904202,
+    "ast_hash": "8ea6ef7e522b3c00896c372a0881e8b2",
+    "semantic_hash": ""
+  },
+  "src/proxy.js": {
+    "mtime": 1793733297.446155,
+    "ast_hash": "ed91d7e6df2b7a8fae25a05077305554",
+    "semantic_hash": ""
+  },
+  ".agent/skills/impeccable/SKILL.md": {
+    "mtime": 1793780626.5624416,
+    "ast_hash": "2c9495d5d0c940d04c92760157792264",
+    "semantic_hash": ""
+  },
+  ".agent/skills/impeccable/reference/adapt.md": {
+    "mtime": 1793780350.208753,
+    "ast_hash": "ef6ccd681bda53968e1c6b0cc7a3bc94",
+    "semantic_hash": ""
+  },
+  ".agent/skills/impeccable/reference/adapt.native.md": {
+    "mtime": 1793780350.2147741,
+    "ast_hash": "63b8e2f62a50991cf30b0ce7417ab4ff",
+    "semantic_hash": ""
+  },
+  ".agent/skills/impeccable/reference/android.md": {
+    "mtime": 1793780350.219284,
+    "ast_hash": "a35783faf7effd696f24bdaafa6b5531",
+    "semantic_hash": ""
+  },
+  ".agent/skills/impeccable/reference/animate.md": {
+    "mtime": 1793780350.2213068,
+    "ast_hash": "03c9f7615f5d3c10bf57c1aef1ec9882",
+    "semantic_hash": ""
+  },
+  ".agent/skills/impeccable/reference/audit.md": {
+    "mtime": 1793780350.2223103,
+    "ast_hash": "5820ba79aa011555f040b35dd98f2442",
+    "semantic_hash": ""
+  },
+  ".agent/skills/impeccable/reference/audit.native.md": {
+    "mtime": 1793780350.2233047,
+    "ast_hash": "102a07aa33fc6be7659e30d5770e44a5",
+    "semantic_hash": ""
+  },
+  ".agent/skills/impeccable/reference/bolder.md": {
+    "mtime": 1793780350.224308,
+    "ast_hash": "34e56086286c24b90fe804f0a3c9c888",
+    "semantic_hash": ""
+  },
+  ".agent/skills/impeccable/reference/clarify.md": {
+    "mtime": 1793780350.22631,
+    "ast_hash": "3f9b6ded202ec0b912807451daaf1d5c",
+    "semantic_hash": ""
+  },
+  ".agent/skills/impeccable/reference/colorize.md": {
+    "mtime": 1793780350.2273068,
+    "ast_hash": "99e051670d4153052b96ee844008d012",
+    "semantic_hash": ""
+  },
+  ".agent/skills/impeccable/reference/component-review.md": {
+    "mtime": 1793780350.2283084,
+    "ast_hash": "771c6052df0e5041bcbd6a1181f9eda8",
+    "semantic_hash": ""
+  },
+  ".agent/skills/impeccable/reference/craft-floor.md": {
+    "mtime": 1793780350.2293098,
+    "ast_hash": "867a31bddcd6b757d6d5b8ee46025f4d",
+    "semantic_hash": ""
+  },
+  ".agent/skills/impeccable/reference/craft.md": {
+    "mtime": 1793780350.230831,
+    "ast_hash": "9075911f45c58c15a720f8188b2738f4",
+    "semantic_hash": ""
+  },
+  ".agent/skills/impeccable/reference/critique.md": {
+    "mtime": 1793780350.2318425,
+    "ast_hash": "cf61bfa240e960db27b0deaa94b713fc",
+    "semantic_hash": ""
+  },
+  ".agent/skills/impeccable/reference/degraded/asset-producer.md": {
+    "mtime": 1793780350.2348433,
+    "ast_hash": "b66d6bd339d82e2560b043f56c14107c",
+    "semantic_hash": ""
+  },
+  ".agent/skills/impeccable/reference/degraded/documenter.md": {
+    "mtime": 1793780350.2368462,
+    "ast_hash": "a38215374db267ad2be047a2a58cc816",
+    "semantic_hash": ""
+  },
+  ".agent/skills/impeccable/reference/degraded/finish-reviewer.md": {
+    "mtime": 1793780350.2378442,
+    "ast_hash": "0850d34ddae341e50f594e22a3913bd3",
+    "semantic_hash": ""
+  },
+  ".agent/skills/impeccable/reference/degraded/manual-edit-applier.md": {
+    "mtime": 1793780350.2388477,
+    "ast_hash": "1652cf7a403f11f4d57382e5ccec6999",
+    "semantic_hash": ""
+  },
+  ".agent/skills/impeccable/reference/delight.md": {
+    "mtime": 1793780350.2398417,
+    "ast_hash": "e10166bb38cadd52ee69fb78226e1322",
+    "semantic_hash": ""
+  },
+  ".agent/skills/impeccable/reference/distill.md": {
+    "mtime": 1793780350.2403536,
+    "ast_hash": "27f8b90ec1025b22a7c3fc0ca1f9b7c6",
+    "semantic_hash": ""
+  },
+  ".agent/skills/impeccable/reference/doctor.md": {
+    "mtime": 1793780350.2413707,
+    "ast_hash": "9566ca7073823cf71b498c93c4d3ea1b",
+    "semantic_hash": ""
+  },
+  ".agent/skills/impeccable/reference/document.md": {
+    "mtime": 1793780350.2423682,
+    "ast_hash": "88b21d28f2512f76eaf9aa49a874a60c",
+    "semantic_hash": ""
+  },
+  ".agent/skills/impeccable/reference/extract.md": {
+    "mtime": 1793780350.2433655,
+    "ast_hash": "b8e7a7c21497d09a396b8d477092ce06",
+    "semantic_hash": ""
+  },
+  ".agent/skills/impeccable/reference/generate.md": {
+    "mtime": 1793780350.2458923,
+    "ast_hash": "330a55cc825a3216e0925c005abb737e",
+    "semantic_hash": ""
+  },
+  ".agent/skills/impeccable/reference/harden.md": {
+    "mtime": 1793780350.2478938,
+    "ast_hash": "193d7a192ce32912ef265aa7715f73a4",
+    "semantic_hash": ""
+  },
+  ".agent/skills/impeccable/reference/hooks.md": {
+    "mtime": 1793780350.2493305,
+    "ast_hash": "31167bf533084d5ab61b303a29f1c618",
+    "semantic_hash": ""
+  },
+  ".agent/skills/impeccable/reference/init.md": {
+    "mtime": 1793780350.2508442,
+    "ast_hash": "583b8add92a2aa6254928d32ea60ad54",
+    "semantic_hash": ""
+  },
+  ".agent/skills/impeccable/reference/ios.md": {
+    "mtime": 1793780350.2518604,
+    "ast_hash": "a8f56b5c246ad44e142853ef59a19039",
+    "semantic_hash": ""
+  },
+  ".agent/skills/impeccable/reference/layout.md": {
+    "mtime": 1793780350.2538676,
+    "ast_hash": "773843a43b0d7243c6e55cf0aada4313",
+    "semantic_hash": ""
+  },
+  ".agent/skills/impeccable/reference/live-setup.md": {
+    "mtime": 1793780350.25487,
+    "ast_hash": "003399c4480468a294d6129a82bde44f",
+    "semantic_hash": ""
+  },
+  ".agent/skills/impeccable/reference/live.md": {
+    "mtime": 1793780350.2578726,
+    "ast_hash": "c9bffa8672c28abed3a8a974a8ffa701",
+    "semantic_hash": ""
+  },
+  ".agent/skills/impeccable/reference/mode-operate.md": {
+    "mtime": 1793780350.2664077,
+    "ast_hash": "bf63bc740b342576279715f35922daad",
+    "semantic_hash": ""
+  },
+  ".agent/skills/impeccable/reference/mode-persuade.md": {
+    "mtime": 1793780350.2684054,
+    "ast_hash": "9536e656c3fab5a8d85f1dcde6df45aa",
+    "semantic_hash": ""
+  },
+  ".agent/skills/impeccable/reference/mode-read.md": {
+    "mtime": 1793780350.2704072,
+    "ast_hash": "09353e7df8b71096238a1d18c6fbfe44",
+    "semantic_hash": ""
+  },
+  ".agent/skills/impeccable/reference/new-work.md": {
+    "mtime": 1793780350.2719162,
+    "ast_hash": "9875f1aa4c964af195faa8be65e2fa58",
+    "semantic_hash": ""
+  },
+  ".agent/skills/impeccable/reference/onboard.md": {
+    "mtime": 1793780350.2739322,
+    "ast_hash": "3d61875f5485b5dd34deb3bd04157cd9",
+    "semantic_hash": ""
+  },
+  ".agent/skills/impeccable/reference/operate.md": {
+    "mtime": 1793780350.2749476,
+    "ast_hash": "53a569b985749058f7b178a32e0a157f",
+    "semantic_hash": ""
+  },
+  ".agent/skills/impeccable/reference/optimize.md": {
+    "mtime": 1793780350.2749476,
+    "ast_hash": "48dbe58f2cf191c53377c141218d8f83",
+    "semantic_hash": ""
+  },
+  ".agent/skills/impeccable/reference/overdrive.md": {
+    "mtime": 1793780350.2769444,
+    "ast_hash": "8ddd4d5e4e8cdf464296045d02397f8c",
+    "semantic_hash": ""
+  },
+  ".agent/skills/impeccable/reference/polish.md": {
+    "mtime": 1793780350.2800913,
+    "ast_hash": "4ad4648733e4463fc63cbb4b4699950f",
+    "semantic_hash": ""
+  },
+  ".agent/skills/impeccable/reference/quieter.md": {
+    "mtime": 1793780350.2800913,
+    "ast_hash": "50c73031611c73d02fd86145a66ec82d",
+    "semantic_hash": ""
+  },
+  ".agent/skills/impeccable/reference/region-map.md": {
+    "mtime": 1793780350.281103,
+    "ast_hash": "022050f8d388ed846ffab412d20db176",
+    "semantic_hash": ""
+  },
+  ".agent/skills/impeccable/reference/routing.md": {
+    "mtime": 1793780350.2836256,
+    "ast_hash": "5bbcdff8a8f94e99da849e28b151d83a",
+    "semantic_hash": ""
+  },
+  ".agent/skills/impeccable/reference/shape.md": {
+    "mtime": 1793780350.2856371,
+    "ast_hash": "ecf5345d56452d10cd2c9203a7512704",
+    "semantic_hash": ""
+  },
+  ".agent/skills/impeccable/reference/typeset.md": {
+    "mtime": 1793780350.2866378,
+    "ast_hash": "1d0770e435759aa013828c8f0582325c",
+    "semantic_hash": ""
+  },
+  ".agent/skills/impeccable/reference/visualize.md": {
+    "mtime": 1793780350.2876396,
+    "ast_hash": "6c8b7c0c0f555d7bf9e2da630e495ea9",
+    "semantic_hash": ""
+  },
+  ".agent/skills/impeccable/scripts/engine-checksums.txt": {
+    "mtime": 1793780350.2951603,
+    "ast_hash": "71cf77934c8cc6ec13163fb601f2d11a",
+    "semantic_hash": ""
+  },
+  ".agents/skills/impeccable/SKILL.md": {
+    "mtime": 1793780350.5318835,
+    "ast_hash": "afdc47902d06abbcf6560ddfc6b93d68",
+    "semantic_hash": ""
+  },
+  ".agents/skills/impeccable/agents/openai.yaml": {
+    "mtime": 1793780350.565006,
+    "ast_hash": "1232e1e58afd6467b515d20946ad8ba5",
+    "semantic_hash": ""
+  },
+  ".agents/skills/impeccable/reference/adapt.md": {
+    "mtime": 1793780350.5690086,
+    "ast_hash": "430695dd62438302654025f62e865ffc",
+    "semantic_hash": ""
+  },
+  ".agents/skills/impeccable/reference/adapt.native.md": {
+    "mtime": 1793780350.5735404,
+    "ast_hash": "3ddd9497ad357d386a08d27e9e6e3f25",
+    "semantic_hash": ""
+  },
+  ".agents/skills/impeccable/reference/android.md": {
+    "mtime": 1793780350.5745387,
+    "ast_hash": "a35783faf7effd696f24bdaafa6b5531",
+    "semantic_hash": ""
+  },
+  ".agents/skills/impeccable/reference/animate.md": {
+    "mtime": 1793780350.5765407,
+    "ast_hash": "610f85bc3d6d370810836681204b015d",
+    "semantic_hash": ""
+  },
+  ".agents/skills/impeccable/reference/audit.md": {
+    "mtime": 1793780350.5795388,
+    "ast_hash": "f3ca61eae761b7ad53a29d11c96a402b",
+    "semantic_hash": ""
+  },
+  ".agents/skills/impeccable/reference/audit.native.md": {
+    "mtime": 1793780350.5805404,
+    "ast_hash": "35e0f32a6ca17635594a141394e936b6",
+    "semantic_hash": ""
+  },
+  ".agents/skills/impeccable/reference/bolder.md": {
+    "mtime": 1793780350.5870686,
+    "ast_hash": "4dc058cbd273b89f9bab0437db1205ed",
+    "semantic_hash": ""
+  },
+  ".agents/skills/impeccable/reference/clarify.md": {
+    "mtime": 1793780350.6028123,
+    "ast_hash": "413da6eb075a6c3ed05de43f760f3be8",
+    "semantic_hash": ""
+  },
+  ".agents/skills/impeccable/reference/colorize.md": {
+    "mtime": 1793780350.603323,
+    "ast_hash": "0bf2887698d75473acd5a5b0ccbe1d3e",
+    "semantic_hash": ""
+  },
+  ".agents/skills/impeccable/reference/component-review.md": {
+    "mtime": 1793780350.6043358,
+    "ast_hash": "6805984a39edac8cee39fbcb4e09e947",
+    "semantic_hash": ""
+  },
+  ".agents/skills/impeccable/reference/craft-floor.md": {
+    "mtime": 1793780350.6053467,
+    "ast_hash": "21a02af5805e3dcc438f122492774fd8",
+    "semantic_hash": ""
+  },
+  ".agents/skills/impeccable/reference/craft.md": {
+    "mtime": 1793780350.612347,
+    "ast_hash": "9075911f45c58c15a720f8188b2738f4",
+    "semantic_hash": ""
+  },
+  ".agents/skills/impeccable/reference/critique.md": {
+    "mtime": 1793780350.6198783,
+    "ast_hash": "aaa025b535d5262c7dcb6ee3e2ca7599",
+    "semantic_hash": ""
+  },
+  ".agents/skills/impeccable/reference/degraded/asset-producer.md": {
+    "mtime": 1793780350.6218798,
+    "ast_hash": "bd704054817484c1188bbb8b8e51406d",
+    "semantic_hash": ""
+  },
+  ".agents/skills/impeccable/reference/degraded/documenter.md": {
+    "mtime": 1793780350.6243892,
+    "ast_hash": "a38215374db267ad2be047a2a58cc816",
+    "semantic_hash": ""
+  },
+  ".agents/skills/impeccable/reference/degraded/finish-reviewer.md": {
+    "mtime": 1793780350.627418,
+    "ast_hash": "0850d34ddae341e50f594e22a3913bd3",
+    "semantic_hash": ""
+  },
+  ".agents/skills/impeccable/reference/degraded/manual-edit-applier.md": {
+    "mtime": 1793780350.641949,
+    "ast_hash": "1652cf7a403f11f4d57382e5ccec6999",
+    "semantic_hash": ""
+  },
+  ".agents/skills/impeccable/reference/delight.md": {
+    "mtime": 1793780350.669542,
+    "ast_hash": "4a4fb8494ddda3d2b4687b938209eb32",
+    "semantic_hash": ""
+  },
+  ".agents/skills/impeccable/reference/distill.md": {
+    "mtime": 1793780350.679063,
+    "ast_hash": "2f563d239ebaec997517232b34d5554e",
+    "semantic_hash": ""
+  },
+  ".agents/skills/impeccable/reference/doctor.md": {
+    "mtime": 1793780350.6830754,
+    "ast_hash": "5ecb5be7c8312aea344770a30689a44f",
+    "semantic_hash": ""
+  },
+  ".agents/skills/impeccable/reference/document.md": {
+    "mtime": 1793780350.6860723,
+    "ast_hash": "2d441224ab2d8adfb026d9f408c72dc7",
+    "semantic_hash": ""
+  },
+  ".agents/skills/impeccable/reference/extract.md": {
+    "mtime": 1793780350.6870735,
+    "ast_hash": "88c7e517902f774f1f365d374d517cf4",
+    "semantic_hash": ""
+  },
+  ".agents/skills/impeccable/reference/generate.md": {
+    "mtime": 1793780350.689602,
+    "ast_hash": "c88c726a91875ddf46b3c7b692c3671f",
+    "semantic_hash": ""
+  },
+  ".agents/skills/impeccable/reference/harden.md": {
+    "mtime": 1793780350.6916144,
+    "ast_hash": "26bc1661aceef6a0989faa666f705bea",
+    "semantic_hash": ""
+  },
+  ".agents/skills/impeccable/reference/hooks.md": {
+    "mtime": 1793780350.692616,
+    "ast_hash": "71d46986b09c725ebf11150f7271ab0f",
+    "semantic_hash": ""
+  },
+  ".agents/skills/impeccable/reference/init.md": {
+    "mtime": 1793780350.6936152,
+    "ast_hash": "f78ca04c54e5555e42050d086ebeb52f",
+    "semantic_hash": ""
+  },
+  ".agents/skills/impeccable/reference/ios.md": {
+    "mtime": 1793780350.6946168,
+    "ast_hash": "a8f56b5c246ad44e142853ef59a19039",
+    "semantic_hash": ""
+  },
+  ".agents/skills/impeccable/reference/layout.md": {
+    "mtime": 1793780350.697614,
+    "ast_hash": "d4db3672050d72bd68949ef6ca614569",
+    "semantic_hash": ""
+  },
+  ".agents/skills/impeccable/reference/live-setup.md": {
+    "mtime": 1793780350.6991234,
+    "ast_hash": "e870461022ffc424f05fdfdd38ad0367",
+    "semantic_hash": ""
+  },
+  ".agents/skills/impeccable/reference/live.md": {
+    "mtime": 1793780350.700134,
+    "ast_hash": "1b7508a03154ed7a0f355cd388da6a20",
+    "semantic_hash": ""
+  },
+  ".agents/skills/impeccable/reference/mode-operate.md": {
+    "mtime": 1793780350.7031446,
+    "ast_hash": "bf63bc740b342576279715f35922daad",
+    "semantic_hash": ""
+  },
+  ".agents/skills/impeccable/reference/mode-persuade.md": {
+    "mtime": 1793780350.7041466,
+    "ast_hash": "9536e656c3fab5a8d85f1dcde6df45aa",
+    "semantic_hash": ""
+  },
+  ".agents/skills/impeccable/reference/mode-read.md": {
+    "mtime": 1793780350.7041466,
+    "ast_hash": "09353e7df8b71096238a1d18c6fbfe44",
+    "semantic_hash": ""
+  },
+  ".agents/skills/impeccable/reference/new-work.md": {
+    "mtime": 1793780350.708147,
+    "ast_hash": "26e284aea74ca399dccb02b6ecce8656",
+    "semantic_hash": ""
+  },
+  ".agents/skills/impeccable/reference/onboard.md": {
+    "mtime": 1793780350.7203815,
+    "ast_hash": "3d4dcb0ea41999ec3c8c0c423cc631fe",
+    "semantic_hash": ""
+  },
+  ".agents/skills/impeccable/reference/operate.md": {
+    "mtime": 1793780350.7223947,
+    "ast_hash": "53a569b985749058f7b178a32e0a157f",
+    "semantic_hash": ""
+  },
+  ".agents/skills/impeccable/reference/optimize.md": {
+    "mtime": 1793780350.7244062,
+    "ast_hash": "1f3f0852bbbf56f90dc547d00894dd76",
+    "semantic_hash": ""
+  },
+  ".agents/skills/impeccable/reference/overdrive.md": {
+    "mtime": 1793780350.7254076,
+    "ast_hash": "8e0b7d24a478bc3e4c2429dd6ff8ce42",
+    "semantic_hash": ""
+  },
+  ".agents/skills/impeccable/reference/polish.md": {
+    "mtime": 1793780350.726405,
+    "ast_hash": "36ed382b9f9692d0545b34dfd643670b",
+    "semantic_hash": ""
+  },
+  ".agents/skills/impeccable/reference/quieter.md": {
+    "mtime": 1793780350.7399457,
+    "ast_hash": "9d037f5df3a6084451cc4e7f64628fab",
+    "semantic_hash": ""
+  },
+  ".agents/skills/impeccable/reference/region-map.md": {
+    "mtime": 1793780350.7449937,
+    "ast_hash": "fbedb05ecee2abb30af4c473de67c343",
+    "semantic_hash": ""
+  },
+  ".agents/skills/impeccable/reference/routing.md": {
+    "mtime": 1793780350.7470095,
+    "ast_hash": "16cfad4cde91da597491055320b2c3ba",
+    "semantic_hash": ""
+  },
+  ".agents/skills/impeccable/reference/shape.md": {
+    "mtime": 1793780350.748011,
+    "ast_hash": "ecf5345d56452d10cd2c9203a7512704",
+    "semantic_hash": ""
+  },
+  ".agents/skills/impeccable/reference/typeset.md": {
+    "mtime": 1793780350.750012,
+    "ast_hash": "44fdf5662f8003feebd2251242952563",
+    "semantic_hash": ""
+  },
+  ".agents/skills/impeccable/reference/visualize.md": {
+    "mtime": 1793780350.7510123,
+    "ast_hash": "9030fe80e1bbad7d0eec44029f487433",
+    "semantic_hash": ""
+  },
+  ".agents/skills/impeccable/scripts/engine-checksums.txt": {
+    "mtime": 1793780350.7680798,
+    "ast_hash": "71cf77934c8cc6ec13163fb601f2d11a",
+    "semantic_hash": ""
+  },
+  ".claude/skills/impeccable/SKILL.md": {
+    "mtime": 1793780655.7125661,
+    "ast_hash": "5c5d066a8509c350ef5abac76a4f6e2b",
+    "semantic_hash": ""
+  },
+  ".claude/skills/impeccable/reference/adapt.md": {
+    "mtime": 1793780350.3273153,
+    "ast_hash": "ef6ccd681bda53968e1c6b0cc7a3bc94",
+    "semantic_hash": ""
+  },
+  ".claude/skills/impeccable/reference/adapt.native.md": {
+    "mtime": 1793780350.3303256,
+    "ast_hash": "63b8e2f62a50991cf30b0ce7417ab4ff",
+    "semantic_hash": ""
+  },
+  ".claude/skills/impeccable/reference/android.md": {
+    "mtime": 1793780350.3323307,
+    "ast_hash": "a35783faf7effd696f24bdaafa6b5531",
+    "semantic_hash": ""
+  },
+  ".claude/skills/impeccable/reference/animate.md": {
+    "mtime": 1793780350.3359666,
+    "ast_hash": "03c9f7615f5d3c10bf57c1aef1ec9882",
+    "semantic_hash": ""
+  },
+  ".claude/skills/impeccable/reference/audit.md": {
+    "mtime": 1793780350.3470137,
+    "ast_hash": "8a1ef236d909c3b38980cead23c1d444",
+    "semantic_hash": ""
+  },
+  ".claude/skills/impeccable/reference/audit.native.md": {
+    "mtime": 1793780350.3480246,
+    "ast_hash": "102a07aa33fc6be7659e30d5770e44a5",
+    "semantic_hash": ""
+  },
+  ".claude/skills/impeccable/reference/bolder.md": {
+    "mtime": 1793780350.3540351,
+    "ast_hash": "4f43781fe23caaadbe46621b84a05fd8",
+    "semantic_hash": ""
+  },
+  ".claude/skills/impeccable/reference/clarify.md": {
+    "mtime": 1793780350.3560367,
+    "ast_hash": "3f9b6ded202ec0b912807451daaf1d5c",
+    "semantic_hash": ""
+  },
+  ".claude/skills/impeccable/reference/colorize.md": {
+    "mtime": 1793780350.3575497,
+    "ast_hash": "99e051670d4153052b96ee844008d012",
+    "semantic_hash": ""
+  },
+  ".claude/skills/impeccable/reference/component-review.md": {
+    "mtime": 1793780350.3635747,
+    "ast_hash": "0cf4ac58975593d69d76e5e5ebe70354",
+    "semantic_hash": ""
+  },
+  ".claude/skills/impeccable/reference/craft-floor.md": {
+    "mtime": 1793780350.3721068,
+    "ast_hash": "867a31bddcd6b757d6d5b8ee46025f4d",
+    "semantic_hash": ""
+  },
+  ".claude/skills/impeccable/reference/craft.md": {
+    "mtime": 1793780350.3761091,
+    "ast_hash": "9075911f45c58c15a720f8188b2738f4",
+    "semantic_hash": ""
+  },
+  ".claude/skills/impeccable/reference/critique.md": {
+    "mtime": 1793780350.3771105,
+    "ast_hash": "ea6e56873bb2e6c5269cfb8fafa7e5fc",
+    "semantic_hash": ""
+  },
+  ".claude/skills/impeccable/reference/degraded/asset-producer.md": {
+    "mtime": 1793780350.3806334,
+    "ast_hash": "fb453bd0cab9030596a6551d7d872aa5",
+    "semantic_hash": ""
+  },
+  ".claude/skills/impeccable/reference/degraded/documenter.md": {
+    "mtime": 1793780350.382257,
+    "ast_hash": "a38215374db267ad2be047a2a58cc816",
+    "semantic_hash": ""
+  },
+  ".claude/skills/impeccable/reference/degraded/finish-reviewer.md": {
+    "mtime": 1793780350.3847165,
+    "ast_hash": "0850d34ddae341e50f594e22a3913bd3",
+    "semantic_hash": ""
+  },
+  ".claude/skills/impeccable/reference/degraded/manual-edit-applier.md": {
+    "mtime": 1793780350.391256,
+    "ast_hash": "1652cf7a403f11f4d57382e5ccec6999",
+    "semantic_hash": ""
+  },
+  ".claude/skills/impeccable/reference/delight.md": {
+    "mtime": 1793780350.3952706,
+    "ast_hash": "e10166bb38cadd52ee69fb78226e1322",
+    "semantic_hash": ""
+  },
+  ".claude/skills/impeccable/reference/distill.md": {
+    "mtime": 1793780350.3982708,
+    "ast_hash": "6e0b73d818f8d82e23e7f8601075e933",
+    "semantic_hash": ""
+  },
+  ".claude/skills/impeccable/reference/doctor.md": {
+    "mtime": 1793780350.3992724,
+    "ast_hash": "7651e297df164f5d2e5dbb388d739090",
+    "semantic_hash": ""
+  },
+  ".claude/skills/impeccable/reference/document.md": {
+    "mtime": 1793780350.400778,
+    "ast_hash": "b3dc570b54dc97bbc59d244f4b859ccf",
+    "semantic_hash": ""
+  },
+  ".claude/skills/impeccable/reference/extract.md": {
+    "mtime": 1793780350.4017959,
+    "ast_hash": "374542f288a8fb2a8d7ff8bdda48270c",
+    "semantic_hash": ""
+  },
+  ".claude/skills/impeccable/reference/generate.md": {
+    "mtime": 1793780350.4028122,
+    "ast_hash": "2df139e06c463aac70c4d6e6b70d9f0c",
+    "semantic_hash": ""
+  },
+  ".claude/skills/impeccable/reference/harden.md": {
+    "mtime": 1793780350.403814,
+    "ast_hash": "193d7a192ce32912ef265aa7715f73a4",
+    "semantic_hash": ""
+  },
+  ".claude/skills/impeccable/reference/hooks.md": {
+    "mtime": 1793780350.4068081,
+    "ast_hash": "c95d8f5add41e967e49052069c726d04",
+    "semantic_hash": ""
+  },
+  ".claude/skills/impeccable/reference/init.md": {
+    "mtime": 1793780350.420341,
+    "ast_hash": "643ebb06c6b9cb50c833a7ed8cc8ff5b",
+    "semantic_hash": ""
+  },
+  ".claude/skills/impeccable/reference/ios.md": {
+    "mtime": 1793780350.4218552,
+    "ast_hash": "a8f56b5c246ad44e142853ef59a19039",
+    "semantic_hash": ""
+  },
+  ".claude/skills/impeccable/reference/layout.md": {
+    "mtime": 1793780350.4323874,
+    "ast_hash": "47a23724d1b8f043665a4e5612d13481",
+    "semantic_hash": ""
+  },
+  ".claude/skills/impeccable/reference/live-setup.md": {
+    "mtime": 1793780350.4364114,
+    "ast_hash": "4ed7527f994917e276df53171b1d9034",
+    "semantic_hash": ""
+  },
+  ".claude/skills/impeccable/reference/live.md": {
+    "mtime": 1793780350.4384098,
+    "ast_hash": "b9d8b962b923c2856e374ff6a6ede4fb",
+    "semantic_hash": ""
+  },
+  ".claude/skills/impeccable/reference/mode-operate.md": {
+    "mtime": 1793780350.441409,
+    "ast_hash": "bf63bc740b342576279715f35922daad",
+    "semantic_hash": ""
+  },
+  ".claude/skills/impeccable/reference/mode-persuade.md": {
+    "mtime": 1793780350.4449308,
+    "ast_hash": "9536e656c3fab5a8d85f1dcde6df45aa",
+    "semantic_hash": ""
+  },
+  ".claude/skills/impeccable/reference/mode-read.md": {
+    "mtime": 1793780350.446449,
+    "ast_hash": "09353e7df8b71096238a1d18c6fbfe44",
+    "semantic_hash": ""
+  },
+  ".claude/skills/impeccable/reference/new-work.md": {
+    "mtime": 1793780350.4499688,
+    "ast_hash": "3fda4bb72b467e96a0d81ec7f94ea921",
+    "semantic_hash": ""
+  },
+  ".claude/skills/impeccable/reference/onboard.md": {
+    "mtime": 1793780350.4519694,
+    "ast_hash": "3d61875f5485b5dd34deb3bd04157cd9",
+    "semantic_hash": ""
+  },
+  ".claude/skills/impeccable/reference/operate.md": {
+    "mtime": 1793780350.4534187,
+    "ast_hash": "53a569b985749058f7b178a32e0a157f",
+    "semantic_hash": ""
+  },
+  ".claude/skills/impeccable/reference/optimize.md": {
+    "mtime": 1793780350.4544325,
+    "ast_hash": "48dbe58f2cf191c53377c141218d8f83",
+    "semantic_hash": ""
+  },
+  ".claude/skills/impeccable/reference/overdrive.md": {
+    "mtime": 1793780350.4601066,
+    "ast_hash": "8ffa77ea1b5518fbc6e33ee4fd062b09",
+    "semantic_hash": ""
+  },
+  ".claude/skills/impeccable/reference/polish.md": {
+    "mtime": 1793780350.4631076,
+    "ast_hash": "85a66fe58fdf6e1f353d27486ac25c67",
+    "semantic_hash": ""
+  },
+  ".claude/skills/impeccable/reference/quieter.md": {
+    "mtime": 1793780350.4696372,
+    "ast_hash": "d22d2423c47ab6fbc893b57b3e52c923",
+    "semantic_hash": ""
+  },
+  ".claude/skills/impeccable/reference/region-map.md": {
+    "mtime": 1793780350.4726374,
+    "ast_hash": "196ae3d6b3c878bf6ed8228aee79e9fa",
+    "semantic_hash": ""
+  },
+  ".claude/skills/impeccable/reference/routing.md": {
+    "mtime": 1793780350.4761617,
+    "ast_hash": "b64946650da7c7136d8932923632ed81",
+    "semantic_hash": ""
+  },
+  ".claude/skills/impeccable/reference/shape.md": {
+    "mtime": 1793780350.4781752,
+    "ast_hash": "ecf5345d56452d10cd2c9203a7512704",
+    "semantic_hash": ""
+  },
+  ".claude/skills/impeccable/reference/typeset.md": {
+    "mtime": 1793780350.4791737,
+    "ast_hash": "478345b9c239e5d2a31ce5a36180418e",
+    "semantic_hash": ""
+  },
+  ".claude/skills/impeccable/reference/visualize.md": {
+    "mtime": 1793780350.4811745,
+    "ast_hash": "9570dbf77ffb2c67a2b4f362c839994b",
+    "semantic_hash": ""
+  },
+  ".claude/skills/impeccable/scripts/engine-checksums.txt": {
+    "mtime": 1793780350.5002794,
+    "ast_hash": "71cf77934c8cc6ec13163fb601f2d11a",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/impeccable/SKILL.md": {
+    "mtime": 1793780643.8857932,
+    "ast_hash": "8d77a8c9915f3fa55b6434f4a8ce84f5",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/impeccable/reference/adapt.md": {
+    "mtime": 1793780350.8293128,
+    "ast_hash": "ef6ccd681bda53968e1c6b0cc7a3bc94",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/impeccable/reference/adapt.native.md": {
+    "mtime": 1793780350.834312,
+    "ast_hash": "63b8e2f62a50991cf30b0ce7417ab4ff",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/impeccable/reference/android.md": {
+    "mtime": 1793780350.8428526,
+    "ast_hash": "a35783faf7effd696f24bdaafa6b5531",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/impeccable/reference/animate.md": {
+    "mtime": 1793780350.856904,
+    "ast_hash": "03c9f7615f5d3c10bf57c1aef1ec9882",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/impeccable/reference/audit.md": {
+    "mtime": 1793780350.8634331,
+    "ast_hash": "8e17e6fb9349ba18cc4a6be0e57b9d21",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/impeccable/reference/audit.native.md": {
+    "mtime": 1793780350.8654337,
+    "ast_hash": "102a07aa33fc6be7659e30d5770e44a5",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/impeccable/reference/bolder.md": {
+    "mtime": 1793780350.868435,
+    "ast_hash": "34e56086286c24b90fe804f0a3c9c888",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/impeccable/reference/clarify.md": {
+    "mtime": 1793780350.8694346,
+    "ast_hash": "3f9b6ded202ec0b912807451daaf1d5c",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/impeccable/reference/colorize.md": {
+    "mtime": 1793780350.869946,
+    "ast_hash": "99e051670d4153052b96ee844008d012",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/impeccable/reference/component-review.md": {
+    "mtime": 1793780350.8709579,
+    "ast_hash": "22c596990681070ad6898bdf30a39df7",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/impeccable/reference/craft-floor.md": {
+    "mtime": 1793780350.8739684,
+    "ast_hash": "867a31bddcd6b757d6d5b8ee46025f4d",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/impeccable/reference/craft.md": {
+    "mtime": 1793780350.874968,
+    "ast_hash": "9075911f45c58c15a720f8188b2738f4",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/impeccable/reference/critique.md": {
+    "mtime": 1793780350.8759696,
+    "ast_hash": "1bbbedbfb9c3db3869e90ede98229d91",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/impeccable/reference/degraded/asset-producer.md": {
+    "mtime": 1793780350.8799741,
+    "ast_hash": "02c0756dc4b030102fca40b18af603bc",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/impeccable/reference/degraded/documenter.md": {
+    "mtime": 1793780350.886551,
+    "ast_hash": "a38215374db267ad2be047a2a58cc816",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/impeccable/reference/degraded/finish-reviewer.md": {
+    "mtime": 1793780350.886551,
+    "ast_hash": "0850d34ddae341e50f594e22a3913bd3",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/impeccable/reference/degraded/manual-edit-applier.md": {
+    "mtime": 1793780350.888554,
+    "ast_hash": "1652cf7a403f11f4d57382e5ccec6999",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/impeccable/reference/delight.md": {
+    "mtime": 1793780350.895084,
+    "ast_hash": "e10166bb38cadd52ee69fb78226e1322",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/impeccable/reference/distill.md": {
+    "mtime": 1793780350.897086,
+    "ast_hash": "27f8b90ec1025b22a7c3fc0ca1f9b7c6",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/impeccable/reference/doctor.md": {
+    "mtime": 1793780350.8980849,
+    "ast_hash": "239c6756d56626e1e23fea998ebed683",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/impeccable/reference/document.md": {
+    "mtime": 1793780350.9000854,
+    "ast_hash": "88b21d28f2512f76eaf9aa49a874a60c",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/impeccable/reference/extract.md": {
+    "mtime": 1793780350.9216409,
+    "ast_hash": "b8e7a7c21497d09a396b8d477092ce06",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/impeccable/reference/generate.md": {
+    "mtime": 1793780350.9251692,
+    "ast_hash": "c575fa9dac62689a25f4c8eec4a52901",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/impeccable/reference/harden.md": {
+    "mtime": 1793780350.9263022,
+    "ast_hash": "193d7a192ce32912ef265aa7715f73a4",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/impeccable/reference/hooks.md": {
+    "mtime": 1793780350.9319599,
+    "ast_hash": "d5825bf19b1ec64fc79922d9cb0573ff",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/impeccable/reference/init.md": {
+    "mtime": 1793780350.9364958,
+    "ast_hash": "583b8add92a2aa6254928d32ea60ad54",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/impeccable/reference/ios.md": {
+    "mtime": 1793780350.9384966,
+    "ast_hash": "a8f56b5c246ad44e142853ef59a19039",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/impeccable/reference/layout.md": {
+    "mtime": 1793780350.9395003,
+    "ast_hash": "aac573145c4175ad0680643ed3431b20",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/impeccable/reference/live-setup.md": {
+    "mtime": 1793780350.941496,
+    "ast_hash": "472b696abcba3108f7ed096c4b7d89cb",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/impeccable/reference/live.md": {
+    "mtime": 1793780350.9424944,
+    "ast_hash": "703875441571b79690da36e3b46d1508",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/impeccable/reference/mode-operate.md": {
+    "mtime": 1793780350.9450195,
+    "ast_hash": "bf63bc740b342576279715f35922daad",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/impeccable/reference/mode-persuade.md": {
+    "mtime": 1793780350.9465408,
+    "ast_hash": "9536e656c3fab5a8d85f1dcde6df45aa",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/impeccable/reference/mode-read.md": {
+    "mtime": 1793780350.9485419,
+    "ast_hash": "09353e7df8b71096238a1d18c6fbfe44",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/impeccable/reference/new-work.md": {
+    "mtime": 1793780350.9505417,
+    "ast_hash": "85f1c122339fd2d2825ee2eab1bfdb8f",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/impeccable/reference/onboard.md": {
+    "mtime": 1793780350.9515424,
+    "ast_hash": "3d61875f5485b5dd34deb3bd04157cd9",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/impeccable/reference/operate.md": {
+    "mtime": 1793780350.952543,
+    "ast_hash": "53a569b985749058f7b178a32e0a157f",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/impeccable/reference/optimize.md": {
+    "mtime": 1793780350.9540584,
+    "ast_hash": "48dbe58f2cf191c53377c141218d8f83",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/impeccable/reference/overdrive.md": {
+    "mtime": 1793780350.9565926,
+    "ast_hash": "8ddd4d5e4e8cdf464296045d02397f8c",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/impeccable/reference/polish.md": {
+    "mtime": 1793780350.9576044,
+    "ast_hash": "26aa6c010b7193ab7287ce2bf804e382",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/impeccable/reference/quieter.md": {
+    "mtime": 1793780350.9576044,
+    "ast_hash": "50c73031611c73d02fd86145a66ec82d",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/impeccable/reference/region-map.md": {
+    "mtime": 1793780350.9586015,
+    "ast_hash": "684a6c1d6553aabbf02ca456570a0362",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/impeccable/reference/routing.md": {
+    "mtime": 1793780350.9606073,
+    "ast_hash": "1d7279149dc127d148381a0357cbe0a7",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/impeccable/reference/shape.md": {
+    "mtime": 1793780350.961607,
+    "ast_hash": "ecf5345d56452d10cd2c9203a7512704",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/impeccable/reference/typeset.md": {
+    "mtime": 1793780350.9665632,
+    "ast_hash": "39ad06de75e29e76f88bd5b3e09ac5aa",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/impeccable/reference/visualize.md": {
+    "mtime": 1793780350.967564,
+    "ast_hash": "a3ffdb030a8d32570a68b78d2ad82777",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/impeccable/scripts/engine-checksums.txt": {
+    "mtime": 1793780350.9802554,
+    "ast_hash": "71cf77934c8cc6ec13163fb601f2d11a",
+    "semantic_hash": ""
+  },
+  ".gemini/skills/impeccable/SKILL.md": {
+    "mtime": 1793780634.7875638,
+    "ast_hash": "300281592b61fb8f8916fffce0aebd79",
+    "semantic_hash": ""
+  },
+  ".gemini/skills/impeccable/reference/adapt.md": {
+    "mtime": 1793780351.0118732,
+    "ast_hash": "ef6ccd681bda53968e1c6b0cc7a3bc94",
+    "semantic_hash": ""
+  },
+  ".gemini/skills/impeccable/reference/adapt.native.md": {
+    "mtime": 1793780351.0128696,
+    "ast_hash": "63b8e2f62a50991cf30b0ce7417ab4ff",
+    "semantic_hash": ""
+  },
+  ".gemini/skills/impeccable/reference/android.md": {
+    "mtime": 1793780351.0138695,
+    "ast_hash": "a35783faf7effd696f24bdaafa6b5531",
+    "semantic_hash": ""
+  },
+  ".gemini/skills/impeccable/reference/animate.md": {
+    "mtime": 1793780351.01487,
+    "ast_hash": "03c9f7615f5d3c10bf57c1aef1ec9882",
+    "semantic_hash": ""
+  },
+  ".gemini/skills/impeccable/reference/audit.md": {
+    "mtime": 1793780351.015872,
+    "ast_hash": "c367b7eb8e044505ffdc0d51cafc6448",
+    "semantic_hash": ""
+  },
+  ".gemini/skills/impeccable/reference/audit.native.md": {
+    "mtime": 1793780351.0193813,
+    "ast_hash": "102a07aa33fc6be7659e30d5770e44a5",
+    "semantic_hash": ""
+  },
+  ".gemini/skills/impeccable/reference/bolder.md": {
+    "mtime": 1793780351.021405,
+    "ast_hash": "34e56086286c24b90fe804f0a3c9c888",
+    "semantic_hash": ""
+  },
+  ".gemini/skills/impeccable/reference/clarify.md": {
+    "mtime": 1793780351.021405,
+    "ast_hash": "3f9b6ded202ec0b912807451daaf1d5c",
+    "semantic_hash": ""
+  },
+  ".gemini/skills/impeccable/reference/colorize.md": {
+    "mtime": 1793780351.022407,
+    "ast_hash": "99e051670d4153052b96ee844008d012",
+    "semantic_hash": ""
+  },
+  ".gemini/skills/impeccable/reference/component-review.md": {
+    "mtime": 1793780351.0274045,
+    "ast_hash": "5ac254c6cc27f26edb127c484e307090",
+    "semantic_hash": ""
+  },
+  ".gemini/skills/impeccable/reference/craft-floor.md": {
+    "mtime": 1793780351.0329316,
+    "ast_hash": "867a31bddcd6b757d6d5b8ee46025f4d",
+    "semantic_hash": ""
+  },
+  ".gemini/skills/impeccable/reference/craft.md": {
+    "mtime": 1793780351.037931,
+    "ast_hash": "9075911f45c58c15a720f8188b2738f4",
+    "semantic_hash": ""
+  },
+  ".gemini/skills/impeccable/reference/critique.md": {
+    "mtime": 1793780351.0424554,
+    "ast_hash": "c89a1562b19ed8c912c44ad760437ef7",
+    "semantic_hash": ""
+  },
+  ".gemini/skills/impeccable/reference/degraded/asset-producer.md": {
+    "mtime": 1793780351.0499747,
+    "ast_hash": "61645d0841250ade02533d4638e5f1d7",
+    "semantic_hash": ""
+  },
+  ".gemini/skills/impeccable/reference/degraded/documenter.md": {
+    "mtime": 1793780351.0524952,
+    "ast_hash": "a38215374db267ad2be047a2a58cc816",
+    "semantic_hash": ""
+  },
+  ".gemini/skills/impeccable/reference/degraded/finish-reviewer.md": {
+    "mtime": 1793780351.054509,
+    "ast_hash": "0850d34ddae341e50f594e22a3913bd3",
+    "semantic_hash": ""
+  },
+  ".gemini/skills/impeccable/reference/degraded/manual-edit-applier.md": {
+    "mtime": 1793780351.060508,
+    "ast_hash": "1652cf7a403f11f4d57382e5ccec6999",
+    "semantic_hash": ""
+  },
+  ".gemini/skills/impeccable/reference/delight.md": {
+    "mtime": 1793780351.1092238,
+    "ast_hash": "e10166bb38cadd52ee69fb78226e1322",
+    "semantic_hash": ""
+  },
+  ".gemini/skills/impeccable/reference/distill.md": {
+    "mtime": 1793780351.1122246,
+    "ast_hash": "27f8b90ec1025b22a7c3fc0ca1f9b7c6",
+    "semantic_hash": ""
+  },
+  ".gemini/skills/impeccable/reference/doctor.md": {
+    "mtime": 1793780351.1132243,
+    "ast_hash": "284dbd4279d3c0ce5283964de6406bfb",
+    "semantic_hash": ""
+  },
+  ".gemini/skills/impeccable/reference/document.md": {
+    "mtime": 1793780351.118765,
+    "ast_hash": "88b21d28f2512f76eaf9aa49a874a60c",
+    "semantic_hash": ""
+  },
+  ".gemini/skills/impeccable/reference/extract.md": {
+    "mtime": 1793780351.1197648,
+    "ast_hash": "b8e7a7c21497d09a396b8d477092ce06",
+    "semantic_hash": ""
+  },
+  ".gemini/skills/impeccable/reference/generate.md": {
+    "mtime": 1793780351.1207628,
+    "ast_hash": "0d5fb558f9de92b4696ab29163d72c35",
+    "semantic_hash": ""
+  },
+  ".gemini/skills/impeccable/reference/harden.md": {
+    "mtime": 1793780351.1217666,
+    "ast_hash": "193d7a192ce32912ef265aa7715f73a4",
+    "semantic_hash": ""
+  },
+  ".gemini/skills/impeccable/reference/hooks.md": {
+    "mtime": 1793780351.1227674,
+    "ast_hash": "7dd0458e5d59fb430eaa8d78790e411d",
+    "semantic_hash": ""
+  },
+  ".gemini/skills/impeccable/reference/init.md": {
+    "mtime": 1793780351.1237657,
+    "ast_hash": "583b8add92a2aa6254928d32ea60ad54",
+    "semantic_hash": ""
+  },
+  ".gemini/skills/impeccable/reference/ios.md": {
+    "mtime": 1793780351.1237657,
+    "ast_hash": "a8f56b5c246ad44e142853ef59a19039",
+    "semantic_hash": ""
+  },
+  ".gemini/skills/impeccable/reference/layout.md": {
+    "mtime": 1793780351.1252759,
+    "ast_hash": "6cc3efe29a3c4ad9fd2fbee766c90b18",
+    "semantic_hash": ""
+  },
+  ".gemini/skills/impeccable/reference/live-setup.md": {
+    "mtime": 1793780351.1272862,
+    "ast_hash": "5acfb7cfb9f110e990be9d84032618a8",
+    "semantic_hash": ""
+  },
+  ".gemini/skills/impeccable/reference/live.md": {
+    "mtime": 1793780351.1282952,
+    "ast_hash": "37820f34863b34a68885ebac641bfb5b",
+    "semantic_hash": ""
+  },
+  ".gemini/skills/impeccable/reference/mode-operate.md": {
+    "mtime": 1793780351.1292956,
+    "ast_hash": "bf63bc740b342576279715f35922daad",
+    "semantic_hash": ""
+  },
+  ".gemini/skills/impeccable/reference/mode-persuade.md": {
+    "mtime": 1793780351.1302977,
+    "ast_hash": "9536e656c3fab5a8d85f1dcde6df45aa",
+    "semantic_hash": ""
+  },
+  ".gemini/skills/impeccable/reference/mode-read.md": {
+    "mtime": 1793780351.1322975,
+    "ast_hash": "09353e7df8b71096238a1d18c6fbfe44",
+    "semantic_hash": ""
+  },
+  ".gemini/skills/impeccable/reference/new-work.md": {
+    "mtime": 1793780351.1368022,
+    "ast_hash": "d9c06923b4c2b15c94ccd9e5de0d51c3",
+    "semantic_hash": ""
+  },
+  ".gemini/skills/impeccable/reference/onboard.md": {
+    "mtime": 1793780351.137813,
+    "ast_hash": "3d61875f5485b5dd34deb3bd04157cd9",
+    "semantic_hash": ""
+  },
+  ".gemini/skills/impeccable/reference/operate.md": {
+    "mtime": 1793780351.1388226,
+    "ast_hash": "53a569b985749058f7b178a32e0a157f",
+    "semantic_hash": ""
+  },
+  ".gemini/skills/impeccable/reference/optimize.md": {
+    "mtime": 1793780351.1453326,
+    "ast_hash": "48dbe58f2cf191c53377c141218d8f83",
+    "semantic_hash": ""
+  },
+  ".gemini/skills/impeccable/reference/overdrive.md": {
+    "mtime": 1793780351.1468441,
+    "ast_hash": "8ddd4d5e4e8cdf464296045d02397f8c",
+    "semantic_hash": ""
+  },
+  ".gemini/skills/impeccable/reference/polish.md": {
+    "mtime": 1793780351.1488607,
+    "ast_hash": "2d7883c633186c931c0daf3bcfffa302",
+    "semantic_hash": ""
+  },
+  ".gemini/skills/impeccable/reference/quieter.md": {
+    "mtime": 1793780351.1488607,
+    "ast_hash": "50c73031611c73d02fd86145a66ec82d",
+    "semantic_hash": ""
+  },
+  ".gemini/skills/impeccable/reference/region-map.md": {
+    "mtime": 1793780351.1518762,
+    "ast_hash": "9073748e963719e6e4e2ba5003c01eda",
+    "semantic_hash": ""
+  },
+  ".gemini/skills/impeccable/reference/routing.md": {
+    "mtime": 1793780351.1664088,
+    "ast_hash": "fe1b75120d9acd0cee3f10a22eaa230b",
+    "semantic_hash": ""
+  },
+  ".gemini/skills/impeccable/reference/shape.md": {
+    "mtime": 1793780351.16741,
+    "ast_hash": "ecf5345d56452d10cd2c9203a7512704",
+    "semantic_hash": ""
+  },
+  ".gemini/skills/impeccable/reference/typeset.md": {
+    "mtime": 1793780351.1709433,
+    "ast_hash": "fdc370f277c4d3b3af471dc40acdbd32",
+    "semantic_hash": ""
+  },
+  ".gemini/skills/impeccable/reference/visualize.md": {
+    "mtime": 1793780351.175941,
+    "ast_hash": "63c38c85911c6cabf7067ad4b57d3018",
+    "semantic_hash": ""
+  },
+  ".gemini/skills/impeccable/scripts/engine-checksums.txt": {
+    "mtime": 1793780351.1956286,
+    "ast_hash": "71cf77934c8cc6ec13163fb601f2d11a",
+    "semantic_hash": ""
+  },
+  ".hermes/skills/impeccable/SKILL.md": {
+    "mtime": 1793780351.2513404,
+    "ast_hash": "ba8282546e272121a773cf815336d72c",
+    "semantic_hash": ""
+  },
+  ".hermes/skills/impeccable/reference/adapt.md": {
+    "mtime": 1793780351.2560253,
+    "ast_hash": "ef6ccd681bda53968e1c6b0cc7a3bc94",
+    "semantic_hash": ""
+  },
+  ".hermes/skills/impeccable/reference/adapt.native.md": {
+    "mtime": 1793780351.258025,
+    "ast_hash": "63b8e2f62a50991cf30b0ce7417ab4ff",
+    "semantic_hash": ""
+  },
+  ".hermes/skills/impeccable/reference/android.md": {
+    "mtime": 1793780351.2590253,
+    "ast_hash": "a35783faf7effd696f24bdaafa6b5531",
+    "semantic_hash": ""
+  },
+  ".hermes/skills/impeccable/reference/animate.md": {
+    "mtime": 1793780351.2600267,
+    "ast_hash": "03c9f7615f5d3c10bf57c1aef1ec9882",
+    "semantic_hash": ""
+  },
+  ".hermes/skills/impeccable/reference/audit.md": {
+    "mtime": 1793780351.2685623,
+    "ast_hash": "7d41486fa638838fda68e8b66ae5e1cf",
+    "semantic_hash": ""
+  },
+  ".hermes/skills/impeccable/reference/audit.native.md": {
+    "mtime": 1793780351.2705607,
+    "ast_hash": "102a07aa33fc6be7659e30d5770e44a5",
+    "semantic_hash": ""
+  },
+  ".hermes/skills/impeccable/reference/bolder.md": {
+    "mtime": 1793780351.2705607,
+    "ast_hash": "34e56086286c24b90fe804f0a3c9c888",
+    "semantic_hash": ""
+  },
+  ".hermes/skills/impeccable/reference/clarify.md": {
+    "mtime": 1793780351.2715619,
+    "ast_hash": "3f9b6ded202ec0b912807451daaf1d5c",
+    "semantic_hash": ""
+  },
+  ".hermes/skills/impeccable/reference/colorize.md": {
+    "mtime": 1793780351.2790911,
+    "ast_hash": "99e051670d4153052b96ee844008d012",
+    "semantic_hash": ""
+  },
+  ".hermes/skills/impeccable/reference/component-review.md": {
+    "mtime": 1793780351.2830944,
+    "ast_hash": "62fcf7f3d68753be5ccb9d718be4a771",
+    "semantic_hash": ""
+  },
+  ".hermes/skills/impeccable/reference/craft-floor.md": {
+    "mtime": 1793780351.3182776,
+    "ast_hash": "867a31bddcd6b757d6d5b8ee46025f4d",
+    "semantic_hash": ""
+  },
+  ".hermes/skills/impeccable/reference/craft.md": {
+    "mtime": 1793780351.3192902,
+    "ast_hash": "9075911f45c58c15a720f8188b2738f4",
+    "semantic_hash": ""
+  },
+  ".hermes/skills/impeccable/reference/critique.md": {
+    "mtime": 1793780351.3222997,
+    "ast_hash": "f38ca81bddce7fd40cd3dad5d5b70ceb",
+    "semantic_hash": ""
+  },
+  ".hermes/skills/impeccable/reference/degraded/asset-producer.md": {
+    "mtime": 1793780351.324301,
+    "ast_hash": "77f5b3f54ed082b3fbcf13fb990d0693",
+    "semantic_hash": ""
+  },
+  ".hermes/skills/impeccable/reference/degraded/documenter.md": {
+    "mtime": 1793780351.324301,
+    "ast_hash": "a38215374db267ad2be047a2a58cc816",
+    "semantic_hash": ""
+  },
+  ".hermes/skills/impeccable/reference/degraded/finish-reviewer.md": {
+    "mtime": 1793780351.3318474,
+    "ast_hash": "0850d34ddae341e50f594e22a3913bd3",
+    "semantic_hash": ""
+  },
+  ".hermes/skills/impeccable/reference/degraded/manual-edit-applier.md": {
+    "mtime": 1793780351.334846,
+    "ast_hash": "1652cf7a403f11f4d57382e5ccec6999",
+    "semantic_hash": ""
+  },
+  ".hermes/skills/impeccable/reference/delight.md": {
+    "mtime": 1793780351.3393562,
+    "ast_hash": "e10166bb38cadd52ee69fb78226e1322",
+    "semantic_hash": ""
+  },
+  ".hermes/skills/impeccable/reference/distill.md": {
+    "mtime": 1793780351.3413813,
+    "ast_hash": "27f8b90ec1025b22a7c3fc0ca1f9b7c6",
+    "semantic_hash": ""
+  },
+  ".hermes/skills/impeccable/reference/doctor.md": {
+    "mtime": 1793780351.3448954,
+    "ast_hash": "94c19fab1aff56bf0412e9ac7fbeaba2",
+    "semantic_hash": ""
+  },
+  ".hermes/skills/impeccable/reference/document.md": {
+    "mtime": 1793780351.346913,
+    "ast_hash": "88b21d28f2512f76eaf9aa49a874a60c",
+    "semantic_hash": ""
+  },
+  ".hermes/skills/impeccable/reference/extract.md": {
+    "mtime": 1793780351.3479097,
+    "ast_hash": "b8e7a7c21497d09a396b8d477092ce06",
+    "semantic_hash": ""
+  },
+  ".hermes/skills/impeccable/reference/generate.md": {
+    "mtime": 1793780351.3494234,
+    "ast_hash": "a05f60247fc20e9948e7c96da9c7509d",
+    "semantic_hash": ""
+  },
+  ".hermes/skills/impeccable/reference/harden.md": {
+    "mtime": 1793780351.3524504,
+    "ast_hash": "193d7a192ce32912ef265aa7715f73a4",
+    "semantic_hash": ""
+  },
+  ".hermes/skills/impeccable/reference/hooks.md": {
+    "mtime": 1793780351.3554513,
+    "ast_hash": "41b742255b573dc42e8467a0b73f6d99",
+    "semantic_hash": ""
+  },
+  ".hermes/skills/impeccable/reference/init.md": {
+    "mtime": 1793780351.3584518,
+    "ast_hash": "583b8add92a2aa6254928d32ea60ad54",
+    "semantic_hash": ""
+  },
+  ".hermes/skills/impeccable/reference/ios.md": {
+    "mtime": 1793780351.3594537,
+    "ast_hash": "a8f56b5c246ad44e142853ef59a19039",
+    "semantic_hash": ""
+  },
+  ".hermes/skills/impeccable/reference/layout.md": {
+    "mtime": 1793780351.3649917,
+    "ast_hash": "3e6eaee67c74f2f987d3442f26bdd3c8",
+    "semantic_hash": ""
+  },
+  ".hermes/skills/impeccable/reference/live-setup.md": {
+    "mtime": 1793780351.367997,
+    "ast_hash": "8c93e45c45a9dc907adc37caaf9f93b3",
+    "semantic_hash": ""
+  },
+  ".hermes/skills/impeccable/reference/live.md": {
+    "mtime": 1793780351.3689892,
+    "ast_hash": "ac061179d23628452c430e7e53c199b6",
+    "semantic_hash": ""
+  },
+  ".hermes/skills/impeccable/reference/mode-operate.md": {
+    "mtime": 1793780351.376531,
+    "ast_hash": "bf63bc740b342576279715f35922daad",
+    "semantic_hash": ""
+  },
+  ".hermes/skills/impeccable/reference/mode-persuade.md": {
+    "mtime": 1793780351.3890648,
+    "ast_hash": "9536e656c3fab5a8d85f1dcde6df45aa",
+    "semantic_hash": ""
+  },
+  ".hermes/skills/impeccable/reference/mode-read.md": {
+    "mtime": 1793780351.3935955,
+    "ast_hash": "09353e7df8b71096238a1d18c6fbfe44",
+    "semantic_hash": ""
+  },
+  ".hermes/skills/impeccable/reference/new-work.md": {
+    "mtime": 1793780351.3996072,
+    "ast_hash": "4116df0a708ec1ac38859973c33b1d7d",
+    "semantic_hash": ""
+  },
+  ".hermes/skills/impeccable/reference/onboard.md": {
+    "mtime": 1793780351.4052534,
+    "ast_hash": "3d61875f5485b5dd34deb3bd04157cd9",
+    "semantic_hash": ""
+  },
+  ".hermes/skills/impeccable/reference/operate.md": {
+    "mtime": 1793780351.4082615,
+    "ast_hash": "53a569b985749058f7b178a32e0a157f",
+    "semantic_hash": ""
+  },
+  ".hermes/skills/impeccable/reference/optimize.md": {
+    "mtime": 1793780351.459465,
+    "ast_hash": "48dbe58f2cf191c53377c141218d8f83",
+    "semantic_hash": ""
+  },
+  ".hermes/skills/impeccable/reference/overdrive.md": {
+    "mtime": 1793780351.4760132,
+    "ast_hash": "8ddd4d5e4e8cdf464296045d02397f8c",
+    "semantic_hash": ""
+  },
+  ".hermes/skills/impeccable/reference/polish.md": {
+    "mtime": 1793780351.4805415,
+    "ast_hash": "e72c300040f1a02c8bf4598c7a5486bc",
+    "semantic_hash": ""
+  },
+  ".hermes/skills/impeccable/reference/quieter.md": {
+    "mtime": 1793780351.4835415,
+    "ast_hash": "50c73031611c73d02fd86145a66ec82d",
+    "semantic_hash": ""
+  },
+  ".hermes/skills/impeccable/reference/region-map.md": {
+    "mtime": 1793780351.484544,
+    "ast_hash": "b129e57700898ffd001acc53a8a48812",
+    "semantic_hash": ""
+  },
+  ".hermes/skills/impeccable/reference/routing.md": {
+    "mtime": 1793780351.4855435,
+    "ast_hash": "31eccfa8ae82d17a3921e5cf8cb6d144",
+    "semantic_hash": ""
+  },
+  ".hermes/skills/impeccable/reference/shape.md": {
+    "mtime": 1793780351.4865434,
+    "ast_hash": "ecf5345d56452d10cd2c9203a7512704",
+    "semantic_hash": ""
+  },
+  ".hermes/skills/impeccable/reference/typeset.md": {
+    "mtime": 1793780351.4865434,
+    "ast_hash": "06f83996477b05e45e5691fa540011cb",
+    "semantic_hash": ""
+  },
+  ".hermes/skills/impeccable/reference/visualize.md": {
+    "mtime": 1793780351.4880536,
+    "ast_hash": "fcce442d97ef42f3d7e76bf55ffabb35",
+    "semantic_hash": ""
+  },
+  ".hermes/skills/impeccable/scripts/engine-checksums.txt": {
+    "mtime": 1793780351.4995909,
+    "ast_hash": "71cf77934c8cc6ec13163fb601f2d11a",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/impeccable/SKILL.md": {
+    "mtime": 1793780351.540709,
+    "ast_hash": "61519cb8896f6c25b785c4ad19ca4469",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/impeccable/reference/adapt.md": {
+    "mtime": 1793780351.546746,
+    "ast_hash": "ef6ccd681bda53968e1c6b0cc7a3bc94",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/impeccable/reference/adapt.native.md": {
+    "mtime": 1793780351.6878817,
+    "ast_hash": "63b8e2f62a50991cf30b0ce7417ab4ff",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/impeccable/reference/android.md": {
+    "mtime": 1793780351.7078724,
+    "ast_hash": "a35783faf7effd696f24bdaafa6b5531",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/impeccable/reference/animate.md": {
+    "mtime": 1793780351.7123814,
+    "ast_hash": "03c9f7615f5d3c10bf57c1aef1ec9882",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/impeccable/reference/audit.md": {
+    "mtime": 1793780351.7143967,
+    "ast_hash": "005ea0228d02e84d04f8ca891e20cc60",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/impeccable/reference/audit.native.md": {
+    "mtime": 1793780351.7154071,
+    "ast_hash": "102a07aa33fc6be7659e30d5770e44a5",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/impeccable/reference/bolder.md": {
+    "mtime": 1793780351.7164056,
+    "ast_hash": "34e56086286c24b90fe804f0a3c9c888",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/impeccable/reference/clarify.md": {
+    "mtime": 1793780351.7204087,
+    "ast_hash": "3f9b6ded202ec0b912807451daaf1d5c",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/impeccable/reference/colorize.md": {
+    "mtime": 1793780351.7214062,
+    "ast_hash": "99e051670d4153052b96ee844008d012",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/impeccable/reference/component-review.md": {
+    "mtime": 1793780351.7229178,
+    "ast_hash": "284deca7f7682431018c7c58b4d69bbb",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/impeccable/reference/craft-floor.md": {
+    "mtime": 1793780351.7259429,
+    "ast_hash": "867a31bddcd6b757d6d5b8ee46025f4d",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/impeccable/reference/craft.md": {
+    "mtime": 1793780351.7289448,
+    "ast_hash": "9075911f45c58c15a720f8188b2738f4",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/impeccable/reference/critique.md": {
+    "mtime": 1793780351.7319455,
+    "ast_hash": "50713c58bfadcb84cf576e18e58ffc88",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/impeccable/reference/degraded/asset-producer.md": {
+    "mtime": 1793780351.7344718,
+    "ast_hash": "3319b6aba2a962c5f9d310e7fb162e0d",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/impeccable/reference/degraded/documenter.md": {
+    "mtime": 1793780351.7354739,
+    "ast_hash": "a38215374db267ad2be047a2a58cc816",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/impeccable/reference/degraded/finish-reviewer.md": {
+    "mtime": 1793780351.7364862,
+    "ast_hash": "0850d34ddae341e50f594e22a3913bd3",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/impeccable/reference/degraded/manual-edit-applier.md": {
+    "mtime": 1793780351.741829,
+    "ast_hash": "1652cf7a403f11f4d57382e5ccec6999",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/impeccable/reference/delight.md": {
+    "mtime": 1793780351.7428262,
+    "ast_hash": "e10166bb38cadd52ee69fb78226e1322",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/impeccable/reference/distill.md": {
+    "mtime": 1793780351.744344,
+    "ast_hash": "27f8b90ec1025b22a7c3fc0ca1f9b7c6",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/impeccable/reference/doctor.md": {
+    "mtime": 1793780351.7489243,
+    "ast_hash": "cd303f85003d80ceaf39430fbbb4d298",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/impeccable/reference/document.md": {
+    "mtime": 1793780351.7499254,
+    "ast_hash": "88b21d28f2512f76eaf9aa49a874a60c",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/impeccable/reference/extract.md": {
+    "mtime": 1793780351.7509246,
+    "ast_hash": "b8e7a7c21497d09a396b8d477092ce06",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/impeccable/reference/generate.md": {
+    "mtime": 1793780351.755436,
+    "ast_hash": "d81ed0f32c1e4d055110728a4a09183c",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/impeccable/reference/harden.md": {
+    "mtime": 1793780351.7614582,
+    "ast_hash": "193d7a192ce32912ef265aa7715f73a4",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/impeccable/reference/hooks.md": {
+    "mtime": 1793780351.7634573,
+    "ast_hash": "bade4770ef1cc1b4e57e195489121aa8",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/impeccable/reference/init.md": {
+    "mtime": 1793780351.764457,
+    "ast_hash": "583b8add92a2aa6254928d32ea60ad54",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/impeccable/reference/ios.md": {
+    "mtime": 1793780351.7700045,
+    "ast_hash": "a8f56b5c246ad44e142853ef59a19039",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/impeccable/reference/layout.md": {
+    "mtime": 1793780351.771007,
+    "ast_hash": "13e0f8e7e708b0782c2a3df02138ea1e",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/impeccable/reference/live-setup.md": {
+    "mtime": 1793780351.771007,
+    "ast_hash": "fda7436e8764d4fdebeecd5d87becad6",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/impeccable/reference/live.md": {
+    "mtime": 1793780351.7908955,
+    "ast_hash": "aa5638c9f48ada8be2c7494414f666c0",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/impeccable/reference/mode-operate.md": {
+    "mtime": 1793780351.7938955,
+    "ast_hash": "bf63bc740b342576279715f35922daad",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/impeccable/reference/mode-persuade.md": {
+    "mtime": 1793780351.7958946,
+    "ast_hash": "9536e656c3fab5a8d85f1dcde6df45aa",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/impeccable/reference/mode-read.md": {
+    "mtime": 1793780351.7958946,
+    "ast_hash": "09353e7df8b71096238a1d18c6fbfe44",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/impeccable/reference/new-work.md": {
+    "mtime": 1793780351.7984138,
+    "ast_hash": "f31f6ae2044a9506cff55f4d897a831b",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/impeccable/reference/onboard.md": {
+    "mtime": 1793780351.8054287,
+    "ast_hash": "3d61875f5485b5dd34deb3bd04157cd9",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/impeccable/reference/operate.md": {
+    "mtime": 1793780351.8099515,
+    "ast_hash": "53a569b985749058f7b178a32e0a157f",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/impeccable/reference/optimize.md": {
+    "mtime": 1793780351.8109624,
+    "ast_hash": "48dbe58f2cf191c53377c141218d8f83",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/impeccable/reference/overdrive.md": {
+    "mtime": 1793780351.8225043,
+    "ast_hash": "8ddd4d5e4e8cdf464296045d02397f8c",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/impeccable/reference/polish.md": {
+    "mtime": 1793780351.8255067,
+    "ast_hash": "95d9d2166ae645c9a7b981cb588af24e",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/impeccable/reference/quieter.md": {
+    "mtime": 1793780351.8265066,
+    "ast_hash": "50c73031611c73d02fd86145a66ec82d",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/impeccable/reference/region-map.md": {
+    "mtime": 1793780351.833041,
+    "ast_hash": "7653941bf96cbde201e2a15b39130488",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/impeccable/reference/routing.md": {
+    "mtime": 1793780351.8370385,
+    "ast_hash": "9cc16d5027a64055b921dc9b0628f125",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/impeccable/reference/shape.md": {
+    "mtime": 1793780351.8401513,
+    "ast_hash": "ecf5345d56452d10cd2c9203a7512704",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/impeccable/reference/typeset.md": {
+    "mtime": 1793780351.8431642,
+    "ast_hash": "f3efe1b92e7e8499b9c8b84f053270f8",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/impeccable/reference/visualize.md": {
+    "mtime": 1793780351.8501942,
+    "ast_hash": "bd36bf9abeb06708cdc4a0ccba92de89",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/impeccable/scripts/engine-checksums.txt": {
+    "mtime": 1793780351.8676662,
+    "ast_hash": "71cf77934c8cc6ec13163fb601f2d11a",
+    "semantic_hash": ""
+  },
+  ".opencode/commands/impeccable.md": {
+    "mtime": 1793780347.5399141,
+    "ast_hash": "a10065c2db891d9e52cc2a3500a534f0",
+    "semantic_hash": ""
+  },
+  ".opencode/skills/impeccable/SKILL.md": {
+    "mtime": 1793780351.9725292,
+    "ast_hash": "e6138647eabebce7fa7bd49862ac44fd",
+    "semantic_hash": ""
+  },
+  ".opencode/skills/impeccable/reference/adapt.md": {
+    "mtime": 1793780351.974529,
+    "ast_hash": "ef6ccd681bda53968e1c6b0cc7a3bc94",
+    "semantic_hash": ""
+  },
+  ".opencode/skills/impeccable/reference/adapt.native.md": {
+    "mtime": 1793780351.9765296,
+    "ast_hash": "63b8e2f62a50991cf30b0ce7417ab4ff",
+    "semantic_hash": ""
+  },
+  ".opencode/skills/impeccable/reference/android.md": {
+    "mtime": 1793780351.9820755,
+    "ast_hash": "a35783faf7effd696f24bdaafa6b5531",
+    "semantic_hash": ""
+  },
+  ".opencode/skills/impeccable/reference/animate.md": {
+    "mtime": 1793780351.9830732,
+    "ast_hash": "03c9f7615f5d3c10bf57c1aef1ec9882",
+    "semantic_hash": ""
+  },
+  ".opencode/skills/impeccable/reference/audit.md": {
+    "mtime": 1793780351.9840736,
+    "ast_hash": "cc236710c3d0239745f638615221f884",
+    "semantic_hash": ""
+  },
+  ".opencode/skills/impeccable/reference/audit.native.md": {
+    "mtime": 1793780351.9860744,
+    "ast_hash": "102a07aa33fc6be7659e30d5770e44a5",
+    "semantic_hash": ""
+  },
+  ".opencode/skills/impeccable/reference/bolder.md": {
+    "mtime": 1793780351.9936101,
+    "ast_hash": "e64959283a3023ec391304a3b91d8fd2",
+    "semantic_hash": ""
+  },
+  ".opencode/skills/impeccable/reference/clarify.md": {
+    "mtime": 1793780352.003143,
+    "ast_hash": "3f9b6ded202ec0b912807451daaf1d5c",
+    "semantic_hash": ""
+  },
+  ".opencode/skills/impeccable/reference/colorize.md": {
+    "mtime": 1793780352.004146,
+    "ast_hash": "99e051670d4153052b96ee844008d012",
+    "semantic_hash": ""
+  },
+  ".opencode/skills/impeccable/reference/component-review.md": {
+    "mtime": 1793780352.004146,
+    "ast_hash": "d4da6edf19f0236e34d322667bdec7d4",
+    "semantic_hash": ""
+  },
+  ".opencode/skills/impeccable/reference/craft-floor.md": {
+    "mtime": 1793780352.008143,
+    "ast_hash": "867a31bddcd6b757d6d5b8ee46025f4d",
+    "semantic_hash": ""
+  },
+  ".opencode/skills/impeccable/reference/craft.md": {
+    "mtime": 1793780352.0166762,
+    "ast_hash": "9075911f45c58c15a720f8188b2738f4",
+    "semantic_hash": ""
+  },
+  ".opencode/skills/impeccable/reference/critique.md": {
+    "mtime": 1793780352.0176759,
+    "ast_hash": "e71401b1c0e245504f5b634673d3cb5b",
+    "semantic_hash": ""
+  },
+  ".opencode/skills/impeccable/reference/degraded/asset-producer.md": {
+    "mtime": 1793780352.0196764,
+    "ast_hash": "d85e2c3c77b97fe56c4090eb9e652662",
+    "semantic_hash": ""
+  },
+  ".opencode/skills/impeccable/reference/degraded/documenter.md": {
+    "mtime": 1793780352.020679,
+    "ast_hash": "a38215374db267ad2be047a2a58cc816",
+    "semantic_hash": ""
+  },
+  ".opencode/skills/impeccable/reference/degraded/finish-reviewer.md": {
+    "mtime": 1793780352.0231981,
+    "ast_hash": "0850d34ddae341e50f594e22a3913bd3",
+    "semantic_hash": ""
+  },
+  ".opencode/skills/impeccable/reference/degraded/manual-edit-applier.md": {
+    "mtime": 1793780352.027212,
+    "ast_hash": "1652cf7a403f11f4d57382e5ccec6999",
+    "semantic_hash": ""
+  },
+  ".opencode/skills/impeccable/reference/delight.md": {
+    "mtime": 1793780352.0327182,
+    "ast_hash": "e10166bb38cadd52ee69fb78226e1322",
+    "semantic_hash": ""
+  },
+  ".opencode/skills/impeccable/reference/distill.md": {
+    "mtime": 1793780352.0337303,
+    "ast_hash": "9b6b5272d71185367fda0976bfa280bc",
+    "semantic_hash": ""
+  },
+  ".opencode/skills/impeccable/reference/doctor.md": {
+    "mtime": 1793780352.037741,
+    "ast_hash": "56431cb04431b1736fd3f411bbc9a0ce",
+    "semantic_hash": ""
+  },
+  ".opencode/skills/impeccable/reference/document.md": {
+    "mtime": 1793780352.0392556,
+    "ast_hash": "1b6b07c96ab6ec7da10949bcd524dad3",
+    "semantic_hash": ""
+  },
+  ".opencode/skills/impeccable/reference/extract.md": {
+    "mtime": 1793780352.0412688,
+    "ast_hash": "52e9e4479fdd7dacded480910eba7587",
+    "semantic_hash": ""
+  },
+  ".opencode/skills/impeccable/reference/generate.md": {
+    "mtime": 1793780352.0412688,
+    "ast_hash": "0d1502d6d86ed5b6c55ee6b592f82dde",
+    "semantic_hash": ""
+  },
+  ".opencode/skills/impeccable/reference/harden.md": {
+    "mtime": 1793780352.0463212,
+    "ast_hash": "193d7a192ce32912ef265aa7715f73a4",
+    "semantic_hash": ""
+  },
+  ".opencode/skills/impeccable/reference/hooks.md": {
+    "mtime": 1793780352.0473232,
+    "ast_hash": "ffcaf0b6fe8e45f2b5b9a255ef193f0c",
+    "semantic_hash": ""
+  },
+  ".opencode/skills/impeccable/reference/init.md": {
+    "mtime": 1793780352.0523212,
+    "ast_hash": "98e5e788fda46e17a664751cdd935aba",
+    "semantic_hash": ""
+  },
+  ".opencode/skills/impeccable/reference/ios.md": {
+    "mtime": 1793780352.057862,
+    "ast_hash": "a8f56b5c246ad44e142853ef59a19039",
+    "semantic_hash": ""
+  },
+  ".opencode/skills/impeccable/reference/layout.md": {
+    "mtime": 1793780352.0598636,
+    "ast_hash": "1891f44ad4e91db880c2a4212515d86d",
+    "semantic_hash": ""
+  },
+  ".opencode/skills/impeccable/reference/live-setup.md": {
+    "mtime": 1793780352.0673938,
+    "ast_hash": "eee96b75e911ea2978a68f46f6f539c5",
+    "semantic_hash": ""
+  },
+  ".opencode/skills/impeccable/reference/live.md": {
+    "mtime": 1793780352.0683947,
+    "ast_hash": "6f97b95575cae6a4c90ac84bbe4d4c49",
+    "semantic_hash": ""
+  },
+  ".opencode/skills/impeccable/reference/mode-operate.md": {
+    "mtime": 1793780352.0713942,
+    "ast_hash": "bf63bc740b342576279715f35922daad",
+    "semantic_hash": ""
+  },
+  ".opencode/skills/impeccable/reference/mode-persuade.md": {
+    "mtime": 1793780352.0732136,
+    "ast_hash": "9536e656c3fab5a8d85f1dcde6df45aa",
+    "semantic_hash": ""
+  },
+  ".opencode/skills/impeccable/reference/mode-read.md": {
+    "mtime": 1793780352.0757377,
+    "ast_hash": "09353e7df8b71096238a1d18c6fbfe44",
+    "semantic_hash": ""
+  },
+  ".opencode/skills/impeccable/reference/new-work.md": {
+    "mtime": 1793780352.0787528,
+    "ast_hash": "a5ce4fb4d07820b619a559a0b67f37fb",
+    "semantic_hash": ""
+  },
+  ".opencode/skills/impeccable/reference/onboard.md": {
+    "mtime": 1793780352.081751,
+    "ast_hash": "3d61875f5485b5dd34deb3bd04157cd9",
+    "semantic_hash": ""
+  },
+  ".opencode/skills/impeccable/reference/operate.md": {
+    "mtime": 1793780352.0827522,
+    "ast_hash": "53a569b985749058f7b178a32e0a157f",
+    "semantic_hash": ""
+  },
+  ".opencode/skills/impeccable/reference/optimize.md": {
+    "mtime": 1793780352.0862677,
+    "ast_hash": "48dbe58f2cf191c53377c141218d8f83",
+    "semantic_hash": ""
+  },
+  ".opencode/skills/impeccable/reference/overdrive.md": {
+    "mtime": 1793780352.0902913,
+    "ast_hash": "401508af068c0c75ee944071436d656c",
+    "semantic_hash": ""
+  },
+  ".opencode/skills/impeccable/reference/polish.md": {
+    "mtime": 1793780352.0922933,
+    "ast_hash": "c0feabd20735b45b55b1fcae8ce1de86",
+    "semantic_hash": ""
+  },
+  ".opencode/skills/impeccable/reference/quieter.md": {
+    "mtime": 1793780352.0932894,
+    "ast_hash": "73da2ab8ef1461c88fd767a0802226b3",
+    "semantic_hash": ""
+  },
+  ".opencode/skills/impeccable/reference/region-map.md": {
+    "mtime": 1793780352.0952897,
+    "ast_hash": "3b6fdb8def369243cd71d6dfe1823b4d",
+    "semantic_hash": ""
+  },
+  ".opencode/skills/impeccable/reference/routing.md": {
+    "mtime": 1793780352.0968041,
+    "ast_hash": "90fe8961c128d69bac1ca2edf5aec5a5",
+    "semantic_hash": ""
+  },
+  ".opencode/skills/impeccable/reference/shape.md": {
+    "mtime": 1793780352.0998278,
+    "ast_hash": "ecf5345d56452d10cd2c9203a7512704",
+    "semantic_hash": ""
+  },
+  ".opencode/skills/impeccable/reference/typeset.md": {
+    "mtime": 1793780352.1008267,
+    "ast_hash": "ae17c44ef277f48b3748d90a26958561",
+    "semantic_hash": ""
+  },
+  ".opencode/skills/impeccable/reference/visualize.md": {
+    "mtime": 1793780352.1018298,
+    "ast_hash": "0edb8c3d7780d7bb104ce0fc6da320e9",
+    "semantic_hash": ""
+  },
+  ".opencode/skills/impeccable/scripts/engine-checksums.txt": {
+    "mtime": 1793780352.1148708,
+    "ast_hash": "71cf77934c8cc6ec13163fb601f2d11a",
+    "semantic_hash": ""
+  },
+  "DEPLOYMENT_GUIDE.md": {
+    "mtime": 1793732030.5826814,
+    "ast_hash": "4bb557b1343fed842c81c6431a42adf4",
     "semantic_hash": ""
   }
 }
