@@ -31,16 +31,19 @@ export async function proxy(request) {
 
   let profile = null
   if (user && supabase) {
-    const result = await supabase
+    let result = await supabase
       .from('profiles')
       .select('role, staff_type, station_id')
       .eq('id', user.id)
       .maybeSingle()
+    if (result.error) {
+      result = await supabase.from('profiles').select('role').eq('id', user.id).maybeSingle()
+    }
     profile = result.data
   }
 
   if (user && (pathname.startsWith('/auth/login') || pathname.startsWith('/auth/register'))) {
-    return NextResponse.redirect(new URL(safeNext || getDashboardForProfile(profile), request.url))
+    return NextResponse.redirect(new URL(safeNext || getDashboardForProfile(profile, user.email), request.url))
   }
 
   if (!user && (pathname.startsWith('/dashboard') || isProtectedBooking)) {
@@ -50,13 +53,13 @@ export async function proxy(request) {
   }
 
   if (user && supabase && pathname.startsWith('/dashboard')) {
-    const role = getOperationalRole(profile)
+    const role = getOperationalRole(profile, user.email)
     const allowed = role === 'admin'
       || (['conductor', 'gate'].includes(role) && ['/dashboard/staff', '/dashboard/orders', '/dashboard/reports'].some(path => pathname.startsWith(path)))
       || (role === 'passenger' && pathname.startsWith('/dashboard/passenger'))
 
     if (!allowed) {
-      return NextResponse.redirect(new URL(getDashboardForProfile(profile), request.url))
+      return NextResponse.redirect(new URL(getDashboardForProfile(profile, user.email), request.url))
     }
   }
 

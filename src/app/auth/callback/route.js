@@ -30,13 +30,16 @@ export async function GET(request) {
 
       const userId = data?.user?.id
       if (userId) {
-        const { data: profile } = await supabase
+        let profileResult = await supabase
           .from('profiles')
           .select('role, staff_type, station_id')
           .eq('id', userId)
           .maybeSingle()
+        if (profileResult.error) {
+          profileResult = await supabase.from('profiles').select('role').eq('id', userId).maybeSingle()
+        }
 
-        return NextResponse.redirect(`${origin}${getDashboardForProfile(profile)}`)
+        return NextResponse.redirect(`${origin}${getDashboardForProfile(profileResult.data, data.user.email)}`)
       }
 
       return NextResponse.redirect(`${origin}/`)

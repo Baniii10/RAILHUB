@@ -77,6 +77,13 @@ export default function LoginPage() {
   const [googleLoading, setGoogleLoading] = useState(false)
   const [error,         setError]         = useState(() => '')
 
+  async function syncDemoProfile() {
+    const response = await fetch('/api/auth/demo-profile', { method: 'POST' })
+    const result = await response.json()
+    if (!response.ok) throw new Error(result.error || 'Role demo gagal disinkronkan.')
+    return result.profile
+  }
+
   async function handleGoogleAuth() {
     setError('')
     setGoogleLoading(true)
@@ -120,20 +127,17 @@ export default function LoginPage() {
     })
 
     if (!authError && data?.session) {
-      const { error: configureError } = await supabase.rpc('configure_demo_profile')
-      if (configureError) {
-        setError(`Role demo gagal disinkronkan: ${configureError.message}`)
+      let profile
+      try {
+        profile = await syncDemoProfile()
+      } catch (syncError) {
+        setError(`Role demo gagal disinkronkan: ${syncError.message}`)
         setLoading(false)
         return
       }
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('role, staff_type, station_id')
-        .eq('id', data.user.id)
-        .maybeSingle()
 
       toast.success(`Login berhasil sebagai ${account.title}!`)
-      router.replace(getDashboardForProfile(profile))
+      router.replace(getDashboardForProfile(profile, data.user.email))
       return
     }
 
@@ -172,21 +176,17 @@ export default function LoginPage() {
         return
       }
 
-      const { error: configureError } = await supabase.rpc('configure_demo_profile')
-      if (configureError) {
-        setError(`Akun masuk, tetapi role demo gagal disiapkan: ${configureError.message}`)
+      let profile
+      try {
+        profile = await syncDemoProfile()
+      } catch (syncError) {
+        setError(`Akun masuk, tetapi role demo gagal disiapkan: ${syncError.message}`)
         setLoading(false)
         return
       }
 
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('role, staff_type, station_id')
-        .eq('id', loginData.user.id)
-        .single()
-
       toast.success(`Selamat datang, ${account.title}!`)
-      router.replace(getDashboardForProfile(profile))
+      router.replace(getDashboardForProfile(profile, loginData.user.email))
       return
     }
 
@@ -221,16 +221,20 @@ export default function LoginPage() {
       return
     }
 
-    const { data: profile } = await supabase
+    let profileResult = await supabase
       .from('profiles')
       .select('role, staff_type, station_id')
       .eq('id', data.user.id)
       .maybeSingle()
+    if (profileResult.error) {
+      profileResult = await supabase.from('profiles').select('role').eq('id', data.user.id).maybeSingle()
+    }
+    const profile = profileResult.data
 
     toast.success(t.auth.loginSuccess)
 
     const requestedNext = new URLSearchParams(window.location.search).get('next')
-    router.replace(isSafeNextPath(requestedNext) ? requestedNext : getDashboardForProfile(profile))
+    router.replace(isSafeNextPath(requestedNext) ? requestedNext : getDashboardForProfile(profile, data.user.email))
   }
 
   return (

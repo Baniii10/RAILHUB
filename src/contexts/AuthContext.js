@@ -1,6 +1,7 @@
 'use client'
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import { normalizeProfile } from '@/lib/auth/roles'
 
 const AuthContext = createContext({
   user: null,
@@ -15,7 +16,7 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true)
   const supabase = useMemo(() => createClient(), [])
 
-  const fetchProfile = useCallback(async (userId) => {
+  const fetchProfile = useCallback(async (userId, email) => {
     try {
       const { data, error } = await supabase
         .from('profiles')
@@ -26,7 +27,7 @@ export function AuthProvider({ children }) {
       if (error && error.code !== 'PGRST116') {
         console.warn('Unable to load user profile:', error.message)
       }
-      setProfile(data || null)
+      setProfile(data ? normalizeProfile(data, email) : null)
     } catch {
       setProfile(null)
     } finally {
@@ -50,7 +51,7 @@ export function AuthProvider({ children }) {
       }
       setUser(currentUser)
       if (currentUser) {
-        fetchProfile(currentUser.id)
+        fetchProfile(currentUser.id, currentUser.email)
       } else {
         setLoading(false)
       }
@@ -64,7 +65,7 @@ export function AuthProvider({ children }) {
         const currentUser = session?.user ?? null
         setUser(currentUser)
         if (currentUser) {
-          await fetchProfile(currentUser.id)
+          await fetchProfile(currentUser.id, currentUser.email)
         } else {
           setProfile(null)
           setLoading(false)
