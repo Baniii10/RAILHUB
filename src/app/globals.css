@@ -1497,7 +1497,7 @@ input[type="checkbox"]:focus-visible {
   inset: 0;
   background: rgba(15, 23, 42, 0.6);
   backdrop-filter: blur(4px);
-  z-index: 10000;
+  z-index: 999999;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1524,22 +1524,31 @@ input[type="checkbox"]:focus-visible {
 
 @media (max-width: 640px) {
   .rh-station-modal-backdrop {
+    position: fixed;
+    inset: 0;
     align-items: stretch;
     justify-content: stretch;
     padding: 0;
     background: #ffffff;
-    z-index: 10000;
+    z-index: 999999;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
   }
 
   .rh-station-modal-content {
     border-radius: 0;
     max-width: 100%;
-    width: 100%;
+    width: 100vw;
     height: 100%;
     height: 100dvh;
     max-height: 100dvh;
     box-shadow: none;
     animation: fadeIn 0.15s ease-out;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
   }
 
   .rh-station-modal-header {
@@ -1730,10 +1739,15 @@ input[type="checkbox"]:focus-visible {
 }
 
 .rh-station-modal-list {
-  flex: 1;
+  flex: 1 1 auto;
   overflow-y: auto;
   padding: 0.5rem 0.75rem;
-  max-height: 380px;
+}
+
+@media (min-width: 641px) {
+  .rh-station-modal-list {
+    max-height: 380px;
+  }
 }
 
 .rh-station-item {
@@ -1890,6 +1904,32 @@ input[type="checkbox"]:focus-visible {
   }
   .rh-popular-routes-track > * {
     flex: initial;
+  }
+}
+
+/* Featured 5 Services slider (Mobile-First scroll-snap track) */
+.rh-featured-slider-track {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.rh-featured-slider-track::-webkit-scrollbar {
+  display: none;
+}
+.rh-feature-slide-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.08) !important;
+}
+.rh-feature-slide-card:active {
+  transform: scale(0.98);
+}
+@media (min-width: 1024px) {
+  .rh-featured-slider-track {
+    display: grid !important;
+    grid-template-columns: repeat(5, 1fr) !important;
+    overflow-x: visible !important;
+  }
+  .rh-feature-slide-card {
+    flex: initial !important;
   }
 }
 

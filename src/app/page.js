@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import Navbar from '@/components/layout/Navbar'
 import SearchWidget from '@/components/booking/SearchWidget'
 import MobilePortalHeader from '@/components/home/MobilePortalHeader'
+import FeaturedServicesSlider from '@/components/home/FeaturedServicesSlider'
 import TrainBumperBanner from '@/components/home/TrainBumperBanner'
 import { useLang } from '@/contexts/LangContext'
 import { useAuth } from '@/contexts/AuthContext'
@@ -209,6 +210,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* ── 5 STANDOUT CAPABILITIES SLIDER (Mobile-First) ── */}
+      <FeaturedServicesSlider />
 
       {/* ── 3 SLIDING PROMO BANNERS (Strict 8:3 Ratio) ───── */}
       <section id="promos" className="rh-section" style={{ background: '#ffffff', paddingTop: '2rem', paddingBottom: '2rem' }}>

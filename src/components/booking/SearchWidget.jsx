@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { useRouter } from 'next/navigation'
 import { TrainFront, Calendar, ArrowUpDown, ChevronDown, Search, X, Check, Plus, Minus, ArrowLeft } from 'lucide-react'
 import { useLang } from '@/contexts/LangContext'
@@ -79,6 +80,7 @@ export default function SearchWidget({ compact = false }) {
   const [adults, setAdults] = useState(1)
   const [infants, setInfants] = useState(0)
   const [loading, setLoading] = useState(false)
+  const [mounted, setMounted] = useState(false)
 
   // Pickers modal/popover states
   const [activePicker, setActivePicker] = useState(null) // 'origin' | 'destination' | null
@@ -89,6 +91,10 @@ export default function SearchWidget({ compact = false }) {
   const returnDateInputRef = useRef(null)
   const searchInputRef = useRef(null)
   const passengerRef = useRef(null)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   // Fetch Supabase stations
   useEffect(() => {
@@ -124,14 +130,15 @@ export default function SearchWidget({ compact = false }) {
     return () => { active = false }
   }, [])
 
-  // Auto-focus search input when modal opens
+  // Handle station modal open: clear query, lock background scroll, do NOT autofocus so keyboard doesn't pop up
   useEffect(() => {
     if (!activePicker) return
-    const timer = window.setTimeout(() => {
-      setStationQuery('')
-      searchInputRef.current?.focus()
-    }, 60)
-    return () => window.clearTimeout(timer)
+    setStationQuery('')
+    const prevOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = prevOverflow
+    }
   }, [activePicker])
 
   // Close passenger popover on outside click
@@ -520,8 +527,8 @@ export default function SearchWidget({ compact = false }) {
         </button>
       </form>
 
-      {/* ── STATION PICKER MODAL (FULL SCREEN SHEET) ── */}
-      {activePicker && (
+      {/* ── STATION PICKER MODAL (FULL SCREEN SHEET VIA PORTAL) ── */}
+      {mounted && activePicker && createPortal(
         <div className="rh-station-modal-backdrop" onClick={() => setActivePicker(null)}>
           <div
             className="rh-station-modal-content"
@@ -558,10 +565,16 @@ export default function SearchWidget({ compact = false }) {
 
             {/* Search Input */}
             <div className="rh-station-modal-search">
-              <Search size={18} className="rh-station-search-icon" />
+              <Search
+                size={18}
+                className="rh-station-search-icon"
+                style={{ cursor: 'pointer' }}
+                onClick={() => searchInputRef.current?.focus()}
+              />
               <input
                 ref={searchInputRef}
                 type="search"
+                autoFocus={false}
                 value={stationQuery}
                 onChange={e => setStationQuery(e.target.value)}
                 placeholder={lang === 'en' ? 'Search station name, city, or code...' : 'Cari nama stasiun, kota, atau kode (misal: PSE, Gambir)...'}
@@ -650,7 +663,8 @@ export default function SearchWidget({ compact = false }) {
               )}
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       {stationError && (

@@ -144,9 +144,14 @@ export default function RegisterPage() {
 
   return (
     <div style={{
-      minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
-      background: 'linear-gradient(160deg, var(--rh-navy) 0%, var(--rh-navy-mid) 40%, var(--rh-surface) 100%)',
-      padding: '1.5rem',
+      minHeight: '100vh',
+      minHeight: '100dvh',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      background: 'linear-gradient(180deg, #0d1b3e 0%, #152857 50%, #0a1128 100%)',
+      padding: '2rem 1.5rem calc(2.5rem + env(safe-area-inset-bottom, 0px))',
+      width: '100%',
     }}>
       <div className="animate-scale-in" style={{ width: '100%', maxWidth: 480 }}>
         {/* Logo */}
@@ -300,8 +305,8 @@ export default function RegisterPage() {
               </div>
         </div>
 
-        <p style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.8125rem' }}>
-          <Link href="/" style={{ color: 'rgba(255,255,255,0.5)' }}>← Kembali ke Beranda</Link>
+        <p style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.875rem' }}>
+          <Link href="/" style={{ color: 'rgba(255,255,255,0.75)', textDecoration: 'none', fontWeight: 600 }}>← {lang === 'en' ? 'Back to Home' : 'Kembali ke Beranda'}</Link>
         </p>
       </div>
     </div>
