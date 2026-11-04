@@ -36,6 +36,9 @@ export default function AdminStaffPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [staff, setStaff] = useState([])
+  const [passengersList, setPassengersList] = useState([])
+  const [selectedPromoteUser, setSelectedPromoteUser] = useState('')
+  const [promoting, setPromoting] = useState(false)
   const [schedules, setSchedules] = useState([])
   const [assignments, setAssignments] = useState([])
   const [selectedStaff, setSelectedStaff] = useState('')
@@ -86,7 +89,7 @@ export default function AdminStaffPage() {
     setLoading(true)
     setError('')
     const supabase = createClient()
-    const [staffResult, scheduleResult, assignmentResult] = await Promise.all([
+    const [staffResult, scheduleResult, assignmentResult, passengersResult] = await Promise.all([
       supabase.from('profiles')
         .select('id, full_name, email, role')
         .eq('role', 'conductor')
@@ -100,6 +103,11 @@ export default function AdminStaffPage() {
         .select('id, staff_id, schedule_id, profiles!staff_assignments_staff_id_fkey(full_name, email), schedules(departure_time, trains(name, train_number), routes(name))')
         .order('created_at', { ascending: false })
         .limit(100),
+      supabase.from('profiles')
+        .select('id, full_name, email, role')
+        .eq('role', 'passenger')
+        .order('full_name')
+        .limit(200),
     ])
 
     const failure = [staffResult, scheduleResult, assignmentResult].find(result => result.error)
@@ -112,6 +120,7 @@ export default function AdminStaffPage() {
     const staffRows = staffResult.data || []
     const scheduleRows = scheduleResult.data || []
     setStaff(staffRows)
+    setPassengersList(passengersResult?.data || [])
     setSchedules(scheduleRows)
     setAssignments(assignmentResult.data || [])
     setSelectedStaff(current => staffRows.some(person => person.id === current) ? current : staffRows[0]?.id || '')
@@ -123,6 +132,34 @@ export default function AdminStaffPage() {
     const timer = window.setTimeout(() => loadStaffData(), 0)
     return () => window.clearTimeout(timer)
   }, [loadStaffData, reloadKey])
+
+  async function handlePromoteSubmit(event) {
+    event.preventDefault()
+    if (!selectedPromoteUser || promoting) return
+    setPromoting(true)
+    const supabase = createClient()
+    const { error: err } = await supabase.from('profiles').update({ role: 'conductor' }).eq('id', selectedPromoteUser)
+    setPromoting(false)
+    if (err) {
+      toast.error(`Gagal mempromosikan petugas: ${err.message}`)
+      return
+    }
+    toast.success('Pengguna berhasil dipromosikan menjadi Petugas Kondektur!')
+    setSelectedPromoteUser('')
+    setReloadKey(k => k + 1)
+  }
+
+  async function demoteFromStaff(userId) {
+    if (!confirm('Hapus status petugas akun ini dan kembalikan ke penumpang biasa?')) return
+    const supabase = createClient()
+    const { error: err } = await supabase.from('profiles').update({ role: 'passenger' }).eq('id', userId)
+    if (err) {
+      toast.error(`Gagal menghapus status petugas: ${err.message}`)
+      return
+    }
+    toast.success('Status petugas dinonaktifkan.')
+    setReloadKey(k => k + 1)
+  }
 
   async function assignStaff(event) {
     event.preventDefault()
@@ -203,6 +240,73 @@ export default function AdminStaffPage() {
 
           {error && <div role="alert" className="rh-card" style={{ padding: '1.25rem', color: 'var(--rh-danger)', marginBottom: '1rem' }}>{error}</div>}
           {loading && <div aria-live="polite" className="rh-card" style={{ padding: '1rem', marginBottom: '1rem' }}>Memuat data petugas dan penugasan…</div>}
+
+          {/* Card: Promosikan Akun Menjadi Petugas */}
+          <section className="rh-card" style={{ marginBottom: '1.5rem' }}>
+            <div className="rh-card-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8 }}>
+              <div>
+                <h2 className="rh-h4"><ShieldCheck size={18} style={{ verticalAlign: 'middle', marginRight: 7, color: 'var(--rh-primary)' }} />Daftar Akun Petugas ({staff.length})</h2>
+                <p style={{ color: 'var(--rh-text-2)', marginTop: '0.25rem', fontSize: '0.88rem' }}>
+                  Pilih akun pengguna yang sudah terdaftar untuk dijadikan Petugas Kondektur aktif.
+                </p>
+              </div>
+            </div>
+            <div className="rh-card-body">
+              <form onSubmit={handlePromoteSubmit} style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', alignItems: 'flex-end', marginBottom: staff.length > 0 ? '1.25rem' : 0 }}>
+                <label className="rh-input-group" style={{ flex: '1 1 280px', margin: 0 }}>
+                  <span className="rh-label-text">Pilih Akun Terdaftar untuk Dijadikan Petugas</span>
+                  <select
+                    className="rh-input"
+                    value={selectedPromoteUser}
+                    onChange={e => setSelectedPromoteUser(e.target.value)}
+                    required
+                  >
+                    <option value="">-- Pilih Akun Penumpang ({passengersList.length} terdaftar) --</option>
+                    {passengersList.map(p => (
+                      <option key={p.id} value={p.id}>
+                        {p.full_name || 'Tanpa Nama'} ({p.email})
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <button type="submit" className="rh-btn rh-btn-primary" disabled={promoting || !selectedPromoteUser}>
+                  {promoting ? 'Memproses…' : '+ Jadikan Petugas'}
+                </button>
+              </form>
+
+              {staff.length > 0 && (
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '0.5rem' }}>
+                  {staff.map(person => (
+                    <div
+                      key={person.id}
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: 8,
+                        padding: '0.4rem 0.8rem',
+                        background: 'var(--rh-surface)',
+                        border: '1px solid var(--rh-border)',
+                        borderRadius: 8,
+                        fontSize: '0.88rem',
+                      }}
+                    >
+                      <UserRound size={15} color="var(--rh-primary)" />
+                      <span><strong>{person.full_name}</strong> ({person.email})</span>
+                      <button
+                        type="button"
+                        onClick={() => demoteFromStaff(person.id)}
+                        className="rh-btn rh-btn-ghost rh-btn-sm"
+                        style={{ padding: '0.15rem 0.4rem', fontSize: '0.75rem', color: 'var(--rh-danger)' }}
+                        title="Kembalikan ke Penumpang"
+                      >
+                        Hapus Status
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </section>
 
           <section className="rh-card" style={{ marginBottom: '1.5rem' }}>
             <div className="rh-card-header">

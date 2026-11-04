@@ -1027,6 +1027,15 @@ function AdminDashboardContent() {
                 </p>
               </div>
 
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12, marginBottom: '1.25rem', padding: '0.85rem 1.25rem', background: 'var(--rh-primary-light)', borderRadius: 10, border: '1px solid rgba(0, 102, 204, 0.2)' }}>
+                <span style={{ fontSize: '0.9rem', color: 'var(--rh-primary)' }}>
+                  💡 <strong>Info:</strong> Untuk mencari jadwal dengan filter tanggal lengkap atau promosikan akun petugas baru, Anda dapat membuka halaman khusus <strong>Pengelolaan Petugas</strong>.
+                </span>
+                <a href="/dashboard/admin/staff" className="rh-btn rh-btn-sm rh-btn-primary">
+                  Buka Halaman Pengelolaan Petugas →
+                </a>
+              </div>
+
               {/* Assignment Form */}
               <form onSubmit={handleAssignStaff} style={{ background: 'var(--rh-surface)', border: '1px solid var(--rh-border)', borderRadius: 12, padding: '1.25rem', marginBottom: '1.5rem' }}>
                 <strong style={{ display: 'block', fontSize: '0.95rem', marginBottom: '0.75rem' }}>
