@@ -307,50 +307,7 @@ export default function LoginPage() {
               </div>
             )}
 
-            {/* 1-Click Role Login for UAS Testing */}
-            <div style={{ marginBottom: '1.25rem', padding: '0.85rem', background: '#f8fafc', borderRadius: 14, border: '1.5px solid #e2e8f0' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.6rem' }}>
-                <span style={{ fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em', color: '#0066cc', display: 'flex', alignItems: 'center', gap: 5 }}>
-                  ⚡ Login Cepat Demo (Testing UAS)
-                </span>
-                <span style={{ fontSize: '0.6875rem', color: '#64748b' }}>Klik role untuk masuk langsung</span>
-              </div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.5rem' }}>
-                {DEMO_ACCOUNTS.map(acc => (
-                  <button
-                    key={acc.role}
-                    type="button"
-                    disabled={loading || googleLoading}
-                    onClick={() => handleQuickLogin(acc)}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.5rem',
-                      padding: '0.55rem 0.65rem',
-                      borderRadius: 10,
-                      background: '#ffffff',
-                      border: '1.5px solid #cbd5e1',
-                      cursor: loading || googleLoading ? 'not-allowed' : 'pointer',
-                      textAlign: 'left',
-                      transition: 'all 0.15s ease',
-                      boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
-                    }}
-                    onMouseEnter={e => { e.currentTarget.style.borderColor = acc.badgeColor; e.currentTarget.style.transform = 'translateY(-1px)' }}
-                    onMouseLeave={e => { e.currentTarget.style.borderColor = '#cbd5e1'; e.currentTarget.style.transform = 'none' }}
-                  >
-                    <span style={{ fontSize: '1.15rem', lineHeight: 1 }}>{acc.icon}</span>
-                    <div style={{ minWidth: 0, flex: 1 }}>
-                      <strong style={{ display: 'block', fontSize: '0.78125rem', color: '#0f172a', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                        {acc.title}
-                      </strong>
-                      <small style={{ display: 'block', fontSize: '0.6875rem', color: '#64748b', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                        {acc.badge}
-                      </small>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </div>
+
 
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
               <div>
@@ -599,6 +556,38 @@ export default function LoginPage() {
               )}
               <span>Sign in with Google</span>
             </button>
+
+            {/* Ultra-Minimal Demo Role Login below Google button */}
+            <div style={{ marginTop: '0.75rem', display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.4rem' }}>
+              {DEMO_ACCOUNTS.map(acc => (
+                <button
+                  key={acc.role}
+                  type="button"
+                  disabled={loading || googleLoading}
+                  onClick={() => handleQuickLogin(acc)}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.4rem',
+                    padding: '0.45rem 0.5rem',
+                    borderRadius: 10,
+                    background: '#f8fafc',
+                    border: '1px solid #e2e8f0',
+                    fontSize: '0.76rem',
+                    fontWeight: 700,
+                    color: '#334155',
+                    cursor: loading || googleLoading ? 'not-allowed' : 'pointer',
+                    transition: 'all 0.15s ease',
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor = acc.badgeColor; e.currentTarget.style.background = '#f1f5f9' }}
+                  onMouseLeave={e => { e.currentTarget.style.borderColor = '#e2e8f0'; e.currentTarget.style.background = '#f8fafc' }}
+                >
+                  <span style={{ fontSize: '0.95rem', lineHeight: 1 }}>{acc.icon}</span>
+                  <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{acc.title}</span>
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>
