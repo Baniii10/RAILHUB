@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Train, Mail, Lock, Eye, EyeOff, User, Phone, AlertCircle, CheckCircle } from 'lucide-react'
+import { Train, Mail, Lock, Eye, EyeOff, User, Phone, AlertCircle, CheckCircle, Send, ArrowRight } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useLang } from '@/contexts/LangContext'
 import toast from 'react-hot-toast'
@@ -28,6 +28,8 @@ export default function RegisterPage() {
   const [loading,       setLoading]       = useState(false)
   const [googleLoading, setGoogleLoading] = useState(false)
   const [error,         setError]         = useState('')
+  const [registeredEmail, setRegisteredEmail] = useState('')
+  const [resending,       setResending]       = useState(false)
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
@@ -43,6 +45,29 @@ export default function RegisterPage() {
     { label: 'Mengandung huruf kapital', met: /[A-Z]/.test(form.password) },
     { label: 'Mengandung angka', met: /[0-9]/.test(form.password) },
   ]
+
+  async function handleResendConfirmation() {
+    if (!registeredEmail) return
+    setResending(true)
+    try {
+      const { error: resendErr } = await supabase.auth.resend({
+        type: 'signup',
+        email: registeredEmail,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
+        },
+      })
+      if (resendErr) {
+        toast.error(resendErr.message)
+      } else {
+        toast.success('Email konfirmasi baru telah dikirim! Cek inbox atau folder Spam Anda.')
+      }
+    } catch (err) {
+      toast.error(err?.message || 'Gagal mengirim ulang email konfirmasi.')
+    } finally {
+      setResending(false)
+    }
+  }
 
   async function handleGoogleAuth() {
     setError('')
@@ -82,6 +107,10 @@ export default function RegisterPage() {
     e.preventDefault()
     setError('')
 
+    const cleanEmail = form.email.trim().toLowerCase()
+    const cleanName = form.fullName.trim()
+    const cleanPhone = form.phone.trim()
+
     if (form.password !== form.confirmPassword) {
       setError('Kata sandi tidak cocok.')
       return
@@ -94,10 +123,10 @@ export default function RegisterPage() {
     setLoading(true)
 
     const { data, error: authError } = await supabase.auth.signUp({
-      email: form.email,
+      email: cleanEmail,
       password: form.password,
       options: {
-        data: { full_name: form.fullName, phone_number: form.phone },
+        data: { full_name: cleanName, phone_number: cleanPhone },
         emailRedirectTo: `${window.location.origin}/auth/callback`,
       },
     })
@@ -108,20 +137,21 @@ export default function RegisterPage() {
       return
     }
 
-    if (!data.user) {
-      setError('Pendaftaran tidak mengembalikan akun pengguna. Silakan coba kembali.')
+    if (data.user?.identities && data.user.identities.length === 0) {
+      setError('Email ini sudah terdaftar sebelumnya. Silakan langsung masuk ke akun Anda.')
       setLoading(false)
       return
     }
 
-    toast.success('Registrasi berhasil! Silakan masuk.')
-    const requestedNext = new URLSearchParams(window.location.search).get('next')
-    const safeNext = requestedNext
-      && !requestedNext.startsWith('//')
-      && (requestedNext.startsWith('/booking/') || requestedNext.startsWith('/dashboard'))
-      ? requestedNext
-      : null
-    router.push(safeNext ? `/auth/login?next=${encodeURIComponent(safeNext)}` : '/auth/login')
+    if (data.session) {
+      toast.success('Pendaftaran berhasil! Mengalihkan...')
+      router.push('/dashboard/passenger')
+      return
+    }
+
+    // Email verification required by Supabase project settings
+    setRegisteredEmail(cleanEmail)
+    setLoading(false)
   }
 
   return (
@@ -140,141 +170,188 @@ export default function RegisterPage() {
         </div>
 
         <div className="rh-card">
-          <div className="rh-card-header">
-            <h1 className="rh-h4">{t.auth.register}</h1>
-            <p style={{ color: 'var(--rh-text-2)', fontSize: '0.9rem', marginTop: '0.25rem' }}>
-              {lang === 'en' ? 'Create your free RAILHUB account' : 'Buat akun RAILHUB Anda secara gratis'}
-            </p>
-          </div>
-          <div className="rh-card-body">
-            {error && (
+          {registeredEmail ? (
+            /* Email Confirmation Prompt Screen */
+            <div className="rh-card-body" style={{ padding: '2rem 1.75rem', textAlign: 'center' }}>
               <div style={{
-                padding: '0.875rem 1rem', borderRadius: 10, background: 'var(--rh-danger-light)',
-                border: '1px solid hsla(0,72%,51%,0.2)',
-                display: 'flex', gap: '0.625rem', alignItems: 'center',
-                marginBottom: '1.25rem', color: 'hsl(0,72%,36%)', fontSize: '0.9rem',
+                width: 60, height: 60, borderRadius: '50%', background: 'rgba(37, 99, 235, 0.1)',
+                color: 'var(--rh-primary)', display: 'grid', placeItems: 'center', margin: '0 auto 1.25rem',
               }}>
-                <AlertCircle size={16} style={{ flexShrink: 0 }} /> {error}
+                <Mail size={30} />
               </div>
-            )}
+              <h2 className="rh-h4" style={{ marginBottom: '0.5rem' }}>Cek Email Anda</h2>
+              <p style={{ color: 'var(--rh-text-2)', fontSize: '0.92rem', lineHeight: 1.5, marginBottom: '1.5rem' }}>
+                Akun berhasil dibuat! Tautan konfirmasi telah dikirim ke: <br />
+                <strong style={{ color: 'var(--rh-navy)', wordBreak: 'break-all' }}>{registeredEmail}</strong>
+              </p>
+              <div style={{
+                background: 'var(--rh-surface)', borderRadius: 12, padding: '0.9rem',
+                border: '1px solid var(--rh-border)', textAlign: 'left', fontSize: '0.82rem',
+                color: 'var(--rh-text-2)', lineHeight: 1.45, marginBottom: '1.5rem',
+              }}>
+                💡 <strong>Catatan Penting:</strong> Supabase mewajibkan klik link konfirmasi di email sebelum Anda dapat login. Jika tidak ada di inbox, periksa folder <strong>Spam</strong> atau <strong>Promosi</strong>.
+              </div>
 
-            {/* Google Register Button */}
-            <button
-              type="button"
-              onClick={handleGoogleAuth}
-              disabled={loading || googleLoading}
-              className="rh-btn rh-btn-full"
-              style={{
-                height: 48,
-                background: '#ffffff',
-                border: '1.5px solid #cbd5e1',
-                borderRadius: 12,
-                color: '#0f172a',
-                fontWeight: 600,
-                fontSize: '0.9375rem',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '0.75rem',
-                cursor: 'pointer',
-                transition: 'all 0.15s ease',
-                boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
-                marginBottom: '1rem',
-              }}
-            >
-              {googleLoading ? (
-                <span className="rh-spinner rh-spinner-sm" style={{ borderTopColor: 'var(--rh-primary)', borderColor: 'rgba(26,66,138,0.2)' }} />
-              ) : (
-                <GoogleIcon size={19} />
-              )}
-              {lang === 'en' ? 'Sign up with Google' : 'Daftar dengan Google'}
-            </button>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                <Link
+                  href={`/auth/login?email=${encodeURIComponent(registeredEmail)}`}
+                  className="rh-btn rh-btn-primary rh-btn-full"
+                  style={{ height: 46 }}
+                >
+                  Sudah Konfirmasi? Masuk Sekarang <ArrowRight size={16} />
+                </Link>
 
-            {/* Divider */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', margin: '1rem 0 1.25rem' }}>
-              <div style={{ flex: 1, height: 1, background: 'var(--rh-border)' }} />
-              <span style={{ fontSize: '0.8125rem', color: 'var(--rh-text-3)' }}>{lang === 'en' ? 'or register with email' : 'atau daftar dengan email'}</span>
-              <div style={{ flex: 1, height: 1, background: 'var(--rh-border)' }} />
+                <button
+                  type="button"
+                  onClick={handleResendConfirmation}
+                  disabled={resending}
+                  className="rh-btn rh-btn-ghost rh-btn-full"
+                  style={{ height: 42, fontSize: '0.875rem' }}
+                >
+                  <Send size={14} />
+                  {resending ? 'Mengirim ulang…' : 'Kirim Ulang Email Konfirmasi'}
+                </button>
+              </div>
             </div>
-
-            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              {/* Full Name */}
-              <div className="rh-input-group">
-                <label className="rh-label-text" htmlFor="register-name">{t.auth.fullName}</label>
-                <div style={{ position: 'relative' }}>
-                  <User size={16} style={{ position: 'absolute', left: '0.875rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--rh-text-3)', pointerEvents: 'none' }} />
-                  <input id="register-name" type="text" name="name" autoComplete="name" className="rh-input" placeholder="Nama lengkap sesuai identitas" value={form.fullName} onChange={update('fullName')} required style={{ paddingLeft: '2.5rem' }} />
-                </div>
+          ) : (
+            <>
+              <div className="rh-card-header">
+                <h1 className="rh-h4">{t.auth.register}</h1>
+                <p style={{ color: 'var(--rh-text-2)', fontSize: '0.9rem', marginTop: '0.25rem' }}>
+                  {lang === 'en' ? 'Create your free RAILHUB account' : 'Buat akun RAILHUB Anda secara gratis'}
+                </p>
               </div>
-
-              {/* Email */}
-              <div className="rh-input-group">
-                <label className="rh-label-text" htmlFor="register-email">{t.auth.email}</label>
-                <div style={{ position: 'relative' }}>
-                  <Mail size={16} style={{ position: 'absolute', left: '0.875rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--rh-text-3)', pointerEvents: 'none' }} />
-                  <input id="register-email" type="email" name="email" autoComplete="email" spellCheck={false} className="rh-input" placeholder="nama@email.com" value={form.email} onChange={update('email')} required style={{ paddingLeft: '2.5rem' }} />
-                </div>
-              </div>
-
-              {/* Phone */}
-              <div className="rh-input-group">
-                <label className="rh-label-text" htmlFor="register-phone">{t.auth.phone}</label>
-                <div style={{ position: 'relative' }}>
-                  <Phone size={16} style={{ position: 'absolute', left: '0.875rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--rh-text-3)', pointerEvents: 'none' }} />
-                  <input id="register-phone" type="tel" name="tel" autoComplete="tel" inputMode="tel" className="rh-input" placeholder="08xx-xxxx-xxxx" value={form.phone} onChange={update('phone')} style={{ paddingLeft: '2.5rem' }} />
-                </div>
-              </div>
-
-              {/* Password */}
-              <div className="rh-input-group">
-                <label className="rh-label-text" htmlFor="register-password">{t.auth.password}</label>
-                <div style={{ position: 'relative' }}>
-                  <Lock size={16} style={{ position: 'absolute', left: '0.875rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--rh-text-3)', pointerEvents: 'none' }} />
-                  <input id="register-password" type={showPw ? 'text' : 'password'} name="new-password" autoComplete="new-password" className="rh-input" placeholder="Minimal 8 karakter" value={form.password} onChange={update('password')} required style={{ paddingLeft: '2.5rem', paddingRight: '3rem' }} />
-                  <button type="button" aria-label={showPw ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'} onClick={() => setShowPw(v => !v)} style={{ position: 'absolute', right: '0.35rem', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--rh-text-3)', width: 40, height: 40, padding: 0 }}>
-                    {showPw ? <EyeOff size={16} /> : <Eye size={16} />}
-                  </button>
-                </div>
-                {/* Password strength indicators */}
-                {form.password.length > 0 && (
-                  <div style={{ marginTop: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-                    {passwordReqs.map(req => (
-                      <div key={req.label} style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', fontSize: '0.8125rem', color: req.met ? 'var(--rh-success)' : 'var(--rh-text-3)' }}>
-                        <CheckCircle size={12} fill={req.met ? 'var(--rh-success)' : 'none'} />
-                        {req.label}
-                      </div>
-                    ))}
+              <div className="rh-card-body">
+                {error && (
+                  <div style={{
+                    padding: '0.875rem 1rem', borderRadius: 10, background: 'var(--rh-danger-light)',
+                    border: '1px solid hsla(0,72%,51%,0.2)',
+                    display: 'flex', gap: '0.625rem', alignItems: 'center',
+                    marginBottom: '1.25rem', color: 'hsl(0,72%,36%)', fontSize: '0.9rem',
+                  }}>
+                    <AlertCircle size={16} style={{ flexShrink: 0 }} /> {error}
                   </div>
                 )}
-              </div>
 
-              {/* Confirm Password */}
-              <div className="rh-input-group">
-                <label className="rh-label-text" htmlFor="register-confirm-password">Konfirmasi Kata Sandi</label>
-                <div style={{ position: 'relative' }}>
-                  <Lock size={16} style={{ position: 'absolute', left: '0.875rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--rh-text-3)', pointerEvents: 'none' }} />
-                  <input
-                    id="register-confirm-password" type="password" name="confirm-password" autoComplete="new-password" className={`rh-input ${form.confirmPassword && form.confirmPassword !== form.password ? 'rh-input-error' : ''}`}
-                    placeholder="Ulangi kata sandi" value={form.confirmPassword} onChange={update('confirmPassword')} required
-                    style={{ paddingLeft: '2.5rem' }}
-                  />
+                {/* Google Register Button */}
+                <button
+                  type="button"
+                  onClick={handleGoogleAuth}
+                  disabled={loading || googleLoading}
+                  className="rh-btn rh-btn-full"
+                  style={{
+                    height: 48,
+                    background: '#ffffff',
+                    border: '1.5px solid #cbd5e1',
+                    borderRadius: 12,
+                    color: '#0f172a',
+                    fontWeight: 600,
+                    fontSize: '0.9375rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.75rem',
+                    cursor: 'pointer',
+                    transition: 'all 0.15s ease',
+                    boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
+                    marginBottom: '1rem',
+                  }}
+                >
+                  {googleLoading ? (
+                    <span className="rh-spinner rh-spinner-sm" style={{ borderTopColor: 'var(--rh-primary)', borderColor: 'rgba(26,66,138,0.2)' }} />
+                  ) : (
+                    <GoogleIcon size={19} />
+                  )}
+                  {lang === 'en' ? 'Sign up with Google' : 'Daftar dengan Google'}
+                </button>
+
+                {/* Divider */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', margin: '1rem 0 1.25rem' }}>
+                  <div style={{ flex: 1, height: 1, background: 'var(--rh-border)' }} />
+                  <span style={{ fontSize: '0.8125rem', color: 'var(--rh-text-3)' }}>{lang === 'en' ? 'or register with email' : 'atau daftar dengan email'}</span>
+                  <div style={{ flex: 1, height: 1, background: 'var(--rh-border)' }} />
                 </div>
-                {form.confirmPassword && form.confirmPassword !== form.password && (
-                  <span className="rh-error-msg">Kata sandi tidak cocok</span>
-                )}
+
+                <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  {/* Full Name */}
+                  <div className="rh-input-group">
+                    <label className="rh-label-text" htmlFor="register-name">{t.auth.fullName}</label>
+                    <div style={{ position: 'relative' }}>
+                      <User size={16} style={{ position: 'absolute', left: '0.875rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--rh-text-3)', pointerEvents: 'none' }} />
+                      <input id="register-name" type="text" name="name" autoComplete="name" className="rh-input" placeholder="Nama lengkap sesuai identitas" value={form.fullName} onChange={update('fullName')} required style={{ paddingLeft: '2.5rem' }} />
+                    </div>
+                  </div>
+
+                  {/* Email */}
+                  <div className="rh-input-group">
+                    <label className="rh-label-text" htmlFor="register-email">{t.auth.email}</label>
+                    <div style={{ position: 'relative' }}>
+                      <Mail size={16} style={{ position: 'absolute', left: '0.875rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--rh-text-3)', pointerEvents: 'none' }} />
+                      <input id="register-email" type="email" name="email" autoComplete="email" spellCheck={false} className="rh-input" placeholder="nama@email.com" value={form.email} onChange={update('email')} required style={{ paddingLeft: '2.5rem' }} />
+                    </div>
+                  </div>
+
+                  {/* Phone */}
+                  <div className="rh-input-group">
+                    <label className="rh-label-text" htmlFor="register-phone">{t.auth.phone}</label>
+                    <div style={{ position: 'relative' }}>
+                      <Phone size={16} style={{ position: 'absolute', left: '0.875rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--rh-text-3)', pointerEvents: 'none' }} />
+                      <input id="register-phone" type="tel" name="tel" autoComplete="tel" inputMode="tel" className="rh-input" placeholder="08xx-xxxx-xxxx" value={form.phone} onChange={update('phone')} style={{ paddingLeft: '2.5rem' }} />
+                    </div>
+                  </div>
+
+                  {/* Password */}
+                  <div className="rh-input-group">
+                    <label className="rh-label-text" htmlFor="register-password">{t.auth.password}</label>
+                    <div style={{ position: 'relative' }}>
+                      <Lock size={16} style={{ position: 'absolute', left: '0.875rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--rh-text-3)', pointerEvents: 'none' }} />
+                      <input id="register-password" type={showPw ? 'text' : 'password'} name="new-password" autoComplete="new-password" className="rh-input" placeholder="Minimal 8 karakter" value={form.password} onChange={update('password')} required style={{ paddingLeft: '2.5rem', paddingRight: '3rem' }} />
+                      <button type="button" aria-label={showPw ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'} onClick={() => setShowPw(v => !v)} style={{ position: 'absolute', right: '0.35rem', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--rh-text-3)', width: 40, height: 40, padding: 0 }}>
+                        {showPw ? <EyeOff size={16} /> : <Eye size={16} />}
+                      </button>
+                    </div>
+                    {/* Password strength indicators */}
+                    {form.password.length > 0 && (
+                      <div style={{ marginTop: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                        {passwordReqs.map(req => (
+                          <div key={req.label} style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', fontSize: '0.8125rem', color: req.met ? 'var(--rh-success)' : 'var(--rh-text-3)' }}>
+                            <CheckCircle size={12} fill={req.met ? 'var(--rh-success)' : 'none'} />
+                            {req.label}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Confirm Password */}
+                  <div className="rh-input-group">
+                    <label className="rh-label-text" htmlFor="register-confirm-password">Konfirmasi Kata Sandi</label>
+                    <div style={{ position: 'relative' }}>
+                      <Lock size={16} style={{ position: 'absolute', left: '0.875rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--rh-text-3)', pointerEvents: 'none' }} />
+                      <input
+                        id="register-confirm-password" type="password" name="confirm-password" autoComplete="new-password" className={`rh-input ${form.confirmPassword && form.confirmPassword !== form.password ? 'rh-input-error' : ''}`}
+                        placeholder="Ulangi kata sandi" value={form.confirmPassword} onChange={update('confirmPassword')} required
+                        style={{ paddingLeft: '2.5rem' }}
+                      />
+                    </div>
+                    {form.confirmPassword && form.confirmPassword !== form.password && (
+                      <span className="rh-error-msg">Kata sandi tidak cocok</span>
+                    )}
+                  </div>
+
+                  <button type="submit" className="rh-btn rh-btn-primary rh-btn-full" disabled={loading} style={{ marginTop: '0.5rem', height: 48 }}>
+                    {loading && <span className="rh-spinner rh-spinner-sm" style={{ borderTopColor: 'white', borderColor: 'rgba(255,255,255,0.3)' }} />}
+                    {loading ? 'Mendaftar…' : 'Buat Akun'}
+                  </button>
+                </form>
+
+                <p style={{ textAlign: 'center', fontSize: '0.9375rem', color: 'var(--rh-text-2)', marginTop: '1.25rem' }}>
+                  {t.auth.hasAccount}{' '}
+                  <Link href="/auth/login" style={{ color: 'var(--rh-primary)', fontWeight: 600 }}>{t.auth.login}</Link>
+                </p>
               </div>
-
-              <button type="submit" className="rh-btn rh-btn-primary rh-btn-full" disabled={loading} style={{ marginTop: '0.5rem', height: 48 }}>
-                {loading && <span className="rh-spinner rh-spinner-sm" style={{ borderTopColor: 'white', borderColor: 'rgba(255,255,255,0.3)' }} />}
-                {loading ? 'Mendaftar…' : 'Buat Akun'}
-              </button>
-            </form>
-
-            <p style={{ textAlign: 'center', fontSize: '0.9375rem', color: 'var(--rh-text-2)', marginTop: '1.25rem' }}>
-              {t.auth.hasAccount}{' '}
-              <Link href="/auth/login" style={{ color: 'var(--rh-primary)', fontWeight: 600 }}>{t.auth.login}</Link>
-            </p>
-          </div>
+            </>
+          )}
         </div>
 
         <p style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.8125rem' }}>

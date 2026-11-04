@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Train, Mail, Lock, Eye, EyeOff, AlertCircle } from 'lucide-react'
+import { Train, Mail, Lock, Eye, EyeOff, AlertCircle, Send } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useLang } from '@/contexts/LangContext'
 import toast from 'react-hot-toast'
@@ -29,6 +29,8 @@ export default function LoginPage() {
   const [loading,       setLoading]       = useState(false)
   const [googleLoading, setGoogleLoading] = useState(false)
   const [error,         setError]         = useState('')
+  const [showResend,    setShowResend]    = useState(false)
+  const [resending,     setResending]     = useState(false)
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
@@ -37,8 +39,36 @@ export default function LoginPage() {
     }
   }, [lang])
 
+  async function handleResendConfirmation() {
+    const cleanEmail = email.trim().toLowerCase()
+    if (!cleanEmail) {
+      toast.error('Masukkan email Anda terlebih dahulu.')
+      return
+    }
+    setResending(true)
+    try {
+      const { error: resendErr } = await supabase.auth.resend({
+        type: 'signup',
+        email: cleanEmail,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
+        },
+      })
+      if (resendErr) {
+        toast.error(resendErr.message)
+      } else {
+        toast.success('Email konfirmasi baru telah dikirim! Cek inbox atau folder Spam Anda.')
+      }
+    } catch (err) {
+      toast.error(err?.message || 'Gagal mengirim ulang email konfirmasi.')
+    } finally {
+      setResending(false)
+    }
+  }
+
   async function handleGoogleAuth() {
     setError('')
+    setShowResend(false)
     setGoogleLoading(true)
     try {
       const requestedNext = new URLSearchParams(window.location.search).get('next')
@@ -74,12 +104,28 @@ export default function LoginPage() {
   async function handleSubmit(e) {
     e.preventDefault()
     setError('')
+    setShowResend(false)
     setLoading(true)
 
-    const { data, error: authError } = await supabase.auth.signInWithPassword({ email, password })
+    const cleanEmail = email.trim().toLowerCase()
+
+    const { data, error: authError } = await supabase.auth.signInWithPassword({
+      email: cleanEmail,
+      password,
+    })
 
     if (authError) {
-      setError(t.auth.loginError)
+      const msg = authError.message?.toLowerCase() || ''
+      const code = authError.code || ''
+
+      if (code === 'email_not_confirmed' || msg.includes('email not confirmed')) {
+        setError('Email belum dikonfirmasi! Supabase mewajibkan konfirmasi email sebelum login. Silakan periksa inbox atau folder Spam/Promosi email Anda.')
+        setShowResend(true)
+      } else if (code === 'invalid_credentials' || msg.includes('invalid login credentials')) {
+        setError('Email atau kata sandi salah. Silakan periksa kembali huruf besar/kecil kata sandi Anda.')
+      } else {
+        setError(authError.message || t.auth.loginError)
+      }
       setLoading(false)
       return
     }
@@ -89,7 +135,7 @@ export default function LoginPage() {
       .from('profiles')
       .select('role')
       .eq('id', data.user.id)
-      .single()
+      .maybeSingle()
 
     toast.success(t.auth.loginSuccess)
 
@@ -134,11 +180,37 @@ export default function LoginPage() {
               <div style={{
                 padding: '0.875rem 1rem', borderRadius: 10, background: 'var(--rh-danger-light)',
                 border: '1px solid hsla(0,72%,51%,0.2)',
-                display: 'flex', gap: '0.625rem', alignItems: 'center',
                 marginBottom: '1.25rem', color: 'hsl(0,72%,36%)', fontSize: '0.9rem',
               }}>
-                <AlertCircle size={16} style={{ flexShrink: 0 }} />
-                {error}
+                <div style={{ display: 'flex', gap: '0.625rem', alignItems: 'flex-start' }}>
+                  <AlertCircle size={18} style={{ flexShrink: 0, marginTop: 2 }} />
+                  <div style={{ flex: 1 }}>{error}</div>
+                </div>
+
+                {showResend && (
+                  <button
+                    type="button"
+                    onClick={handleResendConfirmation}
+                    disabled={resending}
+                    style={{
+                      marginTop: '0.75rem',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.4rem',
+                      padding: '0.4rem 0.75rem',
+                      background: '#ffffff',
+                      color: 'var(--rh-primary)',
+                      border: '1.5px solid var(--rh-primary)',
+                      borderRadius: 8,
+                      fontSize: '0.8125rem',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <Send size={13} />
+                    {resending ? 'Mengirim…' : 'Kirim Ulang Email Konfirmasi'}
+                  </button>
+                )}
               </div>
             )}
 
@@ -254,8 +326,8 @@ export default function LoginPage() {
               borderRadius: 10, border: '1px solid var(--rh-border)',
               fontSize: '0.8125rem', color: 'var(--rh-text-3)',
             }}>
-              <strong style={{ color: 'var(--rh-text-2)', display: 'block', marginBottom: '0.375rem' }}>{t.auth.noAccount}</strong>
-              <div>{lang === 'en' ? 'Demo accounts are not provided. New accounts receive passenger access; only a project administrator can assign elevated roles.' : 'Akun demo tidak tersedia. Akun baru mendapat akses penumpang; role lebih tinggi hanya dapat diberikan oleh pengelola project.'}</div>
+              <strong style={{ color: 'var(--rh-text-2)', display: 'block', marginBottom: '0.375rem' }}>Informasi Akses Akun</strong>
+              <div>{lang === 'en' ? 'New accounts receive passenger access. If you cannot sign in, please verify your email inbox or click resend.' : 'Akun baru otomatis terdaftar sebagai penumpang. Jika tidak bisa masuk, pastikan email Anda sudah dikonfirmasi melalui inbox atau klik tombol kirim ulang di atas.'}</div>
             </div>
           </div>
         </div>
