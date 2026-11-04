@@ -168,7 +168,7 @@ function AdminDashboardContent() {
       ] = await Promise.all([
         supabase.rpc('get_admin_dashboard_stats'),
         supabase.from('stations').select('id, code, name, city, province').order('name'),
-        supabase.from('trains').select('id, name, train_number, type').order('name'),
+        supabase.from('trains').select('id, name, train_number, service_class').order('name'),
         supabase.from('routes').select('id, name, distance_km, estimated_duration_minutes').order('name'),
         supabase.from('schedules').select('id, status, departure_time, arrival_time, trains(name, train_number), routes(name)').order('departure_time', { ascending: false }).limit(100),
         supabase.from('fares').select('id, route_id, class, base_price, routes(name)').order('base_price'),
@@ -625,7 +625,7 @@ function AdminDashboardContent() {
                       <span className="rh-badge rh-badge-secondary">{tr.train_number || 'KA Utama'}</span>
                     </div>
                     <div style={{ fontSize: '0.88rem', color: 'var(--rh-text-2)', marginBottom: '0.75rem' }}>
-                      Tipe Layanan: <strong>{tr.type || 'Antar Kota'}</strong>
+                      Tipe Layanan: <strong>{tr.service_class || 'Antar Kota'}</strong>
                     </div>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', background: '#fff', padding: '0.75rem', borderRadius: 8, border: '1px solid var(--rh-border)', fontSize: '0.8rem' }}>
                       <div>

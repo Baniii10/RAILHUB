@@ -1907,29 +1907,81 @@ input[type="checkbox"]:focus-visible {
   }
 }
 
-/* Featured 5 Services slider (Mobile-First scroll-snap track) */
-.rh-featured-slider-track {
+/* Minimalist Services Dock (5 items) */
+.rh-services-dock-track {
+  display: flex;
+  gap: 0.75rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  padding: 2px 2px 6px;
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
-.rh-featured-slider-track::-webkit-scrollbar {
+.rh-services-dock-track::-webkit-scrollbar {
   display: none;
 }
-.rh-feature-slide-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.08) !important;
+.rh-service-tile {
+  flex: 0 0 clamp(200px, 58vw, 240px);
+  scroll-snap-align: start;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 0.9rem;
+  background: #ffffff;
+  border: 1px solid var(--rh-border);
+  border-radius: 12px;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
 }
-.rh-feature-slide-card:active {
+.rh-service-tile:hover {
+  transform: translateY(-2px);
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+}
+.rh-service-tile:active {
   transform: scale(0.98);
 }
+.rh-service-tile-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.rh-service-tile-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.rh-service-tile-title {
+  font-weight: 700;
+  font-size: 0.86rem;
+  color: var(--rh-navy);
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.rh-service-tile-desc {
+  font-size: 0.74rem;
+  color: var(--rh-text-3);
+  margin-top: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 @media (min-width: 1024px) {
-  .rh-featured-slider-track {
-    display: grid !important;
-    grid-template-columns: repeat(5, 1fr) !important;
-    overflow-x: visible !important;
+  .rh-services-dock-track {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    overflow-x: visible;
+    padding-bottom: 0;
   }
-  .rh-feature-slide-card {
-    flex: initial !important;
+  .rh-service-tile {
+    flex: initial;
   }
 }
 

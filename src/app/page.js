@@ -21,7 +21,6 @@ import {
   Armchair,
   Clock,
   Compass,
-  CheckCircle2,
 } from 'lucide-react'
 
 const PROMO_BANNERS = [
@@ -153,31 +152,15 @@ export default function HomePage() {
 
         <div className="rh-container" style={{ position: 'relative', zIndex: 1 }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))', gap: 'clamp(1.5rem, 3.5vw, 3rem)', alignItems: 'center' }}>
-            {/* Desktop Headline & Value Highlights */}
+            {/* Desktop Headline */}
             <div className="animate-fade-in rh-hide-mobile">
               <h1 className="rh-h1" style={{ color: 'white', marginBottom: '1rem', maxWidth: 500, lineHeight: 1.18 }}>
                 {t.hero.title}
               </h1>
 
-              <p className="rh-body-lg" style={{ color: 'rgba(255,255,255,0.85)', marginBottom: '1.75rem', maxWidth: 440, lineHeight: 1.6 }}>
+              <p className="rh-body-lg" style={{ color: 'rgba(255,255,255,0.85)', margin: 0, maxWidth: 440, lineHeight: 1.6 }}>
                 {t.hero.subtitle}
               </p>
-
-              {/* Verified Trust Bar */}
-              <div style={{ display: 'flex', gap: '1.25rem', flexWrap: 'wrap', paddingTop: '1rem', borderTop: '1px solid rgba(255,255,255,0.12)', fontSize: '0.85rem', color: 'rgba(255,255,255,0.85)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                  <CheckCircle2 size={16} color="var(--rh-accent)" />
-                  <span>{lang === 'en' ? 'Live Track GPS' : 'GPS Tracking Real-Time'}</span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                  <CheckCircle2 size={16} color="var(--rh-accent)" />
-                  <span>{lang === 'en' ? 'Digital QR Boarding' : 'Boarding Pass QR Instan'}</span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                  <CheckCircle2 size={16} color="var(--rh-accent)" />
-                  <span>{lang === 'en' ? 'Interactive Carriages' : 'Denah Kursi Nyata'}</span>
-                </div>
-              </div>
             </div>
 
             {/* Elevated Search Widget Card */}
