@@ -1,0 +1,470 @@
+{
+  "communities": {
+    "0": [
+      "src_app_booking_payment_bookingid_page",
+      "src_app_booking_payment_bookingid_page_paymentpage",
+      "src_app_booking_payment_bookingid_page_paymentpagecontent",
+      "src_app_booking_scheduleid_page",
+      "src_app_booking_scheduleid_page_bookingpage",
+      "src_app_booking_scheduleid_page_bookingpagecontent",
+      "src_app_dashboard_admin_page_admindashboardcontent",
+      "src_app_dashboard_passenger_page",
+      "src_app_dashboard_passenger_page_passengerdashboardcontent",
+      "src_app_dashboard_passenger_page_tabs",
+      "src_app_dashboard_staff_page_staffdashboardcontent",
+      "src_components_booking_bookingflow",
+      "src_components_booking_bookingflow_blankpassenger",
+      "src_components_booking_bookingflow_bookingflow",
+      "src_components_booking_bookingflow_getseatrows",
+      "src_components_booking_bookingpayment",
+      "src_components_booking_bookingpayment_bookingpayment",
+      "src_components_booking_bookingpayment_localdatevalue",
+      "src_components_booking_bookingpayment_ticket_payment_methods",
+      "src_components_services_journeystatustimeline",
+      "src_components_services_journeystatustimeline_journeystatustimeline",
+      "src_components_services_journeystatustimeline_status_colors",
+      "src_components_services_passengerservices",
+      "src_components_services_passengerservices_food_payment_methods",
+      "src_components_services_passengerservices_order_status_labels",
+      "src_components_services_passengerservices_passengerservices",
+      "src_components_services_passengerservices_report_categories",
+      "src_components_services_passengerservices_report_status_labels",
+      "src_lib_supabase_client_createclient",
+      "src_lib_utils_formatters",
+      "src_lib_utils_formatters_cn",
+      "src_lib_utils_formatters_formatdate",
+      "src_lib_utils_formatters_formatduration",
+      "src_lib_utils_formatters_formatidr",
+      "src_lib_utils_formatters_formatshortdate",
+      "src_lib_utils_formatters_formattime",
+      "src_lib_utils_formatters_generatebookingcode",
+      "src_lib_utils_formatters_getbookingstatusinfo",
+      "src_lib_utils_formatters_getschedulestatusinfo",
+      "src_lib_utils_formatters_truncate"
+    ],
+    "1": [
+      "src_app_auth_login_page",
+      "src_app_auth_login_page_loginpage",
+      "src_app_auth_register_page",
+      "src_app_auth_register_page_registerpage",
+      "src_app_dashboard_passenger_page_passengerdashboard",
+      "src_app_layout",
+      "src_app_layout_metadata",
+      "src_app_layout_rootlayout",
+      "src_app_layout_viewport",
+      "src_app_page",
+      "src_app_page_faqs",
+      "src_app_page_features",
+      "src_app_page_gallery_items",
+      "src_app_page_homepage",
+      "src_app_page_popular_routes",
+      "src_app_page_promo_banners",
+      "src_app_page_sectiontitle",
+      "src_app_page_stats",
+      "src_app_page_testimonials",
+      "src_app_page_trains",
+      "src_components_booking_searchwidget",
+      "src_components_booking_searchwidget_formatlocaldate",
+      "src_components_booking_searchwidget_searchwidget",
+      "src_components_booking_searchwidget_stationselect",
+      "src_contexts_authcontext_authprovider",
+      "src_contexts_langcontext",
+      "src_contexts_langcontext_langcontext",
+      "src_contexts_langcontext_langprovider",
+      "src_contexts_langcontext_uselang",
+      "src_lib_i18n_translations",
+      "src_lib_i18n_translations_en",
+      "src_lib_i18n_translations_gettranslations",
+      "src_lib_i18n_translations_id",
+      "src_lib_i18n_translations_translations"
+    ],
+    "2": [
+      "src_app_dashboard_admin_journeys_page",
+      "src_app_dashboard_admin_journeys_page_adddatedays",
+      "src_app_dashboard_admin_journeys_page_adminjourneyspage",
+      "src_app_dashboard_admin_journeys_page_jakartadateinputvalue",
+      "src_app_dashboard_admin_journeys_page_jakartadatestart",
+      "src_app_dashboard_admin_journeys_page_splitintochunks",
+      "src_app_dashboard_admin_journeys_page_statusbadge",
+      "src_app_dashboard_admin_journeys_page_statuscolors",
+      "src_app_dashboard_admin_page",
+      "src_app_dashboard_admin_page_admin_tabs",
+      "src_app_dashboard_admin_page_admindashboard",
+      "src_app_dashboard_admin_page_bookingstatuslabels",
+      "src_app_dashboard_admin_page_emptystats",
+      "src_app_dashboard_admin_page_paymentstatuslabels",
+      "src_app_dashboard_admin_page_statusbadge",
+      "src_app_dashboard_admin_page_statuscolors",
+      "src_app_dashboard_staff_page",
+      "src_app_dashboard_staff_page_journeystatus",
+      "src_app_dashboard_staff_page_staffdashboard",
+      "src_app_dashboard_staff_page_status_colors",
+      "src_app_dashboard_staff_page_tabs",
+      "src_components_staff_ticketscanner",
+      "src_components_staff_ticketscanner_ticketscanner",
+      "src_lib_operations_journey_status",
+      "src_lib_operations_journey_status_getjourneystatuslabel",
+      "src_lib_operations_journey_status_getnextjourneystatuses",
+      "src_lib_operations_journey_status_journey_statuses",
+      "src_lib_operations_journey_status_next_journey_statuses"
+    ],
+    "3": [
+      "date_fns",
+      "framer_motion",
+      "jsqr",
+      "lucide_react",
+      "next",
+      "package_dependencies",
+      "package_dependencies_date_fns",
+      "package_dependencies_framer_motion",
+      "package_dependencies_jsqr",
+      "package_dependencies_lucide_react",
+      "package_dependencies_next",
+      "package_dependencies_qrcode",
+      "package_dependencies_react",
+      "package_dependencies_react_dom",
+      "package_dependencies_react_hot_toast",
+      "package_dependencies_supabase_ssr",
+      "package_dependencies_supabase_supabase_js",
+      "qrcode",
+      "react",
+      "react_dom",
+      "react_hot_toast",
+      "supabase_ssr",
+      "supabase_supabase_js"
+    ],
+    "4": [
+      "src_app_api_payments_midtrans_notification_route",
+      "src_app_api_payments_midtrans_notification_route_amountmatches",
+      "src_app_api_payments_midtrans_notification_route_post",
+      "src_app_api_payments_midtrans_route",
+      "src_app_api_payments_midtrans_route_food_methods",
+      "src_app_api_payments_midtrans_route_get",
+      "src_app_api_payments_midtrans_route_getfinishurl",
+      "src_app_api_payments_midtrans_route_getmissingpaymentconfiguration",
+      "src_app_api_payments_midtrans_route_paymentconfigurationerror",
+      "src_app_api_payments_midtrans_route_post",
+      "src_app_api_payments_midtrans_route_storegatewaytransaction",
+      "src_app_api_payments_midtrans_route_ticket_methods",
+      "src_lib_payments_midtrans",
+      "src_lib_payments_midtrans_authorizationheader",
+      "src_lib_payments_midtrans_createsnaptransaction",
+      "src_lib_payments_midtrans_enabled_payment_methods",
+      "src_lib_payments_midtrans_getmidtransexpiryminutes",
+      "src_lib_payments_midtrans_getmidtranstransactionstatus",
+      "src_lib_payments_midtrans_getserverkey",
+      "src_lib_payments_midtrans_isterminalmidtransstatus",
+      "src_lib_payments_midtrans_isvalidnotificationsignature",
+      "src_lib_supabase_admin",
+      "src_lib_supabase_admin_createadminclient"
+    ],
+    "5": [
+      "src_app_trains_page",
+      "src_app_trains_page_firstvalue",
+      "src_app_trains_page_metadata",
+      "src_app_trains_page_trainspage",
+      "src_app_trains_page_trainspagecontent",
+      "src_components_booking_trainsearchresults",
+      "src_components_booking_trainsearchresults_adddays",
+      "src_components_booking_trainsearchresults_getdaylabel",
+      "src_components_booking_trainsearchresults_trainsearchresults",
+      "src_components_ui_railloader",
+      "src_components_ui_railloader_schedulecardskeleton",
+      "src_components_ui_railloader_traintrackloader",
+      "src_components_ui_vectorlogos_railhubtrainlogo",
+      "src_lib_data_schedulesengine",
+      "src_lib_data_schedulesengine_curated_corridors",
+      "src_lib_data_schedulesengine_fleet_names",
+      "src_lib_data_schedulesengine_generateuuid",
+      "src_lib_data_schedulesengine_getrichtrainschedules",
+      "src_lib_data_schedulesengine_maketimestamp",
+      "src_lib_data_stationscatalog",
+      "src_lib_data_stationscatalog_getstationbycode",
+      "src_lib_data_stationscatalog_searchstations",
+      "src_lib_data_stationscatalog_stations_catalog"
+    ],
+    "6": [
+      "babel_plugin_react_compiler",
+      "eslint",
+      "eslint_config_next",
+      "package",
+      "package_devdependencies",
+      "package_devdependencies_babel_plugin_react_compiler",
+      "package_devdependencies_eslint",
+      "package_devdependencies_eslint_config_next",
+      "package_devdependencies_tailwindcss",
+      "package_devdependencies_tailwindcss_turbopack",
+      "package_engines",
+      "package_engines_node",
+      "package_name",
+      "package_private",
+      "package_scripts",
+      "package_scripts_build",
+      "package_scripts_dev",
+      "package_scripts_lint",
+      "package_scripts_start",
+      "package_version",
+      "tailwindcss",
+      "tailwindcss_turbopack"
+    ],
+    "7": [
+      "src_app_dashboard_admin_staff_page",
+      "src_app_dashboard_admin_staff_page_adminstaffpage",
+      "src_app_dashboard_admin_staff_page_assignablescheduleid",
+      "src_app_dashboard_admin_staff_page_jakartadateinputvalue",
+      "src_app_dashboard_admin_staff_page_jakartadatestart",
+      "src_app_dashboard_orders_page",
+      "src_app_dashboard_orders_page_foodorderspage",
+      "src_app_dashboard_reports_page",
+      "src_app_dashboard_reports_page_passengerreportspage",
+      "src_components_layout_navbar",
+      "src_components_layout_navbar_navbar",
+      "src_components_layout_navbar_publicnavlinks",
+      "src_components_services_staffservicedesk",
+      "src_components_services_staffservicedesk_order_status_labels",
+      "src_components_services_staffservicedesk_order_transitions",
+      "src_components_services_staffservicedesk_report_status_labels",
+      "src_components_services_staffservicedesk_report_transitions",
+      "src_components_services_staffservicedesk_staffservicedesk",
+      "src_contexts_authcontext",
+      "src_contexts_authcontext_authcontext",
+      "src_contexts_authcontext_useauth",
+      "src_lib_supabase_client"
+    ],
+    "8": [
+      "src_app_about_page",
+      "src_app_about_page_aboutpage",
+      "src_app_about_page_fleet_portfolio",
+      "src_app_about_page_team_members",
+      "src_app_about_page_timeline",
+      "src_app_contact_page",
+      "src_app_contact_page_contactpage",
+      "src_app_contact_page_station_desks",
+      "src_app_faq_page",
+      "src_app_faq_page_faq_categories",
+      "src_app_faq_page_faq_items",
+      "src_app_faq_page_faqpage",
+      "src_components_layout_footer",
+      "src_components_layout_footer_footer",
+      "src_components_layout_footer_footerlinks"
+    ],
+    "9": [
+      "src_components_home_mobileportalheader",
+      "src_components_home_mobileportalheader_mobileportalheader",
+      "src_components_ui_vectorlogos",
+      "src_components_ui_vectorlogos_iconantarkota",
+      "src_components_ui_vectorlogos_iconbandara",
+      "src_components_ui_vectorlogos_icongrabfeeder",
+      "src_components_ui_vectorlogos_iconkomuter",
+      "src_components_ui_vectorlogos_iconlebihbanyak",
+      "src_components_ui_vectorlogos_iconlokal",
+      "src_components_ui_vectorlogos_iconlrt",
+      "src_components_ui_vectorlogos_iconmultitrip",
+      "src_components_ui_vectorlogos_iconspacebyrail",
+      "src_components_ui_vectorlogos_locomotiveillustration",
+      "src_components_ui_vectorlogos_railhubbrandlogo",
+      "src_components_ui_vectorlogos_railpaylogo"
+    ],
+    "10": [
+      "src_app_auth_callback_route",
+      "src_app_auth_callback_route_get",
+      "src_lib_supabase_env",
+      "src_lib_supabase_env_createunconfiguredquerybuilder",
+      "src_lib_supabase_env_createunconfiguredsupabaseclient",
+      "src_lib_supabase_env_getsupabaseenv",
+      "src_lib_supabase_env_missing_supabase_env_message",
+      "src_lib_supabase_server",
+      "src_lib_supabase_server_createclient",
+      "src_middleware",
+      "src_middleware_config",
+      "src_middleware_middleware"
+    ],
+    "11": [
+      "feature:live_tracking",
+      "feature:payment_simulation",
+      "feature:seat_selection",
+      "feature:ticket_validation",
+      "feature:train_search",
+      "prd:railhub_spec",
+      "role:admin",
+      "role:passenger",
+      "role:staff"
+    ],
+    "12": [
+      "jsconfig",
+      "jsconfig_compileroptions",
+      "jsconfig_compileroptions_paths"
+    ],
+    "13": [
+      "eslint_config",
+      "eslint_config_eslintconfig"
+    ],
+    "14": [
+      "next_config",
+      "next_config_nextconfig"
+    ]
+  },
+  "cohesion": {
+    "0": 0.11666666666666667,
+    "1": 0.08377896613190731,
+    "2": 0.12169312169312169,
+    "3": 0.08695652173913043,
+    "4": 0.2015810276679842,
+    "5": 0.15019762845849802,
+    "6": 0.09090909090909091,
+    "7": 0.20346320346320346,
+    "8": 0.1619047619047619,
+    "9": 0.3238095238095238,
+    "10": 0.2878787878787879,
+    "11": 0.25,
+    "12": 0.6666666666666666,
+    "13": 1.0,
+    "14": 1.0
+  },
+  "gods": [
+    {
+      "id": "src_lib_supabase_client_createclient",
+      "label": "createClient()",
+      "degree": 35
+    },
+    {
+      "id": "src_contexts_authcontext_useauth",
+      "label": "useAuth()",
+      "degree": 27
+    },
+    {
+      "id": "src_lib_utils_formatters_formatdate",
+      "label": "formatDate()",
+      "degree": 19
+    },
+    {
+      "id": "src_lib_utils_formatters_formattime",
+      "label": "formatTime()",
+      "degree": 19
+    },
+    {
+      "id": "src_components_layout_navbar_navbar",
+      "label": "Navbar()",
+      "degree": 18
+    },
+    {
+      "id": "src_lib_utils_formatters_formatidr",
+      "label": "formatIDR()",
+      "degree": 15
+    },
+    {
+      "id": "src_components_home_mobileportalheader_mobileportalheader",
+      "label": "MobilePortalHeader()",
+      "degree": 13
+    },
+    {
+      "id": "src_contexts_langcontext_uselang",
+      "label": "useLang()",
+      "degree": 13
+    },
+    {
+      "id": "src_lib_operations_journey_status_getjourneystatuslabel",
+      "label": "getJourneyStatusLabel()",
+      "degree": 12
+    },
+    {
+      "id": "src_app_api_payments_midtrans_route_post",
+      "label": "POST()",
+      "degree": 11
+    }
+  ],
+  "surprises": [
+    {
+      "source": "GET()",
+      "target": "createClient()",
+      "source_files": [
+        "src/app/api/payments/midtrans/route.js",
+        "src/lib/supabase/server.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "bridges separate communities"
+    },
+    {
+      "source": "POST()",
+      "target": "createClient()",
+      "source_files": [
+        "src/app/api/payments/midtrans/route.js",
+        "src/lib/supabase/server.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "bridges separate communities"
+    },
+    {
+      "source": "GET()",
+      "target": "createClient()",
+      "source_files": [
+        "src/app/auth/callback/route.js",
+        "src/lib/supabase/server.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "peripheral node `GET()` unexpectedly reaches hub `createClient()`"
+    },
+    {
+      "source": "LoginPage()",
+      "target": "createClient()",
+      "source_files": [
+        "src/app/auth/login/page.js",
+        "src/lib/supabase/client.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "bridges separate communities"
+    },
+    {
+      "source": "RegisterPage()",
+      "target": "createClient()",
+      "source_files": [
+        "src/app/auth/register/page.js",
+        "src/lib/supabase/client.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "bridges separate communities"
+    }
+  ],
+  "questions": [
+    {
+      "type": "bridge_node",
+      "question": "Why does `createClient()` connect `Community 0` to `Community 1`, `Community 2`, `Community 5`, `Community 7`, `Community 10`?",
+      "why": "High betweenness centrality (0.134) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `createClient()` connect `Community 10` to `Community 4`?",
+      "why": "High betweenness centrality (0.077) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `getSupabaseEnv()` connect `Community 10` to `Community 0`, `Community 7`?",
+      "why": "High betweenness centrality (0.074) - this node is a cross-community bridge."
+    },
+    {
+      "type": "isolated_nodes",
+      "question": "What connects `eslintConfig`, `paths`, `nextConfig` to the rest of the system?",
+      "why": "80 weakly-connected nodes found - possible documentation gaps or missing edges."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `Community 0` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.11666666666666667 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `Community 1` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.08377896613190731 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `Community 2` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.12169312169312169 - nodes in this community are weakly interconnected."
+    }
+  ]
+}
