@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Train, Mail, Lock, Eye, EyeOff, User, Phone, AlertCircle, CheckCircle } from 'lucide-react'
@@ -7,15 +7,34 @@ import { createClient } from '@/lib/supabase/client'
 import { useLang } from '@/contexts/LangContext'
 import toast from 'react-hot-toast'
 
+function GoogleIcon({ size = 18 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true" style={{ flexShrink: 0 }}>
+      <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z" />
+      <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.36 24 12 24z" />
+      <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15z" />
+      <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.36 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z" />
+    </svg>
+  )
+}
+
 export default function RegisterPage() {
-  const { t } = useLang()
+  const { t, lang } = useLang()
   const router = useRouter()
   const supabase = createClient()
 
   const [form, setForm] = useState({ fullName: '', email: '', phone: '', password: '', confirmPassword: '' })
-  const [showPw,  setShowPw]  = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [error,   setError]   = useState('')
+  const [showPw,        setShowPw]        = useState(false)
+  const [loading,       setLoading]       = useState(false)
+  const [googleLoading, setGoogleLoading] = useState(false)
+  const [error,         setError]         = useState('')
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('error') === 'auth_callback_failed') {
+      setError(lang === 'en' ? 'Google registration failed. Please configure Google OAuth in your Supabase dashboard.' : 'Pendaftaran Google gagal. Pastikan kredensial Google OAuth telah diaktifkan di dashboard Supabase.')
+    }
+  }, [lang])
 
   const update = (key) => (e) => setForm(prev => ({ ...prev, [key]: e.target.value }))
 
@@ -24,6 +43,40 @@ export default function RegisterPage() {
     { label: 'Mengandung huruf kapital', met: /[A-Z]/.test(form.password) },
     { label: 'Mengandung angka', met: /[0-9]/.test(form.password) },
   ]
+
+  async function handleGoogleAuth() {
+    setError('')
+    setGoogleLoading(true)
+    try {
+      const requestedNext = new URLSearchParams(window.location.search).get('next')
+      const safeNext = requestedNext
+        && !requestedNext.startsWith('//')
+        && (requestedNext.startsWith('/booking/') || requestedNext.startsWith('/dashboard') || requestedNext.startsWith('/trains'))
+        ? requestedNext
+        : '/dashboard/passenger'
+
+      const redirectUrl = `${window.location.origin}/auth/callback?next=${encodeURIComponent(safeNext)}`
+
+      const { error: oauthError } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: redirectUrl,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          },
+        },
+      })
+
+      if (oauthError) {
+        setError(oauthError.message)
+        setGoogleLoading(false)
+      }
+    } catch (err) {
+      setError(err?.message || 'Gagal memulai pendaftaran Google.')
+      setGoogleLoading(false)
+    }
+  }
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -90,7 +143,7 @@ export default function RegisterPage() {
           <div className="rh-card-header">
             <h1 className="rh-h4">{t.auth.register}</h1>
             <p style={{ color: 'var(--rh-text-2)', fontSize: '0.9rem', marginTop: '0.25rem' }}>
-              Buat akun RAILHUB Anda secara gratis
+              {lang === 'en' ? 'Create your free RAILHUB account' : 'Buat akun RAILHUB Anda secara gratis'}
             </p>
           </div>
           <div className="rh-card-body">
@@ -104,6 +157,45 @@ export default function RegisterPage() {
                 <AlertCircle size={16} style={{ flexShrink: 0 }} /> {error}
               </div>
             )}
+
+            {/* Google Register Button */}
+            <button
+              type="button"
+              onClick={handleGoogleAuth}
+              disabled={loading || googleLoading}
+              className="rh-btn rh-btn-full"
+              style={{
+                height: 48,
+                background: '#ffffff',
+                border: '1.5px solid #cbd5e1',
+                borderRadius: 12,
+                color: '#0f172a',
+                fontWeight: 600,
+                fontSize: '0.9375rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.75rem',
+                cursor: 'pointer',
+                transition: 'all 0.15s ease',
+                boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
+                marginBottom: '1rem',
+              }}
+            >
+              {googleLoading ? (
+                <span className="rh-spinner rh-spinner-sm" style={{ borderTopColor: 'var(--rh-primary)', borderColor: 'rgba(26,66,138,0.2)' }} />
+              ) : (
+                <GoogleIcon size={19} />
+              )}
+              {lang === 'en' ? 'Sign up with Google' : 'Daftar dengan Google'}
+            </button>
+
+            {/* Divider */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', margin: '1rem 0 1.25rem' }}>
+              <div style={{ flex: 1, height: 1, background: 'var(--rh-border)' }} />
+              <span style={{ fontSize: '0.8125rem', color: 'var(--rh-text-3)' }}>{lang === 'en' ? 'or register with email' : 'atau daftar dengan email'}</span>
+              <div style={{ flex: 1, height: 1, background: 'var(--rh-border)' }} />
+            </div>
 
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               {/* Full Name */}
@@ -178,7 +270,7 @@ export default function RegisterPage() {
               </button>
             </form>
 
-            <p style={{ textAlign: 'center', fontSize: '0.9375rem', color: 'var(--rh-text-2)', marginTop: '1.5rem' }}>
+            <p style={{ textAlign: 'center', fontSize: '0.9375rem', color: 'var(--rh-text-2)', marginTop: '1.25rem' }}>
               {t.auth.hasAccount}{' '}
               <Link href="/auth/login" style={{ color: 'var(--rh-primary)', fontWeight: 600 }}>{t.auth.login}</Link>
             </p>
