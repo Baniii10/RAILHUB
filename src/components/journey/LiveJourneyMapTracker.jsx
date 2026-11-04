@@ -20,6 +20,7 @@ import {
   ShieldCheck,
   AlertCircle,
   Sparkles,
+  ArrowLeft,
 } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { formatDate, formatTime, formatIDR } from '@/lib/utils/formatters'
@@ -82,6 +83,7 @@ export default function LiveJourneyMapTracker({
   ticket,
   countdown,
   journeyProgress = 35,
+  recentBookings = [],
   onSelectTab,
 }) {
   // Sheet state: 'peek' (bottom collapsed), 'half' (mid-height), 'full' (expanded all the way)
@@ -330,51 +332,104 @@ export default function LiveJourneyMapTracker({
           </g>
         </svg>
 
-        {/* ── TOP FLOATING PILL (GoSend/Tokopedia Inspired) ── */}
+        {/* ── TOP FLOATING BAR (Tokopedia / GoSend Style with Back & Status) ── */}
         <div style={{
           position: 'absolute',
-          top: '1rem',
-          left: '1rem',
-          right: '1rem',
+          top: 'calc(0.75rem + env(safe-area-inset-top, 0px))',
+          left: '0.75rem',
+          right: '0.75rem',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'space-between',
-          background: 'rgba(255, 255, 255, 0.96)',
-          backdropFilter: 'blur(12px)',
-          borderRadius: 14,
-          padding: '0.65rem 1rem',
-          boxShadow: '0 8px 24px rgba(0, 0, 0, 0.18)',
-          zIndex: 10,
+          gap: '0.5rem',
+          zIndex: 30,
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-            <span style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 5,
-              fontSize: '0.74rem',
-              fontWeight: 800,
-              padding: '0.2rem 0.6rem',
-              borderRadius: 999,
-              background: '#ecfdf5',
-              color: '#059669',
-            }}>
-              <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#10b981' }} className="animate-pulse" />
-              LIVE GPS
-            </span>
-            <div style={{ fontSize: '0.86rem', color: '#0f172a', fontWeight: 700 }}>
-              {progress < 100 ? (
-                <>Kereta tiba dalam <strong style={{ color: '#2563eb' }}>{Math.max(15, Math.round((100 - progress) * 1.8))} mnt</strong></>
-              ) : (
-                <span style={{ color: '#059669' }}>Kereta Telah Tiba di Tujuan</span>
-              )}
-            </div>
-          </div>
+          {/* Back button to Home */}
+          <Link
+            href="/"
+            className="rh-btn rh-btn-ghost"
+            style={{
+              width: 40,
+              height: 40,
+              borderRadius: '50%',
+              background: 'rgba(255, 255, 255, 0.96)',
+              backdropFilter: 'blur(8px)',
+              display: 'grid',
+              placeItems: 'center',
+              padding: 0,
+              boxShadow: '0 4px 14px rgba(0, 0, 0, 0.16)',
+              color: '#0f172a',
+              flexShrink: 0,
+            }}
+            aria-label="Kembali ke Beranda"
+          >
+            <ArrowLeft size={19} />
+          </Link>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-            <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#1e3a8a', letterSpacing: '0.02em' }}>
+          {/* Center Info Pill */}
+          <div style={{
+            flex: 1,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            background: 'rgba(255, 255, 255, 0.96)',
+            backdropFilter: 'blur(12px)',
+            borderRadius: 999,
+            padding: '0.5rem 0.85rem',
+            boxShadow: '0 4px 16px rgba(0, 0, 0, 0.16)',
+            minWidth: 0,
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', minWidth: 0 }}>
+              <span style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 4,
+                fontSize: '0.7rem',
+                fontWeight: 800,
+                padding: '0.15rem 0.5rem',
+                borderRadius: 999,
+                background: '#ecfdf5',
+                color: '#059669',
+                flexShrink: 0,
+              }}>
+                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#10b981' }} className="animate-pulse" />
+                LIVE
+              </span>
+              <span style={{ fontSize: '0.82rem', color: '#0f172a', fontWeight: 700, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                {progress < 100 ? (
+                  <>Tiba dlm <strong style={{ color: '#2563eb' }}>{Math.max(15, Math.round((100 - progress) * 1.8))} mnt</strong></>
+                ) : (
+                  <span style={{ color: '#059669' }}>Tiba di Tujuan</span>
+                )}
+              </span>
+            </div>
+
+            <span style={{ fontSize: '0.74rem', fontWeight: 800, color: '#1e3a8a', letterSpacing: '0.04em', flexShrink: 0, paddingLeft: 4 }}>
               RAILHUB
             </span>
           </div>
+
+          {/* Quick tab button */}
+          <button
+            type="button"
+            onClick={() => onSelectTab && onSelectTab('tickets')}
+            style={{
+              padding: '0.5rem 0.85rem',
+              borderRadius: 999,
+              background: 'rgba(255, 255, 255, 0.96)',
+              border: 'none',
+              fontSize: '0.78rem',
+              fontWeight: 700,
+              color: '#1e3a8a',
+              boxShadow: '0 4px 14px rgba(0, 0, 0, 0.16)',
+              cursor: 'pointer',
+              flexShrink: 0,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 4,
+            }}
+          >
+            <QrCode size={14} /> Tiket
+          </button>
         </div>
 
         {/* Floating Recenter Map Button */}
@@ -385,27 +440,27 @@ export default function LiveJourneyMapTracker({
           aria-label="Fokuskan posisi kereta"
           style={{
             position: 'absolute',
-            bottom: '230px',
+            bottom: '260px',
             right: '1rem',
-            width: 42,
-            height: 42,
+            width: 44,
+            height: 44,
             borderRadius: '50%',
-            background: 'rgba(255,255,255,0.95)',
+            background: 'rgba(255,255,255,0.96)',
             border: 'none',
             display: 'grid',
             placeItems: 'center',
-            boxShadow: '0 6px 16px rgba(0,0,0,0.2)',
+            boxShadow: '0 6px 18px rgba(0,0,0,0.22)',
             cursor: 'pointer',
             color: '#1e293b',
             zIndex: 10,
           }}
         >
-          <Crosshair size={20} color={mapZoom > 1 ? '#2563eb' : '#64748b'} />
+          <Crosshair size={21} color={mapZoom > 1 ? '#2563eb' : '#64748b'} />
         </button>
       </div>
 
       {/* ══════════════════════════════════════════════════════
-          2. BOTTOM DRAGGABLE SHEET ("Diseret dari bawah")
+          2. BOTTOM DRAGGABLE SHEET ("Diseret dari bawah sampe bawah")
           ══════════════════════════════════════════════════════ */}
       <section
         ref={sheetRef}
@@ -416,14 +471,15 @@ export default function LiveJourneyMapTracker({
           bottom: 0,
           left: 0,
           right: 0,
-          height: '210px',
+          height: '240px',
           background: '#ffffff',
           borderTopLeftRadius: 24,
           borderTopRightRadius: 24,
-          boxShadow: '0 -10px 40px rgba(0, 0, 0, 0.22)',
+          boxShadow: '0 -10px 40px rgba(0, 0, 0, 0.25)',
           display: 'flex',
           flexDirection: 'column',
           zIndex: 20,
+          paddingBottom: 'calc(1.5rem + env(safe-area-inset-bottom, 0px))',
           transition: 'height 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
           willChange: 'height',
         }}
@@ -650,6 +706,35 @@ export default function LiveJourneyMapTracker({
               )}
             </div>
           </div>
+
+          {/* Section: Other Bookings List (Accessible inside sheet) */}
+          {recentBookings.length > 1 && (
+            <div style={{ background: '#f8fafc', borderRadius: 16, padding: '1rem', border: '1px solid #e2e8f0', marginBottom: '1.25rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.65rem' }}>
+                <strong style={{ fontSize: '0.88rem', color: '#0f172a' }}>Pemesanan Tiket Lainnya</strong>
+                <button
+                  type="button"
+                  onClick={() => onSelectTab && onSelectTab('tickets')}
+                  style={{ background: 'none', border: 'none', color: '#2563eb', fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer' }}
+                >
+                  Semua Tiket →
+                </button>
+              </div>
+              <div style={{ display: 'grid', gap: '0.5rem' }}>
+                {recentBookings.filter(b => b.id !== booking?.id).slice(0, 2).map(b => (
+                  <div key={b.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#ffffff', padding: '0.65rem 0.85rem', borderRadius: 10, border: '1px solid #e2e8f0' }}>
+                    <div>
+                      <span className="rh-mono" style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748b' }}>{b.booking_code}</span>
+                      <strong style={{ display: 'block', fontSize: '0.82rem', color: '#1e293b' }}>{b.schedules?.trains?.name || 'KA Antarkota'}</strong>
+                    </div>
+                    <Link href={`/booking/payment/${b.id}`} className="rh-btn rh-btn-ghost rh-btn-sm" style={{ fontSize: '0.75rem', padding: '0.25rem 0.6rem' }}>
+                      Buka E-Ticket
+                    </Link>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Simulated demo disclaimer if no booking exists */}
           {isDemo && (

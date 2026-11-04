@@ -302,9 +302,9 @@ function PassengerDashboardContent() {
   return (
     <>
       <Navbar />
-      <main className="passenger-dashboard" style={{ background: 'var(--rh-surface)', minHeight: '100vh', paddingBottom: '6rem' }}>
+      <main className={`passenger-dashboard ${activeTab === 'overview' ? 'is-tracking-tab' : ''}`} style={{ background: 'var(--rh-surface)', minHeight: '100vh', paddingBottom: activeTab === 'overview' ? 0 : '6rem' }}>
         {/* ── TOP HEADER / GREETING BAR ── */}
-        <section style={{
+        <section className="passenger-header-banner rh-hide-on-mobile-tracking" style={{
           background: 'var(--rh-primary)',
           color: 'white',
           padding: '2.5rem 0 2rem',
@@ -371,7 +371,7 @@ function PassengerDashboardContent() {
         </section>
 
         {/* ── TAB CONTENT ── */}
-        <div className="rh-container" style={{ marginTop: '2rem' }}>
+        <div className={activeTab === 'overview' ? 'passenger-main-container' : 'rh-container'} style={{ marginTop: activeTab === 'overview' ? 0 : '2rem' }}>
           {error && (
             <div role="alert" className="rh-card" style={{ padding: '1.25rem', color: 'var(--rh-danger)', marginBottom: '1.5rem', borderLeft: '4px solid var(--rh-danger)' }}>
               <AlertCircle size={18} style={{ verticalAlign: 'middle', marginRight: 6 }} /> {error}
@@ -389,11 +389,12 @@ function PassengerDashboardContent() {
                 ticket={activeTicket}
                 countdown={countdown}
                 journeyProgress={journeyProgress}
+                recentBookings={bookings}
                 onSelectTab={selectTab}
               />
 
-              {/* Recent Bookings Overview Table */}
-              <section className="rh-card">
+              {/* Recent Bookings Overview Table (Desktop Only - on mobile it is inside the draggable sheet) */}
+              <section className="rh-card rh-desktop-only-bookings">
                 <div className="rh-card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <div>
                     <h3 className="rh-h4" style={{ margin: 0 }}>Riwayat Booking Terbaru</h3>
