@@ -21,6 +21,49 @@ function GoogleIcon({ size = 19 }) {
   )
 }
 
+const DEMO_ACCOUNTS = [
+  {
+    role: 'passenger',
+    title: 'Penumpang',
+    desc: 'Akun Penumpang',
+    email: 'penumpang.demo@railhub.id',
+    password: 'DemoPassenger2026!',
+    badge: 'Tiket & Perjalanan',
+    badgeColor: '#10b981',
+    icon: '👤',
+  },
+  {
+    role: 'gate',
+    title: 'Petugas Gerbang',
+    desc: 'Scanner Masuk Peron',
+    email: 'gate.gambir@railhub.id',
+    password: 'DemoStaff2026!',
+    badge: 'Gate Stasiun Gambir',
+    badgeColor: '#f59e0b',
+    icon: '🎫',
+  },
+  {
+    role: 'conductor',
+    title: 'Petugas Kereta',
+    desc: 'Kondektur KA',
+    email: 'kondektur.parahyangan@railhub.id',
+    password: 'DemoStaff2026!',
+    badge: 'KA Argo Parahyangan',
+    badgeColor: '#0066cc',
+    icon: '🚆',
+  },
+  {
+    role: 'admin',
+    title: 'Administrator',
+    desc: 'Admin Operasional',
+    email: 'admin.operasional@railhub.id',
+    password: 'DemoAdmin2026!',
+    badge: 'Semua Akses Admin',
+    badgeColor: '#6366f1',
+    icon: '🛡️',
+  },
+]
+
 export default function LoginPage() {
   const { t, lang } = useLang()
   const router = useRouter()
@@ -81,6 +124,84 @@ export default function LoginPage() {
       setError(err?.message || 'Gagal memulai autentikasi Google.')
       setGoogleLoading(false)
     }
+  }
+
+  async function handleQuickLogin(account) {
+    setEmail(account.email)
+    setPassword(account.password)
+    setError('')
+    setLoading(true)
+
+    // 1. Try to sign in directly
+    const { data, error: authError } = await supabase.auth.signInWithPassword({
+      email: account.email,
+      password: account.password,
+    })
+
+    if (!authError && data?.session) {
+      toast.success(`Login berhasil sebagai ${account.title}!`)
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', data.user.id)
+        .maybeSingle()
+
+      if (profile?.role === 'admin' || account.role === 'admin') router.push('/dashboard/admin')
+      else if (profile?.role === 'conductor' || account.role === 'conductor' || account.role === 'gate') router.push('/dashboard/staff')
+      else router.push('/')
+      return
+    }
+
+    // 2. If account does not exist yet in Supabase, auto-create it seamlessly
+    const isNew = authError?.message?.toLowerCase().includes('invalid login credentials')
+      || authError?.code === 'invalid_credentials'
+
+    if (isNew) {
+      toast.loading(`Menyiapkan akun demo ${account.title}...`, { duration: 2500 })
+      const { data: signUpData, error: signUpErr } = await supabase.auth.signUp({
+        email: account.email,
+        password: account.password,
+        options: {
+          data: {
+            full_name: `${account.title} RAILHUB`,
+            phone_number: '081234567890',
+          },
+        },
+      })
+
+      if (signUpErr) {
+        setError(`Gagal membuat akun demo: ${signUpErr.message}`)
+        setLoading(false)
+        return
+      }
+
+      // 3. Log in after sign up
+      const { data: loginData, error: secondLoginErr } = await supabase.auth.signInWithPassword({
+        email: account.email,
+        password: account.password,
+      })
+
+      if (secondLoginErr) {
+        setError('Akun demo berhasil didaftarkan. Silakan klik kembali untuk masuk.')
+        setLoading(false)
+        return
+      }
+
+      // 4. Update profile role if staff or admin
+      if (account.role === 'conductor' || account.role === 'gate' || account.role === 'admin') {
+        const assignedRole = account.role === 'admin' ? 'admin' : 'conductor'
+        await supabase.from('profiles').update({ role: assignedRole }).eq('id', loginData.user.id)
+      }
+
+      toast.success(`Selamat datang, ${account.title}!`)
+      if (account.role === 'admin') router.push('/dashboard/admin')
+      else if (account.role === 'conductor' || account.role === 'gate') router.push('/dashboard/staff')
+      else router.push('/')
+      return
+    }
+
+    setError(authError?.message || 'Gagal login demo.')
+    setLoading(false)
   }
 
   async function handleSubmit(e) {
@@ -185,6 +306,51 @@ export default function LoginPage() {
                 <div>{error}</div>
               </div>
             )}
+
+            {/* 1-Click Role Login for UAS Testing */}
+            <div style={{ marginBottom: '1.25rem', padding: '0.85rem', background: '#f8fafc', borderRadius: 14, border: '1.5px solid #e2e8f0' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.6rem' }}>
+                <span style={{ fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em', color: '#0066cc', display: 'flex', alignItems: 'center', gap: 5 }}>
+                  ⚡ Login Cepat Demo (Testing UAS)
+                </span>
+                <span style={{ fontSize: '0.6875rem', color: '#64748b' }}>Klik role untuk masuk langsung</span>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.5rem' }}>
+                {DEMO_ACCOUNTS.map(acc => (
+                  <button
+                    key={acc.role}
+                    type="button"
+                    disabled={loading || googleLoading}
+                    onClick={() => handleQuickLogin(acc)}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      padding: '0.55rem 0.65rem',
+                      borderRadius: 10,
+                      background: '#ffffff',
+                      border: '1.5px solid #cbd5e1',
+                      cursor: loading || googleLoading ? 'not-allowed' : 'pointer',
+                      textAlign: 'left',
+                      transition: 'all 0.15s ease',
+                      boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
+                    }}
+                    onMouseEnter={e => { e.currentTarget.style.borderColor = acc.badgeColor; e.currentTarget.style.transform = 'translateY(-1px)' }}
+                    onMouseLeave={e => { e.currentTarget.style.borderColor = '#cbd5e1'; e.currentTarget.style.transform = 'none' }}
+                  >
+                    <span style={{ fontSize: '1.15rem', lineHeight: 1 }}>{acc.icon}</span>
+                    <div style={{ minWidth: 0, flex: 1 }}>
+                      <strong style={{ display: 'block', fontSize: '0.78125rem', color: '#0f172a', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        {acc.title}
+                      </strong>
+                      <small style={{ display: 'block', fontSize: '0.6875rem', color: '#64748b', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        {acc.badge}
+                      </small>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
 
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
               <div>

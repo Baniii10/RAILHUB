@@ -362,6 +362,24 @@ function StaffDashboardContent() {
                 <p style={{ margin: 0, color: 'var(--rh-text-2)', fontSize: '0.9rem' }}>
                   Petugas: <strong>{profile?.full_name || 'Petugas Kondektur'}</strong> · ID: <span className="rh-mono">STF-{user?.id?.slice(0, 8).toUpperCase()}</span> · Penugasan {journeys.length} Perjalanan
                 </p>
+                <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.6rem', flexWrap: 'wrap' }}>
+                  <button
+                    type="button"
+                    onClick={() => selectTab('validation')}
+                    className={`rh-btn rh-btn-sm ${activeTab === 'validation' ? 'rh-btn-primary' : 'rh-btn-ghost'}`}
+                    style={{ borderRadius: 8, fontSize: '0.8rem' }}
+                  >
+                    🎫 Mode Petugas Gerbang (Scan Boarding)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => selectTab('passengers')}
+                    className={`rh-btn rh-btn-sm ${activeTab === 'passengers' || activeTab === 'journey' ? 'rh-btn-primary' : 'rh-btn-ghost'}`}
+                    style={{ borderRadius: 8, fontSize: '0.8rem' }}
+                  >
+                    🚆 Mode Petugas Kereta (Manifest & Perjalanan)
+                  </button>
+                </div>
               </div>
 
               <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
