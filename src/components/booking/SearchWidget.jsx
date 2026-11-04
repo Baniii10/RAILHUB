@@ -410,8 +410,15 @@ export default function SearchWidget({ compact = false }) {
 
           {/* Passenger Stepper Popover */}
           {passengerOpen && (
-            <div className="rh-passenger-popover" role="dialog" aria-label="Jumlah Penumpang">
-              <div className="rh-passenger-popover-header">
+            <>
+              <div
+                className="rh-passenger-mobile-backdrop rh-show-mobile-only"
+                onClick={() => setPassengerOpen(false)}
+                aria-hidden="true"
+              />
+              <div className="rh-passenger-popover" role="dialog" aria-label="Jumlah Penumpang">
+                <div className="rh-bottom-sheet-handle" aria-hidden="true" />
+                <div className="rh-passenger-popover-header">
                 <strong>{lang === 'en' ? 'Select Passengers' : 'Jumlah Penumpang'}</strong>
                 <button
                   type="button"
@@ -492,6 +499,7 @@ export default function SearchWidget({ compact = false }) {
                 {lang === 'en' ? 'Done' : 'Selesai'}
               </button>
             </div>
+          </>
           )}
         </div>
 
@@ -519,6 +527,9 @@ export default function SearchWidget({ compact = false }) {
             aria-modal="true"
             aria-label={activePicker === 'origin' ? 'Pilih Stasiun Keberangkatan' : 'Pilih Stasiun Tujuan'}
           >
+            {/* Sheet Handle for Mobile */}
+            <div className="rh-bottom-sheet-handle" aria-hidden="true" />
+
             {/* Modal Header */}
             <div className="rh-station-modal-header">
               <div className="rh-station-modal-title">
@@ -544,6 +555,11 @@ export default function SearchWidget({ compact = false }) {
                 type="search"
                 value={stationQuery}
                 onChange={e => setStationQuery(e.target.value)}
+                onFocus={e => {
+                  setTimeout(() => {
+                    e.target.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+                  }, 120)
+                }}
                 placeholder={lang === 'en' ? 'Search station name, city, or code...' : 'Cari nama stasiun, kota, atau kode (misal: PSE, Gambir)...'}
                 className="rh-station-modal-input"
               />
