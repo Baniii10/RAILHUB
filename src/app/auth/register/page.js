@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Train, Mail, Lock, Eye, EyeOff, User, Phone, AlertCircle, CheckCircle, Send, ArrowRight } from 'lucide-react'
+import { Train, Mail, Lock, Eye, EyeOff, User, Phone, AlertCircle, CheckCircle } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useLang } from '@/contexts/LangContext'
 import TrainBumperBanner from '@/components/home/TrainBumperBanner'
@@ -29,8 +29,6 @@ export default function RegisterPage() {
   const [loading,       setLoading]       = useState(false)
   const [googleLoading, setGoogleLoading] = useState(false)
   const [error,         setError]         = useState('')
-  const [registeredEmail, setRegisteredEmail] = useState('')
-  const [resending,       setResending]       = useState(false)
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
@@ -46,29 +44,6 @@ export default function RegisterPage() {
     { label: 'Mengandung huruf kapital', met: /[A-Z]/.test(form.password) },
     { label: 'Mengandung angka', met: /[0-9]/.test(form.password) },
   ]
-
-  async function handleResendConfirmation() {
-    if (!registeredEmail) return
-    setResending(true)
-    try {
-      const { error: resendErr } = await supabase.auth.resend({
-        type: 'signup',
-        email: registeredEmail,
-        options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
-        },
-      })
-      if (resendErr) {
-        toast.error(resendErr.message)
-      } else {
-        toast.success('Email konfirmasi baru telah dikirim! Cek inbox atau folder Spam Anda.')
-      }
-    } catch (err) {
-      toast.error(err?.message || 'Gagal mengirim ulang email konfirmasi.')
-    } finally {
-      setResending(false)
-    }
-  }
 
   async function handleGoogleAuth() {
     setError('')
@@ -150,8 +125,20 @@ export default function RegisterPage() {
       return
     }
 
-    // Email verification required by Supabase project settings
-    setRegisteredEmail(cleanEmail)
+    // Coba langsung login otomatis jika akun langsung aktif
+    const { data: loginData } = await supabase.auth.signInWithPassword({
+      email: cleanEmail,
+      password: form.password,
+    })
+
+    if (loginData?.session) {
+      toast.success('Pendaftaran berhasil! Selamat datang di RAILHUB.')
+      router.push('/dashboard/passenger')
+      return
+    }
+
+    toast.success('Pendaftaran berhasil! Silakan masuk ke akun Anda.')
+    router.push(`/auth/login?email=${encodeURIComponent(cleanEmail)}`)
     setLoading(false)
   }
 
@@ -176,52 +163,7 @@ export default function RegisterPage() {
         </div>
 
         <div className="rh-card">
-          {registeredEmail ? (
-            /* Email Confirmation Prompt Screen */
-            <div className="rh-card-body" style={{ padding: '2rem 1.75rem', textAlign: 'center' }}>
-              <div style={{
-                width: 60, height: 60, borderRadius: '50%', background: 'rgba(37, 99, 235, 0.1)',
-                color: 'var(--rh-primary)', display: 'grid', placeItems: 'center', margin: '0 auto 1.25rem',
-              }}>
-                <Mail size={30} />
-              </div>
-              <h2 className="rh-h4" style={{ marginBottom: '0.5rem' }}>Cek Email Anda</h2>
-              <p style={{ color: 'var(--rh-text-2)', fontSize: '0.92rem', lineHeight: 1.5, marginBottom: '1.5rem' }}>
-                Akun berhasil dibuat! Tautan konfirmasi telah dikirim ke: <br />
-                <strong style={{ color: 'var(--rh-navy)', wordBreak: 'break-all' }}>{registeredEmail}</strong>
-              </p>
-              <div style={{
-                background: 'var(--rh-surface)', borderRadius: 12, padding: '0.9rem',
-                border: '1px solid var(--rh-border)', textAlign: 'left', fontSize: '0.82rem',
-                color: 'var(--rh-text-2)', lineHeight: 1.45, marginBottom: '1.5rem',
-              }}>
-                💡 <strong>Catatan Penting:</strong> Supabase mewajibkan klik link konfirmasi di email sebelum Anda dapat login. Jika tidak ada di inbox, periksa folder <strong>Spam</strong> atau <strong>Promosi</strong>.
-              </div>
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                <Link
-                  href={`/auth/login?email=${encodeURIComponent(registeredEmail)}`}
-                  className="rh-btn rh-btn-primary rh-btn-full"
-                  style={{ height: 46 }}
-                >
-                  Sudah Konfirmasi? Masuk Sekarang <ArrowRight size={16} />
-                </Link>
-
-                <button
-                  type="button"
-                  onClick={handleResendConfirmation}
-                  disabled={resending}
-                  className="rh-btn rh-btn-ghost rh-btn-full"
-                  style={{ height: 42, fontSize: '0.875rem' }}
-                >
-                  <Send size={14} />
-                  {resending ? 'Mengirim ulang…' : 'Kirim Ulang Email Konfirmasi'}
-                </button>
-              </div>
-            </div>
-          ) : (
-            <>
-              <div className="rh-card-header">
+          <div className="rh-card-header">
                 <h1 className="rh-h4">{t.auth.register}</h1>
                 <p style={{ color: 'var(--rh-text-2)', fontSize: '0.9rem', marginTop: '0.25rem' }}>
                   {lang === 'en' ? 'Create your free RAILHUB account' : 'Buat akun RAILHUB Anda secara gratis'}
@@ -356,8 +298,6 @@ export default function RegisterPage() {
                   <Link href="/auth/login" style={{ color: 'var(--rh-primary)', fontWeight: 600 }}>{t.auth.login}</Link>
                 </p>
               </div>
-            </>
-          )}
         </div>
 
         <p style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.8125rem' }}>
