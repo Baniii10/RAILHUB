@@ -43,7 +43,7 @@ export async function GET(request) {
         }
       }
 
-      return NextResponse.redirect(`${origin}/dashboard/passenger`)
+      return NextResponse.redirect(`${origin}/`)
     }
   }
 

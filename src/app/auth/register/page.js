@@ -55,7 +55,7 @@ export default function RegisterPage() {
     setError('')
     setGoogleLoading(true)
     try {
-      const redirectUrl = `${window.location.origin}/auth/callback?next=/dashboard/passenger`
+      const redirectUrl = `${window.location.origin}/auth/callback?next=/`
       const { error: oauthError } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
@@ -119,7 +119,7 @@ export default function RegisterPage() {
 
     if (data.session) {
       toast.success('Pendaftaran berhasil! Mengalihkan...')
-      router.push('/dashboard/passenger')
+      router.push('/')
       return
     }
 
@@ -130,7 +130,7 @@ export default function RegisterPage() {
 
     if (loginData?.session) {
       toast.success('Pendaftaran berhasil! Selamat datang di RAILHUB.')
-      router.push('/dashboard/passenger')
+      router.push('/')
       return
     }
 

@@ -58,7 +58,7 @@ export default function LoginPage() {
         && !requestedNext.startsWith('//')
         && (requestedNext.startsWith('/booking/') || requestedNext.startsWith('/dashboard') || requestedNext.startsWith('/trains'))
         ? requestedNext
-        : '/dashboard/passenger'
+        : '/'
 
       const redirectUrl = `${window.location.origin}/auth/callback?next=${encodeURIComponent(safeNext)}`
 
@@ -125,7 +125,7 @@ export default function LoginPage() {
       router.push(requestedNext)
     } else if (profile?.role === 'admin')     router.push('/dashboard/admin')
     else if (profile?.role === 'conductor') router.push('/dashboard/staff')
-    else router.push('/dashboard/passenger')
+    else router.push('/')
   }
 
   return (
