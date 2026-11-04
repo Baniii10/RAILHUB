@@ -126,10 +126,12 @@ export default function SearchWidget({ compact = false }) {
 
   // Auto-focus search input when modal opens
   useEffect(() => {
-    if (activePicker) {
+    if (!activePicker) return
+    const timer = window.setTimeout(() => {
       setStationQuery('')
-      setTimeout(() => searchInputRef.current?.focus(), 60)
-    }
+      searchInputRef.current?.focus()
+    }, 60)
+    return () => window.clearTimeout(timer)
   }, [activePicker])
 
   // Close passenger popover on outside click

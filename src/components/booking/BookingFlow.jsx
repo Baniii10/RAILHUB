@@ -57,6 +57,7 @@ export default function BookingFlow({
   const [selectedSeats, setSelectedSeats] = useState([])
   const [passengers, setPassengers] = useState(() => Array.from({ length: passengerCount }, blankPassenger))
   const [submitting, setSubmitting] = useState(false)
+  const [now, setNow] = useState(0)
   const [step, setStep] = useState('details')
   const [detailsAttempted, setDetailsAttempted] = useState(false)
   const stepHeadingRef = useRef(null)
@@ -171,6 +172,9 @@ export default function BookingFlow({
   )
   const seatRows = useMemo(() => getSeatRows(selectedCarriageSeats), [selectedCarriageSeats])
   const total = Number(fare?.price || 0) * passengerCount
+  const bookingClosed = journey?.schedule?.departure_time
+    ? new Date(journey.schedule.departure_time).getTime() <= now + 60 * 60 * 1000
+    : false
   const passengerDetailsComplete = passengers.every(passenger => (
     passenger.fullName.trim().length >= 2 && passenger.identity.trim().length >= 3
   ))
@@ -185,6 +189,11 @@ export default function BookingFlow({
     ...(subclass ? { subclass } : {}),
   })
   const loginHref = `/auth/login?next=${encodeURIComponent(`/booking/${scheduleId}?${loginNextParams}`)}`
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setNow(Date.now()), 0)
+    return () => window.clearTimeout(timer)
+  }, [journey?.schedule?.departure_time])
 
   useEffect(() => {
     if (step === 'seats') {
@@ -228,6 +237,10 @@ export default function BookingFlow({
   async function submitBooking(event) {
     event.preventDefault()
     if (!user || !journey || !fare) return
+    if (bookingClosed) {
+      toast.error('Pemesanan online ditutup 1 jam sebelum keberangkatan. Silakan gunakan loket stasiun.')
+      return
+    }
     if (selectedSeats.length !== passengerCount) {
       toast.error(`Pilih ${passengerCount} kursi terlebih dahulu.`)
       return
@@ -355,7 +368,16 @@ export default function BookingFlow({
                 </div>
               </section>
 
-              {!authLoading && !user && (
+              {bookingClosed && (
+                <section className="rh-card" role="status" style={{ padding: '1rem 1.25rem', borderColor: 'var(--rh-warning)' }}>
+                  <strong>Pemesanan online sudah ditutup</strong>
+                  <p style={{ margin: '0.25rem 0 0', color: 'var(--rh-text-2)' }}>
+                    Pemesanan online tersedia sampai 1 jam sebelum keberangkatan. Untuk jadwal ini, silakan pesan melalui loket stasiun.
+                  </p>
+                </section>
+              )}
+
+              {!bookingClosed && !authLoading && !user && (
                 <section className="rh-card rh-booking-auth-gate" aria-labelledby="booking-login-title">
                   <div className="rh-card-body">
                     <span className="rh-icon-wrap"><UserRound size={20} aria-hidden="true" /></span>
@@ -369,7 +391,7 @@ export default function BookingFlow({
                 </section>
               )}
 
-              {user && <>
+              {user && !bookingClosed && <>
               <div ref={stepHeadingRef} className="rh-booking-steps" aria-label="Tahapan pemesanan" tabIndex={-1}>
                 <div className={`rh-booking-step ${step === 'details' ? 'is-active' : 'is-complete'}`}>
                   <span>{step === 'seats' ? <Check size={16} /> : '1'}</span>

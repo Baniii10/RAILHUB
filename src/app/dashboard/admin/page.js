@@ -918,7 +918,7 @@ function AdminDashboardContent() {
                       <th style={{ padding: '0.65rem 0.5rem' }}>Kode &amp; Pemesan</th>
                       <th style={{ padding: '0.65rem 0.5rem' }}>Kereta &amp; Rute</th>
                       <th style={{ padding: '0.65rem 0.5rem' }}>Waktu Berangkat</th>
-                      <th style={{ padding: '0.65rem 0.5rem' }}>Status</th>
+                      <th style={{ padding: '0.65rem 0.5rem' }}>Booking &amp; Pembayaran</th>
                       <th style={{ padding: '0.65rem 0.5rem' }}>Total</th>
                     </tr>
                   </thead>
@@ -938,6 +938,12 @@ function AdminDashboardContent() {
                         </td>
                         <td style={{ padding: '0.75rem 0.5rem' }}>
                           <StatusBadge status={b.status} label={bookingStatusLabels[b.status]} />
+                          {payments[b.id] && (
+                            <small style={{ display: 'block', marginTop: 5, color: 'var(--rh-text-2)' }}>
+                              Pembayaran: {paymentStatusLabels[payments[b.id].status] || payments[b.id].status}
+                              {payments[b.id].method ? ` · ${payments[b.id].method.replaceAll('_', ' ')}` : ''}
+                            </small>
+                          )}
                         </td>
                         <td style={{ padding: '0.75rem 0.5rem', fontWeight: 700 }}>
                           {formatIDR(b.total_amount)}

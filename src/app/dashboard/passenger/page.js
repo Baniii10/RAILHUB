@@ -37,6 +37,7 @@ import {
 } from 'lucide-react'
 import toast from 'react-hot-toast'
 import Navbar from '@/components/layout/Navbar'
+import EBoardingPass from '@/components/booking/EBoardingPass'
 import PassengerServices from '@/components/services/PassengerServices'
 import { useAuth } from '@/contexts/AuthContext'
 import { createClient } from '@/lib/supabase/client'
@@ -721,33 +722,21 @@ function PassengerDashboardContent() {
 
               {/* QR Modal when enlarged */}
               {selectedTicketForQR && (
-                <div style={{
-                  position: 'fixed', inset: 0, zIndex: 1000,
-                  background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(5px)',
-                  display: 'grid', placeItems: 'center', padding: '1rem',
-                }} onClick={() => setSelectedTicketForQR(null)}>
-                  <div className="rh-card" style={{ maxWidth: 360, width: '100%', padding: '1.75rem', textAlign: 'center', position: 'relative' }} onClick={e => e.stopPropagation()}>
+                <div className="rh-boarding-pass-overlay" role="dialog" aria-modal="true" aria-label="E-boarding pass" onClick={() => setSelectedTicketForQR(null)}>
+                  <div className="rh-boarding-pass-dialog" onClick={e => e.stopPropagation()}>
                     <button
                       type="button"
                       onClick={() => setSelectedTicketForQR(null)}
-                      style={{ position: 'absolute', top: 14, right: 14, background: 'none', border: 'none', cursor: 'pointer' }}
+                      className="rh-boarding-pass-close"
+                      aria-label="Tutup e-boarding pass"
                     >
                       <X size={20} />
                     </button>
-                    <span className="rh-badge rh-badge-primary" style={{ marginBottom: '0.75rem' }}>E-Boarding Pass QR</span>
-                    <h3 style={{ margin: '0 0 0.25rem', fontSize: '1.15rem' }}>{selectedTicketForQR.passengers?.full_name}</h3>
-                    <p style={{ margin: 0, color: 'var(--rh-text-2)', fontSize: '0.85rem' }}>
-                      Kursi {selectedTicketForQR.seats?.seat_number} · Gerbong {selectedTicketForQR.seats?.carriages?.carriage_number}
-                    </p>
-                    <div style={{ margin: '1.25rem auto', display: 'inline-block', padding: 8, background: 'white', borderRadius: 12, border: '1px solid var(--rh-border)', boxShadow: 'var(--shadow-md)' }}>
-                      <Image src={selectedTicketForQR.qrImage} alt="QR Tiket" width={220} height={220} unoptimized />
-                    </div>
-                    <span className="rh-mono" style={{ display: 'block', fontSize: '0.85rem', fontWeight: 800, color: 'var(--rh-primary)' }}>
-                      {selectedTicketForQR.ticket_number}
-                    </span>
-                    <small style={{ display: 'block', color: 'var(--rh-text-3)', marginTop: 6, fontSize: '0.75rem' }}>
-                      Tunjukkan layar ini ke kondektur untuk scan gerbang boarding
-                    </small>
+                    <EBoardingPass
+                      booking={selectedTicketForQR.booking}
+                      ticket={selectedTicketForQR}
+                      qrImage={selectedTicketForQR.qrImage}
+                    />
                   </div>
                 </div>
               )}

@@ -2,12 +2,12 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import QRCode from 'qrcode'
 import { ArrowLeft, Banknote, CalendarDays, CheckCircle2, Clock3, CreditCard, LoaderCircle, MapPin, RefreshCw, Smartphone, Ticket, Train } from 'lucide-react'
 import toast from 'react-hot-toast'
 import Navbar from '@/components/layout/Navbar'
+import EBoardingPass from '@/components/booking/EBoardingPass'
 import { useAuth } from '@/contexts/AuthContext'
 import { createClient } from '@/lib/supabase/client'
 import { formatDate, formatIDR, formatTime } from '@/lib/utils/formatters'
@@ -726,19 +726,13 @@ export default function BookingPayment({ bookingId }) {
                             <span style={{ color: 'var(--rh-text-2)' }}>Kursi {ticket.seats?.seat_number || '—'}</span>
                           </div>
                           {boardingPassOpen && canOpenBoardingPass && (
-                            <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', paddingTop: '.85rem', borderTop: '1px dashed var(--rh-border)' }}>
-                              {qrCodes[ticket.ticket_number]
-                                ? <Image src={qrCodes[ticket.ticket_number]} alt={`QR e-boarding pass ${ticket.ticket_number}`} width={168} height={168} unoptimized />
-                                : <div aria-label="Membuat QR e-boarding pass" style={{ width: 168, height: 168, display: 'grid', placeItems: 'center' }}><Ticket size={24} /></div>}
-                              <div style={{ minWidth: 0, flex: '1 1 180px' }}>
-                                <strong>E-boarding pass</strong>
-                                <span style={{ display: 'block', color: 'var(--rh-text-2)', marginTop: '.25rem', overflowWrap: 'anywhere' }}>
-                                  {journey?.schedule?.train_name || booking.schedules?.trains?.name || 'KA'} · {(journey?.schedule?.origin_code && journey?.schedule?.destination_code) ? `${journey.schedule.origin_code} → ${journey.schedule.destination_code}` : (booking.schedules?.routes?.name || '')}
-                                </span>
-                                <span style={{ display: 'block', color: 'var(--rh-text-2)', overflowWrap: 'anywhere' }}>
-                                  {booking.schedules?.departure_time && formatDate(booking.schedules.departure_time)} · {booking.schedules?.departure_time && formatTime(booking.schedules.departure_time)}
-                                </span>
-                              </div>
+                            <div className="rh-boarding-pass-inline">
+                              <EBoardingPass
+                                booking={booking}
+                                ticket={ticket}
+                                qrImage={qrCodes[ticket.ticket_number]}
+                                journey={journey}
+                              />
                             </div>
                           )}
                         </div>
