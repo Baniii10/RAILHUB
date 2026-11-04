@@ -66,7 +66,7 @@ Jika melakukan import project baru di Vercel:
    - Build Command: `npm run build` (atau kosongkan untuk default `next build`).
    - Output Directory: `.next` (default).
    - Install Command: `npm install`.
-5. **Node.js Version**: **20.x** (atau minimum 18.x).
+5. **Node.js Version**: **22.x** (sesuai `package.json`).
 6. **Production Branch**: Setel ke **`main`**.
 
 ---
@@ -149,4 +149,25 @@ Flag `--prod` akan mem-build aplikasi dan langsung mengarahkan domain utama ke d
 Jika kamu ingin memerintahkan agent AI lain untuk melakukan deployment RAILHUB, kamu bisa copy-paste instruksi berikut:
 
 > *"Tolong lakukan build verification dengan `npm run build`. Jika sukses tanpa error, lakukan commit dengan pesan yang jelas, lalu push perubahan ke production Vercel dengan perintah `git push bagas master:main && git push bagas master && git push origin master:main && git push origin master`. Pastikan Vercel Production menerima commit terbaru pada branch main."*
+
+---
+
+## 8. MIGRASI DATABASE WAJIB
+
+Perubahan role/stasiun tidak cukup hanya dengan deploy Vercel. Jalankan migrasi Supabase sebelum menguji login petugas:
+
+```bash
+npx supabase login
+npx supabase link --project-ref YOUR_PROJECT_REF
+npx supabase db push
+```
+
+Migrasi `20261104192451_role_station_access.sql` menambahkan role gerbang dan kondektur yang terpisah, relasi petugas gerbang ke stasiun, pembatasan scanner sesuai stasiun, serta konfigurasi akun demo yang aman.
+
+Verifikasi setelah migrasi:
+
+1. Login `gate.gambir@railhub.id` masuk ke `/dashboard/staff` dan hanya melihat menu gerbang.
+2. Scanner menolak tiket yang bukan berasal dari Stasiun Gambir.
+3. Kondektur hanya melihat perjalanan yang ditugaskan admin.
+4. Penumpang masuk ke `/dashboard/passenger`, bukan halaman role lain.
 

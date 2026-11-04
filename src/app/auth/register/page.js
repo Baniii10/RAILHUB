@@ -35,11 +35,12 @@ export default function RegisterPage() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     if (params.get('error') === 'auth_callback_failed') {
-      setError(
+      const timer = window.setTimeout(() => setError(
         lang === 'en'
           ? 'Google registration failed. Please configure Google OAuth in your Supabase dashboard.'
           : 'Pendaftaran Google gagal. Pastikan kredensial Google OAuth telah diaktifkan di dashboard Supabase.'
-      )
+      ), 0)
+      return () => window.clearTimeout(timer)
     }
   }, [lang])
 

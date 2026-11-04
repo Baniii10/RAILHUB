@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
+import { getDashboardForProfile, isSafeNextPath } from '@/lib/auth/roles'
 
 export async function GET(request) {
   const { searchParams, origin } = new URL(request.url)
@@ -23,7 +24,7 @@ export async function GET(request) {
     }
 
     if (data?.session) {
-      if (next && next !== '/' && !next.startsWith('//')) {
+      if (isSafeNextPath(next)) {
         return NextResponse.redirect(`${origin}${next}`)
       }
 
@@ -31,16 +32,11 @@ export async function GET(request) {
       if (userId) {
         const { data: profile } = await supabase
           .from('profiles')
-          .select('role')
+          .select('role, staff_type, station_id')
           .eq('id', userId)
           .maybeSingle()
 
-        if (profile?.role === 'admin') {
-          return NextResponse.redirect(`${origin}/dashboard/admin`)
-        }
-        if (profile?.role === 'conductor') {
-          return NextResponse.redirect(`${origin}/dashboard/staff`)
-        }
+        return NextResponse.redirect(`${origin}${getDashboardForProfile(profile)}`)
       }
 
       return NextResponse.redirect(`${origin}/`)

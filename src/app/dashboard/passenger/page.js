@@ -120,7 +120,7 @@ function PassengerDashboardContent() {
           schedules(
             id, status, departure_time, arrival_time,
             trains(name, train_number),
-            routes(name, origin_station_id, destination_station_id)
+            routes(name, origin_station_id, destination_station_id, route_stops(id, stop_order, offset_minutes, stations(name, code)))
           )
         `)
         .eq('user_id', user.id)

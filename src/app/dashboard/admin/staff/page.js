@@ -38,6 +38,9 @@ export default function AdminStaffPage() {
   const [staff, setStaff] = useState([])
   const [passengersList, setPassengersList] = useState([])
   const [selectedPromoteUser, setSelectedPromoteUser] = useState('')
+  const [selectedStaffType, setSelectedStaffType] = useState('conductor')
+  const [selectedStation, setSelectedStation] = useState('')
+  const [stations, setStations] = useState([])
   const [promoting, setPromoting] = useState(false)
   const [schedules, setSchedules] = useState([])
   const [assignments, setAssignments] = useState([])
@@ -89,9 +92,9 @@ export default function AdminStaffPage() {
     setLoading(true)
     setError('')
     const supabase = createClient()
-    const [staffResult, scheduleResult, assignmentResult, passengersResult] = await Promise.all([
+    const [staffResult, scheduleResult, assignmentResult, passengersResult, stationsResult] = await Promise.all([
       supabase.from('profiles')
-        .select('id, full_name, email, role')
+        .select('id, full_name, email, role, staff_type, station_id, stations(name, code)')
         .eq('role', 'conductor')
         .order('full_name'),
       supabase.from('schedules')
@@ -108,6 +111,7 @@ export default function AdminStaffPage() {
         .eq('role', 'passenger')
         .order('full_name')
         .limit(200),
+      supabase.from('stations').select('id, name, code').eq('operational_status', 'active').order('name'),
     ])
 
     const failure = [staffResult, scheduleResult, assignmentResult].find(result => result.error)
@@ -121,9 +125,11 @@ export default function AdminStaffPage() {
     const scheduleRows = scheduleResult.data || []
     setStaff(staffRows)
     setPassengersList(passengersResult?.data || [])
+    setStations(stationsResult?.data || [])
     setSchedules(scheduleRows)
     setAssignments(assignmentResult.data || [])
-    setSelectedStaff(current => staffRows.some(person => person.id === current) ? current : staffRows[0]?.id || '')
+    const conductors = staffRows.filter(person => person.staff_type !== 'gate')
+    setSelectedStaff(current => conductors.some(person => person.id === current) ? current : conductors[0]?.id || '')
     setSelectedSchedule(current => assignableScheduleId(scheduleRows, current))
     setLoading(false)
   }, [previewMode, user, profile?.role])
@@ -135,16 +141,20 @@ export default function AdminStaffPage() {
 
   async function handlePromoteSubmit(event) {
     event.preventDefault()
-    if (!selectedPromoteUser || promoting) return
+    if (!selectedPromoteUser || promoting || (selectedStaffType === 'gate' && !selectedStation)) return
     setPromoting(true)
     const supabase = createClient()
-    const { error: err } = await supabase.from('profiles').update({ role: 'conductor' }).eq('id', selectedPromoteUser)
+    const { error: err } = await supabase.rpc('admin_set_staff_role', {
+      p_user_id: selectedPromoteUser,
+      p_staff_type: selectedStaffType,
+      p_station_id: selectedStaffType === 'gate' ? selectedStation : null,
+    })
     setPromoting(false)
     if (err) {
       toast.error(`Gagal mempromosikan petugas: ${err.message}`)
       return
     }
-    toast.success('Pengguna berhasil dipromosikan menjadi Petugas Kondektur!')
+    toast.success(`Pengguna berhasil dijadikan ${selectedStaffType === 'gate' ? 'Petugas Gerbang' : 'Kondektur'}!`)
     setSelectedPromoteUser('')
     setReloadKey(k => k + 1)
   }
@@ -195,6 +205,7 @@ export default function AdminStaffPage() {
   }
 
   const assignableSchedules = schedules.filter(schedule => schedule.status !== 'cancelled')
+  const conductors = staff.filter(person => person.staff_type !== 'gate')
   const filteredSchedules = useMemo(() => {
     const search = scheduleSearch.trim().toLocaleLowerCase('id-ID')
     return assignableSchedules.filter(schedule => {
@@ -269,7 +280,21 @@ export default function AdminStaffPage() {
                     ))}
                   </select>
                 </label>
-                <button type="submit" className="rh-btn rh-btn-primary" disabled={promoting || !selectedPromoteUser}>
+                <label className="rh-input-group" style={{ flex: '0 1 210px', margin: 0 }}>
+                  <span className="rh-label-text">Peran operasional</span>
+                  <select className="rh-input" value={selectedStaffType} onChange={event => setSelectedStaffType(event.target.value)}>
+                    <option value="conductor">Kondektur kereta</option>
+                    <option value="gate">Petugas gerbang</option>
+                  </select>
+                </label>
+                {selectedStaffType === 'gate' && <label className="rh-input-group" style={{ flex: '1 1 250px', margin: 0 }}>
+                  <span className="rh-label-text">Stasiun tugas</span>
+                  <select className="rh-input" value={selectedStation} onChange={event => setSelectedStation(event.target.value)} required>
+                    <option value="">Pilih stasiun</option>
+                    {stations.map(station => <option key={station.id} value={station.id}>{station.name} ({station.code})</option>)}
+                  </select>
+                </label>}
+                <button type="submit" className="rh-btn rh-btn-primary" disabled={promoting || !selectedPromoteUser || (selectedStaffType === 'gate' && !selectedStation)}>
                   {promoting ? 'Memproses…' : '+ Jadikan Petugas'}
                 </button>
               </form>
@@ -291,7 +316,7 @@ export default function AdminStaffPage() {
                       }}
                     >
                       <UserRound size={15} color="var(--rh-primary)" />
-                      <span><strong>{person.full_name}</strong> ({person.email})</span>
+                      <span><strong>{person.full_name}</strong> · {person.staff_type === 'gate' ? `Gerbang ${person.stations?.name || 'tanpa stasiun'}` : 'Kondektur'} ({person.email})</span>
                       <button
                         type="button"
                         onClick={() => demoteFromStaff(person.id)}
@@ -314,7 +339,7 @@ export default function AdminStaffPage() {
               <p style={{ color: 'var(--rh-text-2)', marginTop: '0.25rem' }}>Cari perjalanan berdasarkan nama kereta, nomor, rute, atau tanggal, lalu pilih dari daftar.</p>
             </div>
             <div className="rh-card-body">
-              {staff.length === 0 ? (
+              {conductors.length === 0 ? (
                 <p style={{ color: 'var(--rh-text-2)' }}>Belum ada profil ber-role petugas. Buat/promosikan akun petugas secara aman terlebih dahulu.</p>
               ) : assignableSchedules.length === 0 ? (
                 <p style={{ color: 'var(--rh-text-2)' }}>Tidak ada jadwal mendatang yang dapat ditugaskan.</p>
@@ -323,7 +348,7 @@ export default function AdminStaffPage() {
                   <label className="rh-input-group" style={{ flex: '1 1 240px' }}>
                     <span className="rh-label-text">Petugas</span>
                     <select className="rh-input" value={selectedStaff} onChange={event => setSelectedStaff(event.target.value)} required>
-                      {staff.map(person => <option key={person.id} value={person.id}>{person.full_name} · {person.email}</option>)}
+                      {conductors.map(person => <option key={person.id} value={person.id}>{person.full_name} · {person.email}</option>)}
                     </select>
                   </label>
                   <div>

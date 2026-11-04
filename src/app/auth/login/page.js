@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Mail, Lock, Eye, EyeOff, AlertCircle } from 'lucide-react'
@@ -9,6 +9,7 @@ import { createClient } from '@/lib/supabase/client'
 import { useLang } from '@/contexts/LangContext'
 import toast from 'react-hot-toast'
 import MobileTrainIllustration from '@/components/auth/MobileTrainIllustration'
+import { getDashboardForProfile, isSafeNextPath } from '@/lib/auth/roles'
 
 function GoogleIcon({ size = 19 }) {
   return (
@@ -74,34 +75,14 @@ export default function LoginPage() {
   const [showPw,        setShowPw]        = useState(false)
   const [loading,       setLoading]       = useState(false)
   const [googleLoading, setGoogleLoading] = useState(false)
-  const [error,         setError]         = useState('')
-
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search)
-    const err = params.get('error')
-    if (err) {
-      if (err === 'auth_callback_failed') {
-        setError(
-          lang === 'en'
-            ? 'Google authentication failed. Please configure Google OAuth in your Supabase dashboard.'
-            : 'Autentikasi Google gagal. Pastikan kredensial Google OAuth telah diaktifkan di dashboard Supabase.'
-        )
-      } else {
-        setError(`Autentikasi Google: ${decodeURIComponent(err)}`)
-      }
-    }
-  }, [lang])
+  const [error,         setError]         = useState(() => '')
 
   async function handleGoogleAuth() {
     setError('')
     setGoogleLoading(true)
     try {
       const requestedNext = new URLSearchParams(window.location.search).get('next')
-      const safeNext = requestedNext
-        && !requestedNext.startsWith('//')
-        && (requestedNext.startsWith('/booking/') || requestedNext.startsWith('/dashboard') || requestedNext.startsWith('/trains'))
-        ? requestedNext
-        : '/'
+      const safeNext = isSafeNextPath(requestedNext) ? requestedNext : '/'
 
       const redirectUrl = `${window.location.origin}/auth/callback?next=${encodeURIComponent(safeNext)}`
 
@@ -139,16 +120,20 @@ export default function LoginPage() {
     })
 
     if (!authError && data?.session) {
-      toast.success(`Login berhasil sebagai ${account.title}!`)
+      const { error: configureError } = await supabase.rpc('configure_demo_profile')
+      if (configureError) {
+        setError(`Role demo gagal disinkronkan: ${configureError.message}`)
+        setLoading(false)
+        return
+      }
       const { data: profile } = await supabase
         .from('profiles')
-        .select('role')
+        .select('role, staff_type, station_id')
         .eq('id', data.user.id)
         .maybeSingle()
 
-      if (profile?.role === 'admin' || account.role === 'admin') router.push('/dashboard/admin')
-      else if (profile?.role === 'conductor' || account.role === 'conductor' || account.role === 'gate') router.push('/dashboard/staff')
-      else router.push('/')
+      toast.success(`Login berhasil sebagai ${account.title}!`)
+      router.replace(getDashboardForProfile(profile))
       return
     }
 
@@ -187,16 +172,21 @@ export default function LoginPage() {
         return
       }
 
-      // 4. Update profile role if staff or admin
-      if (account.role === 'conductor' || account.role === 'gate' || account.role === 'admin') {
-        const assignedRole = account.role === 'admin' ? 'admin' : 'conductor'
-        await supabase.from('profiles').update({ role: assignedRole }).eq('id', loginData.user.id)
+      const { error: configureError } = await supabase.rpc('configure_demo_profile')
+      if (configureError) {
+        setError(`Akun masuk, tetapi role demo gagal disiapkan: ${configureError.message}`)
+        setLoading(false)
+        return
       }
 
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role, staff_type, station_id')
+        .eq('id', loginData.user.id)
+        .single()
+
       toast.success(`Selamat datang, ${account.title}!`)
-      if (account.role === 'admin') router.push('/dashboard/admin')
-      else if (account.role === 'conductor' || account.role === 'gate') router.push('/dashboard/staff')
-      else router.push('/')
+      router.replace(getDashboardForProfile(profile))
       return
     }
 
@@ -233,20 +223,14 @@ export default function LoginPage() {
 
     const { data: profile } = await supabase
       .from('profiles')
-      .select('role')
+      .select('role, staff_type, station_id')
       .eq('id', data.user.id)
       .maybeSingle()
 
     toast.success(t.auth.loginSuccess)
 
     const requestedNext = new URLSearchParams(window.location.search).get('next')
-    if (requestedNext
-      && !requestedNext.startsWith('//')
-      && (requestedNext.startsWith('/booking/') || requestedNext.startsWith('/dashboard'))) {
-      router.push(requestedNext)
-    } else if (profile?.role === 'admin')     router.push('/dashboard/admin')
-    else if (profile?.role === 'conductor') router.push('/dashboard/staff')
-    else router.push('/')
+    router.replace(isSafeNextPath(requestedNext) ? requestedNext : getDashboardForProfile(profile))
   }
 
   return (
@@ -491,7 +475,7 @@ export default function LoginPage() {
                 margin: '16px 0 14px',
               }}
             >
-              Don't have an Access account yet?{' '}
+              Don&apos;t have an Access account yet?{' '}
               <Link
                 href="/auth/register"
                 style={{

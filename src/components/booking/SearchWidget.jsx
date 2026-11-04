@@ -61,12 +61,14 @@ function LiveClockMinimal({ lang = 'id' }) {
   const [now, setNow] = useState(null)
 
   useEffect(() => {
-    setMounted(true)
-    setNow(new Date())
+    const mountTimer = window.setTimeout(() => {
+      setMounted(true)
+      setNow(new Date())
+    }, 0)
     const timer = setInterval(() => {
       setNow(new Date())
     }, 1000)
-    return () => clearInterval(timer)
+    return () => { clearTimeout(mountTimer); clearInterval(timer) }
   }, [])
 
   if (!mounted || !now) {
@@ -205,7 +207,8 @@ export default function SearchWidget({ compact = false }) {
   }
 
   useEffect(() => {
-    setMounted(true)
+    const timer = window.setTimeout(() => setMounted(true), 0)
+    return () => window.clearTimeout(timer)
   }, [])
 
   // Fetch Supabase stations
@@ -245,7 +248,6 @@ export default function SearchWidget({ compact = false }) {
   // Handle station modal open: clear query, lock background scroll, do NOT autofocus so keyboard doesn't pop up
   useEffect(() => {
     if (!activePicker) return
-    setStationQuery('')
     const prevOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
     return () => {

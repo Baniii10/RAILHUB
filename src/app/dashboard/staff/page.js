@@ -62,13 +62,17 @@ const TABS = [
   { id: 'orders', label: 'Pesanan Makanan', icon: Utensils },
   { id: 'notifications', label: 'Notifikasi Tugas', icon: Bell },
 ]
+const GATE_TABS = TABS.filter(tab => ['overview', 'validation'].includes(tab.id))
 
 function StaffDashboardContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { user, profile, loading: authLoading } = useAuth()
+  const isGate = profile?.staff_type === 'gate'
+  const availableTabs = isGate ? GATE_TABS : TABS
   const requestedTab = searchParams.get('tab')
-  const activeTab = TABS.some(tab => tab.id === requestedTab) ? requestedTab : 'overview'
+  const activeTab = availableTabs.some(tab => tab.id === requestedTab) ? requestedTab : 'overview'
+  const [stationName, setStationName] = useState('')
   const [journeys, setJourneys] = useState([])
   const [tickets, setTickets] = useState([])
   const [foodOrders, setFoodOrders] = useState([])
@@ -121,6 +125,19 @@ function StaffDashboardContent() {
     const supabase = createClient()
 
     try {
+      if (isGate) {
+        const { data: station } = profile?.station_id
+          ? await supabase.from('stations').select('name, code').eq('id', profile.station_id).maybeSingle()
+          : { data: null }
+        setStationName(station ? `${station.name} (${station.code})` : 'Stasiun belum ditetapkan')
+        setJourneys([])
+        setTickets([])
+        setFoodOrders([])
+        setReports([])
+        setLoading(false)
+        setHasLoaded(true)
+        return
+      }
       // 1. Fetch staff assignments
       const { data: assignments, error: assignmentError } = await supabase
         .from('staff_assignments')
@@ -187,7 +204,7 @@ function StaffDashboardContent() {
       setLoading(false)
       setHasLoaded(true)
     }
-  }, [user, profile?.role, hasLoaded])
+  }, [user, profile, isGate, hasLoaded])
 
   useEffect(() => {
     let active = true
@@ -360,9 +377,9 @@ function StaffDashboardContent() {
                   Dashboard Petugas
                 </h1>
                 <p style={{ margin: 0, color: 'var(--rh-text-2)', fontSize: '0.9rem' }}>
-                  Petugas: <strong>{profile?.full_name || 'Petugas Kondektur'}</strong> · ID: <span className="rh-mono">STF-{user?.id?.slice(0, 8).toUpperCase()}</span> · Penugasan {journeys.length} Perjalanan
+                  {isGate ? 'Petugas Gerbang' : 'Kondektur'}: <strong>{profile?.full_name || 'Petugas'}</strong> · ID: <span className="rh-mono">STF-{user?.id?.slice(0, 8).toUpperCase()}</span> · {isGate ? stationName : `${journeys.length} perjalanan tugas`}
                 </p>
-                <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.6rem', flexWrap: 'wrap' }}>
+                {!isGate && <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.6rem', flexWrap: 'wrap' }}>
                   <button
                     type="button"
                     onClick={() => selectTab('validation')}
@@ -379,7 +396,7 @@ function StaffDashboardContent() {
                   >
                     🚆 Mode Petugas Kereta (Manifest & Perjalanan)
                   </button>
-                </div>
+                </div>}
               </div>
 
               <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
@@ -406,7 +423,7 @@ function StaffDashboardContent() {
           <label className="dashboard-tab-select rh-show-mobile-only">
             <span>Menu petugas</span>
             <select value={activeTab} onChange={event => selectTab(event.target.value)}>
-              {TABS.map(tab => <option key={tab.id} value={tab.id}>{tab.label}</option>)}
+              {availableTabs.map(tab => <option key={tab.id} value={tab.id}>{tab.label}</option>)}
             </select>
           </label>
 
@@ -423,7 +440,7 @@ function StaffDashboardContent() {
               WebkitOverflowScrolling: 'touch',
             }}
           >
-            {TABS.map(tab => {
+            {availableTabs.map(tab => {
               const Icon = tab.icon
               const active = activeTab === tab.id
               let badge = null
