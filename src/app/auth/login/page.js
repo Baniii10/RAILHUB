@@ -35,12 +35,17 @@ export default function LoginPage() {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
-    if (params.get('error') === 'auth_callback_failed') {
-      setError(
-        lang === 'en'
-          ? 'Google authentication failed. Please configure Google OAuth in your Supabase dashboard.'
-          : 'Autentikasi Google gagal. Pastikan kredensial Google OAuth telah diaktifkan di dashboard Supabase.'
-      )
+    const err = params.get('error')
+    if (err) {
+      if (err === 'auth_callback_failed') {
+        setError(
+          lang === 'en'
+            ? 'Google authentication failed. Please configure Google OAuth in your Supabase dashboard.'
+            : 'Autentikasi Google gagal. Pastikan kredensial Google OAuth telah diaktifkan di dashboard Supabase.'
+        )
+      } else {
+        setError(`Autentikasi Google: ${decodeURIComponent(err)}`)
+      }
     }
   }, [lang])
 
