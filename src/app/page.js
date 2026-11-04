@@ -155,21 +155,6 @@ export default function HomePage() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))', gap: 'clamp(1.5rem, 3.5vw, 3rem)', alignItems: 'center' }}>
             {/* Desktop Headline & Value Highlights */}
             <div className="animate-fade-in rh-hide-mobile">
-              <div
-                className="rh-badge"
-                style={{
-                  background: 'rgba(255,255,255,0.12)',
-                  color: 'var(--rh-accent)',
-                  border: '1px solid rgba(255,255,255,0.2)',
-                  marginBottom: '1.25rem',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.45rem',
-                }}
-              >
-                <Train size={14} /> {lang === 'en' ? 'Java Railway Platform' : 'Platform Kereta Pulau Jawa'}
-              </div>
-
               <h1 className="rh-h1" style={{ color: 'white', marginBottom: '1rem', maxWidth: 500, lineHeight: 1.18 }}>
                 {t.hero.title}
               </h1>
@@ -178,21 +163,19 @@ export default function HomePage() {
                 {t.hero.subtitle}
               </p>
 
-              {/* Fast stats pills */}
-              <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap', paddingTop: '0.5rem', borderTop: '1px solid rgba(255,255,255,0.15)' }}>
-                <div>
-                  <strong style={{ display: 'block', fontSize: '1.4rem', color: 'var(--rh-accent)', fontWeight: 800 }}>50</strong>
-                  <span style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.75)' }}>{lang === 'en' ? 'Stations' : 'Stasiun Aktif'}</span>
+              {/* Verified Trust Bar */}
+              <div style={{ display: 'flex', gap: '1.25rem', flexWrap: 'wrap', paddingTop: '1rem', borderTop: '1px solid rgba(255,255,255,0.12)', fontSize: '0.85rem', color: 'rgba(255,255,255,0.85)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                  <CheckCircle2 size={16} color="var(--rh-accent)" />
+                  <span>{lang === 'en' ? 'Live Track GPS' : 'GPS Tracking Real-Time'}</span>
                 </div>
-                <div style={{ width: 1, background: 'rgba(255,255,255,0.15)' }} />
-                <div>
-                  <strong style={{ display: 'block', fontSize: '1.4rem', color: 'white', fontWeight: 800 }}>100%</strong>
-                  <span style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.75)' }}>{lang === 'en' ? 'Seat Availability' : 'Ketersediaan Kursi'}</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                  <CheckCircle2 size={16} color="var(--rh-accent)" />
+                  <span>{lang === 'en' ? 'Digital QR Boarding' : 'Boarding Pass QR Instan'}</span>
                 </div>
-                <div style={{ width: 1, background: 'rgba(255,255,255,0.15)' }} />
-                <div>
-                  <strong style={{ display: 'block', fontSize: '1.4rem', color: 'var(--rh-accent)', fontWeight: 800 }}>QR Ready</strong>
-                  <span style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.75)' }}>E-Boarding Pass</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                  <CheckCircle2 size={16} color="var(--rh-accent)" />
+                  <span>{lang === 'en' ? 'Interactive Carriages' : 'Denah Kursi Nyata'}</span>
                 </div>
               </div>
             </div>
@@ -219,10 +202,9 @@ export default function HomePage() {
         <div className="rh-container">
           <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem', marginBottom: '1rem' }}>
             <div>
-              <span className="rh-badge rh-badge-primary" style={{ marginBottom: '0.25rem' }}>
-                <Sparkles size={12} /> {lang === 'en' ? 'Limited Offers' : 'Penawaran Terbatas'}
-              </span>
-              <h2 className="rh-h3" style={{ margin: 0, color: 'var(--rh-navy)', fontSize: '1.25rem' }}>{lang === 'en' ? 'RAILHUB Travel Deals' : 'Promo Perjalanan RAILHUB'}</h2>
+              <h2 className="rh-h3" style={{ margin: 0, color: 'var(--rh-navy)', fontSize: '1.35rem', fontWeight: 800 }}>
+                {lang === 'en' ? 'Limited Travel Deals' : 'Promo Perjalanan Kereta'}
+              </h2>
             </div>
 
             {/* Slider controls */}
@@ -428,10 +410,7 @@ export default function HomePage() {
         <div className="rh-container">
           <div style={{ marginBottom: '1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '0.5rem' }}>
             <div>
-              <span className="rh-badge rh-badge-primary" style={{ marginBottom: '0.25rem' }}>
-                <Compass size={12} /> {lang === 'en' ? 'Popular Destinations' : 'Destinasi Terpopuler'}
-              </span>
-              <h2 className="rh-h3" style={{ margin: 0, color: 'var(--rh-navy)', fontSize: '1.25rem' }}>{lang === 'en' ? 'Favorite Routes' : 'Rute Favorit Penumpang'}</h2>
+              <h2 className="rh-h3" style={{ margin: 0, color: 'var(--rh-navy)', fontSize: '1.35rem', fontWeight: 800 }}>{lang === 'en' ? 'Favorite Routes' : 'Rute Favorit Penumpang'}</h2>
             </div>
             <span style={{ fontSize: '0.75rem', color: 'var(--rh-text-3)', fontWeight: 600 }}>
               {lang === 'en' ? 'Swipe for more routes →' : 'Geser untuk rute lainnya →'}
@@ -492,10 +471,7 @@ export default function HomePage() {
       <section className="rh-section home-fleet-section" style={{ background: '#ffffff', paddingTop: '2rem', paddingBottom: '2rem' }}>
         <div className="rh-container">
           <div style={{ marginBottom: '1.25rem', textAlign: 'center' }}>
-            <span className="rh-badge rh-badge-primary" style={{ marginBottom: '0.25rem' }}>
-              <Train size={12} /> {lang === 'en' ? 'Service Classes' : 'Standar Layanan'}
-            </span>
-            <h2 className="rh-h3" style={{ margin: 0, color: 'var(--rh-navy)', fontSize: '1.25rem' }}>{lang === 'en' ? 'Choose Your Travel Class' : 'Pilihan Kelas Kereta'}</h2>
+            <h2 className="rh-h3" style={{ margin: 0, color: 'var(--rh-navy)', fontSize: '1.35rem', fontWeight: 800 }}>{lang === 'en' ? 'Choose Your Travel Class' : 'Pilihan Kelas Kereta'}</h2>
           </div>
 
           {/* Ultra-compact 3-card horizontal grid */}

@@ -2482,14 +2482,14 @@ input[type="checkbox"]:focus-visible {
   background: var(--rh-white);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-lg);
-  border-left: 4px solid var(--rh-primary);
+  border: 1px solid var(--rh-border);
   min-width: 280px;
   max-width: 380px;
 }
 
-.rh-toast-success { border-left-color: var(--rh-success); }
-.rh-toast-warning { border-left-color: var(--rh-warning); }
-.rh-toast-error   { border-left-color: var(--rh-danger); }
+.rh-toast-success { border-color: hsla(142, 71%, 45%, 0.4); }
+.rh-toast-warning { border-color: hsla(38, 92%, 50%, 0.4); }
+.rh-toast-error   { border-color: hsla(0, 84%, 60%, 0.4); }
 
 /* ============================================================
    TABLE
@@ -2579,10 +2579,8 @@ input[type="checkbox"]:focus-visible {
 }
 
 .rh-gradient-text {
-  background: linear-gradient(135deg, var(--rh-primary), var(--rh-accent));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--rh-primary);
+  font-weight: 800;
 }
 
 .rh-pattern-dots {

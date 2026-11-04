@@ -123,12 +123,12 @@ export default function FeaturedServicesSlider() {
         {/* Header with Title & Slider Controls */}
         <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: '1rem', marginBottom: '1.25rem', flexWrap: 'wrap' }}>
           <div>
-            <span className="rh-badge rh-badge-primary" style={{ marginBottom: '0.35rem', display: 'inline-flex', alignItems: 'center', gap: 5 }}>
-              <Sparkles size={12} /> {lang === 'en' ? '5 Standout Capabilities' : '5 Fitur Unggulan RAILHUB'}
-            </span>
-            <h2 className="rh-h3" style={{ margin: 0, color: 'var(--rh-navy)', fontSize: 'clamp(1.15rem, 2.8vw, 1.45rem)', fontWeight: 800 }}>
-              {lang === 'en' ? 'Everything You Need on One Track' : 'Kemudahan Perjalanan Modern dalam Satu Aplikasi'}
+            <h2 className="rh-h3" style={{ margin: 0, color: 'var(--rh-navy)', fontSize: 'clamp(1.2rem, 2.5vw, 1.45rem)', fontWeight: 800 }}>
+              {lang === 'en' ? 'Core Railway Services' : 'Layanan Utama RAILHUB'}
             </h2>
+            <p style={{ margin: '0.25rem 0 0', color: 'var(--rh-text-2)', fontSize: '0.875rem' }}>
+              {lang === 'en' ? 'Smart digital travel ecosystem across Java' : 'Kemudahan pemesanan dan pemantauan perjalanan se-Pulau Jawa'}
+            </p>
           </div>
 
           {/* Navigation Controls */}
@@ -226,18 +226,7 @@ export default function FeaturedServicesSlider() {
                   cursor: 'pointer',
                 }}
               >
-                {/* Top Ambient Glow */}
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    height: 4,
-                    background: `linear-gradient(90deg, ${item.color}, transparent)`,
-                  }}
-                />
-
+                {/* Content */}
                 <div>
                   {/* Badge & Icon Row */}
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
