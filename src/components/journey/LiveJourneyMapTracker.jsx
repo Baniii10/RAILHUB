@@ -21,6 +21,7 @@ import {
   AlertCircle,
   Sparkles,
   ArrowLeft,
+  ArrowRight,
 } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { formatDate, formatTime, formatIDR } from '@/lib/utils/formatters'
@@ -31,7 +32,6 @@ function generateTransitStops(originName, destName, depTimeStr, arrTimeStr) {
   const arr = arrTimeStr ? new Date(arrTimeStr) : new Date(dep.getTime() + 3.5 * 3600 * 1000)
   const totalDuration = Math.max(arr.getTime() - dep.getTime(), 3600 * 1000)
 
-  // Default transit stations if route has known names
   const routeKey = `${originName || ''} - ${destName || ''}`.toLowerCase()
   let midNames = ['Cirebon (CN)', 'Purwokerto (PWT)', 'Kutoarjo (KTA)']
 
@@ -44,7 +44,6 @@ function generateTransitStops(originName, destName, depTimeStr, arrTimeStr) {
   }
 
   const stops = []
-  // 1. Origin
   stops.push({
     id: 'origin',
     name: originName || 'Stasiun Keberangkatan',
@@ -53,7 +52,6 @@ function generateTransitStops(originName, destName, depTimeStr, arrTimeStr) {
     pct: 0,
   })
 
-  // 2. Intermediate stops
   midNames.forEach((name, idx) => {
     const fraction = (idx + 1) / (midNames.length + 1)
     const stopTime = new Date(dep.getTime() + totalDuration * fraction)
@@ -66,7 +64,6 @@ function generateTransitStops(originName, destName, depTimeStr, arrTimeStr) {
     })
   })
 
-  // 3. Destination
   stops.push({
     id: 'destination',
     name: destName || 'Stasiun Tujuan',
@@ -86,19 +83,24 @@ export default function LiveJourneyMapTracker({
   recentBookings = [],
   onSelectTab,
 }) {
-  // Sheet state: 'peek' (bottom collapsed), 'half' (mid-height), 'full' (expanded all the way)
+  // Sheet state: 'peek' | 'half' | 'full'
   const [sheetState, setSheetState] = useState('peek')
-  const [dragProgress, setDragProgress] = useState(0) // 0 (peek) to 1 (full)
-  const [qrCodeUrl, setQrCodeUrl] = useState('')
   const [mapZoom, setMapZoom] = useState(1)
+  const [qrCodeUrl, setQrCodeUrl] = useState('')
 
-  // Drag handling refs
+  // DOM Refs for physics
   const sheetRef = useRef(null)
-  const dragStartY = useRef(0)
-  const dragStartHeight = useRef(0)
+  const contentRef = useRef(null)
+  const currentTranslateY = useRef(0)
   const isDragging = useRef(false)
+  const dragStartY = useRef(0)
+  const startTranslateY = useRef(0)
+  const lastTouchY = useRef(0)
+  const lastTouchTime = useRef(0)
+  const velocityY = useRef(0)
+  const isContentDrag = useRef(false)
 
-  // Derive train & route details from booking or fallback to demo
+  // Derive train & route details
   const isDemo = !booking
   const trainName = booking?.schedules?.trains?.name || 'KA Argo Parahyangan'
   const trainNumber = booking?.schedules?.trains?.train_number || 'KA 34'
@@ -112,11 +114,35 @@ export default function LiveJourneyMapTracker({
   const bookingCode = booking?.booking_code || 'RH-BKG84920'
   const ticketNumber = ticket?.ticket_number || `TKT-${bookingCode}-01`
 
-  // Progress derived
   const progress = isDemo ? 42 : Math.min(100, Math.max(0, journeyProgress))
   const transitStops = useMemo(() => {
     return generateTransitStops(originStation, destStation, departureTime, arrivalTime)
   }, [originStation, destStation, departureTime, arrivalTime])
+
+  // Compute snap points dynamically based on viewport height
+  const getSnapPoints = useCallback(() => {
+    if (typeof window === 'undefined') return { full: 0, half: 340, peek: 560 }
+    const vh = window.innerHeight
+    // Sheet height is 92vh
+    const sheetH = vh * 0.92
+    const peekVisibleH = 230 // pixels visible in collapsed peek
+    const halfVisibleH = Math.min(sheetH * 0.58, vh * 0.52)
+
+    return {
+      full: 0, // translateY = 0 (top of sheet at 8vh)
+      half: Math.round(sheetH - halfVisibleH),
+      peek: Math.round(sheetH - peekVisibleH),
+    }
+  }, [])
+
+  // Set initial sheet position on mount
+  useEffect(() => {
+    const snaps = getSnapPoints()
+    currentTranslateY.current = snaps.peek
+    if (sheetRef.current) {
+      sheetRef.current.style.transform = `translate3d(0, ${snaps.peek}px, 0)`
+    }
+  }, [getSnapPoints])
 
   // Generate QR for active ticket
   useEffect(() => {
@@ -127,62 +153,147 @@ export default function LiveJourneyMapTracker({
     }).then(setQrCodeUrl).catch(() => {})
   }, [ticketNumber])
 
-  // Drag Gesture Handlers
-  const handleTouchStart = useCallback(e => {
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY
-    dragStartY.current = clientY
-    isDragging.current = true
+  // Smooth Snap Function (Grab Physics)
+  const snapTo = useCallback((targetState, animate = true) => {
+    const snaps = getSnapPoints()
+    let targetY = snaps.peek
+    if (targetState === 'full') targetY = snaps.full
+    else if (targetState === 'half') targetY = snaps.half
+
+    currentTranslateY.current = targetY
+    setSheetState(targetState)
+
     if (sheetRef.current) {
-      dragStartHeight.current = sheetRef.current.offsetHeight
+      if (animate) {
+        // Grab-style responsive spring curve
+        sheetRef.current.style.transition = 'transform 0.38s cubic-bezier(0.2, 0.9, 0.3, 1)'
+      } else {
+        sheetRef.current.style.transition = 'none'
+      }
+      sheetRef.current.style.transform = `translate3d(0, ${targetY}px, 0)`
+    }
+
+    // Micro-haptic tactile feedback (vibration click on native mobile)
+    if (typeof navigator !== 'undefined' && navigator.vibrate) {
+      try { navigator.vibrate(12) } catch {}
+    }
+  }, [getSnapPoints])
+
+  // Drag Gesture Engine (120Hz GPU driven, zero-layout reflows)
+  const onDragStart = useCallback((clientY, fromContent = false) => {
+    isDragging.current = true
+    isContentDrag.current = fromContent
+    dragStartY.current = clientY
+    startTranslateY.current = currentTranslateY.current
+    lastTouchY.current = clientY
+    lastTouchTime.current = performance.now()
+    velocityY.current = 0
+
+    if (sheetRef.current) {
       sheetRef.current.style.transition = 'none'
     }
   }, [])
 
-  const handleTouchMove = useCallback(e => {
+  const onDragMove = useCallback((clientY) => {
     if (!isDragging.current || !sheetRef.current) return
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY
-    const deltaY = dragStartY.current - clientY // positive when dragging UP
-    const windowH = typeof window !== 'undefined' ? window.innerHeight : 800
-    const minH = 200
-    const maxH = windowH * 0.92
 
-    const newH = Math.min(maxH, Math.max(minH, dragStartHeight.current + deltaY))
-    sheetRef.current.style.height = `${newH}px`
-  }, [])
+    const deltaY = clientY - dragStartY.current
+    let targetY = startTranslateY.current + deltaY
 
-  const handleTouchEnd = useCallback(() => {
-    if (!isDragging.current || !sheetRef.current) return
-    isDragging.current = false
-    sheetRef.current.style.transition = 'height 0.35s cubic-bezier(0.16, 1, 0.3, 1)'
+    const snaps = getSnapPoints()
 
-    const currentH = sheetRef.current.offsetHeight
-    const windowH = typeof window !== 'undefined' ? window.innerHeight : 800
-
-    if (currentH > windowH * 0.65) {
-      setSheetState('full')
-      sheetRef.current.style.height = `${windowH * 0.92}px`
-    } else if (currentH > windowH * 0.35) {
-      setSheetState('half')
-      sheetRef.current.style.height = '55vh'
-    } else {
-      setSheetState('peek')
-      sheetRef.current.style.height = '210px'
+    // Grab-style rubber-band resistance when pulling beyond limits
+    if (targetY < snaps.full) {
+      // Over-drag at top: elastic logarithmic resistance
+      const over = snaps.full - targetY
+      targetY = snaps.full - Math.sqrt(Math.max(0, over)) * 4
+    } else if (targetY > snaps.peek) {
+      // Over-drag at bottom: elastic resistance
+      const over = targetY - snaps.peek
+      targetY = snaps.peek + Math.sqrt(Math.max(0, over)) * 4
     }
-  }, [])
 
-  function toggleSheet() {
-    if (sheetState === 'peek') {
-      setSheetState('full')
-      if (sheetRef.current) {
-        sheetRef.current.style.transition = 'height 0.35s cubic-bezier(0.16, 1, 0.3, 1)'
-        sheetRef.current.style.height = '90vh'
+    // Velocity tracker
+    const now = performance.now()
+    const dt = now - lastTouchTime.current
+    if (dt > 12) {
+      velocityY.current = (clientY - lastTouchY.current) / dt
+      lastTouchY.current = clientY
+      lastTouchTime.current = now
+    }
+
+    currentTranslateY.current = targetY
+    sheetRef.current.style.transform = `translate3d(0, ${targetY}px, 0)`
+  }, [getSnapPoints])
+
+  const onDragEnd = useCallback(() => {
+    if (!isDragging.current) return
+    isDragging.current = false
+
+    const snaps = getSnapPoints()
+    const currentY = currentTranslateY.current
+    const v = velocityY.current // Positive: dragged down, Negative: dragged up
+
+    // High velocity FLICK gesture (Grab app flick physics)
+    if (v < -0.45) {
+      // Fast flick UP -> snap higher
+      if (currentY > snaps.half + 40) {
+        snapTo('half')
+      } else {
+        snapTo('full')
       }
+      return
+    } else if (v > 0.45) {
+      // Fast flick DOWN -> snap lower
+      if (currentY < snaps.half - 40) {
+        snapTo('half')
+      } else {
+        snapTo('peek')
+      }
+      return
+    }
+
+    // Gentle release: snap to nearest snap point
+    const distToFull = Math.abs(currentY - snaps.full)
+    const distToHalf = Math.abs(currentY - snaps.half)
+    const distToPeek = Math.abs(currentY - snaps.peek)
+
+    const minDist = Math.min(distToFull, distToHalf, distToPeek)
+    if (minDist === distToFull) {
+      snapTo('full')
+    } else if (minDist === distToHalf) {
+      snapTo('half')
     } else {
-      setSheetState('peek')
-      if (sheetRef.current) {
-        sheetRef.current.style.transition = 'height 0.35s cubic-bezier(0.16, 1, 0.3, 1)'
-        sheetRef.current.style.height = '210px'
-      }
+      snapTo('peek')
+    }
+  }, [getSnapPoints, snapTo])
+
+  // Touch event listeners for handle
+  const handleTouchStart = e => onDragStart(e.touches[0].clientY, false)
+  const handleTouchMove = e => onDragMove(e.touches[0].clientY)
+  const handleTouchEnd = () => onDragEnd()
+
+  // Mouse event listeners for desktop preview
+  const handleMouseDown = e => {
+    onDragStart(e.clientY, false)
+    const onMouseMove = ev => onDragMove(ev.clientY)
+    const onMouseUp = () => {
+      onDragEnd()
+      window.removeEventListener('mousemove', onMouseMove)
+      window.removeEventListener('mouseup', onMouseUp)
+    }
+    window.addEventListener('mousemove', onMouseMove)
+    window.addEventListener('mouseup', onMouseUp)
+  }
+
+  // Handle tap toggle (click handle)
+  function handleHandleClick() {
+    if (sheetState === 'peek') {
+      snapTo('half')
+    } else if (sheetState === 'half') {
+      snapTo('full')
+    } else {
+      snapTo('peek')
     }
   }
 
@@ -203,27 +314,37 @@ export default function LiveJourneyMapTracker({
     }
   }
 
-  // Calculate train position along SVG path (500x320 viewport)
-  // Path starts at (60, 240) and curves to (440, 80)
+  // Calculate train position along SVG path
   const trainX = 60 + (progress / 100) * 380
-  // Sine curve offset for natural railway look
   const trainY = 240 - Math.sin((progress / 100) * Math.PI * 0.85) * 110 - (progress / 100) * 50
 
   return (
-    <div className="rh-live-tracker-viewport" style={{ position: 'relative', width: '100%', height: 'calc(100vh - 120px)', minHeight: 620, maxHeight: 900, borderRadius: 24, overflow: 'hidden', background: '#0b1329', boxShadow: '0 20px 50px rgba(0,0,0,0.25)', border: '1px solid rgba(255,255,255,0.08)' }}>
-
+    <div
+      className="rh-live-tracker-viewport"
+      style={{
+        position: 'relative',
+        width: '100%',
+        height: '100dvh',
+        minHeight: '100dvh',
+        overflow: 'hidden',
+        background: '#0a1024',
+        userSelect: 'none',
+      }}
+    >
       {/* ══════════════════════════════════════════════════════
           1. TOP / BACKGROUND: INTERACTIVE VECTOR TRANSIT MAP
           ══════════════════════════════════════════════════════ */}
       <div className="rh-tracker-map-canvas" style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
         {/* Subtle grid pattern background */}
-        <div style={{
-          position: 'absolute',
-          inset: 0,
-          backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(255,255,255,0.07) 1px, transparent 0)',
-          backgroundSize: '24px 24px',
-          opacity: 0.8,
-        }} />
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(255,255,255,0.08) 1px, transparent 0)',
+            backgroundSize: '24px 24px',
+            opacity: 0.9,
+          }}
+        />
 
         {/* Map Vector SVG Viewport */}
         <svg
@@ -233,41 +354,39 @@ export default function LiveJourneyMapTracker({
             width: '100%',
             height: '100%',
             transform: `scale(${mapZoom})`,
-            transition: 'transform 0.3s ease',
+            transition: 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
           }}
         >
           <defs>
-            {/* Soft gradient along rail path */}
             <linearGradient id="railGrad" x1="0%" y1="100%" x2="100%" y2="0%">
               <stop offset="0%" stopColor="#10b981" />
               <stop offset="50%" stopColor="#3b82f6" />
               <stop offset="100%" stopColor="#ef4444" />
             </linearGradient>
 
-            {/* Glowing train marker filter */}
             <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
               <feGaussianBlur stdDeviation="3" result="blur" />
               <feComposite in="SourceGraphic" in2="blur" operator="over" />
             </filter>
           </defs>
 
-          {/* Background geographical terrain curves */}
+          {/* Geographical terrain contours */}
           <path d="M 0,160 Q 150,110 300,190 T 500,130" fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth="60" />
-          <path d="M 0,220 Q 200,260 400,180 T 500,240" fill="none" stroke="rgba(37,99,235,0.03)" strokeWidth="80" />
+          <path d="M 0,220 Q 200,260 400,180 T 500,240" fill="none" stroke="rgba(37,99,235,0.04)" strokeWidth="80" />
 
-          {/* Secondary / Branch Rail lines */}
+          {/* Branch Rail lines */}
           <path d="M 60,240 Q 140,220 200,280" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="2.5" strokeDasharray="4 4" />
           <path d="M 320,135 Q 380,180 440,210" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="2.5" strokeDasharray="4 4" />
 
-          {/* MAIN ACTIVE RAILWAY ROUTE (Gray Bedding + Colored Active Track) */}
+          {/* MAIN ACTIVE RAILWAY ROUTE */}
           <path
             d="M 60,240 C 140,240 180,130 260,130 C 340,130 380,90 440,80"
             fill="none"
-            stroke="rgba(255,255,255,0.16)"
+            stroke="rgba(255,255,255,0.18)"
             strokeWidth="7"
             strokeLinecap="round"
           />
-          {/* Active green/blue travelled track */}
+          {/* Active travelled track */}
           <path
             d="M 60,240 C 140,240 180,130 260,130 C 340,130 380,90 440,80"
             fill="none"
@@ -279,8 +398,8 @@ export default function LiveJourneyMapTracker({
             style={{ transition: 'stroke-dashoffset 0.8s ease' }}
           />
 
-          {/* Transit Stations Nodes along the line */}
-          {/* 1. Origin Station */}
+          {/* Stations Nodes along the line */}
+          {/* Origin */}
           <g transform="translate(60, 240)">
             <circle r="9" fill="#10b981" />
             <circle r="4" fill="#ffffff" />
@@ -289,7 +408,7 @@ export default function LiveJourneyMapTracker({
             </text>
           </g>
 
-          {/* 2. Mid Transit Station 1 */}
+          {/* Mid Transit 1 */}
           <g transform="translate(190, 160)">
             <circle r="6" fill="#3b82f6" stroke="#ffffff" strokeWidth="2" />
             <text x="0" y="-12" fill="rgba(255,255,255,0.8)" fontSize="8.5" fontWeight="600" textAnchor="middle">
@@ -297,7 +416,7 @@ export default function LiveJourneyMapTracker({
             </text>
           </g>
 
-          {/* 3. Mid Transit Station 2 */}
+          {/* Mid Transit 2 */}
           <g transform="translate(320, 118)">
             <circle r="6" fill="#3b82f6" stroke="#ffffff" strokeWidth="2" />
             <text x="0" y="18" fill="rgba(255,255,255,0.8)" fontSize="8.5" fontWeight="600" textAnchor="middle">
@@ -305,9 +424,8 @@ export default function LiveJourneyMapTracker({
             </text>
           </g>
 
-          {/* 4. Destination Station (Red Pin Marker like Tokopedia screenshot) */}
+          {/* Destination Pin Marker */}
           <g transform="translate(440, 80)">
-            {/* Destination Pin Marker */}
             <path
               d="M 0,-24 C -8,-24 -14,-18 -14,-10 C -14,-2 0,0 0,0 C 0,0 14,-2 14,-10 C 14,-18 8,-24 0,-24 Z"
               fill="#ef4444"
@@ -321,42 +439,42 @@ export default function LiveJourneyMapTracker({
             </text>
           </g>
 
-          {/* LIVE MOVING TRAIN MARKER (Pulsing radar ring + train badge) */}
+          {/* LIVE MOVING TRAIN MARKER */}
           <g transform={`translate(${trainX}, ${trainY})`} style={{ transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)' }}>
-            {/* Animated radar ripple rings */}
             <circle r="22" fill="rgba(16, 185, 129, 0.25)" className="animate-ping" style={{ transformOrigin: 'center' }} />
             <circle r="14" fill="rgba(16, 185, 129, 0.35)" />
-            {/* Center Vehicle Hub */}
             <circle r="9" fill="#10b981" stroke="#ffffff" strokeWidth="2" />
             <circle r="3.5" fill="#ffffff" />
           </g>
         </svg>
 
-        {/* ── TOP FLOATING BAR (Tokopedia / GoSend Style with Back & Status) ── */}
-        <div style={{
-          position: 'absolute',
-          top: 'calc(0.75rem + env(safe-area-inset-top, 0px))',
-          left: '0.75rem',
-          right: '0.75rem',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '0.5rem',
-          zIndex: 30,
-        }}>
+        {/* ── TOP FLOATING BAR (Grab / Tokopedia Style Header) ── */}
+        <header
+          style={{
+            position: 'absolute',
+            top: 'calc(0.75rem + env(safe-area-inset-top, 0px))',
+            left: '0.75rem',
+            right: '0.75rem',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            zIndex: 30,
+          }}
+        >
           {/* Back button to Home */}
           <Link
             href="/"
             className="rh-btn rh-btn-ghost"
             style={{
-              width: 40,
-              height: 40,
+              width: 42,
+              height: 42,
               borderRadius: '50%',
-              background: 'rgba(255, 255, 255, 0.96)',
-              backdropFilter: 'blur(8px)',
+              background: 'rgba(255, 255, 255, 0.98)',
+              backdropFilter: 'blur(10px)',
               display: 'grid',
               placeItems: 'center',
               padding: 0,
-              boxShadow: '0 4px 14px rgba(0, 0, 0, 0.16)',
+              boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2)',
               color: '#0f172a',
               flexShrink: 0,
             }}
@@ -366,35 +484,48 @@ export default function LiveJourneyMapTracker({
           </Link>
 
           {/* Center Info Pill */}
-          <div style={{
-            flex: 1,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            background: 'rgba(255, 255, 255, 0.96)',
-            backdropFilter: 'blur(12px)',
-            borderRadius: 999,
-            padding: '0.5rem 0.85rem',
-            boxShadow: '0 4px 16px rgba(0, 0, 0, 0.16)',
-            minWidth: 0,
-          }}>
+          <div
+            style={{
+              flex: 1,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              background: 'rgba(255, 255, 255, 0.98)',
+              backdropFilter: 'blur(12px)',
+              borderRadius: 999,
+              padding: '0.5rem 0.9rem',
+              boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2)',
+              minWidth: 0,
+            }}
+          >
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', minWidth: 0 }}>
-              <span style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: 4,
-                fontSize: '0.7rem',
-                fontWeight: 800,
-                padding: '0.15rem 0.5rem',
-                borderRadius: 999,
-                background: '#ecfdf5',
-                color: '#059669',
-                flexShrink: 0,
-              }}>
+              <span
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 4,
+                  fontSize: '0.7rem',
+                  fontWeight: 800,
+                  padding: '0.15rem 0.5rem',
+                  borderRadius: 999,
+                  background: '#ecfdf5',
+                  color: '#059669',
+                  flexShrink: 0,
+                }}
+              >
                 <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#10b981' }} className="animate-pulse" />
                 LIVE
               </span>
-              <span style={{ fontSize: '0.82rem', color: '#0f172a', fontWeight: 700, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              <span
+                style={{
+                  fontSize: '0.82rem',
+                  color: '#0f172a',
+                  fontWeight: 700,
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                }}
+              >
                 {progress < 100 ? (
                   <>Tiba dlm <strong style={{ color: '#2563eb' }}>{Math.max(15, Math.round((100 - progress) * 1.8))} mnt</strong></>
                 ) : (
@@ -415,12 +546,12 @@ export default function LiveJourneyMapTracker({
             style={{
               padding: '0.5rem 0.85rem',
               borderRadius: 999,
-              background: 'rgba(255, 255, 255, 0.96)',
+              background: 'rgba(255, 255, 255, 0.98)',
               border: 'none',
               fontSize: '0.78rem',
               fontWeight: 700,
               color: '#1e3a8a',
-              boxShadow: '0 4px 14px rgba(0, 0, 0, 0.16)',
+              boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2)',
               cursor: 'pointer',
               flexShrink: 0,
               display: 'flex',
@@ -430,7 +561,7 @@ export default function LiveJourneyMapTracker({
           >
             <QrCode size={14} /> Tiket
           </button>
-        </div>
+        </header>
 
         {/* Floating Recenter Map Button */}
         <button
@@ -445,11 +576,11 @@ export default function LiveJourneyMapTracker({
             width: 44,
             height: 44,
             borderRadius: '50%',
-            background: 'rgba(255,255,255,0.96)',
+            background: 'rgba(255,255,255,0.98)',
             border: 'none',
             display: 'grid',
             placeItems: 'center',
-            boxShadow: '0 6px 18px rgba(0,0,0,0.22)',
+            boxShadow: '0 6px 18px rgba(0,0,0,0.25)',
             cursor: 'pointer',
             color: '#1e293b',
             zIndex: 10,
@@ -460,76 +591,109 @@ export default function LiveJourneyMapTracker({
       </div>
 
       {/* ══════════════════════════════════════════════════════
-          2. BOTTOM DRAGGABLE SHEET ("Diseret dari bawah sampe bawah")
+          2. GRAB-STYLE BUTTERY-SMOOTH DRAGGABLE BOTTOM SHEET
+             (Driven by GPU translateY, Velocity Flick, Haptics)
           ══════════════════════════════════════════════════════ */}
       <section
         ref={sheetRef}
-        aria-label="Rincian Perjalanan"
-        className="rh-tracker-bottom-sheet"
+        aria-label="Rincian Perjalanan Lengkap"
+        className="rh-grab-bottom-sheet"
         style={{
           position: 'absolute',
           bottom: 0,
           left: 0,
           right: 0,
-          height: '240px',
+          height: '92dvh',
           background: '#ffffff',
-          borderTopLeftRadius: 24,
-          borderTopRightRadius: 24,
-          boxShadow: '0 -10px 40px rgba(0, 0, 0, 0.25)',
+          borderTopLeftRadius: 28,
+          borderTopRightRadius: 28,
+          boxShadow: '0 -12px 48px rgba(0, 0, 0, 0.32)',
           display: 'flex',
           flexDirection: 'column',
-          zIndex: 20,
-          paddingBottom: 'calc(1.5rem + env(safe-area-inset-bottom, 0px))',
-          transition: 'height 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
-          willChange: 'height',
+          zIndex: 25,
+          willChange: 'transform',
+          transform: 'translate3d(0, 560px, 0)',
         }}
       >
-        {/* DRAG HANDLE BAR (Touch target to pull up/down) */}
+        {/* GRAB DRAG HANDLE HEADER (Primary touch area) */}
         <div
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
-          onMouseDown={handleTouchStart}
-          onMouseMove={handleTouchMove}
-          onMouseUp={handleTouchEnd}
-          onClick={toggleSheet}
+          onMouseDown={handleMouseDown}
+          onClick={handleHandleClick}
           style={{
-            padding: '0.65rem 1rem 0.35rem',
+            padding: '0.75rem 1rem 0.5rem',
             cursor: 'grab',
             userSelect: 'none',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             touchAction: 'none',
+            flexShrink: 0,
           }}
         >
-          {/* Pill indicator */}
-          <div style={{ width: 44, height: 4.5, borderRadius: 999, background: '#cbd5e1', marginBottom: 6 }} />
-          <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: '0.75rem', fontWeight: 700, color: '#64748b' }}>
+          {/* Thick Rounded Pill Handle Bar */}
+          <div
+            style={{
+              width: 52,
+              height: 5.5,
+              borderRadius: 999,
+              background: '#cbd5e1',
+              marginBottom: 6,
+              transition: 'background-color 0.2s',
+            }}
+          />
+
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 5,
+              fontSize: '0.75rem',
+              fontWeight: 700,
+              color: '#64748b',
+            }}
+          >
             {sheetState === 'full' ? (
-              <><ChevronDown size={14} /> Tutup rincian</>
+              <><ChevronDown size={14} /> Geser ke bawah untuk melihat peta</>
+            ) : sheetState === 'half' ? (
+              <><ChevronUp size={14} /> Tarik penuh atau geser ke bawah</>
             ) : (
-              <><ChevronUp size={14} /> Tarik untuk melihat rincian lengkap</>
+              <><ChevronUp size={14} /> Tarik untuk rincian perjalanan lengkap</>
             )}
           </div>
         </div>
 
         {/* ── SHEET HEADER PEEK: TRAIN & ROUTE SUMMARY (Always visible) ── */}
-        <div style={{ padding: '0.5rem 1.25rem 0.75rem', borderBottom: '1px solid #f1f5f9', flexShrink: 0 }}>
+        <div
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+          onMouseDown={handleMouseDown}
+          style={{
+            padding: '0.45rem 1.25rem 0.85rem',
+            borderBottom: '1px solid #f1f5f9',
+            flexShrink: 0,
+            cursor: 'grab',
+          }}
+        >
           {/* Train identity row */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-              <div style={{
-                width: 44,
-                height: 44,
-                borderRadius: 14,
-                background: '#eff6ff',
-                color: '#2563eb',
-                display: 'grid',
-                placeItems: 'center',
-                flexShrink: 0,
-              }}>
-                <Train size={22} strokeWidth={2.4} />
+              <div
+                style={{
+                  width: 46,
+                  height: 46,
+                  borderRadius: 14,
+                  background: '#eff6ff',
+                  color: '#2563eb',
+                  display: 'grid',
+                  placeItems: 'center',
+                  flexShrink: 0,
+                }}
+              >
+                <Train size={24} strokeWidth={2.4} />
               </div>
               <div>
                 <strong style={{ fontSize: '1.05rem', color: '#0f172a', display: 'block', lineHeight: 1.25 }}>
@@ -553,13 +717,13 @@ export default function LiveJourneyMapTracker({
 
           {/* Route origin -> destination pills */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.65rem', marginTop: '0.75rem' }}>
-            <div style={{ background: '#f8fafc', padding: '0.45rem 0.75rem', borderRadius: 10, border: '1px solid #e2e8f0' }}>
+            <div style={{ background: '#f8fafc', padding: '0.5rem 0.75rem', borderRadius: 10, border: '1px solid #e2e8f0' }}>
               <span style={{ fontSize: '0.7rem', color: '#10b981', fontWeight: 800, textTransform: 'uppercase' }}>↑ Asal</span>
               <strong style={{ display: 'block', fontSize: '0.85rem', color: '#1e293b', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                 {originStation}
               </strong>
             </div>
-            <div style={{ background: '#f8fafc', padding: '0.45rem 0.75rem', borderRadius: 10, border: '1px solid #e2e8f0' }}>
+            <div style={{ background: '#f8fafc', padding: '0.5rem 0.75rem', borderRadius: 10, border: '1px solid #e2e8f0' }}>
               <span style={{ fontSize: '0.7rem', color: '#ef4444', fontWeight: 800, textTransform: 'uppercase' }}>↓ Tujuan</span>
               <strong style={{ display: 'block', fontSize: '0.85rem', color: '#1e293b', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                 {destStation}
@@ -569,12 +733,16 @@ export default function LiveJourneyMapTracker({
         </div>
 
         {/* ── EXPANDED FULL DETAILS (Scrollable when sheet pulled up) ── */}
-        <div style={{
-          flex: 1,
-          overflowY: 'auto',
-          padding: '1.25rem',
-          WebkitOverflowScrolling: 'touch',
-        }}>
+        <div
+          ref={contentRef}
+          style={{
+            flex: 1,
+            overflowY: 'auto',
+            padding: '1.25rem 1.25rem calc(2.5rem + env(safe-area-inset-bottom, 0px))',
+            WebkitOverflowScrolling: 'touch',
+            overscrollBehaviorY: 'contain',
+          }}
+        >
           {/* Quick Action Utility Buttons */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '0.6rem', marginBottom: '1.25rem' }}>
             <Link
@@ -619,28 +787,30 @@ export default function LiveJourneyMapTracker({
 
                 return (
                   <div key={stop.id} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.85rem' }}>
-                    {/* Node marker with connecting line */}
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: 20 }}>
-                      <div style={{
-                        width: 14,
-                        height: 14,
-                        borderRadius: '50%',
-                        background: isPassed ? '#10b981' : isCurrentNext ? '#3b82f6' : '#cbd5e1',
-                        border: '3px solid #ffffff',
-                        boxShadow: '0 0 0 1px #cbd5e1',
-                        flexShrink: 0,
-                      }} />
+                      <div
+                        style={{
+                          width: 14,
+                          height: 14,
+                          borderRadius: '50%',
+                          background: isPassed ? '#10b981' : isCurrentNext ? '#3b82f6' : '#cbd5e1',
+                          border: '3px solid #ffffff',
+                          boxShadow: '0 0 0 1px #cbd5e1',
+                          flexShrink: 0,
+                        }}
+                      />
                       {index < transitStops.length - 1 && (
-                        <div style={{
-                          width: 2,
-                          height: 36,
-                          background: isPassed ? '#10b981' : '#e2e8f0',
-                          margin: '2px 0',
-                        }} />
+                        <div
+                          style={{
+                            width: 2,
+                            height: 36,
+                            background: isPassed ? '#10b981' : '#e2e8f0',
+                            margin: '2px 0',
+                          }}
+                        />
                       )}
                     </div>
 
-                    {/* Stop info */}
                     <div style={{ flex: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <div>
                         <strong style={{ fontSize: '0.88rem', color: isPassed ? '#0f172a' : '#475569' }}>
@@ -747,4 +917,3 @@ export default function LiveJourneyMapTracker({
     </div>
   )
 }
-

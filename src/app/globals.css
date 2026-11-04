@@ -2030,9 +2030,12 @@ input[type="checkbox"]:focus-visible {
   }
 }
 
-.rh-tracker-bottom-sheet {
+.rh-tracker-bottom-sheet,
+.rh-grab-bottom-sheet {
   touch-action: pan-y;
   overscroll-behavior-y: contain;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 /* Minimalist Footer container styling (safe mobile bottom nav clearance, zero white gap) */
