@@ -635,64 +635,7 @@ function PassengerDashboardContent() {
             </div>
           )}
 
-          {activeTab === 'overview' && activePaidBooking && (
-            <div id="trip-status" style={{ display: 'grid', gap: '1.25rem', scrollMarginTop: 112 }}>
-                  <div className="passenger-journey-heading">
-                    <div>
-                      <span className="rh-badge rh-badge-primary">Status perjalanan</span>
-                      <h2 className="rh-h3" style={{ margin: '0.35rem 0 0' }}>
-                        {activePaidBooking.schedules?.trains?.name || 'Kereta Anda'}
-                        {activePaidBooking.schedules?.trains?.train_number ? ` (${activePaidBooking.schedules.trains.train_number})` : ''}
-                      </h2>
-                      <p style={{ margin: '0.25rem 0 0', color: 'var(--rh-text-2)' }}>
-                        {activePaidBooking.schedules?.routes?.name || 'Rute belum tersedia'} · {activePaidBooking.booking_code}
-                      </p>
-                    </div>
-                    <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap' }}>
-                      <button type="button" onClick={handleShareJourney} className="rh-btn rh-btn-ghost rh-btn-sm">
-                        <Share2 size={15} aria-hidden="true" /> Bagikan
-                      </button>
-                      <button type="button" onClick={() => selectTab('services')} className="rh-btn rh-btn-primary rh-btn-sm">
-                        <Utensils size={15} aria-hidden="true" /> Layanan kereta
-                      </button>
-                    </div>
-                  </div>
 
-                  <section className="rh-card passenger-route-map" aria-label="Estimasi progres perjalanan">
-                    <div className="passenger-route-map-head">
-                      <div>
-                        <small>Berangkat</small>
-                        <strong>{activePaidBooking.schedules?.departure_time ? formatTime(activePaidBooking.schedules.departure_time) : '—'}</strong>
-                      </div>
-                      <div style={{ textAlign: 'right' }}>
-                        <small>Estimasi tiba</small>
-                        <strong>{activePaidBooking.schedules?.arrival_time ? formatTime(activePaidBooking.schedules.arrival_time) : '—'}</strong>
-                      </div>
-                    </div>
-                    <div className="passenger-route-map-track" aria-hidden="true">
-                      <span className="passenger-route-map-progress" style={{ width: `${journeyProgress}%` }} />
-                      <span className="passenger-route-map-train" style={{ left: `${journeyProgress}%` }}>
-                        <Train size={18} />
-                      </span>
-                    </div>
-                    <div className="passenger-route-map-labels">
-                      {(activePaidBooking.schedules?.routes?.name || 'Stasiun asal — Stasiun tujuan')
-                        .split(/\s(?:->|—|–|-|→)\s/)
-                        .slice(0, 2)
-                        .map((station, index) => <strong key={station} style={{ textAlign: index ? 'right' : 'left' }}>{station}</strong>)}
-                    </div>
-                    <div className="passenger-route-map-note">
-                      <Clock3 size={15} aria-hidden="true" />
-                      <span>
-                        {countdown.isDeparted
-                          ? `Estimasi progres ${journeyProgress}% berdasarkan waktu jadwal.`
-                          : `Berangkat dalam ${countdown.hours}j ${countdown.minutes}m.`}
-                        {' '}Posisi ini bukan pelacakan GPS.
-                      </span>
-                    </div>
-                  </section>
-            </div>
-          )}
 
           {activeTab === 'services' && (
             <div style={{ display: 'grid', gap: '1rem' }}>
