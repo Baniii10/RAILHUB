@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Mail, Lock, Eye, EyeOff, User, Phone, AlertCircle, CheckCircle } from 'lucide-react'
+import Navbar from '@/components/layout/Navbar'
 import { createClient } from '@/lib/supabase/client'
 import { useLang } from '@/contexts/LangContext'
 import toast from 'react-hot-toast'
@@ -139,254 +140,258 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="rh-login-viewport">
-      <div className="rh-login-container">
-        {/* Top Header Vector Illustration */}
-        <MobileTrainIllustration />
+    <div style={{ minHeight: '100vh', minHeight: '100dvh', display: 'flex', flexDirection: 'column', background: '#ffffff' }}>
+      {/* Standard RAILHUB Navbar with Brand & Language Toggle */}
+      <Navbar />
 
-        {/* Bottom Form Sheet */}
-        <div className="rh-login-sheet">
-          <div style={{ marginBottom: '1.25rem' }}>
-            <h1
-              style={{
-                fontSize: '1.4375rem',
-                fontWeight: 800,
-                color: '#0f172a',
-                letterSpacing: '-0.025em',
-                lineHeight: 1.25,
-                margin: '0 0 6px',
-              }}
-            >
-              Register Account
-            </h1>
-            <p
-              style={{
-                fontSize: '0.84375rem',
-                color: '#64748b',
-                lineHeight: 1.45,
-                margin: 0,
-              }}
-            >
-              Create your account to start booking trains across Java.
-            </p>
-          </div>
+      <div className="rh-login-viewport" style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
+        <div className="rh-login-container">
+          {/* Top Header Vector Illustration */}
+          <MobileTrainIllustration />
 
-          {error && (
-            <div
-              style={{
-                padding: '0.75rem 0.875rem',
-                borderRadius: 12,
-                backgroundColor: '#fef2f2',
-                border: '1px solid #fecaca',
-                marginBottom: '1rem',
-                color: '#b91c1c',
-                fontSize: '0.84375rem',
-                lineHeight: 1.4,
-                display: 'flex',
-                gap: '0.5rem',
-                alignItems: 'flex-start',
-              }}
-            >
-              <AlertCircle size={16} style={{ flexShrink: 0, marginTop: 2, color: '#dc2626' }} />
-              <div>{error}</div>
-            </div>
-          )}
-
-          <button
-            type="button"
-            onClick={handleGoogleAuth}
-            disabled={loading || googleLoading}
-            style={{
-              width: '100%',
-              height: 48,
-              borderRadius: 12,
-              border: '1.5px solid #cbd5e1',
-              backgroundColor: '#ffffff',
-              color: '#0f172a',
-              fontSize: '0.875rem',
-              fontWeight: 600,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 10,
-              cursor: loading || googleLoading ? 'not-allowed' : 'pointer',
-              boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
-              marginBottom: '1rem',
-            }}
-          >
-            {googleLoading ? (
-              <span
+          {/* Bottom Form Sheet */}
+          <div className="rh-login-sheet">
+            <div style={{ marginBottom: '1.25rem' }}>
+              <h1
                 style={{
-                  width: 18,
-                  height: 18,
-                  border: '2px solid rgba(37, 99, 235, 0.2)',
-                  borderTopColor: '#2563eb',
-                  borderRadius: '50%',
-                  animation: 'spin 0.75s linear infinite',
+                  fontSize: '1.4375rem',
+                  fontWeight: 800,
+                  color: '#0f172a',
+                  letterSpacing: '-0.025em',
+                  lineHeight: 1.25,
+                  margin: '0 0 6px',
                 }}
-              />
-            ) : (
-              <GoogleIcon size={19} />
+              >
+                Register Account
+              </h1>
+              <p
+                style={{
+                  fontSize: '0.84375rem',
+                  color: '#64748b',
+                  lineHeight: 1.45,
+                  margin: 0,
+                }}
+              >
+                Create your account to start booking trains across Java.
+              </p>
+            </div>
+
+            {error && (
+              <div
+                style={{
+                  padding: '0.75rem 0.875rem',
+                  borderRadius: 12,
+                  backgroundColor: '#fef2f2',
+                  border: '1px solid #fecaca',
+                  marginBottom: '1rem',
+                  color: '#b91c1c',
+                  fontSize: '0.84375rem',
+                  lineHeight: 1.4,
+                  display: 'flex',
+                  gap: '0.5rem',
+                  alignItems: 'flex-start',
+                }}
+              >
+                <AlertCircle size={16} style={{ flexShrink: 0, marginTop: 2, color: '#dc2626' }} />
+                <div>{error}</div>
+              </div>
             )}
-            <span>Sign up with Google</span>
-          </button>
 
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 12,
-              margin: '0 0 14px',
-            }}
-          >
-            <div style={{ flex: 1, height: 1, backgroundColor: '#e2e8f0' }} />
-            <span style={{ fontSize: '0.78125rem', color: '#94a3b8', fontWeight: 500 }}>
-              or register with email
-            </span>
-            <div style={{ flex: 1, height: 1, backgroundColor: '#e2e8f0' }} />
-          </div>
-
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
-            <div>
-              <label
-                htmlFor="register-name"
-                style={{ display: 'block', fontSize: '0.78125rem', fontWeight: 600, color: '#475569', marginBottom: 5 }}
-              >
-                Full Name
-              </label>
-              <div style={{ position: 'relative' }}>
-                <User size={17} style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: '#94a3b8', pointerEvents: 'none' }} />
-                <input
-                  id="register-name"
-                  type="text"
-                  name="name"
-                  autoComplete="name"
-                  placeholder="Nama lengkap sesuai KTP"
-                  value={form.fullName}
-                  onChange={update('fullName')}
-                  required
-                  style={{ width: '100%', height: 46, paddingLeft: 42, paddingRight: 14, borderRadius: 12, border: '1.5px solid #e2e8f0', fontSize: '0.875rem', outline: 'none' }}
-                />
-              </div>
-            </div>
-
-            <div>
-              <label
-                htmlFor="register-email"
-                style={{ display: 'block', fontSize: '0.78125rem', fontWeight: 600, color: '#475569', marginBottom: 5 }}
-              >
-                Email Address
-              </label>
-              <div style={{ position: 'relative' }}>
-                <Mail size={17} style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: '#94a3b8', pointerEvents: 'none' }} />
-                <input
-                  id="register-email"
-                  type="email"
-                  name="email"
-                  autoComplete="email"
-                  placeholder="nama@email.com"
-                  value={form.email}
-                  onChange={update('email')}
-                  required
-                  style={{ width: '100%', height: 46, paddingLeft: 42, paddingRight: 14, borderRadius: 12, border: '1.5px solid #e2e8f0', fontSize: '0.875rem', outline: 'none' }}
-                />
-              </div>
-            </div>
-
-            <div>
-              <label
-                htmlFor="register-phone"
-                style={{ display: 'block', fontSize: '0.78125rem', fontWeight: 600, color: '#475569', marginBottom: 5 }}
-              >
-                Phone Number
-              </label>
-              <div style={{ position: 'relative' }}>
-                <Phone size={17} style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: '#94a3b8', pointerEvents: 'none' }} />
-                <input
-                  id="register-phone"
-                  type="tel"
-                  name="tel"
-                  autoComplete="tel"
-                  placeholder="08xx-xxxx-xxxx"
-                  value={form.phone}
-                  onChange={update('phone')}
-                  style={{ width: '100%', height: 46, paddingLeft: 42, paddingRight: 14, borderRadius: 12, border: '1.5px solid #e2e8f0', fontSize: '0.875rem', outline: 'none' }}
-                />
-              </div>
-            </div>
-
-            <div>
-              <label
-                htmlFor="register-password"
-                style={{ display: 'block', fontSize: '0.78125rem', fontWeight: 600, color: '#475569', marginBottom: 5 }}
-              >
-                Password
-              </label>
-              <div style={{ position: 'relative' }}>
-                <Lock size={17} style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: '#94a3b8', pointerEvents: 'none' }} />
-                <input
-                  id="register-password"
-                  type={showPw ? 'text' : 'password'}
-                  name="new-password"
-                  autoComplete="new-password"
-                  placeholder="Minimal 8 karakter"
-                  value={form.password}
-                  onChange={update('password')}
-                  required
-                  style={{ width: '100%', height: 46, paddingLeft: 42, paddingRight: 44, borderRadius: 12, border: '1.5px solid #e2e8f0', fontSize: '0.875rem', outline: 'none' }}
-                />
-                <button
-                  type="button"
-                  aria-label={showPw ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'}
-                  onClick={() => setShowPw(v => !v)}
-                  style={{ position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8', width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                >
-                  {showPw ? <EyeOff size={16} /> : <Eye size={16} />}
-                </button>
-              </div>
-              {form.password.length > 0 && (
-                <div style={{ marginTop: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-                  {passwordReqs.map(req => (
-                    <div key={req.label} style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', fontSize: '0.75rem', color: req.met ? '#16a34a' : '#94a3b8' }}>
-                      <CheckCircle size={12} fill={req.met ? '#16a34a' : 'none'} color={req.met ? '#ffffff' : '#94a3b8'} />
-                      {req.label}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            <div>
-              <label
-                htmlFor="register-confirm-password"
-                style={{ display: 'block', fontSize: '0.78125rem', fontWeight: 600, color: '#475569', marginBottom: 5 }}
-              >
-                Confirm Password
-              </label>
-              <div style={{ position: 'relative' }}>
-                <Lock size={17} style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: '#94a3b8', pointerEvents: 'none' }} />
-                <input
-                  id="register-confirm-password"
-                  type="password"
-                  name="confirm-password"
-                  autoComplete="new-password"
-                  placeholder="Ulangi kata sandi"
-                  value={form.confirmPassword}
-                  onChange={update('confirmPassword')}
-                  required
+            <button
+              type="button"
+              onClick={handleGoogleAuth}
+              disabled={loading || googleLoading}
+              style={{
+                width: '100%',
+                height: 48,
+                borderRadius: 12,
+                border: '1.5px solid #cbd5e1',
+                backgroundColor: '#ffffff',
+                color: '#0f172a',
+                fontSize: '0.875rem',
+                fontWeight: 600,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 10,
+                cursor: loading || googleLoading ? 'not-allowed' : 'pointer',
+                boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
+                marginBottom: '1rem',
+              }}
+            >
+              {googleLoading ? (
+                <span
                   style={{
-                    width: '100%',
-                    height: 46,
-                    paddingLeft: 42,
-                    paddingRight: 14,
-                    borderRadius: 12,
-                    border: form.confirmPassword && form.confirmPassword !== form.password ? '1.5px solid #ef4444' : '1.5px solid #e2e8f0',
-                    fontSize: '0.875rem',
-                    outline: 'none',
+                    width: 18,
+                    height: 18,
+                    border: '2px solid rgba(37, 99, 235, 0.2)',
+                    borderTopColor: '#2563eb',
+                    borderRadius: '50%',
+                    animation: 'spin 0.75s linear infinite',
                   }}
                 />
-              </div>
+              ) : (
+                <GoogleIcon size={19} />
+              )}
+              <span>Sign up with Google</span>
+            </button>
+
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 12,
+                margin: '0 0 14px',
+              }}
+            >
+              <div style={{ flex: 1, height: 1, backgroundColor: '#e2e8f0' }} />
+              <span style={{ fontSize: '0.78125rem', color: '#94a3b8', fontWeight: 500 }}>
+                or register with email
+              </span>
+              <div style={{ flex: 1, height: 1, backgroundColor: '#e2e8f0' }} />
             </div>
+
+            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
+              <div>
+                <label
+                  htmlFor="register-name"
+                  style={{ display: 'block', fontSize: '0.78125rem', fontWeight: 600, color: '#475569', marginBottom: 5 }}
+                >
+                  Full Name
+                </label>
+                <div style={{ position: 'relative' }}>
+                  <User size={17} style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: '#94a3b8', pointerEvents: 'none' }} />
+                  <input
+                    id="register-name"
+                    type="text"
+                    name="name"
+                    autoComplete="name"
+                    placeholder="Nama lengkap sesuai KTP"
+                    value={form.fullName}
+                    onChange={update('fullName')}
+                    required
+                    style={{ width: '100%', height: 46, paddingLeft: 42, paddingRight: 14, borderRadius: 12, border: '1.5px solid #e2e8f0', fontSize: '0.875rem', outline: 'none' }}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="register-email"
+                  style={{ display: 'block', fontSize: '0.78125rem', fontWeight: 600, color: '#475569', marginBottom: 5 }}
+                >
+                  Email Address
+                </label>
+                <div style={{ position: 'relative' }}>
+                  <Mail size={17} style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: '#94a3b8', pointerEvents: 'none' }} />
+                  <input
+                    id="register-email"
+                    type="email"
+                    name="email"
+                    autoComplete="email"
+                    placeholder="nama@email.com"
+                    value={form.email}
+                    onChange={update('email')}
+                    required
+                    style={{ width: '100%', height: 46, paddingLeft: 42, paddingRight: 14, borderRadius: 12, border: '1.5px solid #e2e8f0', fontSize: '0.875rem', outline: 'none' }}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="register-phone"
+                  style={{ display: 'block', fontSize: '0.78125rem', fontWeight: 600, color: '#475569', marginBottom: 5 }}
+                >
+                  Phone Number
+                </label>
+                <div style={{ position: 'relative' }}>
+                  <Phone size={17} style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: '#94a3b8', pointerEvents: 'none' }} />
+                  <input
+                    id="register-phone"
+                    type="tel"
+                    name="tel"
+                    autoComplete="tel"
+                    placeholder="08xx-xxxx-xxxx"
+                    value={form.phone}
+                    onChange={update('phone')}
+                    style={{ width: '100%', height: 46, paddingLeft: 42, paddingRight: 14, borderRadius: 12, border: '1.5px solid #e2e8f0', fontSize: '0.875rem', outline: 'none' }}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="register-password"
+                  style={{ display: 'block', fontSize: '0.78125rem', fontWeight: 600, color: '#475569', marginBottom: 5 }}
+                >
+                  Password
+                </label>
+                <div style={{ position: 'relative' }}>
+                  <Lock size={17} style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: '#94a3b8', pointerEvents: 'none' }} />
+                  <input
+                    id="register-password"
+                    type={showPw ? 'text' : 'password'}
+                    name="new-password"
+                    autoComplete="new-password"
+                    placeholder="Minimal 8 karakter"
+                    value={form.password}
+                    onChange={update('password')}
+                    required
+                    style={{ width: '100%', height: 46, paddingLeft: 42, paddingRight: 44, borderRadius: 12, border: '1.5px solid #e2e8f0', fontSize: '0.875rem', outline: 'none' }}
+                  />
+                  <button
+                    type="button"
+                    aria-label={showPw ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'}
+                    onClick={() => setShowPw(v => !v)}
+                    style={{ position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8', width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                  >
+                    {showPw ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
+                </div>
+                {form.password.length > 0 && (
+                  <div style={{ marginTop: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                    {passwordReqs.map(req => (
+                      <div key={req.label} style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', fontSize: '0.75rem', color: req.met ? '#16a34a' : '#94a3b8' }}>
+                        <CheckCircle size={12} fill={req.met ? '#16a34a' : 'none'} color={req.met ? '#ffffff' : '#94a3b8'} />
+                        {req.label}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <div>
+                <label
+                  htmlFor="register-confirm-password"
+                  style={{ display: 'block', fontSize: '0.78125rem', fontWeight: 600, color: '#475569', marginBottom: 5 }}
+                >
+                  Confirm Password
+                </label>
+                <div style={{ position: 'relative' }}>
+                  <Lock size={17} style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: '#94a3b8', pointerEvents: 'none' }} />
+                  <input
+                    id="register-confirm-password"
+                    type="password"
+                    name="confirm-password"
+                    autoComplete="new-password"
+                    placeholder="Ulangi kata sandi"
+                    value={form.confirmPassword}
+                    onChange={update('confirmPassword')}
+                    required
+                    style={{
+                      width: '100%',
+                      height: 46,
+                      paddingLeft: 42,
+                      paddingRight: 14,
+                      borderRadius: 12,
+                      border: form.confirmPassword && form.confirmPassword !== form.password ? '1.5px solid #ef4444' : '1.5px solid #e2e8f0',
+                      fontSize: '0.875rem',
+                      outline: 'none',
+                    }}
+                  />
+                </div>
+              </div>
 
             <button
               type="submit"
@@ -451,5 +456,6 @@ export default function RegisterPage() {
         </div>
       </div>
     </div>
+  </div>
   )
 }

@@ -1,183 +1,16 @@
-'use client'
-
-import { useState } from 'react'
-import Link from 'next/link'
-import { ArrowLeft, ChevronDown, Check } from 'lucide-react'
-import { useLang } from '@/contexts/LangContext'
-
 export default function MobileTrainIllustration() {
-  const { lang, toggleLang } = useLang()
-  const [langMenuOpen, setLangMenuOpen] = useState(false)
-
-  const handleSelectLang = (selectedLang) => {
-    if (selectedLang !== lang) {
-      toggleLang()
-    }
-    setLangMenuOpen(false)
-  }
-
   return (
     <div
       style={{
         position: 'relative',
         width: '100%',
-        height: 255,
+        height: 250,
         overflow: 'hidden',
         background: 'linear-gradient(180deg, #32115f 0%, #4c1d95 38%, #5b21b6 70%, #6d28d9 100%)',
         userSelect: 'none',
       }}
       aria-label="Ilustrasi Kereta Api Mobile RAILHUB"
     >
-      {/* Top Floating Action Bar: Back Button & Language Selector */}
-      <div
-        style={{
-          position: 'absolute',
-          top: 'max(12px, env(safe-area-inset-top, 12px))',
-          left: 16,
-          right: 16,
-          zIndex: 20,
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          pointerEvents: 'auto',
-        }}
-      >
-        {/* Back to Home Button */}
-        <Link
-          href="/"
-          aria-label={lang === 'en' ? 'Back to home' : 'Kembali ke beranda'}
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: 36,
-            height: 36,
-            borderRadius: '50%',
-            backgroundColor: 'rgba(255, 255, 255, 0.92)',
-            backdropFilter: 'blur(8px)',
-            color: '#1e293b',
-            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
-            border: '1px solid rgba(255, 255, 255, 0.6)',
-            transition: 'all 0.15s ease',
-            textDecoration: 'none',
-          }}
-        >
-          <ArrowLeft size={18} strokeWidth={2.4} />
-        </Link>
-
-        {/* Language Selector Pill ('🇺🇸 EN v' / '🇮🇩 ID v') */}
-        <div style={{ position: 'relative' }}>
-          <button
-            type="button"
-            onClick={() => setLangMenuOpen(!langMenuOpen)}
-            aria-expanded={langMenuOpen}
-            aria-label="Pilih Bahasa / Select Language"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 6,
-              padding: '5px 12px 5px 10px',
-              borderRadius: 20,
-              backgroundColor: 'rgba(255, 255, 255, 0.95)',
-              backdropFilter: 'blur(10px)',
-              color: '#0f172a',
-              fontSize: '0.8125rem',
-              fontWeight: 700,
-              boxShadow: '0 2px 10px rgba(0, 0, 0, 0.15)',
-              border: '1px solid rgba(255, 255, 255, 0.8)',
-              cursor: 'pointer',
-              transition: 'all 0.15s ease',
-            }}
-          >
-            <span style={{ fontSize: '0.9375rem', lineHeight: 1 }}>
-              {lang === 'id' ? '🇮🇩' : '🇺🇸'}
-            </span>
-            <span style={{ letterSpacing: '0.04em' }}>
-              {lang === 'id' ? 'ID' : 'EN'}
-            </span>
-            <ChevronDown
-              size={13}
-              style={{
-                color: '#475569',
-                transform: langMenuOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-                transition: 'transform 0.2s ease',
-              }}
-            />
-          </button>
-
-          {/* Dropdown Menu */}
-          {langMenuOpen && (
-            <div
-              style={{
-                position: 'absolute',
-                top: 'calc(100% + 6px)',
-                right: 0,
-                backgroundColor: '#ffffff',
-                borderRadius: 12,
-                boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.25)',
-                padding: '6px',
-                minWidth: 130,
-                zIndex: 30,
-                border: '1px solid #e2e8f0',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 2,
-              }}
-            >
-              <button
-                type="button"
-                onClick={() => handleSelectLang('id')}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  padding: '7px 10px',
-                  borderRadius: 8,
-                  border: 'none',
-                  backgroundColor: lang === 'id' ? '#f1f5f9' : 'transparent',
-                  color: '#0f172a',
-                  fontSize: '0.8125rem',
-                  fontWeight: lang === 'id' ? 700 : 500,
-                  cursor: 'pointer',
-                  width: '100%',
-                  textAlign: 'left',
-                }}
-              >
-                <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <span>🇮🇩</span> Bahasa ID
-                </span>
-                {lang === 'id' && <Check size={14} color="#2563eb" strokeWidth={3} />}
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleSelectLang('en')}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  padding: '7px 10px',
-                  borderRadius: 8,
-                  border: 'none',
-                  backgroundColor: lang === 'en' ? '#f1f5f9' : 'transparent',
-                  color: '#0f172a',
-                  fontSize: '0.8125rem',
-                  fontWeight: lang === 'en' ? 700 : 500,
-                  cursor: 'pointer',
-                  width: '100%',
-                  textAlign: 'left',
-                }}
-              >
-                <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <span>🇺🇸</span> English (EN)
-                </span>
-                {lang === 'en' && <Check size={14} color="#2563eb" strokeWidth={3} />}
-              </button>
-            </div>
-          )}
-        </div>
-      </div>
-
       {/* GPU Accelerated SVG Animations */}
       <style dangerouslySetInnerHTML={{ __html: `
         @keyframes rhTrainChug {
@@ -374,7 +207,6 @@ export default function MobileTrainIllustration() {
         <g id="rhLocomotive" className="rh-anim-train">
           <ellipse cx="160" cy="192" rx="135" ry="8" fill="rgba(15, 6, 30, 0.65)" />
 
-          {/* Under-chassis & Bogies */}
           <g id="rhBogieAndWheels">
             <rect x="35" y="172" width="225" height="12" rx="2" fill="#1e1b4b" />
             <rect x="250" y="170" width="22" height="14" rx="2" fill="#312e81" />
@@ -404,10 +236,8 @@ export default function MobileTrainIllustration() {
             <rect x="183" y="178" width="8" height="5" rx="1" fill="#64748b" />
           </g>
 
-          {/* Locomotive Body */}
           <rect x="35" y="100" width="130" height="74" rx="4" fill="url(#rhTrainBodyGrad)" />
 
-          {/* Louvers */}
           <g fill="#9a3412" stroke="#ea580c" strokeWidth="0.8">
             <rect x="44" y="112" width="22" height="42" rx="2" />
             <line x1="45" y1="118" x2="65" y2="118" />
@@ -429,7 +259,6 @@ export default function MobileTrainIllustration() {
           <rect x="106" y="112" width="26" height="52" rx="2" fill="none" stroke="#b45309" strokeWidth="1.2" />
           <circle cx="126" cy="138" r="1.5" fill="#fef3c7" />
 
-          {/* Cabin */}
           <path
             d="M 160,174 L 160,94 Q 160,88 166,88 L 222,88 Q 232,88 238,98 L 248,122 L 248,174 Z"
             fill="url(#rhTrainBodyGrad)"
@@ -442,7 +271,6 @@ export default function MobileTrainIllustration() {
           <rect x="180" y="82" width="16" height="5" rx="1.5" fill="#1e1b4b" />
           <polygon points="214,84 226,81 226,87" fill="#fbbf24" />
 
-          {/* Windshields */}
           <polygon
             points="220,95 238,95 244,124 220,124"
             fill="url(#rhGlassGrad)"
@@ -469,7 +297,6 @@ export default function MobileTrainIllustration() {
             fill="rgba(255, 255, 255, 0.4)"
           />
 
-          {/* Nose */}
           <path
             d="M 244,120 L 264,122 Q 272,123 274,130 L 276,174 L 244,174 Z"
             fill="url(#rhTrainNoseGrad)"
@@ -477,13 +304,11 @@ export default function MobileTrainIllustration() {
           <path d="M 244,142 L 275,144" stroke="#ffffff" strokeWidth="2.5" />
           <path d="M 244,147 L 275,149" stroke="#1d4ed8" strokeWidth="2" />
 
-          {/* Plate */}
           <rect x="250" y="152" width="20" height="9" rx="1.5" fill="#0f172a" />
           <text x="260" y="158.5" fontSize="5" fontWeight="bold" fill="#38bdf8" textAnchor="middle" letterSpacing="0.5">
             RH-206
           </text>
 
-          {/* Red Cowcatcher */}
           <path
             d="M 264,172 L 286,172 L 292,185 L 260,185 Z"
             fill="url(#rhCowcatcherGrad)"
@@ -496,7 +321,6 @@ export default function MobileTrainIllustration() {
 
           <rect x="286" y="174" width="8" height="5" rx="1" fill="#334155" />
 
-          {/* Headlights */}
           <g id="rhHeadlights" className="rh-anim-headlight">
             <circle cx="266" cy="133" r="5" fill="#1e1b4b" stroke="#f59e0b" strokeWidth="0.8" />
             <circle cx="266" cy="133" r="3.6" fill="#fef08a" />

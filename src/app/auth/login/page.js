@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Mail, Lock, Eye, EyeOff, AlertCircle } from 'lucide-react'
+import Navbar from '@/components/layout/Navbar'
 import { createClient } from '@/lib/supabase/client'
 import { useLang } from '@/contexts/LangContext'
 import toast from 'react-hot-toast'
@@ -123,306 +124,311 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="rh-login-viewport">
-      <div className="rh-login-container">
-        {/* Top Header Vector Illustration */}
-        <MobileTrainIllustration />
+    <div style={{ minHeight: '100vh', minHeight: '100dvh', display: 'flex', flexDirection: 'column', background: '#ffffff' }}>
+      {/* Standard RAILHUB Navbar with Brand & Language Toggle */}
+      <Navbar />
 
-        {/* Bottom Form Sheet - Fills to the bottom smoothly */}
-        <div className="rh-login-sheet">
-          <div style={{ marginBottom: '1.25rem' }}>
-            <h1
-              style={{
-                fontSize: '1.4375rem',
-                fontWeight: 800,
-                color: '#0f172a',
-                letterSpacing: '-0.025em',
-                lineHeight: 1.25,
-                margin: '0 0 6px',
-              }}
-            >
-              Welcome to Access!
-            </h1>
-            <p
-              style={{
-                fontSize: '0.84375rem',
-                color: '#64748b',
-                lineHeight: 1.45,
-                margin: 0,
-              }}
-            >
-              Login or Register now! to enjoy all the features available on Access by RAILHUB.
-            </p>
-          </div>
+      <div className="rh-login-viewport" style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
+        <div className="rh-login-container">
+          {/* Top Header Vector Illustration */}
+          <MobileTrainIllustration />
 
-          {error && (
-            <div
-              style={{
-                padding: '0.75rem 0.875rem',
-                borderRadius: 12,
-                backgroundColor: '#fef2f2',
-                border: '1px solid #fecaca',
-                marginBottom: '1rem',
-                color: '#b91c1c',
-                fontSize: '0.84375rem',
-                lineHeight: 1.4,
-                display: 'flex',
-                gap: '0.5rem',
-                alignItems: 'flex-start',
-              }}
-            >
-              <AlertCircle size={16} style={{ flexShrink: 0, marginTop: 2, color: '#dc2626' }} />
-              <div>{error}</div>
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
-            <div>
-              <label
-                htmlFor="email"
+          {/* Bottom Form Sheet */}
+          <div className="rh-login-sheet">
+            <div style={{ marginBottom: '1.25rem' }}>
+              <h1
                 style={{
-                  display: 'block',
-                  fontSize: '0.78125rem',
-                  fontWeight: 600,
-                  color: '#475569',
-                  marginBottom: 5,
+                  fontSize: '1.4375rem',
+                  fontWeight: 800,
+                  color: '#0f172a',
+                  letterSpacing: '-0.025em',
+                  lineHeight: 1.25,
+                  margin: '0 0 6px',
                 }}
               >
-                Email Address / Phone Number
-              </label>
-              <div style={{ position: 'relative' }}>
-                <Mail
-                  size={17}
-                  style={{
-                    position: 'absolute',
-                    left: 14,
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    color: '#94a3b8',
-                    pointerEvents: 'none',
-                  }}
-                />
-                <input
-                  id="email"
-                  type="email"
-                  name="email"
-                  spellCheck={false}
-                  placeholder="Enter your Email Address / Phone Number"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  autoComplete="email"
-                  style={{
-                    width: '100%',
-                    height: 48,
-                    paddingLeft: 42,
-                    paddingRight: 14,
-                    borderRadius: 12,
-                    border: '1.5px solid #e2e8f0',
-                    backgroundColor: '#ffffff',
-                    fontSize: '0.875rem',
-                    color: '#0f172a',
-                    outline: 'none',
-                  }}
-                />
-              </div>
+                Welcome to Access!
+              </h1>
+              <p
+                style={{
+                  fontSize: '0.84375rem',
+                  color: '#64748b',
+                  lineHeight: 1.45,
+                  margin: 0,
+                }}
+              >
+                Login or Register now! to enjoy all the features available on Access by RAILHUB.
+              </p>
             </div>
 
-            <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 5 }}>
+            {error && (
+              <div
+                style={{
+                  padding: '0.75rem 0.875rem',
+                  borderRadius: 12,
+                  backgroundColor: '#fef2f2',
+                  border: '1px solid #fecaca',
+                  marginBottom: '1rem',
+                  color: '#b91c1c',
+                  fontSize: '0.84375rem',
+                  lineHeight: 1.4,
+                  display: 'flex',
+                  gap: '0.5rem',
+                  alignItems: 'flex-start',
+                }}
+              >
+                <AlertCircle size={16} style={{ flexShrink: 0, marginTop: 2, color: '#dc2626' }} />
+                <div>{error}</div>
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
+              <div>
                 <label
-                  htmlFor="password"
+                  htmlFor="email"
                   style={{
+                    display: 'block',
                     fontSize: '0.78125rem',
                     fontWeight: 600,
                     color: '#475569',
+                    marginBottom: 5,
                   }}
                 >
-                  Password
+                  Email Address / Phone Number
                 </label>
-                <Link
-                  href="/auth/register"
-                  style={{
-                    fontSize: '0.75rem',
-                    fontWeight: 600,
-                    color: '#2563eb',
-                    textDecoration: 'none',
-                  }}
-                >
-                  Forgot?
-                </Link>
+                <div style={{ position: 'relative' }}>
+                  <Mail
+                    size={17}
+                    style={{
+                      position: 'absolute',
+                      left: 14,
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      color: '#94a3b8',
+                      pointerEvents: 'none',
+                    }}
+                  />
+                  <input
+                    id="email"
+                    type="email"
+                    name="email"
+                    spellCheck={false}
+                    placeholder="Enter your Email Address / Phone Number"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    autoComplete="email"
+                    style={{
+                      width: '100%',
+                      height: 48,
+                      paddingLeft: 42,
+                      paddingRight: 14,
+                      borderRadius: 12,
+                      border: '1.5px solid #e2e8f0',
+                      backgroundColor: '#ffffff',
+                      fontSize: '0.875rem',
+                      color: '#0f172a',
+                      outline: 'none',
+                    }}
+                  />
+                </div>
               </div>
-              <div style={{ position: 'relative' }}>
-                <Lock
-                  size={17}
-                  style={{
-                    position: 'absolute',
-                    left: 14,
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    color: '#94a3b8',
-                    pointerEvents: 'none',
-                  }}
-                />
-                <input
-                  id="password"
-                  type={showPw ? 'text' : 'password'}
-                  placeholder="Enter your Password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  autoComplete="current-password"
-                  style={{
-                    width: '100%',
-                    height: 48,
-                    paddingLeft: 42,
-                    paddingRight: 44,
-                    borderRadius: 12,
-                    border: '1.5px solid #e2e8f0',
-                    backgroundColor: '#ffffff',
-                    fontSize: '0.875rem',
-                    color: '#0f172a',
-                    outline: 'none',
-                  }}
-                />
-                <button
-                  type="button"
-                  aria-label={showPw ? 'Hide password' : 'Show password'}
-                  onClick={() => setShowPw((v) => !v)}
-                  style={{
-                    position: 'absolute',
-                    right: 8,
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    background: 'none',
-                    border: 'none',
-                    cursor: 'pointer',
-                    color: '#94a3b8',
-                    width: 32,
-                    height: 32,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                >
-                  {showPw ? <EyeOff size={16} /> : <Eye size={16} />}
-                </button>
+
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 5 }}>
+                  <label
+                    htmlFor="password"
+                    style={{
+                      fontSize: '0.78125rem',
+                      fontWeight: 600,
+                      color: '#475569',
+                    }}
+                  >
+                    Password
+                  </label>
+                  <Link
+                    href="/auth/register"
+                    style={{
+                      fontSize: '0.75rem',
+                      fontWeight: 600,
+                      color: '#2563eb',
+                      textDecoration: 'none',
+                    }}
+                  >
+                    Forgot?
+                  </Link>
+                </div>
+                <div style={{ position: 'relative' }}>
+                  <Lock
+                    size={17}
+                    style={{
+                      position: 'absolute',
+                      left: 14,
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      color: '#94a3b8',
+                      pointerEvents: 'none',
+                    }}
+                  />
+                  <input
+                    id="password"
+                    type={showPw ? 'text' : 'password'}
+                    placeholder="Enter your Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    autoComplete="current-password"
+                    style={{
+                      width: '100%',
+                      height: 48,
+                      paddingLeft: 42,
+                      paddingRight: 44,
+                      borderRadius: 12,
+                      border: '1.5px solid #e2e8f0',
+                      backgroundColor: '#ffffff',
+                      fontSize: '0.875rem',
+                      color: '#0f172a',
+                      outline: 'none',
+                    }}
+                  />
+                  <button
+                    type="button"
+                    aria-label={showPw ? 'Hide password' : 'Show password'}
+                    onClick={() => setShowPw((v) => !v)}
+                    style={{
+                      position: 'absolute',
+                      right: 8,
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      color: '#94a3b8',
+                      width: 32,
+                      height: 32,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    {showPw ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
+                </div>
               </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                style={{
+                  width: '100%',
+                  height: 48,
+                  marginTop: 6,
+                  borderRadius: 12,
+                  border: 'none',
+                  backgroundColor: '#2563eb',
+                  color: '#ffffff',
+                  fontSize: '0.9375rem',
+                  fontWeight: 700,
+                  letterSpacing: '0.04em',
+                  textTransform: 'uppercase',
+                  cursor: loading ? 'not-allowed' : 'pointer',
+                  boxShadow: '0 4px 14px rgba(37, 99, 235, 0.35)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 8,
+                }}
+              >
+                {loading ? (
+                  <span
+                    style={{
+                      width: 20,
+                      height: 20,
+                      border: '2.5px solid rgba(255, 255, 255, 0.35)',
+                      borderTopColor: '#ffffff',
+                      borderRadius: '50%',
+                      animation: 'spin 0.75s linear infinite',
+                    }}
+                  />
+                ) : (
+                  <span>LOGIN</span>
+                )}
+              </button>
+            </form>
+
+            <p
+              style={{
+                textAlign: 'center',
+                fontSize: '0.84375rem',
+                color: '#64748b',
+                margin: '16px 0 14px',
+              }}
+            >
+              Don't have an Access account yet?{' '}
+              <Link
+                href="/auth/register"
+                style={{
+                  color: '#2563eb',
+                  fontWeight: 700,
+                  textDecoration: 'none',
+                }}
+              >
+                Register Now
+              </Link>
+            </p>
+
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 12,
+                margin: '10px 0 14px',
+              }}
+            >
+              <div style={{ flex: 1, height: 1, backgroundColor: '#e2e8f0' }} />
+              <span style={{ fontSize: '0.78125rem', color: '#94a3b8', fontWeight: 500 }}>
+                Or use account
+              </span>
+              <div style={{ flex: 1, height: 1, backgroundColor: '#e2e8f0' }} />
             </div>
 
             <button
-              type="submit"
-              disabled={loading}
+              type="button"
+              onClick={handleGoogleAuth}
+              disabled={loading || googleLoading}
               style={{
                 width: '100%',
                 height: 48,
-                marginTop: 6,
                 borderRadius: 12,
-                border: 'none',
-                backgroundColor: '#2563eb',
-                color: '#ffffff',
-                fontSize: '0.9375rem',
-                fontWeight: 700,
-                letterSpacing: '0.04em',
-                textTransform: 'uppercase',
-                cursor: loading ? 'not-allowed' : 'pointer',
-                boxShadow: '0 4px 14px rgba(37, 99, 235, 0.35)',
+                border: '1.5px solid #cbd5e1',
+                backgroundColor: '#ffffff',
+                color: '#0f172a',
+                fontSize: '0.875rem',
+                fontWeight: 600,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: 8,
+                gap: 10,
+                cursor: loading || googleLoading ? 'not-allowed' : 'pointer',
+                boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
               }}
             >
-              {loading ? (
+              {googleLoading ? (
                 <span
                   style={{
-                    width: 20,
-                    height: 20,
-                    border: '2.5px solid rgba(255, 255, 255, 0.35)',
-                    borderTopColor: '#ffffff',
+                    width: 18,
+                    height: 18,
+                    border: '2px solid rgba(37, 99, 235, 0.2)',
+                    borderTopColor: '#2563eb',
                     borderRadius: '50%',
                     animation: 'spin 0.75s linear infinite',
                   }}
                 />
               ) : (
-                <span>LOGIN</span>
+                <GoogleIcon size={19} />
               )}
+              <span>Sign in with Google</span>
             </button>
-          </form>
-
-          <p
-            style={{
-              textAlign: 'center',
-              fontSize: '0.84375rem',
-              color: '#64748b',
-              margin: '16px 0 14px',
-            }}
-          >
-            Don't have an Access account yet?{' '}
-            <Link
-              href="/auth/register"
-              style={{
-                color: '#2563eb',
-                fontWeight: 700,
-                textDecoration: 'none',
-              }}
-            >
-              Register Now
-            </Link>
-          </p>
-
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 12,
-              margin: '10px 0 14px',
-            }}
-          >
-            <div style={{ flex: 1, height: 1, backgroundColor: '#e2e8f0' }} />
-            <span style={{ fontSize: '0.78125rem', color: '#94a3b8', fontWeight: 500 }}>
-              Or use account
-            </span>
-            <div style={{ flex: 1, height: 1, backgroundColor: '#e2e8f0' }} />
           </div>
-
-          <button
-            type="button"
-            onClick={handleGoogleAuth}
-            disabled={loading || googleLoading}
-            style={{
-              width: '100%',
-              height: 48,
-              borderRadius: 12,
-              border: '1.5px solid #cbd5e1',
-              backgroundColor: '#ffffff',
-              color: '#0f172a',
-              fontSize: '0.875rem',
-              fontWeight: 600,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 10,
-              cursor: loading || googleLoading ? 'not-allowed' : 'pointer',
-              boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
-            }}
-          >
-            {googleLoading ? (
-              <span
-                style={{
-                  width: 18,
-                  height: 18,
-                  border: '2px solid rgba(37, 99, 235, 0.2)',
-                  borderTopColor: '#2563eb',
-                  borderRadius: '50%',
-                  animation: 'spin 0.75s linear infinite',
-                }}
-              />
-            ) : (
-              <GoogleIcon size={19} />
-            )}
-            <span>Sign in with Google</span>
-          </button>
         </div>
       </div>
 
@@ -431,8 +437,6 @@ export default function LoginPage() {
           to { transform: rotate(360deg); }
         }
         .rh-login-viewport {
-          min-height: 100vh;
-          min-height: 100dvh;
           width: 100%;
           background: #ffffff;
           display: flex;
@@ -443,8 +447,6 @@ export default function LoginPage() {
         .rh-login-container {
           width: 100%;
           max-width: 440px;
-          min-height: 100vh;
-          min-height: 100dvh;
           display: flex;
           flex-direction: column;
           background: #ffffff;
@@ -471,7 +473,6 @@ export default function LoginPage() {
           .rh-login-container {
             border-radius: 28px;
             overflow: hidden;
-            min-height: auto;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
           }
         }
