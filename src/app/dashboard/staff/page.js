@@ -124,7 +124,7 @@ function StaffDashboardContent() {
       // 1. Fetch staff assignments
       const { data: assignments, error: assignmentError } = await supabase
         .from('staff_assignments')
-        .select('id, schedule_id, schedules(id, status, departure_time, arrival_time, trains(name, train_number, type), routes(name, distance_km))')
+        .select('id, schedule_id, schedules(id, status, departure_time, arrival_time, trains(name, train_number), routes(name, distance_km))')
         .eq('staff_id', user.id)
         .order('created_at', { ascending: false })
 
