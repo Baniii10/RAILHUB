@@ -66,12 +66,12 @@ const PROMO_BANNERS_EN = [
 ]
 
 const POPULAR_ROUTES = [
-  { from: 'GMR', fromName: 'Gambir (Jakarta)',   to: 'BD',  toName: 'Bandung',         duration: '3j 00m', price: 'Mulai Rp 150.000', tag: 'Favorit Akhir Pekan', enTag: 'Weekend Favorite' },
-  { from: 'GMR', fromName: 'Gambir (Jakarta)',   to: 'YK',  toName: 'Yogyakarta',      duration: '7j 00m', price: 'Mulai Rp 250.000', tag: 'Rute Wisata', enTag: 'Leisure Route' },
-  { from: 'GMR', fromName: 'Gambir (Jakarta)',   to: 'SGU', toName: 'Surabaya Gubeng', duration: '8j 15m', price: 'Mulai Rp 350.000', tag: 'Lintas Pantura', enTag: 'North Coast' },
-  { from: 'BD',  fromName: 'Bandung',            to: 'SGU', toName: 'Surabaya Gubeng', duration: '11j 00m', price: 'Mulai Rp 300.000', tag: 'Lintas Selatan', enTag: 'Southern Line' },
-  { from: 'YK',  fromName: 'Yogyakarta',         to: 'GMR', toName: 'Gambir (Jakarta)',duration: '7j 00m', price: 'Mulai Rp 250.000', tag: 'Bisnis & Wisata', enTag: 'Business & Leisure' },
-  { from: 'SLO', fromName: 'Solo Balapan',       to: 'BD',  toName: 'Bandung',         duration: '8j 45m', price: 'Mulai Rp 195.000', tag: 'Antar Budaya', enTag: 'Cross-Cultural' },
+  { from: 'GMR', fromName: 'Gambir (Jakarta)',   to: 'BD',  toName: 'Bandung',         duration: '3 Jam', price: 'Mulai Rp 150.000', tag: 'Favorit Akhir Pekan', enTag: 'Weekend Favorite' },
+  { from: 'GMR', fromName: 'Gambir (Jakarta)',   to: 'YK',  toName: 'Yogyakarta',      duration: '7 Jam', price: 'Mulai Rp 250.000', tag: 'Rute Wisata', enTag: 'Leisure Route' },
+  { from: 'GMR', fromName: 'Gambir (Jakarta)',   to: 'SGU', toName: 'Surabaya Gubeng', duration: '8 Jam 15 Menit', price: 'Mulai Rp 350.000', tag: 'Lintas Pantura', enTag: 'North Coast' },
+  { from: 'BD',  fromName: 'Bandung',            to: 'SGU', toName: 'Surabaya Gubeng', duration: '11 Jam', price: 'Mulai Rp 300.000', tag: 'Lintas Selatan', enTag: 'Southern Line' },
+  { from: 'YK',  fromName: 'Yogyakarta',         to: 'GMR', toName: 'Gambir (Jakarta)',duration: '7 Jam', price: 'Mulai Rp 250.000', tag: 'Bisnis & Wisata', enTag: 'Business & Leisure' },
+  { from: 'SLO', fromName: 'Solo Balapan',       to: 'BD',  toName: 'Bandung',         duration: '8 Jam 45 Menit', price: 'Mulai Rp 195.000', tag: 'Antar Budaya', enTag: 'Cross-Cultural' },
 ]
 
 const FLEET_CLASSES = [
@@ -423,7 +423,7 @@ export default function HomePage() {
                     {lang === 'en' ? route.enTag : route.tag}
                   </span>
                   <span style={{ fontSize: '0.72rem', color: 'var(--rh-text-2)', display: 'flex', alignItems: 'center', gap: 3 }}>
-                    <Clock size={11} /> {lang === 'en' ? route.duration.replace('j', 'h') : route.duration}
+                    <Clock size={11} /> {lang === 'en' ? route.duration.replace('Jam', 'h').replace('Menit', 'm') : route.duration}
                   </span>
                 </div>
 

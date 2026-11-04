@@ -39,12 +39,19 @@ export function formatTime(dateString) {
  * Calculate journey duration in hours and minutes
  */
 export function formatDuration(departureStr, arrivalStr) {
+  if (!departureStr || !arrivalStr) return '-'
   const dep = new Date(departureStr)
   const arr = new Date(arrivalStr)
-  const diffMs = arr - dep
-  const hours = Math.floor(diffMs / (1000 * 60 * 60))
-  const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60))
-  return `${hours}j ${minutes}m`
+  let diffMs = arr.getTime() - dep.getTime()
+  if (diffMs < 0) {
+    diffMs += 24 * 60 * 60 * 1000
+  }
+  const totalMinutes = Math.round(diffMs / (1000 * 60))
+  const hours = Math.floor(totalMinutes / 60)
+  const minutes = totalMinutes % 60
+  if (hours === 0) return minutes + ' Menit'
+  if (minutes === 0) return hours + ' Jam'
+  return hours + ' Jam ' + minutes + ' Menit'
 }
 
 /**

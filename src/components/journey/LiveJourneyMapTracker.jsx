@@ -526,9 +526,17 @@ export default function LiveJourneyMapTracker({
                   textOverflow: 'ellipsis',
                 }}
               >
-                {progress < 100 ? (
-                  <>Tiba dlm <strong style={{ color: '#2563eb' }}>{Math.max(15, Math.round((100 - progress) * 1.8))} mnt</strong></>
-                ) : (
+                {countdown && !countdown.isDeparted && (countdown.hours > 0 || countdown.minutes > 0) ? (
+                  <>Berangkat dlm <strong style={{ color: '#2563eb' }}>
+                    {countdown.hours > 0 ? (countdown.minutes === 0 ? `${countdown.hours} Jam` : `${countdown.hours} Jam ${countdown.minutes} Menit`) : `${countdown.minutes} Menit`}
+                  </strong></>
+                ) : progress < 100 ? (() => {
+                  const remMin = Math.max(1, Math.round((100 - progress) * 1.8))
+                  const remH = Math.floor(remMin / 60)
+                  const remM = remMin % 60
+                  const timeLabel = remH > 0 ? (remM === 0 ? `${remH} Jam` : `${remH} Jam ${remM} Menit`) : `${remM} Menit`
+                  return <>Tiba dlm <strong style={{ color: '#2563eb' }}>{timeLabel}</strong></>
+                })() : (
                   <span style={{ color: '#059669' }}>Tiba di Tujuan</span>
                 )}
               </span>

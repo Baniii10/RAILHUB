@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useRouter } from 'next/navigation'
-import { TrainFront, Calendar, ArrowUpDown, ChevronDown, Search, X, Check, Plus, Minus, ArrowLeft } from 'lucide-react'
+import { TrainFront, Calendar, ArrowUpDown, ChevronDown, Search, X, Check, Plus, Minus, ArrowLeft, Clock } from 'lucide-react'
 import { useLang } from '@/contexts/LangContext'
 import { createClient } from '@/lib/supabase/client'
 import { STATIONS_CATALOG } from '@/lib/data/stationsCatalog'
@@ -54,6 +54,101 @@ function PassengerSeatIcon({ size = 22, color = '#475569', style = {} }) {
 }
 
 const POPULAR_CODES = ['PSE', 'GMR', 'BD', 'YK', 'SGU', 'SMT', 'ML']
+
+
+function LiveClockMinimal({ lang = 'id' }) {
+  const [mounted, setMounted] = useState(false)
+  const [now, setNow] = useState(null)
+
+  useEffect(() => {
+    setMounted(true)
+    setNow(new Date())
+    const timer = setInterval(() => {
+      setNow(new Date())
+    }, 1000)
+    return () => clearInterval(timer)
+  }, [])
+
+  if (!mounted || !now) {
+    return (
+      <div
+        className="rh-live-clock-skeleton"
+        style={{
+          height: 32,
+          marginBottom: '0.65rem',
+          borderRadius: 8,
+          background: 'rgba(241, 245, 249, 0.6)',
+        }}
+        aria-hidden="true"
+      />
+    )
+  }
+
+  const locale = lang === 'en' ? 'en-US' : 'id-ID'
+  const dayName = now.toLocaleDateString(locale, { weekday: 'long' })
+  const dateNum = now.getDate()
+  const monthName = now.toLocaleDateString(locale, { month: 'long' })
+  const year = now.getFullYear()
+  const timeFormatted = now.toLocaleTimeString(locale, {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false,
+    timeZone: 'Asia/Jakarta',
+  })
+
+  return (
+    <div
+      className="rh-live-time-ticker"
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        gap: '0.4rem',
+        padding: '0.4rem 0.8rem',
+        marginBottom: '0.75rem',
+        borderRadius: 10,
+        background: '#f8fafc',
+        border: '1px solid #e2e8f0',
+        fontSize: '0.78rem',
+        lineHeight: 1.3,
+      }}
+    >
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', color: '#334155', fontWeight: 600 }}>
+        <span
+          style={{
+            width: 7,
+            height: 7,
+            borderRadius: '50%',
+            background: '#10b981',
+            boxShadow: '0 0 0 2.5px rgba(16, 185, 129, 0.25)',
+            display: 'inline-block',
+            flexShrink: 0,
+          }}
+          className="animate-pulse"
+        />
+        <span>
+          {dayName}, {dateNum} {monthName} {year}
+        </span>
+      </div>
+
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.35rem',
+          fontFamily: 'var(--font-mono, monospace)',
+          fontWeight: 700,
+          color: '#1A428A',
+        }}
+      >
+        <Clock size={13} style={{ color: '#1A428A' }} />
+        <span>{timeFormatted} WIB</span>
+      </div>
+    </div>
+  )
+}
 
 export default function SearchWidget({ compact = false }) {
   const { lang, t } = useLang()
@@ -249,9 +344,12 @@ export default function SearchWidget({ compact = false }) {
   return (
     <div className="rh-detail-journey-container">
       {!compact && (
-        <h2 className="rh-detail-journey-heading">
-          {lang === 'en' ? 'Journey Details' : 'Detail Perjalanan'}
-        </h2>
+        <>
+          <LiveClockMinimal lang={lang} />
+          <h2 className="rh-detail-journey-heading">
+            {lang === 'en' ? 'Journey Details' : 'Detail Perjalanan'}
+          </h2>
+        </>
       )}
 
       <form onSubmit={handleSearch}>
