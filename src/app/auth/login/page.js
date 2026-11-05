@@ -22,6 +22,13 @@ function GoogleIcon({ size = 19 }) {
   )
 }
 
+const DEMO_ACCOUNTS = [
+  { role: 'passenger', title: 'Penumpang', email: 'penumpang.demo@railhub.id', password: 'DemoPassenger2026!', icon: '👤' },
+  { role: 'gate', title: 'Petugas Gerbang', email: 'gate.gambir@railhub.id', password: 'DemoStaff2026!', icon: '🎫' },
+  { role: 'conductor', title: 'Petugas Kereta', email: 'kondektur.parahyangan@railhub.id', password: 'DemoStaff2026!', icon: '🚆' },
+  { role: 'admin', title: 'Administrator', email: 'admin.operasional@railhub.id', password: 'DemoAdmin2026!', icon: '🛡️' },
+]
+
 export default function LoginPage() {
   const { t, lang } = useLang()
   const router = useRouter()
@@ -64,16 +71,13 @@ export default function LoginPage() {
     }
   }
 
-  async function handleSubmit(e) {
-    e.preventDefault()
+  async function signInWithCredentials(loginEmail, loginPassword, successMessage) {
     setError('')
     setLoading(true)
 
-    const cleanEmail = email.trim().toLowerCase()
-
     const { data, error: authError } = await supabase.auth.signInWithPassword({
-      email: cleanEmail,
-      password,
+      email: loginEmail,
+      password: loginPassword,
     })
 
     if (authError) {
@@ -101,12 +105,23 @@ export default function LoginPage() {
     }
     const profile = profileResult.data
 
-    toast.success(t.auth.loginSuccess)
+    toast.success(successMessage)
     setLoading(false)
 
     const requestedNext = new URLSearchParams(window.location.search).get('next')
     const role = getOperationalRole(profile)
     router.replace(isSafeNextPath(requestedNext, role) ? requestedNext : getDashboardForProfile(profile))
+  }
+
+  async function handleQuickLogin(account) {
+    setEmail(account.email)
+    setPassword(account.password)
+    await signInWithCredentials(account.email, account.password, `Login berhasil sebagai ${account.title}!`)
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault()
+    await signInWithCredentials(email.trim().toLowerCase(), password, t.auth.loginSuccess)
   }
 
   return (
@@ -416,6 +431,39 @@ export default function LoginPage() {
               )}
               <span>Sign in with Google</span>
             </button>
+
+            <div style={{ marginTop: '0.9rem' }}>
+              <div style={{ marginBottom: '0.45rem', fontSize: '0.75rem', fontWeight: 700, color: '#64748b' }}>
+                Login Cepat
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '0.4rem' }}>
+                {DEMO_ACCOUNTS.map((account) => (
+                  <button
+                    key={account.role}
+                    type="button"
+                    disabled={loading || googleLoading}
+                    onClick={() => handleQuickLogin(account)}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '0.4rem',
+                      padding: '0.55rem 0.5rem',
+                      borderRadius: 10,
+                      border: '1px solid #e2e8f0',
+                      background: '#f8fafc',
+                      color: '#334155',
+                      fontSize: '0.76rem',
+                      fontWeight: 700,
+                      cursor: loading || googleLoading ? 'not-allowed' : 'pointer',
+                    }}
+                  >
+                    <span aria-hidden="true">{account.icon}</span>
+                    <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{account.title}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
 
           </div>
         </div>

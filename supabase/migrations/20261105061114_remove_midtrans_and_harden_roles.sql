@@ -6,15 +6,6 @@ DROP FUNCTION IF EXISTS public.create_passenger_food_payment_intent(UUID, UUID, 
 DROP FUNCTION IF EXISTS public.configure_demo_profile();
 DROP TABLE IF EXISTS public.food_payment_intents;
 
-UPDATE public.profiles
-SET role = 'passenger', staff_type = NULL, station_id = NULL
-WHERE lower(email) IN (
-  'admin.operasional@railhub.id',
-  'gate.gambir@railhub.id',
-  'kondektur.parahyangan@railhub.id',
-  'penumpang.demo@railhub.id'
-);
-
 ALTER TABLE public.payments
   DROP COLUMN IF EXISTS gateway_order_id,
   DROP COLUMN IF EXISTS gateway_transaction_id,
