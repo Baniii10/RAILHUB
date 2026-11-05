@@ -38,7 +38,7 @@ export default function BookingPayment({ bookingId }) {
   const [qrCodes, setQrCodes] = useState({})
   const [journey, setJourney] = useState(null)
   const [now, setNow] = useState(0)
-  const [boardingPassOpen, setBoardingPassOpen] = useState(false)
+  const [selectedTicketNumber, setSelectedTicketNumber] = useState(null)
   const [rescheduleOpen, setRescheduleOpen] = useState(false)
   const [currentFareTotal, setCurrentFareTotal] = useState(null)
   const [rescheduleDate, setRescheduleDate] = useState('')
@@ -446,7 +446,8 @@ export default function BookingPayment({ bookingId }) {
 
           {booking && (
             <>
-              <section className="rh-card" style={{ marginBottom: '1rem' }}>
+              <section className="rh-card rh-ticket-detail-shell">
+                <section className="rh-ticket-detail-section">
                 <div className="rh-card-body" style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', alignItems: 'center' }}>
                   <div style={{ flex: '1 1 180px', minWidth: 0 }}>
                     <span style={{ color: 'var(--rh-text-2)', fontSize: '0.875rem' }}>Kode booking</span>
@@ -457,10 +458,10 @@ export default function BookingPayment({ bookingId }) {
                     <strong style={{ display: 'block', color: 'var(--rh-primary)', fontSize: '1.25rem' }}>{formatIDR(booking.total_amount)}</strong>
                   </div>
                 </div>
-              </section>
+                </section>
 
               {booking.status === 'pending' && payment?.status === 'pending' && !bookingExpired && (
-                <section className="rh-card" style={{ marginBottom: '1rem' }}>
+                <section className="rh-ticket-detail-section">
                   <div className="rh-card-body">
                     <h2 className="rh-h4">Pilih metode pembayaran</h2>
                     <p style={{ color: 'var(--rh-text-2)', margin: '0.5rem 0 1rem' }}>
@@ -505,7 +506,7 @@ export default function BookingPayment({ bookingId }) {
               )}
 
               {booking.status === 'pending' && bookingExpired && (
-                <section className="rh-card" role="status" style={{ padding: '1.5rem', marginBottom: '1rem' }}>
+                <section className="rh-ticket-detail-section" role="status" style={{ padding: '1.5rem' }}>
                   <h2 className="rh-h4">Waktu pembayaran telah habis</h2>
                   <p style={{ color: 'var(--rh-text-2)', margin: '.5rem 0 1rem' }}>
                     Booking ini tidak dapat dibayar lagi. Silakan pilih jadwal dan kursi untuk membuat booking baru.
@@ -516,7 +517,7 @@ export default function BookingPayment({ bookingId }) {
 
               {booking.status === 'paid' && (
                 <>
-                  <section className="rh-card" style={{ marginBottom: '1rem' }}>
+                  <section className="rh-ticket-detail-section">
                     <div className="rh-card-body">
                       <h2 className="rh-h4" style={{ color: 'var(--rh-success)' }}>
                         <CheckCircle2 size={20} style={{ verticalAlign: 'middle', marginRight: 6 }} />
@@ -546,16 +547,6 @@ export default function BookingPayment({ bookingId }) {
                         )
                       })()}
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.65rem', marginTop: '1rem' }}>
-                        <button
-                          className="rh-btn rh-btn-primary"
-                          type="button"
-                          onClick={() => setBoardingPassOpen(open => !open)}
-                          disabled={!canOpenBoardingPass}
-                          aria-expanded={boardingPassOpen}
-                        >
-                          <Ticket size={16} />
-                          {boardingPassOpen ? 'Tutup e-boarding pass' : 'Lihat e-boarding pass'}
-                        </button>
                         <button
                           className="rh-btn rh-btn-ghost"
                           type="button"
@@ -594,7 +585,7 @@ export default function BookingPayment({ bookingId }) {
                   <JourneyStatusTimeline scheduleId={booking.schedule_id} />
 
                   {rescheduleOpen && canManagePaidTicket && (
-                    <section className="rh-card" style={{ marginBottom: '1rem' }}>
+                    <section className="rh-ticket-detail-section">
                       <div className="rh-card-header">
                         <h2 className="rh-h4">Reschedule perjalanan</h2>
                         <p style={{ color: 'var(--rh-text-2)', marginTop: '.35rem' }}>
@@ -707,35 +698,53 @@ export default function BookingPayment({ bookingId }) {
               )}
 
               {booking.status !== 'pending' && booking.status !== 'paid' && (
-                <section className="rh-card" style={{ padding: '1.5rem', marginBottom: '1rem' }}>
+                <section className="rh-ticket-detail-section" style={{ padding: '1.5rem' }}>
                   Status booking: <strong>{booking.status}</strong>. Silakan buat booking baru bila masih ingin melakukan perjalanan.
                 </section>
               )}
 
               {tickets.length > 0 && (
-                <section>
-                  <h2 className="rh-h3" style={{ marginBottom: '1rem' }}>Tiket penumpang</h2>
+                <section className="rh-ticket-detail-section rh-ticket-list-section">
+                  <h2 className="rh-h4" style={{ marginBottom: '1rem' }}>Tiket penumpang</h2>
                   <div style={{ display: 'grid', gap: '1rem' }}>
                     {tickets.map(ticket => (
-                      boardingPassOpen && canOpenBoardingPass ? (
-                        <EBoardingPass
-                          key={ticket.ticket_number}
-                          booking={booking}
-                          ticket={ticket}
-                          qrImage={qrCodes[ticket.ticket_number]}
-                          journey={journey}
-                        />
+                      selectedTicketNumber === ticket.ticket_number && canOpenBoardingPass ? (
+                        <div key={ticket.ticket_number} className="rh-selected-ticket">
+                          <button
+                            className="rh-btn rh-btn-ghost rh-btn-sm"
+                            type="button"
+                            onClick={() => setSelectedTicketNumber(null)}
+                          >
+                            <ArrowLeft size={15} /> Tutup e-ticket
+                          </button>
+                          <EBoardingPass
+                            booking={booking}
+                            ticket={ticket}
+                            qrImage={qrCodes[ticket.ticket_number]}
+                            journey={journey}
+                          />
+                        </div>
                       ) : (
                         <article key={ticket.ticket_number} className="rh-ticket-row">
                           <div><small>Nomor tiket</small><strong className="rh-mono">{ticket.ticket_number}</strong></div>
                           <div><small>Penumpang</small><strong>{ticket.passengers?.full_name || 'Penumpang simulasi'}</strong></div>
                           <div><small>Kursi</small><strong>{ticket.seats?.seat_number || '—'}</strong></div>
+                          <button
+                            className="rh-btn rh-btn-primary rh-btn-sm"
+                            type="button"
+                            onClick={() => setSelectedTicketNumber(ticket.ticket_number)}
+                            disabled={!canOpenBoardingPass}
+                            aria-expanded={selectedTicketNumber === ticket.ticket_number}
+                          >
+                            <Ticket size={15} /> Buka e-ticket
+                          </button>
                         </article>
                       )
                     ))}
                   </div>
                 </section>
               )}
+              </section>
               {booking.status === 'paid' && user && (
                 <PassengerServices userId={user.id} bookingId={booking.id} />
               )}

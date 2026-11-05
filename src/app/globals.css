@@ -4286,9 +4286,41 @@ input[type="checkbox"]:focus-visible {
   text-align: center;
 }
 
+.rh-ticket-detail-shell {
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.rh-ticket-detail-section + .rh-ticket-detail-section,
+.rh-ticket-detail-shell > .rh-card {
+  border-top: 1px solid var(--rh-border);
+}
+
+.rh-ticket-detail-shell > .rh-card {
+  margin: 0 !important;
+  border-right: 0;
+  border-bottom: 0;
+  border-left: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.rh-ticket-list-section {
+  padding: 1.5rem;
+}
+
+.rh-selected-ticket {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.rh-selected-ticket > .rh-btn {
+  justify-self: start;
+}
+
 .rh-ticket-row {
   display: grid;
-  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) auto auto;
   gap: 1rem;
   align-items: center;
   padding: 1rem 1.1rem;
@@ -4344,6 +4376,7 @@ input[type="checkbox"]:focus-visible {
   .rh-boarding-pass-details { grid-template-columns: minmax(0, 1.4fr) 0.6fr 0.6fr; }
   .rh-ticket-row { grid-template-columns: 1fr auto; }
   .rh-ticket-row div:nth-child(2) { grid-column: 1 / -1; grid-row: 2; }
+  .rh-ticket-row > .rh-btn { grid-column: 1 / -1; width: 100%; }
 }
 
 
