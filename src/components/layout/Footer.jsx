@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Train, MapPin, Clock, Mail, Phone } from 'lucide-react'
+import { useAuth } from '@/contexts/AuthContext'
 
 // --- SOCIAL MEDIA VECTOR ICONS (Matching reference orange/coral outline style) ---
 function IconThreads({ size = 18 }) {
@@ -123,6 +124,7 @@ function LogoQris() {
 }
 
 export default function Footer() {
+  const { user, loading } = useAuth()
   const [isConsole, setIsConsole] = useState(false)
 
   useEffect(() => {
@@ -134,8 +136,8 @@ export default function Footer() {
     }
   }, [])
 
-  // Suppress public marketing footer in dedicated staff and admin operational consoles
-  if (isConsole) {
+  // Jika sudah login atau berada di konsol operasional, jangan render footer
+  if (loading || user || isConsole) {
     return null
   }
 
