@@ -4491,8 +4491,9 @@ input[type="checkbox"]:focus-visible {
   .staff-tabs-nav::-webkit-scrollbar { display: none; }
 }
 .passenger-profile-page { width: min(100%, 760px); margin: 0 auto; display: grid; gap: 1.25rem; }
-.passenger-profile-hero { position: relative; padding-top: 120px; }
-.passenger-profile-sky { position: absolute; inset: 0 0 70px; display: flex; align-items: flex-start; justify-content: flex-end; padding: 1rem 2rem; overflow: hidden; border-radius: 24px 24px 0 0; color: rgba(255,255,255,.28); background: linear-gradient(135deg, #183f86, #2563eb 58%, #f28c18); }
+.passenger-account-hide { display: none; }
+.passenger-profile-hero { position: relative; padding-top: 76px; }
+.passenger-profile-sky { position: absolute; top: 0; right: 0; left: 0; height: 130px; display: flex; align-items: flex-start; justify-content: flex-end; padding: .75rem 1.25rem; overflow: hidden; border-radius: 20px 20px 0 0; color: rgba(255,255,255,.2); background: linear-gradient(135deg, #183f86, #2563eb 72%, #f28c18); }
 .passenger-profile-card { position: relative; margin: 0 1.25rem; padding: 1.35rem; border: 1px solid var(--rh-border); border-radius: 22px; background: white; box-shadow: 0 14px 35px rgba(20, 52, 98, .12); }
 .passenger-profile-identity { display: flex; align-items: center; gap: 1rem; }
 .passenger-profile-avatar { width: 76px; height: 76px; display: grid; flex: 0 0 76px; place-items: center; border-radius: 50%; color: white; background: var(--rh-secondary); font-size: 1.6rem; font-weight: 850; }
@@ -4513,9 +4514,9 @@ input[type="checkbox"]:focus-visible {
 .passenger-profile-menu span svg { color: var(--rh-text-2); }
 @media (max-width: 640px) {
   .passenger-profile-page { gap: 1rem; }
-  .passenger-profile-hero { margin: -2rem calc(50% - 50vw) 0; padding: 110px 0 0; }
-  .passenger-profile-sky { border-radius: 0; }
-  .passenger-profile-card { margin: 0 1rem; padding: 1.1rem; }
+  .passenger-profile-hero { margin: 0; padding-top: 58px; }
+  .passenger-profile-sky { height: 105px; border-radius: 16px 16px 0 0; }
+  .passenger-profile-card { margin: 0 .65rem; padding: 1rem; border-radius: 18px; }
   .passenger-profile-avatar { width: 64px; height: 64px; flex-basis: 64px; font-size: 1.35rem; }
   .passenger-profile-identity h2 { font-size: 1.05rem; }
   .passenger-profile-form form { grid-template-columns: 1fr; }

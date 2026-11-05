@@ -309,7 +309,7 @@ function PassengerDashboardContent() {
       <Navbar />
       <main className="passenger-dashboard" style={{ background: 'var(--rh-surface)', minHeight: '100vh', paddingBottom: '6rem' }}>
         {/* ── TOP HEADER / GREETING BAR ── */}
-        <section className="passenger-header-banner rh-hide-on-mobile-tracking" style={{
+        <section className={`passenger-header-banner rh-hide-on-mobile-tracking ${activeTab === 'account' ? 'passenger-account-hide' : ''}`} style={{
           background: 'var(--rh-primary)',
           color: 'white',
           padding: '2.5rem 0 2rem',
