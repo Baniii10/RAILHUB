@@ -241,11 +241,11 @@ export default function Navbar() {
               <Image
                 src="/images/Fix logo railhub.png"
                 alt="RAILHUB"
-                width={140}
-                height={46}
+                width={160}
+                height={48}
                 priority
                 style={{
-                  height: '46px',
+                  height: '48px',
                   width: 'auto',
                   objectFit: 'contain',
                   display: 'block',
