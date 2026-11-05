@@ -32,7 +32,7 @@ import {
   XCircle,
 } from 'lucide-react'
 import toast from 'react-hot-toast'
-import Navbar from '@/components/layout/Navbar'
+import OperationalDashboardShell from '@/components/layout/OperationalDashboardShell'
 import LiveRoleClock from '@/components/ui/LiveRoleClock'
 import { useAuth } from '@/contexts/AuthContext'
 import { useConfirm } from '@/contexts/ConfirmDialogContext'
@@ -80,11 +80,40 @@ function StatusBadge({ status, label }) {
   )
 }
 
-const ADMIN_TABS = [
-  { id: 'overview', label: 'Ringkasan', icon: LayoutDashboard },
-  { id: 'schedules', label: 'Perjalanan', icon: CalendarDays },
-  { id: 'bookings', label: 'Pemesanan', icon: TicketCheck },
-  { id: 'staff', label: 'Petugas', icon: ShieldCheck },
+// Admin Sidebar Navigation Groups
+const getAdminMenuGroups = ({ stats, unassignedCount }) => [
+  {
+    groupLabel: 'Utama',
+    items: [
+      { id: 'overview', label: 'Dashboard Utama', icon: LayoutDashboard },
+    ],
+  },
+  {
+    groupLabel: 'Operasional KA',
+    items: [
+      { id: 'schedules', label: 'Jadwal & Perjalanan', icon: CalendarDays },
+      { id: 'trains', label: 'Armada Kereta', icon: Train },
+      { id: 'routes', label: 'Rute & Koridor', icon: Navigation },
+      { id: 'stations', label: 'Stasiun & Wilayah', icon: MapPin },
+      { id: 'seats', label: 'Formasi Kursi', icon: Grid },
+      { id: 'fares', label: 'Tarif & Tiket', icon: CircleDollarSign },
+    ],
+  },
+  {
+    groupLabel: 'Pemesanan',
+    items: [
+      { id: 'bookings', label: 'Data Pemesanan', icon: TicketCheck, badge: stats?.bookings || 0 },
+      { id: 'users', label: 'Akun Pengguna', icon: Users },
+    ],
+  },
+  {
+    groupLabel: 'Staf & Laporan',
+    items: [
+      { id: 'staff', label: 'Petugas & Kondektur', icon: ShieldCheck, badge: unassignedCount || 0, badgeColor: '#f59e0b' },
+      { id: 'reports', label: 'Laporan Masalah', icon: ClipboardList },
+      { id: 'content', label: 'Pengumuman Sistem', icon: Megaphone },
+    ],
+  },
 ]
 
 function AdminDashboardContent() {
@@ -358,89 +387,25 @@ function AdminDashboardContent() {
 
   const unassignedCount = schedules.filter(s => s.status !== 'cancelled' && !assignmentCounts[s.id]).length
 
+  const menuGroups = getAdminMenuGroups({ stats, unassignedCount })
+
   return (
-    <>
-      <Navbar />
-      <main style={{ minHeight: '100vh', padding: '1.5rem 0 5rem', background: 'var(--rh-surface)' }}>
-        <div className="rh-container">
-
-          {/* Top Admin Header */}
-          <header className="rh-card" style={{ padding: '1.25rem 1.5rem', marginBottom: '1.5rem' }}>
-            <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
-              <div>
-                <span className="rh-badge rh-badge-primary">Administrator Sistem · Akses Penuh</span>
-                <h1 className="rh-h2" style={{ margin: '0.45rem 0 0.2rem' }}>{profile?.full_name || 'Administrator RAILHUB'}</h1>
-                <p style={{ margin: 0, color: 'var(--rh-text-2)', fontSize: '0.9rem' }}>
-                  Bertugas mengawasi perjalanan, pemesanan, petugas, dan laporan seluruh jaringan RAILHUB. · {user?.email}
-                </p>
-              </div>
-              <div style={{ display: 'grid', gap: '0.5rem', justifyItems: 'end' }}>
-                <LiveRoleClock />
-                <button
-                  type="button"
-                  className="rh-btn rh-btn-ghost"
-                  onClick={() => { setError(''); setLoading(true); setReloadKey(k => k + 1) }}
-                  disabled={loading}
-                >
-                  <RefreshCw size={16} className={loading ? 'rh-spin' : ''} />
-                  Muat Ulang Data
-                </button>
-              </div>
-            </div>
-          </header>
-
-          {error && (
-            <div role="alert" className="rh-card" style={{ padding: '1rem', color: 'var(--rh-danger)', marginBottom: '1.25rem' }}>
-              <AlertCircle size={18} style={{ verticalAlign: 'middle', marginRight: 8 }} />
-              {error}
-            </div>
-          )}
-
-          {/* 12 Tab Navigation Bar matching RAILHUB.md Section C */}
-          <nav
-            aria-label="Navigasi Menu Admin"
-            className="rh-card"
-            style={{
-              display: 'flex',
-              overflowX: 'auto',
-              gap: '0.35rem',
-              padding: '0.4rem',
-              marginBottom: '1.5rem',
-              WebkitOverflowScrolling: 'touch',
-            }}
-          >
-            {ADMIN_TABS.map(tab => {
-              const Icon = tab.icon
-              const active = activeTab === tab.id
-              return (
-                <button
-                  key={tab.id}
-                  type="button"
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`rh-btn rh-btn-sm ${active ? 'rh-btn-primary' : 'rh-btn-ghost'}`}
-                  style={{
-                    whiteSpace: 'nowrap',
-                    flexShrink: 0,
-                    borderRadius: 8,
-                    fontWeight: active ? 700 : 500,
-                  }}
-                >
-                  <Icon size={15} />
-                  {tab.label}
-                  {tab.id === 'staff' && unassignedCount > 0 && (
-                    <span style={{ marginLeft: 4, padding: '0.1rem 0.4rem', borderRadius: 999, background: 'var(--rh-warning)', color: '#fff', fontSize: '0.68rem', fontWeight: 700 }}>
-                      {unassignedCount}
-                    </span>
-                  )}
-                </button>
-              )
-            })}
-          </nav>
+    <OperationalDashboardShell
+      role="admin"
+      roleBadge="Administrator Sistem"
+      subtitle="Pusat Kendali Seluruh Jaringan Kereta Api Pulau Jawa"
+      menuGroups={menuGroups}
+      activeTab={activeTab}
+      onSelectTab={setActiveTab}
+      loading={loading}
+      error={error}
+      onRefresh={() => { setError(''); setLoading(true); setReloadKey(k => k + 1) }}
+    >
 
           {/* ── TAB 1: OVERVIEW ──────────────────────────────────────────────── */}
           {activeTab === 'overview' && (
             <div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))', gap: '0.9rem', marginBottom: '1.5rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 150px), 1fr))', gap: '0.75rem', marginBottom: '1.25rem' }}>
                 {[
                   { label: 'Jadwal Aktif', value: stats.activeSchedules, icon: Train, color: 'var(--rh-primary)' },
                   { label: 'Belum Ditugaskan', value: unassignedCount, icon: AlertCircle, color: 'var(--rh-warning)' },
@@ -1221,9 +1186,7 @@ function AdminDashboardContent() {
             </section>
           )}
 
-        </div>
-      </main>
-    </>
+    </OperationalDashboardShell>
   )
 }
 

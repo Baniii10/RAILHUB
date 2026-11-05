@@ -231,6 +231,59 @@ export function IconLebihBanyak({ size = 26 }) {
   )
 }
 
+export function IconAboutRailHub({ size = 32, className = '' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} aria-label="Tentang RailHub">
+      <rect x="5" y="6" width="22" height="21" rx="5" fill="#1A428A" />
+      <path d="M7 13H25V9C25 7.34 23.66 6 22 6H10C8.34 6 7 7.34 7 9V13Z" fill="#2563EB" />
+      <rect x="9" y="8" width="14" height="4.5" rx="1" fill="#E2E8F0" />
+      <circle cx="11" cy="18" r="2" fill="#FFE500" />
+      <circle cx="21" cy="18" r="2" fill="#FFE500" />
+      <rect x="13" y="16.5" width="6" height="3" rx="1.5" fill="#FF8C00" />
+      <circle cx="24" cy="7" r="5" fill="#FF8C00" stroke="#FFFFFF" strokeWidth="1.5" />
+      <text x="24" y="9.8" textAnchor="middle" fill="#FFFFFF" fontSize="7" fontWeight="bold" fontFamily="sans-serif">i</text>
+    </svg>
+  )
+}
+
+export function IconFaqHelp({ size = 32, className = '' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} aria-label="Pusat Bantuan FAQ">
+      <path d="M5 8C5 5.79 6.79 4 9 4H23C25.21 4 27 5.79 27 8V18C27 20.21 25.21 22 23 22H14L8 27V22H9C6.79 22 5 20.21 5 18V8Z" fill="#1A428A" />
+      <circle cx="16" cy="13" r="6.5" fill="#FF8C00" />
+      <path d="M14.5 11C14.5 10.17 15.17 9.5 16 9.5C16.83 9.5 17.5 10.17 17.5 11C17.5 11.9 16.5 12.3 16.5 13.2V13.6M16 15.6V15.7" stroke="#FFFFFF" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  )
+}
+
+export function IconContactCs({ size = 32, className = '' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} aria-label="Kontak RailHub">
+      <circle cx="16" cy="16" r="10" fill="#F8FAFC" stroke="#1A428A" strokeWidth="2.5" />
+      <path d="M8 16C8 11.58 11.58 8 16 8C20.42 8 24 11.58 24 16" stroke="#1A428A" strokeWidth="3" strokeLinecap="round" />
+      <rect x="6" y="14" width="4" height="6.5" rx="2" fill="#FF8C00" />
+      <rect x="22" y="14" width="4" height="6.5" rx="2" fill="#FF8C00" />
+      <path d="M23 18V21C23 22.66 21.66 24 20 24H16.5" stroke="#1A428A" strokeWidth="2" strokeLinecap="round" />
+      <circle cx="15.5" cy="24" r="1.5" fill="#FF8C00" />
+    </svg>
+  )
+}
+
+export function IconMyTickets({ size = 32, className = '' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} aria-label="Tiket Saya">
+      <rect x="4" y="8" width="24" height="16" rx="3.5" fill="#1A428A" />
+      <rect x="7" y="10" width="18" height="12" rx="2" fill="#2563EB" />
+      <circle cx="4" cy="16" r="2.5" fill="#FFFFFF" />
+      <circle cx="28" cy="16" r="2.5" fill="#FFFFFF" />
+      <line x1="12" y1="12" x2="12" y2="20" stroke="#FFFFFF" strokeWidth="1.5" strokeDasharray="1.5 1.5" />
+      <path d="M15 13H21M15 16H19M15 19H21" stroke="#FFE500" strokeWidth="1.5" strokeLinecap="round" />
+      <circle cx="24" cy="8" r="4.5" fill="#FF8C00" stroke="#FFFFFF" strokeWidth="1.5" />
+      <path d="M22.5 8L23.5 9L25.5 7" stroke="#FFFFFF" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
 /**
  * Modern Locomotive Vector Illustration for Live Tracking Banner (Screenshot 1)
  */

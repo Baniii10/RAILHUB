@@ -563,85 +563,78 @@ export default function LoginPage() {
               <span>Sign in with Google</span>
             </button>
 
-            <div style={{ marginTop: '1.25rem', paddingTop: '1rem', borderTop: '1px dashed #e2e8f0' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.65rem' }}>
-                <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#1e293b', letterSpacing: '-0.01em' }}>
-                  Akses Cepat Pengujian UAS
+            <div style={{ marginTop: '1.15rem', paddingTop: '0.85rem', borderTop: '1px solid #f1f5f9' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                  Akses Cepat Demo
                 </span>
-                <span style={{ fontSize: '0.7rem', fontWeight: 600, color: '#2563eb', background: '#eff6ff', padding: '2px 8px', borderRadius: 999 }}>
-                  1-Click Login
+                <span style={{ fontSize: '0.68rem', color: '#94a3b8' }}>
+                  1-klik login
                 </span>
               </div>
 
-              {/* Akun Pengguna Utama: Penumpang & Admin */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '0.5rem', marginBottom: '0.75rem' }}>
+              {/* Minimalist Role Chips: Penumpang & Admin */}
+              <div style={{ display: 'flex', gap: '0.45rem', marginBottom: '0.45rem' }}>
                 {DEMO_ACCOUNTS.filter(a => a.category !== 'staff').map((account) => (
                   <button
                     key={account.email}
                     type="button"
                     disabled={loading || googleLoading}
                     onClick={() => handleQuickLogin(account)}
+                    className="rh-quick-login-chip"
                     style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'flex-start',
-                      padding: '0.65rem 0.75rem',
-                      borderRadius: 12,
-                      border: '1.5px solid #e2e8f0',
-                      background: account.role === 'admin' ? '#faf5ff' : '#f0fdf4',
-                      color: '#0f172a',
-                      textAlign: 'left',
+                      flex: 1,
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '0.45rem',
+                      padding: '0.5rem 0.75rem',
+                      borderRadius: 10,
+                      border: '1px solid #e2e8f0',
+                      background: '#ffffff',
+                      color: '#1e293b',
+                      fontSize: '0.78rem',
+                      fontWeight: 600,
                       cursor: loading || googleLoading ? 'not-allowed' : 'pointer',
                       transition: 'all 0.15s ease',
                     }}
                   >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, width: '100%' }}>
-                      <span style={{ fontSize: '1.1rem' }}>{account.icon}</span>
-                      <strong style={{ fontSize: '0.8rem', fontWeight: 700, color: '#0f172a' }}>{account.title}</strong>
-                    </div>
-                    <span style={{ fontSize: '0.68rem', color: '#64748b', marginTop: 3 }}>{account.badge}</span>
+                    <span>{account.icon}</span>
+                    <span>{account.title}</span>
                   </button>
                 ))}
               </div>
 
-              {/* 5 Akun Petugas Kereta (1 Petugas per 1 Kereta) */}
-              <div style={{ marginBottom: '0.45rem', display: 'flex', alignItems: 'center', gap: 6 }}>
-                <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                  Petugas Kereta (1 Akun per Kereta)
-                </span>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(1, minmax(0, 1fr))', gap: '0.4rem', maxHeight: 220, overflowY: 'auto', paddingRight: 2 }}>
+              {/* Minimalist Micro-chips for Petugas KA */}
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem' }}>
                 {DEMO_ACCOUNTS.filter(a => a.category === 'staff').map((account) => (
                   <button
                     key={account.email}
                     type="button"
                     disabled={loading || googleLoading}
                     onClick={() => handleQuickLogin(account)}
+                    className="rh-quick-login-chip"
+                    title={`${account.title} (${account.badge})`}
                     style={{
-                      display: 'flex',
+                      flex: '1 1 auto',
+                      display: 'inline-flex',
                       alignItems: 'center',
-                      justifyContent: 'space-between',
-                      padding: '0.55rem 0.75rem',
-                      borderRadius: 10,
-                      border: '1px solid #fed7aa',
-                      background: '#fff7ed',
-                      color: '#0f172a',
-                      textAlign: 'left',
+                      justifyContent: 'center',
+                      gap: '0.35rem',
+                      padding: '0.35rem 0.55rem',
+                      borderRadius: 8,
+                      border: '1px solid #e2e8f0',
+                      background: '#f8fafc',
+                      color: '#475569',
+                      fontSize: '0.72rem',
+                      fontWeight: 600,
                       cursor: loading || googleLoading ? 'not-allowed' : 'pointer',
                       transition: 'all 0.15s ease',
+                      whiteSpace: 'nowrap',
                     }}
                   >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                      <span style={{ fontSize: '1rem' }}>{account.icon}</span>
-                      <div>
-                        <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#9a3412' }}>{account.title}</div>
-                        <div style={{ fontSize: '0.68rem', color: '#7c2d12' }}>{account.badge}</div>
-                      </div>
-                    </div>
-                    <span style={{ fontSize: '0.68rem', fontWeight: 700, color: '#ea580c', background: '#ffedd5', padding: '2px 8px', borderRadius: 6 }}>
-                      Masuk →
-                    </span>
+                    <span style={{ fontSize: '0.78rem' }}>🚆</span>
+                    <span>{account.trainName || account.title.replace('Petugas KA ', '')}</span>
                   </button>
                 ))}
               </div>
@@ -670,6 +663,15 @@ export default function LoginPage() {
           flex-direction: column;
           background: #ffffff;
           position: relative;
+        }
+        .rh-quick-login-chip:hover {
+          border-color: #cbd5e1 !important;
+          background: #f1f5f9 !important;
+          color: #0f172a !important;
+          transform: translateY(-1px);
+        }
+        .rh-quick-login-chip:active {
+          transform: translateY(0);
         }
         .rh-login-sheet {
           background-color: #ffffff;

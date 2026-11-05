@@ -14,6 +14,17 @@ import { createClient } from '@/lib/supabase/client'
 import { formatDate, formatIDR, formatTime } from '@/lib/utils/formatters'
 import PassengerServices from '@/components/services/PassengerServices'
 import JourneyStatusTimeline from '@/components/services/JourneyStatusTimeline'
+import {
+  QrisLogo,
+  GopayLogo,
+  OvoLogo,
+  DanaLogo,
+  ShopeepayLogo,
+  BcaLogo,
+  MandiriLogo,
+  BniLogo,
+  BriLogo,
+} from '@/components/payment/PaymentLogos'
 
 const TICKET_PAYMENT_METHODS = [
   { value: 'qr_payment', label: 'QRIS', description: 'Metode pembayaran simulasi', icon: CreditCard },
@@ -52,6 +63,8 @@ export default function BookingPayment({ bookingId }) {
   const [error, setError] = useState('')
   const [processing, setProcessing] = useState(false)
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('qr_payment')
+  const [selectedWallet, setSelectedWallet] = useState('gopay')
+  const [selectedBank, setSelectedBank] = useState('bca')
   const paymentExpiresAt = booking?.expires_at ? Date.parse(booking.expires_at) : NaN
   const bookingExpired = now > 0 && Number.isFinite(paymentExpiresAt) && paymentExpiresAt <= now
 
@@ -405,21 +418,154 @@ export default function BookingPayment({ bookingId }) {
                       Batas pembayaran: {new Date(booking.expires_at).toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' })}
                     </p>
                     <div className="passenger-food-payment-methods" role="radiogroup" aria-label="Metode pembayaran tiket">
-                      {TICKET_PAYMENT_METHODS.map(({ value, label, description, icon: Icon }) => (
-                        <button
-                          key={value}
-                          className={`passenger-food-payment-method ${selectedPaymentMethod === value ? 'is-selected' : ''}`}
-                          type="button"
-                          role="radio"
-                          aria-checked={selectedPaymentMethod === value}
-                          onClick={() => setSelectedPaymentMethod(value)}
-                          disabled={processing}
-                        >
-                          <span className="passenger-food-item-icon"><Icon size={19} /></span>
-                          <span><strong>{label}</strong><small>{description}</small></span>
+                      {/* 1. QRIS (Authentic Logo) */}
+                      <button
+                        type="button"
+                        className={`passenger-food-payment-method ${selectedPaymentMethod === 'qr_payment' ? 'is-selected' : ''}`}
+                        role="radio"
+                        aria-checked={selectedPaymentMethod === 'qr_payment'}
+                        onClick={() => setSelectedPaymentMethod('qr_payment')}
+                        disabled={processing}
+                        style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}
+                      >
+                        <div style={{ padding: '4px 6px', background: '#ffffff', borderRadius: 8, border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', flexShrink: 0 }}>
+                          <QrisLogo height={26} />
+                        </div>
+                        <span style={{ flex: 1, display: 'grid', gap: '0.2rem' }}>
+                          <strong style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', fontSize: '0.92rem' }}>
+                            QRIS (Standar Pembayaran Nasional)
+                            <span style={{ fontSize: '0.68rem', fontWeight: 700, padding: '1px 6px', borderRadius: 4, background: '#fee2e2', color: '#b91c1c' }}>Semua Bank & E-Wallet</span>
+                          </strong>
+                          <small style={{ color: 'var(--rh-text-2)', fontSize: '0.78rem' }}>
+                            BCA Mobile, Livin&apos; Mandiri, BRImo, BNI, GoPay, OVO, DANA, ShopeePay
+                          </small>
+                        </span>
+                        <span className="passenger-food-payment-radio" />
+                      </button>
+
+                      {/* 2. E-WALLET (Authentic Logos: GoPay, OVO, DANA, ShopeePay) */}
+                      <div
+                        className={`passenger-food-payment-method ${selectedPaymentMethod === 'e_wallet' ? 'is-selected' : ''}`}
+                        onClick={() => setSelectedPaymentMethod('e_wallet')}
+                        role="radio"
+                        aria-checked={selectedPaymentMethod === 'e_wallet'}
+                        tabIndex={0}
+                        style={{ display: 'flex', flexDirection: 'column', alignItems: 'stretch', cursor: 'pointer' }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', width: '100%' }}>
+                          <div style={{ display: 'flex', gap: '4px', alignItems: 'center', flexWrap: 'wrap', flexShrink: 0 }}>
+                            <GopayLogo height={18} />
+                            <OvoLogo height={18} />
+                            <DanaLogo height={18} />
+                            <ShopeepayLogo height={18} />
+                          </div>
+                          <span style={{ flex: 1, display: 'grid', gap: '0.2rem' }}>
+                            <strong style={{ fontSize: '0.92rem' }}>Dompet Digital (E-Wallet)</strong>
+                            <small style={{ color: 'var(--rh-text-2)', fontSize: '0.78rem' }}>Pilih GoPay, OVO, DANA, atau ShopeePay</small>
+                          </span>
                           <span className="passenger-food-payment-radio" />
-                        </button>
-                      ))}
+                        </div>
+
+                        {selectedPaymentMethod === 'e_wallet' && (
+                          <div
+                            style={{
+                              display: 'grid',
+                              gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
+                              gap: '0.5rem',
+                              marginTop: '0.75rem',
+                              paddingTop: '0.75rem',
+                              borderTop: '1px solid rgba(26,66,138,0.1)',
+                            }}
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            {[
+                              { id: 'gopay', label: 'GoPay', Logo: GopayLogo },
+                              { id: 'ovo', label: 'OVO', Logo: OvoLogo },
+                              { id: 'dana', label: 'DANA', Logo: DanaLogo },
+                              { id: 'shopeepay', label: 'ShopeePay', Logo: ShopeepayLogo },
+                            ].map(({ id, label, Logo }) => (
+                              <button
+                                key={id}
+                                type="button"
+                                className={`rh-payment-provider-btn ${selectedWallet === id ? 'is-active' : ''}`}
+                                onClick={() => setSelectedWallet(id)}
+                                style={{
+                                  display: 'flex',
+                                  flexDirection: 'column',
+                                  alignItems: 'center',
+                                  gap: 4,
+                                  padding: '0.5rem 0.35rem',
+                                }}
+                              >
+                                <Logo height={20} />
+                                <span style={{ fontSize: '0.72rem', fontWeight: 600, color: selectedWallet === id ? 'var(--rh-primary)' : 'var(--rh-text-2)' }}>{label}</span>
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* 3. VIRTUAL ACCOUNT BANK (Authentic Logos: BCA, Mandiri, BNI, BRI) */}
+                      <div
+                        className={`passenger-food-payment-method ${selectedPaymentMethod === 'bank_transfer' ? 'is-selected' : ''}`}
+                        onClick={() => setSelectedPaymentMethod('bank_transfer')}
+                        role="radio"
+                        aria-checked={selectedPaymentMethod === 'bank_transfer'}
+                        tabIndex={0}
+                        style={{ display: 'flex', flexDirection: 'column', alignItems: 'stretch', cursor: 'pointer' }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', width: '100%' }}>
+                          <div style={{ display: 'flex', gap: '4px', alignItems: 'center', flexWrap: 'wrap', flexShrink: 0 }}>
+                            <BcaLogo height={18} />
+                            <MandiriLogo height={18} />
+                            <BniLogo height={18} />
+                            <BriLogo height={18} />
+                          </div>
+                          <span style={{ flex: 1, display: 'grid', gap: '0.2rem' }}>
+                            <strong style={{ fontSize: '0.92rem' }}>Virtual Account Bank</strong>
+                            <small style={{ color: 'var(--rh-text-2)', fontSize: '0.78rem' }}>Konfirmasi otomatis 24 jam</small>
+                          </span>
+                          <span className="passenger-food-payment-radio" />
+                        </div>
+
+                        {selectedPaymentMethod === 'bank_transfer' && (
+                          <div
+                            style={{
+                              display: 'grid',
+                              gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
+                              gap: '0.5rem',
+                              marginTop: '0.75rem',
+                              paddingTop: '0.75rem',
+                              borderTop: '1px solid rgba(26,66,138,0.1)',
+                            }}
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            {[
+                              { id: 'bca', label: 'BCA VA', Logo: BcaLogo },
+                              { id: 'mandiri', label: 'Mandiri VA', Logo: MandiriLogo },
+                              { id: 'bni', label: 'BNI VA', Logo: BniLogo },
+                              { id: 'bri', label: 'BRI VA', Logo: BriLogo },
+                            ].map(({ id, label, Logo }) => (
+                              <button
+                                key={id}
+                                type="button"
+                                className={`rh-payment-provider-btn ${selectedBank === id ? 'is-active' : ''}`}
+                                onClick={() => setSelectedBank(id)}
+                                style={{
+                                  display: 'flex',
+                                  flexDirection: 'column',
+                                  alignItems: 'center',
+                                  gap: 4,
+                                  padding: '0.5rem 0.35rem',
+                                }}
+                              >
+                                <Logo height={20} />
+                                <span style={{ fontSize: '0.72rem', fontWeight: 600, color: selectedBank === id ? 'var(--rh-primary)' : 'var(--rh-text-2)' }}>{label}</span>
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
                     </div>
                     <div className="passenger-food-payment-summary">
                       <span>Total tiket</span>
@@ -457,6 +603,10 @@ export default function BookingPayment({ bookingId }) {
                         Pembayaran dikonfirmasi
                       </h2>
                       <p style={{ color: 'var(--rh-text-2)', marginTop: '0.4rem' }}>Pembayaran simulasi berhasil dan tiket telah diterbitkan.</p>
+                      <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.55rem', marginTop: '0.5rem', padding: '0.35rem 0.75rem', borderRadius: 8, background: 'rgba(5, 150, 105, 0.08)', border: '1px solid rgba(5, 150, 105, 0.2)' }}>
+                        <small style={{ color: 'var(--rh-success)', fontWeight: 700 }}>Metode Terbayar:</small>
+                        {payment?.method === 'qr_payment' ? <QrisLogo height={18} /> : payment?.method === 'e_wallet' ? <GopayLogo height={18} /> : <BcaLogo height={18} />}
+                      </div>
                       {booking.schedules?.departure_time && (
                         <p style={{ display: 'flex', alignItems: 'center', gap: '.45rem', color: 'var(--rh-text-2)', marginTop: '.75rem' }}>
                           <CalendarDays size={16} />

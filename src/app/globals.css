@@ -185,25 +185,54 @@ html {
 
 .mobile-quick-access {
   display: grid;
-  gap: 0.75rem;
-  padding: 0.9rem;
-  border: 1px solid rgba(255,255,255,.14);
-  border-radius: 16px;
-  background: rgba(255,255,255,.07);
+  gap: 0.85rem;
+  padding: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(8px);
   color: white;
 }
-.mobile-quick-access small { color: rgba(255,255,255,.68); font-size: .72rem; }
-.mobile-quick-access h2 { margin: 0.1rem 0 0; font-size: 1rem; }
-.mobile-quick-access nav { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.5rem; }
-.mobile-quick-access a { display: grid; gap: 0.35rem; justify-items: center; color: white; font-size: .69rem; font-weight: 650; text-align: center; }
+.mobile-quick-access small {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+.mobile-quick-access h2 {
+  margin: 0.15rem 0 0;
+  font-size: 1.1rem;
+  font-weight: 800;
+}
+.mobile-quick-access nav {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+.mobile-quick-access a {
+  display: grid;
+  gap: 0.45rem;
+  justify-items: center;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+  transition: transform 0.15s ease;
+}
 .mobile-quick-access a > span {
   display: grid;
-  width: 42px;
-  height: 42px;
+  width: 54px;
+  height: 54px;
   place-items: center;
-  border-radius: 13px;
-  background: white;
+  border-radius: 16px;
+  background: #ffffff;
   color: var(--rh-primary);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.14);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.mobile-quick-access a:active > span {
+  transform: scale(0.94);
 }
 
 .dashboard-tab-select {
@@ -4821,4 +4850,148 @@ input[type="checkbox"] {
     animation: none;
     overflow-x: auto;
   }
+}
+
+
+/* ============================================================
+   OPERATIONAL DASHBOARD SIDEBAR & MOBILE TABS (ADMIN & PETUGAS)
+   ============================================================ */
+
+.rh-sidebar-mobile-only {
+  display: none !important;
+}
+
+.rh-sidebar-mobile-tabs {
+  display: none;
+}
+
+@media (max-width: 1023px) {
+  .rh-sidebar-mobile-only {
+    display: flex !important;
+  }
+
+  .rh-sidebar-responsive {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    bottom: 0 !important;
+    width: min(290px, 86vw) !important;
+    transform: translateX(-100%) !important;
+    box-shadow: none !important;
+    visibility: hidden;
+    pointer-events: none;
+    z-index: 1000 !important;
+  }
+
+  .rh-sidebar-drawer-open {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    bottom: 0 !important;
+    width: min(290px, 86vw) !important;
+    transform: translateX(0) !important;
+    box-shadow: 14px 0 40px rgba(5, 17, 36, 0.38) !important;
+    visibility: visible;
+    pointer-events: auto;
+    z-index: 1000 !important;
+  }
+
+  /* Horizontal swipeable tab pills right under header on mobile */
+  .rh-sidebar-mobile-tabs {
+    display: flex;
+    overflow-x: auto;
+    gap: 0.45rem;
+    padding: 0.65rem 1rem;
+    background: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    position: sticky;
+    top: 58px;
+    z-index: 25;
+  }
+  .rh-sidebar-mobile-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .rh-mobile-tab-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.4rem 0.75rem;
+    border-radius: 999px;
+    border: 1px solid #e2e8f0;
+    background: #f8fafc;
+    color: #475569;
+    font-size: 0.76rem;
+    font-weight: 600;
+    white-space: nowrap;
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .rh-mobile-tab-pill.is-active {
+    background: #1a428a;
+    border-color: #1a428a;
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(26, 66, 138, 0.25);
+  }
+
+  .rh-mobile-tab-pill .rh-pill-badge {
+    padding: 0.1rem 0.4rem;
+    border-radius: 999px;
+    font-size: 0.62rem;
+    font-weight: 800;
+    background: #ea580c;
+    color: #ffffff;
+    line-height: 1;
+  }
+
+  /* Compact card padding on mobile to maximize viewport */
+  .rh-card {
+    padding: 1rem !important;
+    border-radius: 14px !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .rh-sidebar-responsive,
+  .rh-sidebar-drawer-open {
+    position: sticky !important;
+    top: 0 !important;
+    height: 100vh !important;
+    transform: translateX(0) !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    width: 270px !important;
+  }
+}
+
+/* Authentic Payment Logos & Sub-Providers */
+.rh-payment-logo-badges {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+.rh-payment-provider-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.45rem 0.65rem;
+  border-radius: 10px;
+  border: 1.5px solid var(--rh-border);
+  background: #ffffff;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.rh-payment-provider-btn:hover {
+  border-color: var(--rh-primary);
+  background: var(--rh-primary-light);
+}
+.rh-payment-provider-btn.is-active {
+  border-color: var(--rh-primary);
+  background: var(--rh-primary-light);
+  box-shadow: 0 0 0 2px rgba(26, 66, 138, 0.12);
 }

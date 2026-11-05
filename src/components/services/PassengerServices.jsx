@@ -4,6 +4,17 @@ import { useEffect, useState } from 'react'
 import { AlertCircle, ArrowLeft, Banknote, ClipboardList, CreditCard, Minus, Plus, Smartphone, Utensils } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { createClient } from '@/lib/supabase/client'
+import {
+  QrisLogo,
+  GopayLogo,
+  OvoLogo,
+  DanaLogo,
+  ShopeepayLogo,
+  BcaLogo,
+  MandiriLogo,
+  BniLogo,
+  BriLogo,
+} from '@/components/payment/PaymentLogos'
 import { formatIDR } from '@/lib/utils/formatters'
 
 const REPORT_CATEGORIES = [
@@ -298,20 +309,66 @@ export default function PassengerServices({ userId, bookingId: initialBookingId,
                 </p>
               </div>
               <div className="passenger-food-payment-methods" role="radiogroup" aria-label="Metode pembayaran">
-                {FOOD_PAYMENT_METHODS.map(({ value, label, description, icon: Icon }) => (
-                  <button
-                    key={value}
-                    className={`passenger-food-payment-method ${foodPaymentMethod === value ? 'is-selected' : ''}`}
-                    type="button"
-                    role="radio"
-                    aria-checked={foodPaymentMethod === value}
-                    onClick={() => setFoodPaymentMethod(value)}
-                  >
-                    <span className="passenger-food-item-icon"><Icon size={19} /></span>
-                    <span><strong>{label}</strong><small>{description}</small></span>
-                    <span className="passenger-food-payment-radio" />
-                  </button>
-                ))}
+                {/* QRIS */}
+                <button
+                  type="button"
+                  className={`passenger-food-payment-method ${foodPaymentMethod === 'qris' ? 'is-selected' : ''}`}
+                  role="radio"
+                  aria-checked={foodPaymentMethod === 'qris'}
+                  onClick={() => setFoodPaymentMethod('qris')}
+                  style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}
+                >
+                  <div style={{ padding: '4px 6px', background: '#ffffff', borderRadius: 8, border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', flexShrink: 0 }}>
+                    <QrisLogo height={24} />
+                  </div>
+                  <span style={{ flex: 1, display: 'grid', gap: '0.2rem' }}>
+                    <strong style={{ fontSize: '0.9rem' }}>QRIS (Standar Pembayaran Nasional)</strong>
+                    <small style={{ color: 'var(--rh-text-2)', fontSize: '0.78rem' }}>Scan instan via m-Banking & E-Wallet</small>
+                  </span>
+                  <span className="passenger-food-payment-radio" />
+                </button>
+
+                {/* E-Wallet */}
+                <button
+                  type="button"
+                  className={`passenger-food-payment-method ${foodPaymentMethod === 'e_wallet' ? 'is-selected' : ''}`}
+                  role="radio"
+                  aria-checked={foodPaymentMethod === 'e_wallet'}
+                  onClick={() => setFoodPaymentMethod('e_wallet')}
+                  style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}
+                >
+                  <div style={{ display: 'flex', gap: '3px', alignItems: 'center', flexWrap: 'wrap', flexShrink: 0 }}>
+                    <GopayLogo height={16} />
+                    <OvoLogo height={16} />
+                    <DanaLogo height={16} />
+                  </div>
+                  <span style={{ flex: 1, display: 'grid', gap: '0.2rem' }}>
+                    <strong style={{ fontSize: '0.9rem' }}>E-Wallet</strong>
+                    <small style={{ color: 'var(--rh-text-2)', fontSize: '0.78rem' }}>GoPay, OVO, DANA, ShopeePay</small>
+                  </span>
+                  <span className="passenger-food-payment-radio" />
+                </button>
+
+                {/* Bank Transfer */}
+                <button
+                  type="button"
+                  className={`passenger-food-payment-method ${foodPaymentMethod === 'bank_transfer' ? 'is-selected' : ''}`}
+                  role="radio"
+                  aria-checked={foodPaymentMethod === 'bank_transfer'}
+                  onClick={() => setFoodPaymentMethod('bank_transfer')}
+                  style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}
+                >
+                  <div style={{ display: 'flex', gap: '3px', alignItems: 'center', flexWrap: 'wrap', flexShrink: 0 }}>
+                    <BcaLogo height={16} />
+                    <MandiriLogo height={16} />
+                    <BniLogo height={16} />
+                  </div>
+                  <span style={{ flex: 1, display: 'grid', gap: '0.2rem' }}>
+                    <strong style={{ fontSize: '0.9rem' }}>Virtual Account Bank</strong>
+                    <small style={{ color: 'var(--rh-text-2)', fontSize: '0.78rem' }}>BCA, Mandiri, BNI, BRI</small>
+                  </span>
+                  <span className="passenger-food-payment-radio" />
+                </button>
               </div>
               <div className="passenger-food-payment-summary">
                 <span>{selectedItems.reduce((sum, item) => sum + item.quantity, 0)} item menu</span>

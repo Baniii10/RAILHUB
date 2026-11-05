@@ -27,7 +27,7 @@ import {
   XCircle,
 } from 'lucide-react'
 import toast from 'react-hot-toast'
-import Navbar from '@/components/layout/Navbar'
+import OperationalDashboardShell from '@/components/layout/OperationalDashboardShell'
 import LiveRoleClock from '@/components/ui/LiveRoleClock'
 import TicketScanner from '@/components/staff/TicketScanner'
 import { useAuth } from '@/contexts/AuthContext'
@@ -61,6 +61,61 @@ const TABS = [
   { id: 'services', label: 'Layanan', icon: HelpingHand },
 ]
 const GATE_TABS = TABS.filter(tab => ['overview', 'validation'].includes(tab.id))
+
+// Staff Sidebar Navigation Groups
+const getStaffMenuGroups = ({ isGate, ticketTotal, pendingServices }) => {
+  if (isGate) {
+    return [
+      {
+        groupLabel: 'Utama',
+        items: [
+          { id: 'overview', label: 'Dashboard Tugas', icon: LayoutDashboard },
+        ],
+      },
+      {
+        groupLabel: 'Pemeriksaan Boarding',
+        items: [
+          { id: 'validation', label: 'Scan & Validasi Tiket', icon: TicketCheck },
+        ],
+      },
+      {
+        groupLabel: 'Layanan & Bantuan',
+        items: [
+          { id: 'notifications', label: 'Pemberitahuan Tugas', icon: Bell },
+        ],
+      },
+    ]
+  }
+
+  return [
+    {
+      groupLabel: 'Utama',
+      items: [
+        { id: 'overview', label: 'Dashboard Tugas', icon: LayoutDashboard },
+      ],
+    },
+    {
+      groupLabel: 'Validasi & Boarding',
+      items: [
+        { id: 'validation', label: 'Scan Tiket Penumpang', icon: TicketCheck },
+      ],
+    },
+    {
+      groupLabel: 'Operasional KA',
+      items: [
+        { id: 'passengers', label: 'Manifest Penumpang', icon: Users, badge: ticketTotal || 0 },
+        { id: 'journey', label: 'Status Perjalanan', icon: Train },
+      ],
+    },
+    {
+      groupLabel: 'Layanan Kereta',
+      items: [
+        { id: 'services', label: 'Restorasi & Bantuan', icon: Utensils, badge: pendingServices || 0, badgeColor: '#ea580c' },
+        { id: 'notifications', label: 'Pemberitahuan Tugas', icon: Bell },
+      ],
+    },
+  ]
+}
 
 function StaffDashboardContent() {
   const router = useRouter()
@@ -351,123 +406,30 @@ function StaffDashboardContent() {
     })
   }, [tickets, passengerSearch, passengerScheduleFilter, passengerValidatedFilter])
 
+  const pendingServices = pendingOrders + pendingReports
+  const menuGroups = useMemo(() => getStaffMenuGroups({
+    isGate,
+    ticketTotal,
+    pendingServices,
+  }), [isGate, ticketTotal, pendingServices])
+
   return (
-    <>
-      <Navbar />
-      <main style={{ minHeight: '100vh', padding: '1.5rem 0 5rem', background: 'var(--rh-surface)' }}>
-        <div className="rh-container">
-
-          {/* Header Card */}
-          <header className="rh-card" style={{ padding: '1.25rem 1.5rem', marginBottom: '1.5rem' }}>
-            <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
-              <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                  <span className="rh-badge rh-badge-primary">Area Operasional Kereta Api</span>
-                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.8rem', color: 'var(--rh-success)', fontWeight: 700 }}>
-                    <span style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--rh-success)' }} />
-                    Dinas Aktif
-                  </span>
-                </div>
-                <h1 className="rh-h2" style={{ margin: '0.45rem 0 0.2rem' }}>
-                  Dashboard Petugas
-                </h1>
-                <p style={{ margin: 0, color: 'var(--rh-text-2)', fontSize: '0.9rem' }}>
-                  <strong>PETUGAS KERETA</strong> · {profile?.full_name || 'Petugas'} · ID <span className="rh-mono">STF-{user?.id?.slice(0, 8).toUpperCase()}</span>
-                </p>
-                <p style={{ margin: '.35rem 0 0', color: 'var(--rh-text-2)', fontSize: '.85rem' }}>
-                  {isGate ? `Lokasi tugas: ${stationName || 'Stasiun Gambir (GMR)'} · Tugas: scan dan validasi boarding.` : journeys[0] ? `Tugas aktif: ${journeys[0].schedules?.trains?.name || 'Kereta'} · ${journeys[0].schedules?.routes?.name || 'Rute'} · Total ${journeys.length} perjalanan.` : 'Belum ada perjalanan yang ditugaskan oleh admin.'}
-                </p>
-              </div>
-
-              <div style={{ display: 'grid', gap: '.5rem', justifyItems: 'end' }}>
-                <LiveRoleClock />
-                <button
-                  type="button"
-                  className="rh-btn rh-btn-ghost"
-                  onClick={() => { setLoading(true); setReloadKey(k => k + 1) }}
-                  disabled={loading}
-                >
-                  <RefreshCw size={16} className={loading ? 'rh-spin' : ''} />
-                  Muat Ulang
-                </button>
-              </div>
-            </div>
-          </header>
-
-          {error && (
-            <div role="alert" className="rh-card" style={{ padding: '1rem 1.25rem', color: 'var(--rh-danger)', borderColor: 'var(--rh-danger-light)', marginBottom: '1.25rem' }}>
-              <AlertCircle size={18} style={{ verticalAlign: 'middle', marginRight: 8 }} />
-              {error}
-            </div>
-          )}
-
-          <label className="dashboard-tab-select rh-show-mobile-only">
-            <span>Menu petugas</span>
-            <select className="rh-input rh-select" value={activeTab} onChange={event => selectTab(event.target.value)}>
-              {availableTabs.map(tab => <option key={tab.id} value={tab.id}>{tab.label}</option>)}
-            </select>
-          </label>
-
-          {/* Desktop operational navigation */}
-          <nav
-            aria-label="Menu Petugas"
-            className="rh-card staff-tabs-nav"
-            style={{
-              display: 'flex',
-              overflowX: 'auto',
-              gap: '0.35rem',
-              padding: '0.4rem',
-              marginBottom: '1.5rem',
-              WebkitOverflowScrolling: 'touch',
-            }}
-          >
-            {availableTabs.map(tab => {
-              const Icon = tab.icon
-              const active = activeTab === tab.id
-              let badge = null
-              if (tab.id === 'passengers') badge = ticketTotal
-              if (tab.id === 'services' && pendingOrders + pendingReports > 0) badge = pendingOrders + pendingReports
-
-              return (
-                <button
-                  key={tab.id}
-                  type="button"
-                  onClick={() => selectTab(tab.id)}
-                  className={`rh-btn rh-btn-sm ${active ? 'rh-btn-primary' : 'rh-btn-ghost'}`}
-                  style={{
-                    whiteSpace: 'nowrap',
-                    flexShrink: 0,
-                    borderRadius: 8,
-                    fontWeight: active ? 700 : 500,
-                  }}
-                >
-                  <Icon size={15} />
-                  {tab.label}
-                  {badge !== null && badge > 0 && (
-                    <span
-                      style={{
-                        marginLeft: 4,
-                        padding: '0.1rem 0.4rem',
-                        borderRadius: 999,
-                        fontSize: '0.7rem',
-                        fontWeight: 700,
-                        background: active ? 'rgba(255,255,255,0.25)' : 'var(--rh-primary-light)',
-                        color: active ? '#fff' : 'var(--rh-primary)',
-                      }}
-                    >
-                      {badge}
-                    </span>
-                  )}
-                </button>
-              )
-            })}
-          </nav>
-
+    <OperationalDashboardShell
+      role={isGate ? 'gate' : 'conductor'}
+      roleBadge={isGate ? 'Petugas Gerbang & Boarding' : 'Kondektur & Operasional KA'}
+      subtitle={isGate ? `Lokasi tugas: ${stationName || 'Stasiun Gambir (GMR)'} · Gate In & Validasi Boarding` : (journeys[0] ? `Dinas Aktif: ${journeys[0].schedules?.trains?.name || 'Kereta Api'} · Total ${journeys.length} Perjalanan` : 'Area Penugasan Operasional Awak Kereta Api')}
+      menuGroups={menuGroups}
+      activeTab={activeTab}
+      onSelectTab={selectTab}
+      loading={loading}
+      error={error}
+      onRefresh={() => { setError(''); setLoading(true); setReloadKey(k => k + 1) }}
+    >
           {/* ── TAB 1: OVERVIEW ──────────────────────────────────────────────── */}
           {activeTab === 'overview' && (
             <div>
               {/* Stat Cards */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: '0.9rem', marginBottom: '1.5rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 150px), 1fr))', gap: '0.75rem', marginBottom: '1.25rem' }}>
                 {[
                   { label: 'Perjalanan Tugas', value: journeys.length, icon: Train, color: 'var(--rh-primary)' },
                   { label: 'Manifest Penumpang', value: ticketTotal, icon: Users, color: 'var(--rh-info)' },
@@ -900,7 +862,7 @@ function StaffDashboardContent() {
                           </select>
                         </label>
 
-                        <label className="rh-input-group" style={{ margin: 0, gridColumn: 'span 2' }}>
+                        <label className="rh-input-group" style={{ margin: 0 }}>
                           <span className="rh-label-text">Catatan Informasi Penumpang / Stasiun (Opsional)</span>
                           <input
                             className="rh-input"
@@ -1209,9 +1171,7 @@ function StaffDashboardContent() {
             </section>
           )}
 
-        </div>
-      </main>
-    </>
+    </OperationalDashboardShell>
   )
 }
 
