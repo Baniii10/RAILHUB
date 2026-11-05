@@ -52,7 +52,6 @@ export default function Navbar() {
     ? profileName.split(' ')[0]
     : roleLabel
 
-  const isPassengerTracking = pathname === '/dashboard/passenger'
     && (!searchParams.get('tab') || searchParams.get('tab') === 'overview' || searchParams.get('tab') === 'journey')
 
   const [scrolled,     setScrolled]     = useState(false)
@@ -525,7 +524,7 @@ export default function Navbar() {
       )}
 
       {/* Mobile Bottom App Navigation Bar */}
-      {!isBookingFlow && !isPassengerTracking && <nav
+      {!isBookingFlow && <nav
         aria-label="Navigasi bawah mobile"
         className="rh-show-mobile-only"
         style={{

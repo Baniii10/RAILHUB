@@ -7,6 +7,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import QRCode from 'qrcode'
 import {
   AlertCircle,
+  ArrowLeft,
   ArrowRight,
   CalendarDays,
   CheckCircle2,
@@ -28,7 +29,6 @@ import {
   Share2,
   Shield,
   ShieldCheck,
-  Sparkles,
   Star,
   Ticket,
   Train,
@@ -230,7 +230,6 @@ function PassengerDashboardContent() {
   )
   const profileName = profile?.full_name || user?.user_metadata?.full_name || 'Penumpang RAILHUB'
   const profileInitials = profileName.split(/\s+/).slice(0, 2).map(part => part[0]).join('').toUpperCase()
-  const profileComplete = [profileName, profile?.phone_number, user?.email].filter(Boolean).length
 
   // Calculate live countdown to departure
   useEffect(() => {
@@ -308,7 +307,7 @@ function PassengerDashboardContent() {
   return (
     <>
       <Navbar />
-      <main className={`passenger-dashboard ${activeTab === 'overview' ? 'is-tracking-tab' : ''}`} style={{ background: 'var(--rh-surface)', minHeight: '100vh', paddingBottom: activeTab === 'overview' ? 0 : '6rem' }}>
+      <main className="passenger-dashboard" style={{ background: 'var(--rh-surface)', minHeight: '100vh', paddingBottom: '6rem' }}>
         {/* ── TOP HEADER / GREETING BAR ── */}
         <section className="passenger-header-banner rh-hide-on-mobile-tracking" style={{
           background: 'var(--rh-primary)',
@@ -333,18 +332,6 @@ function PassengerDashboardContent() {
               </div>
 
             </div>
-
-            <nav className="passenger-mobile-tabs rh-show-mobile-only" aria-label="Menu penumpang">
-              {TABS.map(tab => {
-                const TabIcon = tab.icon
-                return (
-                  <button key={tab.id} type="button" className={activeTab === tab.id ? 'is-active' : ''} onClick={() => selectTab(tab.id)} aria-current={activeTab === tab.id ? 'page' : undefined}>
-                    <TabIcon size={17} aria-hidden="true" />
-                    <span>{tab.label}</span>
-                  </button>
-                )
-              })}
-            </nav>
 
             {/* ── DESKTOP DASHBOARD NAVIGATION ── */}
             <nav className="passenger-tabs-nav" aria-label="Menu Dashboard Penumpang">
@@ -658,6 +645,7 @@ function PassengerDashboardContent() {
 
           {activeTab === 'account' && (
             <div className="passenger-profile-page">
+              <button type="button" className="passenger-profile-back" onClick={() => selectTab('overview')}><ArrowLeft size={18} /> Kembali ke perjalanan</button>
               <section className="passenger-profile-hero">
                 <div className="passenger-profile-sky" aria-hidden="true"><Train size={88} /></div>
                 <div className="passenger-profile-card">
@@ -667,16 +655,8 @@ function PassengerDashboardContent() {
                   </div>
                   <div className="passenger-profile-actions">
                     <button type="button" onClick={() => setShowEditProfile(value => !value)}><UserRound size={20} /> Lihat profil</button>
-                    <button type="button" onClick={() => selectTab('tickets')}><QrCode size={20} /> QR tiket</button>
                   </div>
                 </div>
-              </section>
-
-              <section className="passenger-profile-complete">
-                <Sparkles size={24} />
-                <div><h3>Lengkapi profil perjalanan</h3><p>Data yang lengkap mempercepat pemesanan dan layanan bantuan selama perjalanan.</p></div>
-                <span>{profileComplete}/3 lengkap</span>
-                <button type="button" onClick={() => setShowEditProfile(true)}>LENGKAPI SEKARANG</button>
               </section>
 
               {showEditProfile && <section id="edit-profile" className="rh-card passenger-profile-form">
@@ -690,6 +670,7 @@ function PassengerDashboardContent() {
               </section>}
 
               <nav className="passenger-profile-menu" aria-label="Menu akun">
+                <button type="button" onClick={() => selectTab('tickets')}><span><QrCode size={20} /> QR tiket digital</span><ChevronRight size={21} /></button>
                 <button type="button" onClick={() => setShowEditProfile(true)}><span><KeyRound size={20} /> Ubah data akun</span><ChevronRight size={21} /></button>
                 <button type="button" onClick={() => selectTab('tickets')}><span><History size={20} /> Riwayat tiket</span><ChevronRight size={21} /></button>
                 <Link href="/about"><span><ShieldCheck size={20} /> Keamanan &amp; privasi</span><ChevronRight size={21} /></Link>

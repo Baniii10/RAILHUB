@@ -4500,13 +4500,9 @@ input[type="checkbox"]:focus-visible {
 .passenger-profile-identity p { display: flex; align-items: center; gap: .4rem; margin: .3rem 0 .15rem; color: var(--rh-text-2); }
 .passenger-profile-identity p svg { color: var(--rh-secondary); }
 .passenger-profile-identity small { color: var(--rh-text-3); overflow-wrap: anywhere; }
-.passenger-profile-actions { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; margin-top: 1.15rem; }
+.passenger-profile-back { width: max-content; display: inline-flex; align-items: center; gap: .45rem; padding: .4rem 0; border: 0; color: var(--rh-primary); background: transparent; font: inherit; font-weight: 750; cursor: pointer; }
+.passenger-profile-actions { display: grid; grid-template-columns: 1fr; gap: .75rem; margin-top: 1.15rem; }
 .passenger-profile-actions button { min-height: 52px; display: inline-flex; align-items: center; justify-content: center; gap: .55rem; border: 1px solid var(--rh-border); border-radius: 15px; background: white; color: var(--rh-text); font: inherit; cursor: pointer; }
-.passenger-profile-complete { display: grid; grid-template-columns: auto 1fr auto; align-items: start; gap: .75rem; padding: 1.35rem; border-radius: 20px; color: white; background: linear-gradient(135deg, #f4a62a, #ef6a54 48%, #7c3aed); box-shadow: 0 12px 28px rgba(104, 57, 170, .18); }
-.passenger-profile-complete h3 { margin: 0 0 .35rem; color: white; }
-.passenger-profile-complete p { margin: 0; color: rgba(255,255,255,.9); line-height: 1.55; }
-.passenger-profile-complete > span { padding: .25rem .55rem; border-radius: 999px; background: rgba(255,255,255,.18); font-size: .75rem; font-weight: 750; white-space: nowrap; }
-.passenger-profile-complete button { grid-column: 1 / -1; min-height: 50px; margin-top: .45rem; border: 0; border-radius: 14px; color: var(--rh-primary); background: white; font-weight: 850; cursor: pointer; }
 .passenger-profile-form { padding: 1.25rem; scroll-margin-top: 100px; }
 .passenger-profile-form h3 { margin: 0 0 1rem; }
 .passenger-profile-form form { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
@@ -4522,7 +4518,5 @@ input[type="checkbox"]:focus-visible {
   .passenger-profile-card { margin: 0 1rem; padding: 1.1rem; }
   .passenger-profile-avatar { width: 64px; height: 64px; flex-basis: 64px; font-size: 1.35rem; }
   .passenger-profile-identity h2 { font-size: 1.05rem; }
-  .passenger-profile-complete { grid-template-columns: auto 1fr; padding: 1.15rem; }
-  .passenger-profile-complete > span { grid-column: 2; }
   .passenger-profile-form form { grid-template-columns: 1fr; }
 }
