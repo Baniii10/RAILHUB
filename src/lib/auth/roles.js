@@ -5,6 +5,16 @@ export const DASHBOARD_BY_ROLE = {
   passenger: '/dashboard/passenger',
 }
 
+export const DEMO_ROLE_BY_EMAIL = {
+  'admin.operasional@railhub.id': 'admin',
+  'admin@railhub.com': 'admin',
+  'gate.gambir@railhub.id': 'gate',
+  'kondektur.parahyangan@railhub.id': 'conductor',
+  'staff@railhub.com': 'conductor',
+  'penumpang.demo@railhub.id': 'passenger',
+  'penumpang@railhub.com': 'passenger',
+}
+
 const DASHBOARD_PATHS_BY_ROLE = {
   admin: ['/dashboard/admin', '/dashboard/orders', '/dashboard/reports'],
   conductor: ['/dashboard/staff', '/dashboard/orders', '/dashboard/reports'],
@@ -16,20 +26,33 @@ function matchesPath(pathname, path) {
   return pathname === path || pathname.startsWith(`${path}/`)
 }
 
-export function getOperationalRole(profile) {
+export function getOperationalRole(profile, email = null) {
+  const userEmail = (email || profile?.email || '').trim().toLowerCase()
+  if (userEmail && DEMO_ROLE_BY_EMAIL[userEmail]) {
+    return DEMO_ROLE_BY_EMAIL[userEmail]
+  }
+
   if (profile?.role === 'admin') return 'admin'
-  if (profile?.role !== 'conductor') return 'passenger'
-  return profile.staff_type === 'gate' ? 'gate' : 'conductor'
+  if (profile?.role === 'gate') return 'gate'
+  if (profile?.role === 'conductor' || profile?.role === 'staff') {
+    return profile?.staff_type === 'gate' ? 'gate' : 'conductor'
+  }
+  if (profile?.staff_type === 'gate') return 'gate'
+  if (profile?.staff_type === 'conductor') return 'conductor'
+
+  return 'passenger'
 }
 
-export function getDashboardForProfile(profile) {
-  return DASHBOARD_BY_ROLE[getOperationalRole(profile)]
+export function getDashboardForProfile(profile, email = null) {
+  const role = getOperationalRole(profile, email)
+  return DASHBOARD_BY_ROLE[role] || '/dashboard/passenger'
 }
 
-export function normalizeProfile(profile) {
-  const operationalRole = getOperationalRole(profile)
+export function normalizeProfile(profile, email = null) {
+  const operationalRole = getOperationalRole(profile, email)
   return {
     ...profile,
+    email: profile?.email || email || null,
     role: operationalRole === 'admin' ? 'admin' : operationalRole === 'passenger' ? 'passenger' : 'conductor',
     staff_type: ['gate', 'conductor'].includes(operationalRole) ? operationalRole : null,
   }

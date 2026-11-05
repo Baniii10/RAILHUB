@@ -135,7 +135,7 @@ function AdminDashboardContent() {
     if (!user) {
       router.replace('/auth/login?next=%2Fdashboard%2Fadmin')
     } else if (profile?.role && profile.role !== 'admin') {
-      router.replace(profile.role === 'conductor' ? '/dashboard/staff' : '/dashboard/passenger')
+      router.replace((profile.role === 'conductor' || profile.role === 'gate' || profile.role === 'staff' || profile.staff_type) ? '/dashboard/staff' : '/dashboard/passenger')
     }
   }, [authLoading, user, profile, router])
 

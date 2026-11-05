@@ -24,25 +24,28 @@ export async function GET(request) {
     }
 
     if (data?.session) {
-      const userId = data?.user?.id
-      if (userId) {
-        let profileResult = await supabase
-          .from('profiles')
-          .select('role, staff_type, station_id')
-          .eq('id', userId)
-          .maybeSingle()
-        if (profileResult.error) {
-          profileResult = await supabase.from('profiles').select('role').eq('id', userId).maybeSingle()
+      const user = data?.user
+      if (user?.id) {
+        let profile = null
+        try {
+          const { data: profileData } = await supabase
+            .from('profiles')
+            .select('id, email, role')
+            .eq('id', user.id)
+            .maybeSingle()
+          profile = profileData || { id: user.id, email: user.email, role: 'passenger' }
+        } catch {
+          profile = { id: user.id, email: user.email, role: 'passenger' }
         }
 
-        const role = getOperationalRole(profileResult.data)
+        const role = getOperationalRole(profile, user.email)
         const destination = isSafeNextPath(next, role)
           ? next
-          : getDashboardForProfile(profileResult.data)
+          : getDashboardForProfile(profile, user.email)
         return NextResponse.redirect(`${origin}${destination}`)
       }
 
-      return NextResponse.redirect(`${origin}/`)
+      return NextResponse.redirect(`${origin}/dashboard/passenger`)
     }
   }
 

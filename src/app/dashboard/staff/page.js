@@ -110,14 +110,14 @@ function StaffDashboardContent() {
     if (authLoading) return
     if (!user) {
       router.replace('/auth/login?next=%2Fdashboard%2Fstaff')
-    } else if (profile?.role && profile.role !== 'conductor') {
+    } else if (profile?.role && profile.role !== 'conductor' && profile.role !== 'gate' && profile.role !== 'staff' && !profile.staff_type) {
       router.replace(profile.role === 'admin' ? '/dashboard/admin' : '/dashboard/passenger')
     }
   }, [authLoading, user, profile, router])
 
   // Load operational data
   const loadStaffData = useCallback(async () => {
-    if (!user || profile?.role !== 'conductor') return
+    if (!user || (profile?.role !== 'conductor' && profile?.role !== 'gate' && profile?.role !== 'staff' && !profile?.staff_type)) return
     if (!hasLoaded) setLoading(true)
     setError('')
     const supabase = createClient()

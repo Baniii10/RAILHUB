@@ -187,14 +187,32 @@ export default function SearchWidget({
   const [loading, setLoading] = useState(false)
   const [mounted, setMounted] = useState(false)
 
-  // Sync initial props and always clear stuck loading
-  useEffect(() => {
+  // Adjust state during render when props change (React-recommended pattern)
+  const [prevProps, setPrevProps] = useState({
+    origin: initialOrigin,
+    destination: initialDestination,
+    date: initialDate,
+    pax: initialPax,
+  })
+
+  if (
+    prevProps.origin !== initialOrigin ||
+    prevProps.destination !== initialDestination ||
+    prevProps.date !== initialDate ||
+    prevProps.pax !== initialPax
+  ) {
+    setPrevProps({
+      origin: initialOrigin,
+      destination: initialDestination,
+      date: initialDate,
+      pax: initialPax,
+    })
     if (initialOrigin) setOrigin(initialOrigin)
     if (initialDestination) setDestination(initialDestination)
     if (initialDate) setDate(initialDate)
     if (initialPax) setAdults(Number(initialPax) || 1)
     setLoading(false)
-  }, [initialOrigin, initialDestination, initialDate, initialPax])
+  }
 
   // Release loading on browser history navigation (back/forward)
   useEffect(() => {

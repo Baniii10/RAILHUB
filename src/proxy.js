@@ -20,8 +20,20 @@ export async function proxy(request) {
         },
       },
     })
-    const { data } = await supabase.auth.getUser()
-    user = data.user
+    try {
+      const { data } = await supabase.auth.getUser()
+      user = data?.user ?? null
+    } catch {
+      user = null
+    }
+  }
+
+  const redirectWithCookies = (dest) => {
+    const redirectResponse = NextResponse.redirect(new URL(dest, request.url))
+    supabaseResponse.cookies.getAll().forEach(({ name, value, ...options }) => {
+      redirectResponse.cookies.set(name, value, options)
+    })
+    return redirectResponse
   }
 
   const { pathname } = request.nextUrl
@@ -30,33 +42,34 @@ export async function proxy(request) {
 
   let profile = null
   if (user && supabase) {
-    let result = await supabase
-      .from('profiles')
-      .select('role, staff_type, station_id')
-      .eq('id', user.id)
-      .maybeSingle()
-    if (result.error) {
-      result = await supabase.from('profiles').select('role').eq('id', user.id).maybeSingle()
+    try {
+      const { data } = await supabase
+        .from('profiles')
+        .select('id, email, role')
+        .eq('id', user.id)
+        .maybeSingle()
+      profile = data || { id: user.id, email: user.email, role: 'passenger' }
+    } catch {
+      profile = { id: user.id, email: user.email, role: 'passenger' }
     }
-    profile = result.data
   }
 
   if (user && (pathname.startsWith('/auth/login') || pathname.startsWith('/auth/register'))) {
-    const role = getOperationalRole(profile)
+    const role = getOperationalRole(profile, user.email)
     const safeNext = isSafeNextPath(requestedNext, role) ? requestedNext : null
-    return NextResponse.redirect(new URL(safeNext || getDashboardForProfile(profile), request.url))
+    return redirectWithCookies(safeNext || getDashboardForProfile(profile, user.email))
   }
 
   if (!user && (pathname.startsWith('/dashboard') || isProtectedBooking)) {
     const loginUrl = new URL('/auth/login', request.url)
     loginUrl.searchParams.set('next', `${pathname}${request.nextUrl.search}`)
-    return NextResponse.redirect(loginUrl)
+    return redirectWithCookies(loginUrl.pathname + loginUrl.search)
   }
 
   if (user && supabase) {
-    const role = getOperationalRole(profile)
+    const role = getOperationalRole(profile, user.email)
     if (!isPathAllowedForRole(pathname, role)) {
-      return NextResponse.redirect(new URL(getDashboardForProfile(profile), request.url))
+      return redirectWithCookies(getDashboardForProfile(profile, user.email))
     }
   }
 

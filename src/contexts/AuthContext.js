@@ -16,7 +16,7 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true)
   const supabase = useMemo(() => createClient(), [])
 
-  const fetchProfile = useCallback(async (userId) => {
+  const fetchProfile = useCallback(async (userId, userEmail) => {
     try {
       const { data, error } = await supabase
         .from('profiles')
@@ -27,9 +27,9 @@ export function AuthProvider({ children }) {
       if (error && error.code !== 'PGRST116') {
         console.warn('Unable to load user profile:', error.message)
       }
-      setProfile(data ? normalizeProfile(data) : null)
+      setProfile(normalizeProfile(data || { id: userId, email: userEmail }, userEmail))
     } catch {
-      setProfile(null)
+      setProfile(normalizeProfile({ id: userId, email: userEmail }, userEmail))
     } finally {
       setLoading(false)
     }
@@ -41,7 +41,6 @@ export function AuthProvider({ children }) {
     supabase.auth.getUser().then(({ data, error }) => {
       if (!active) return
       const currentUser = data?.user ?? null
-      // "Auth session missing!" is normal for guests/unauthenticated visitors
       const isMissingSession = error && (
         error.message?.toLowerCase().includes('session missing') ||
         error.name === 'AuthSessionMissingError'
@@ -51,8 +50,9 @@ export function AuthProvider({ children }) {
       }
       setUser(currentUser)
       if (currentUser) {
-        fetchProfile(currentUser.id)
+        fetchProfile(currentUser.id, currentUser.email)
       } else {
+        setProfile(null)
         setLoading(false)
       }
     }).catch(() => {
@@ -60,13 +60,18 @@ export function AuthProvider({ children }) {
     })
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
+      async (event, session) => {
         if (!active) return
         const currentUser = session?.user ?? null
-        setUser(currentUser)
         if (currentUser) {
-          await fetchProfile(currentUser.id)
-        } else {
+          setUser(currentUser)
+          await fetchProfile(currentUser.id, currentUser.email)
+        } else if (event === 'SIGNED_OUT') {
+          setUser(null)
+          setProfile(null)
+          setLoading(false)
+        } else if (event !== 'INITIAL_SESSION') {
+          setUser(null)
           setProfile(null)
           setLoading(false)
         }
@@ -81,8 +86,12 @@ export function AuthProvider({ children }) {
 
   async function signOut() {
     try {
-      const { error } = await supabase.auth.signOut({ scope: 'local' })
-      if (error) console.warn('Sign out warning:', error.message)
+      const { error } = await supabase.auth.signOut()
+      if (error) {
+        await supabase.auth.signOut({ scope: 'local' })
+      }
+    } catch {
+      // Ignore network errors during sign out
     } finally {
       setUser(null)
       setProfile(null)

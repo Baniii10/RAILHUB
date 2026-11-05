@@ -182,8 +182,10 @@ export default function BookingPayment({ bookingId }) {
     }
 
     toast.success('Pembayaran simulasi berhasil. Tiket digital telah diterbitkan.')
+    setBooking(prev => prev ? ({ ...prev, status: 'paid' }) : null)
+    setPayment(prev => prev ? ({ ...prev, status: 'confirmed', confirmed_at: new Date().toISOString() }) : null)
     setProcessing(false)
-    router.push('/dashboard/passenger#my-bookings')
+    router.push('/dashboard/passenger?tab=tickets')
   }
 
   async function cancelBooking() {
@@ -319,7 +321,7 @@ export default function BookingPayment({ bookingId }) {
     }
 
     toast.success(`Tiket berhasil di-reschedule. Biaya tambahan simulasi: ${formatIDR(data?.additional_amount || 0)}.`)
-    router.push('/dashboard/passenger#my-bookings')
+    router.push('/dashboard/passenger?tab=tickets')
   }
 
   async function cancelPaidBooking() {
@@ -341,7 +343,7 @@ export default function BookingPayment({ bookingId }) {
       return
     }
     toast.success(`Tiket dibatalkan. Pengembalian simulasi: ${formatIDR(data?.refund_amount || 0)}.`)
-    router.push('/dashboard/passenger#my-bookings')
+    router.push('/dashboard/passenger?tab=tickets')
   }
 
   return (

@@ -1,15 +1,16 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Mail, Lock, Eye, EyeOff, AlertCircle } from 'lucide-react'
 import Navbar from '@/components/layout/Navbar'
 import { createClient } from '@/lib/supabase/client'
+import { useAuth } from '@/contexts/AuthContext'
 import { useLang } from '@/contexts/LangContext'
 import toast from 'react-hot-toast'
 import MobileTrainIllustration from '@/components/auth/MobileTrainIllustration'
-import { getDashboardForProfile, getOperationalRole, isSafeNextPath } from '@/lib/auth/roles'
+import { getDashboardForProfile, getOperationalRole, isSafeNextPath, normalizeProfile } from '@/lib/auth/roles'
 
 function GoogleIcon({ size = 19 }) {
   return (
@@ -41,12 +42,22 @@ export default function LoginPage() {
   const [googleLoading, setGoogleLoading] = useState(false)
   const [error,         setError]         = useState(() => '')
 
+  const { user: currentUser, profile: currentProfile, loading: authLoading } = useAuth()
+
+  useEffect(() => {
+    if (authLoading || !currentUser) return
+    const requestedNext = new URLSearchParams(window.location.search).get('next')
+    const role = getOperationalRole(currentProfile, currentUser.email)
+    const destination = isSafeNextPath(requestedNext, role) ? requestedNext : getDashboardForProfile(currentProfile, currentUser.email)
+    router.replace(destination)
+  }, [authLoading, currentUser, currentProfile, router])
+
   async function handleGoogleAuth() {
     setError('')
     setGoogleLoading(true)
     try {
       const requestedNext = new URLSearchParams(window.location.search).get('next')
-      const safeNext = isSafeNextPath(requestedNext) ? requestedNext : '/'
+      const safeNext = isSafeNextPath(requestedNext) ? requestedNext : '/dashboard/passenger'
 
       const redirectUrl = `${window.location.origin}/auth/callback?next=${encodeURIComponent(safeNext)}`
 
@@ -97,20 +108,21 @@ export default function LoginPage() {
 
     let profileResult = await supabase
       .from('profiles')
-      .select('role, staff_type, station_id')
+      .select('id, email, role')
       .eq('id', data.user.id)
       .maybeSingle()
-    if (profileResult.error) {
-      profileResult = await supabase.from('profiles').select('role').eq('id', data.user.id).maybeSingle()
-    }
-    const profile = profileResult.data
+
+    const rawProfile = profileResult?.data || { id: data.user.id, email: data.user.email }
+    const role = getOperationalRole(rawProfile, data.user.email)
+    const profile = normalizeProfile(rawProfile, data.user.email)
 
     toast.success(successMessage)
     setLoading(false)
 
     const requestedNext = new URLSearchParams(window.location.search).get('next')
-    const role = getOperationalRole(profile)
-    router.replace(isSafeNextPath(requestedNext, role) ? requestedNext : getDashboardForProfile(profile))
+    const destination = isSafeNextPath(requestedNext, role) ? requestedNext : getDashboardForProfile(profile, data.user.email)
+    router.replace(destination)
+    router.refresh()
   }
 
   async function handleQuickLogin(account) {

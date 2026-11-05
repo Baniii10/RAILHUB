@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { Train, MapPin, Clock, Mail, Phone } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 
@@ -125,19 +126,11 @@ function LogoQris() {
 
 export default function Footer() {
   const { user, loading } = useAuth()
-  const [isAllowedPage, setIsAllowedPage] = useState(true)
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const path = window.location.pathname || ''
-      // Footer HANYA untuk guest di halaman publik (bukan dashboard, bukan proses booking tiket)
-      const isRestricted = path.startsWith('/dashboard') || path.startsWith('/booking')
-      setIsAllowedPage(!isRestricted)
-    }
-  }, [])
+  const pathname = usePathname()
+  const isRestricted = pathname?.startsWith('/dashboard') || pathname?.startsWith('/booking')
 
   // STRICT: Footer HANYA ADA DI GUEST SAJA (loading atau user sudah login = TIDAK ADA FOOTER)
-  if (loading || user || !isAllowedPage) {
+  if (loading || user || isRestricted) {
     return null
   }
 

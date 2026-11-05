@@ -98,7 +98,7 @@ function PassengerDashboardContent() {
     if (profile?.role && profile.role !== 'passenger') {
       const target = profile.role === 'admin'
         ? '/dashboard/admin'
-        : profile.role === 'conductor' ? '/dashboard/staff' : '/'
+        : (profile.role === 'conductor' || profile.role === 'gate' || profile.role === 'staff' || profile.staff_type) ? '/dashboard/staff' : '/'
       router.replace(target)
     }
     if (profile) {
