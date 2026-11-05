@@ -1846,7 +1846,18 @@ input[type="checkbox"]:focus-visible {
   font-size: 0.82rem;
 }
 
-/* Home banner carousel: one strict 8:3 canvas on every viewport. */
+/* Animated train bumper */
+.rh-bumper-banner-wrapper {
+  padding: 0.5rem 0.75rem 0.25rem;
+}
+
+@media (min-width: 769px) {
+  .rh-bumper-banner-wrapper {
+    padding: 0.75rem 1rem 0.5rem;
+  }
+}
+
+/* Promo carousel: one strict 8:3 canvas on every viewport. */
 .rh-home-banners {
   width: min(100%, 1200px);
   margin: 0 auto;

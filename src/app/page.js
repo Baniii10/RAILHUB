@@ -7,6 +7,7 @@ import SearchWidget from '@/components/booking/SearchWidget'
 import MobilePortalHeader from '@/components/home/MobilePortalHeader'
 import FeaturedServicesSlider from '@/components/home/FeaturedServicesSlider'
 import TrainBumperBanner from '@/components/home/TrainBumperBanner'
+import PromoBannerCarousel from '@/components/home/PromoBannerCarousel'
 import { useLang } from '@/contexts/LangContext'
 import {
   ChevronRight,  Train,
@@ -72,7 +73,7 @@ export default function HomePage() {
     <div>
       <Navbar />
 
-      {/* 3 clean vector banners with a strict 8:3 aspect ratio. */}
+      {/* Animated train bumper */}
       <TrainBumperBanner />
 
       {/* Hero and search */}
@@ -108,6 +109,15 @@ export default function HomePage() {
 
       {/* Featured services */}
       <FeaturedServicesSlider />
+
+      <section id="promos" className="rh-section" style={{ background: '#ffffff', paddingTop: '2rem', paddingBottom: '2rem' }}>
+        <div className="rh-container">
+          <h2 className="rh-h3" style={{ margin: '0 0 1rem', color: 'var(--rh-navy)', fontSize: '1.35rem', fontWeight: 800 }}>
+            {lang === 'en' ? 'Travel Deals' : 'Promo Perjalanan Kereta'}
+          </h2>
+          <PromoBannerCarousel />
+        </div>
+      </section>
 
       {/* Popular routes */}
       <section className="rh-section" style={{ background: 'var(--rh-surface)', paddingTop: '2rem', paddingBottom: '2rem' }}>
