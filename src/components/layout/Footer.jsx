@@ -125,19 +125,19 @@ function LogoQris() {
 
 export default function Footer() {
   const { user, loading } = useAuth()
-  const [isConsole, setIsConsole] = useState(false)
+  const [isAllowedPage, setIsAllowedPage] = useState(true)
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const path = window.location.pathname || ''
-      if (path.startsWith('/dashboard/admin') || path.startsWith('/dashboard/staff')) {
-        setIsConsole(true)
-      }
+      // Footer HANYA untuk guest di halaman publik (bukan dashboard, bukan proses booking tiket)
+      const isRestricted = path.startsWith('/dashboard') || path.startsWith('/booking')
+      setIsAllowedPage(!isRestricted)
     }
   }, [])
 
-  // Jika sudah login atau berada di konsol operasional, jangan render footer
-  if (loading || user || isConsole) {
+  // STRICT: Footer HANYA ADA DI GUEST SAJA (loading atau user sudah login = TIDAK ADA FOOTER)
+  if (loading || user || !isAllowedPage) {
     return null
   }
 
