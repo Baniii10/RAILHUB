@@ -4480,3 +4480,13 @@ input[type="checkbox"]:focus-visible {
   .journey-tracker-media { background: linear-gradient(135deg, #bfe6ff, #cde8bf); }
   .journey-progress span { transition: none; }
 }
+.role-clock { display: grid; gap: .2rem; text-align: right; color: var(--rh-text-2); }
+.role-clock span, .role-clock strong { display: inline-flex; align-items: center; justify-content: flex-end; gap: .4rem; }
+.role-clock span { font-size: .76rem; }
+.role-clock strong { color: var(--rh-primary); font-size: 1rem; font-variant-numeric: tabular-nums; }
+@media (max-width: 640px) {
+  .role-clock { width: 100%; text-align: left; }
+  .role-clock span, .role-clock strong { justify-content: flex-start; }
+  .staff-tabs-nav { scrollbar-width: none; }
+  .staff-tabs-nav::-webkit-scrollbar { display: none; }
+}

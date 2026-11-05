@@ -34,6 +34,7 @@ import {
 } from 'lucide-react'
 import toast from 'react-hot-toast'
 import Navbar from '@/components/layout/Navbar'
+import LiveRoleClock from '@/components/ui/LiveRoleClock'
 import { useAuth } from '@/contexts/AuthContext'
 import { createClient } from '@/lib/supabase/client'
 import { formatDate, formatIDR, formatTime } from '@/lib/utils/formatters'
@@ -80,18 +81,11 @@ function StatusBadge({ status, label }) {
 }
 
 const ADMIN_TABS = [
-  { id: 'overview', label: 'Overview', icon: LayoutDashboard },
-  { id: 'stations', label: 'Stasiun', icon: MapPin },
-  { id: 'trains', label: 'Kereta Api', icon: Train },
-  { id: 'seats', label: 'Tempat Duduk', icon: Grid },
-  { id: 'routes', label: 'Rute Perjalanan', icon: Navigation },
-  { id: 'schedules', label: 'Jadwal KA', icon: CalendarDays },
-  { id: 'fares', label: 'Tarif & Harga', icon: CircleDollarSign },
+  { id: 'overview', label: 'Ringkasan', icon: LayoutDashboard },
+  { id: 'schedules', label: 'Perjalanan', icon: CalendarDays },
   { id: 'bookings', label: 'Pemesanan', icon: TicketCheck },
-  { id: 'users', label: 'Pengguna & Role', icon: UserCheck },
-  { id: 'staff', label: 'Penugasan Petugas', icon: ShieldCheck },
-  { id: 'reports', label: 'Laporan & Analitik', icon: BarChart3 },
-  { id: 'content', label: 'Konten & Promo', icon: Megaphone },
+  { id: 'staff', label: 'Petugas', icon: ShieldCheck },
+  { id: 'reports', label: 'Laporan', icon: BarChart3 },
 ]
 
 function AdminDashboardContent() {
@@ -356,13 +350,14 @@ function AdminDashboardContent() {
           <header className="rh-card" style={{ padding: '1.25rem 1.5rem', marginBottom: '1.5rem' }}>
             <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
               <div>
-                <span className="rh-badge rh-badge-primary">Pusat Kontrol &amp; Administrator RailHub</span>
-                <h1 className="rh-h2" style={{ margin: '0.45rem 0 0.2rem' }}>Dashboard Admin Terpadu</h1>
+                <span className="rh-badge rh-badge-primary">Administrator Sistem · Akses Penuh</span>
+                <h1 className="rh-h2" style={{ margin: '0.45rem 0 0.2rem' }}>{profile?.full_name || 'Administrator RAILHUB'}</h1>
                 <p style={{ margin: 0, color: 'var(--rh-text-2)', fontSize: '0.9rem' }}>
-                  Kelola stasiun, armada kereta, tempat duduk, jadwal, tarif, pemesanan, pengguna, dan penugasan petugas operasional.
+                  Bertugas mengawasi perjalanan, pemesanan, petugas, dan laporan seluruh jaringan RAILHUB. · {user?.email}
                 </p>
               </div>
-              <div style={{ display: 'flex', gap: '0.5rem' }}>
+              <div style={{ display: 'grid', gap: '0.5rem', justifyItems: 'end' }}>
+                <LiveRoleClock />
                 <button
                   type="button"
                   className="rh-btn rh-btn-ghost"

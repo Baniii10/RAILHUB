@@ -81,11 +81,12 @@ export function AuthProvider({ children }) {
 
   async function signOut() {
     try {
-      const { error } = await supabase.auth.signOut()
+      const { error } = await supabase.auth.signOut({ scope: 'local' })
       if (error) console.warn('Sign out warning:', error.message)
     } finally {
       setUser(null)
       setProfile(null)
+      setLoading(false)
     }
   }
 

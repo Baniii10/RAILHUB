@@ -137,6 +137,7 @@ export default function LoginPage() {
       }
 
       toast.success(`Login berhasil sebagai ${account.title}!`)
+      setLoading(false)
       router.replace(getDashboardForProfile(profile, data.user.email))
       return
     }
@@ -186,6 +187,7 @@ export default function LoginPage() {
       }
 
       toast.success(`Selamat datang, ${account.title}!`)
+      setLoading(false)
       router.replace(getDashboardForProfile(profile, loginData.user.email))
       return
     }
@@ -232,6 +234,7 @@ export default function LoginPage() {
     const profile = profileResult.data
 
     toast.success(t.auth.loginSuccess)
+    setLoading(false)
 
     const requestedNext = new URLSearchParams(window.location.search).get('next')
     router.replace(isSafeNextPath(requestedNext) ? requestedNext : getDashboardForProfile(profile, data.user.email))

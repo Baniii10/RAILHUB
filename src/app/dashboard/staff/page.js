@@ -28,6 +28,7 @@ import {
 } from 'lucide-react'
 import toast from 'react-hot-toast'
 import Navbar from '@/components/layout/Navbar'
+import LiveRoleClock from '@/components/ui/LiveRoleClock'
 import TicketScanner from '@/components/staff/TicketScanner'
 import { useAuth } from '@/contexts/AuthContext'
 import { createClient } from '@/lib/supabase/client'
@@ -53,14 +54,11 @@ function JourneyStatus({ status }) {
 }
 
 const TABS = [
-  { id: 'overview', label: 'Overview', icon: LayoutDashboard },
-  { id: 'validation', label: 'Validasi Tiket', icon: TicketCheck },
-  { id: 'passengers', label: 'Daftar Penumpang', icon: Users },
-  { id: 'journey', label: 'Status Perjalanan', icon: Train },
-  { id: 'assistance', label: 'Laporan Bantuan', icon: HelpingHand },
-  { id: 'lostfound', label: 'Barang Hilang', icon: PackageSearch },
-  { id: 'orders', label: 'Pesanan Makanan', icon: Utensils },
-  { id: 'notifications', label: 'Notifikasi Tugas', icon: Bell },
+  { id: 'overview', label: 'Ringkasan', icon: LayoutDashboard },
+  { id: 'validation', label: 'Scan Tiket', icon: TicketCheck },
+  { id: 'passengers', label: 'Penumpang', icon: Users },
+  { id: 'journey', label: 'Perjalanan', icon: Train },
+  { id: 'services', label: 'Layanan', icon: HelpingHand },
 ]
 const GATE_TABS = TABS.filter(tab => ['overview', 'validation'].includes(tab.id))
 
@@ -129,7 +127,7 @@ function StaffDashboardContent() {
         const { data: station } = profile?.station_id
           ? await supabase.from('stations').select('name, code').eq('id', profile.station_id).maybeSingle()
           : { data: null }
-        setStationName(station ? `${station.name} (${station.code})` : 'Stasiun belum ditetapkan')
+        setStationName(station ? `${station.name} (${station.code})` : user.email === 'gate.gambir@railhub.id' ? 'Stasiun Gambir (GMR)' : 'Stasiun belum ditetapkan')
         setJourneys([])
         setTickets([])
         setFoodOrders([])
@@ -377,29 +375,15 @@ function StaffDashboardContent() {
                   Dashboard Petugas
                 </h1>
                 <p style={{ margin: 0, color: 'var(--rh-text-2)', fontSize: '0.9rem' }}>
-                  {isGate ? 'Petugas Gerbang' : 'Kondektur'}: <strong>{profile?.full_name || 'Petugas'}</strong> · ID: <span className="rh-mono">STF-{user?.id?.slice(0, 8).toUpperCase()}</span> · {isGate ? stationName : `${journeys.length} perjalanan tugas`}
+                  <strong>{isGate ? 'PETUGAS GERBANG' : 'KONDEKTUR KERETA'}</strong> · {profile?.full_name || 'Petugas'} · ID <span className="rh-mono">STF-{user?.id?.slice(0, 8).toUpperCase()}</span>
                 </p>
-                {!isGate && <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.6rem', flexWrap: 'wrap' }}>
-                  <button
-                    type="button"
-                    onClick={() => selectTab('validation')}
-                    className={`rh-btn rh-btn-sm ${activeTab === 'validation' ? 'rh-btn-primary' : 'rh-btn-ghost'}`}
-                    style={{ borderRadius: 8, fontSize: '0.8rem' }}
-                  >
-                    🎫 Mode Petugas Gerbang (Scan Boarding)
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => selectTab('passengers')}
-                    className={`rh-btn rh-btn-sm ${activeTab === 'passengers' || activeTab === 'journey' ? 'rh-btn-primary' : 'rh-btn-ghost'}`}
-                    style={{ borderRadius: 8, fontSize: '0.8rem' }}
-                  >
-                    🚆 Mode Petugas Kereta (Manifest & Perjalanan)
-                  </button>
-                </div>}
+                <p style={{ margin: '.35rem 0 0', color: 'var(--rh-text-2)', fontSize: '.85rem' }}>
+                  {isGate ? `Lokasi tugas: ${stationName || 'Stasiun Gambir (GMR)'} · Tugas: scan dan validasi boarding.` : journeys[0] ? `Tugas aktif: ${journeys[0].schedules?.trains?.name || 'Kereta'} · ${journeys[0].schedules?.routes?.name || 'Rute'} · Total ${journeys.length} perjalanan.` : 'Belum ada perjalanan yang ditugaskan oleh admin.'}
+                </p>
               </div>
 
-              <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+              <div style={{ display: 'grid', gap: '.5rem', justifyItems: 'end' }}>
+                <LiveRoleClock />
                 <button
                   type="button"
                   className="rh-btn rh-btn-ghost"
@@ -445,8 +429,7 @@ function StaffDashboardContent() {
               const active = activeTab === tab.id
               let badge = null
               if (tab.id === 'passengers') badge = ticketTotal
-              if (tab.id === 'orders' && pendingOrders > 0) badge = pendingOrders
-              if (tab.id === 'assistance' && pendingReports > 0) badge = pendingReports
+              if (tab.id === 'services' && pendingOrders + pendingReports > 0) badge = pendingOrders + pendingReports
 
               return (
                 <button
@@ -948,7 +931,7 @@ function StaffDashboardContent() {
           )}
 
           {/* ── TAB 5: ASSISTANCE REPORTS ───────────────────────────────────── */}
-          {activeTab === 'assistance' && (
+          {activeTab === 'services' && (
             <section className="rh-card" style={{ padding: '1.5rem' }}>
               <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', marginBottom: '1.25rem' }}>
                 <div>
@@ -1020,7 +1003,7 @@ function StaffDashboardContent() {
           )}
 
           {/* ── TAB 6: LOST & FOUND ─────────────────────────────────────────── */}
-          {activeTab === 'lostfound' && (
+          {activeTab === 'services' && (
             <section className="rh-card" style={{ padding: '1.5rem' }}>
               <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', marginBottom: '1.25rem' }}>
                 <div>
@@ -1084,7 +1067,7 @@ function StaffDashboardContent() {
           )}
 
           {/* ── TAB 7: FOOD ORDERS ─────────────────────────────────────────── */}
-          {activeTab === 'orders' && (
+          {activeTab === 'services' && (
             <section className="rh-card" style={{ padding: '1.5rem' }}>
               <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', marginBottom: '1.25rem' }}>
                 <div>

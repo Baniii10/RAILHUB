@@ -160,7 +160,8 @@ export default function Navbar() {
     try {
       await signOut()
       toast.success('Berhasil keluar!')
-      router.push('/')
+      setMobileOpen(false)
+      window.location.replace('/auth/login')
     } catch (error) {
       toast.error(`Tidak dapat keluar: ${error.message}`)
     }
@@ -177,15 +178,12 @@ export default function Navbar() {
       { href: '/dashboard/admin', label: 'Ringkasan' },
       { href: '/dashboard/admin/journeys', label: 'Perjalanan mendatang' },
       { href: '/dashboard/admin/staff', label: 'Pengelolaan petugas' },
-      { href: '/dashboard/orders', label: 'Pesanan makanan' },
-      { href: '/dashboard/reports', label: 'Laporan' },
     ]
     : dashboardRole === 'conductor'
       ? [
           { href: '/dashboard/staff?tab=overview', label: 'Perjalanan tugas' },
           { href: '/dashboard/staff?tab=validation', label: 'Validasi tiket' },
-          { href: '/dashboard/orders', label: 'Pesanan makanan' },
-          { href: '/dashboard/reports', label: 'Laporan' },
+          { href: '/dashboard/staff?tab=services', label: 'Layanan penumpang' },
         ]
       : null
   const isStaffArea = Boolean(dashboardNavLinks)
@@ -203,8 +201,8 @@ export default function Navbar() {
       ? [
           { href: '/dashboard/staff?tab=overview', label: lang === 'en' ? 'Duties' : 'Tugas', icon: Train },
           { href: '/dashboard/staff?tab=validation', label: lang === 'en' ? 'Validate' : 'Validasi', icon: TicketCheck },
-          { href: '/dashboard/staff?tab=orders', label: lang === 'en' ? 'Services' : 'Layanan', icon: Utensils },
-          { href: '/dashboard/staff?tab=assistance', label: lang === 'en' ? 'Help' : 'Bantuan', icon: ClipboardList },
+          { href: '/dashboard/staff?tab=passengers', label: lang === 'en' ? 'Passengers' : 'Penumpang', icon: User },
+          { href: '/dashboard/staff?tab=services', label: lang === 'en' ? 'Services' : 'Layanan', icon: Utensils },
         ]
       : user
         ? [
