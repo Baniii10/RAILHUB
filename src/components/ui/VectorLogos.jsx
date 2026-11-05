@@ -15,15 +15,15 @@ export function RailHubBrandLogo({ size = 32, className = '' }) {
     <Image
       src="/images/Fix logo railhub.png"
       alt="RAILHUB"
-      width={size * 2}
-      height={size}
+      width={950}
+      height={275}
+      unoptimized
       className={className}
       style={{
         height: `${size}px`,
         width: 'auto',
         objectFit: 'contain',
         display: 'inline-block',
-        filter: 'drop-shadow(0 2px 5px rgba(0, 0, 0, 0.10))',
       }}
     />
   )
@@ -41,14 +41,14 @@ export function RailHubTrainLogo({ height = 22, className = '' }) {
       <Image
         src="/images/Fix logo railhub.png"
         alt="RAILHUB"
-        width={height * 2}
-        height={height}
+        width={950}
+        height={275}
+        unoptimized
         style={{
           height: `${height}px`,
           width: 'auto',
           objectFit: 'contain',
           display: 'block',
-          filter: 'drop-shadow(0 2px 5px rgba(0, 0, 0, 0.10))',
         }}
       />
     </div>

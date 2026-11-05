@@ -241,15 +241,15 @@ export default function Navbar() {
               <Image
                 src="/images/Fix logo railhub.png"
                 alt="RAILHUB"
-                width={200}
-                height={58}
+                width={950}
+                height={275}
+                unoptimized
                 priority
                 style={{
-                  height: '56px',
+                  height: '54px',
                   width: 'auto',
                   objectFit: 'contain',
                   display: 'block',
-                  filter: 'drop-shadow(0 2px 6px rgba(0, 0, 0, 0.12))',
                 }}
               />
             </Link>
@@ -474,14 +474,14 @@ export default function Navbar() {
               <Image
                 src="/images/Fix logo railhub.png"
                 alt="RAILHUB"
-                width={180}
-                height={52}
+                width={950}
+                height={275}
+                unoptimized
                 style={{
-                  height: '50px',
+                  height: '48px',
                   width: 'auto',
                   objectFit: 'contain',
                   display: 'block',
-                  filter: 'drop-shadow(0 2px 6px rgba(0, 0, 0, 0.12))',
                 }}
               />
             </Link>

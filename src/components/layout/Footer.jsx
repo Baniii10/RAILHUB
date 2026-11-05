@@ -200,14 +200,14 @@ export default function Footer() {
               <Image
                 src="/images/Fix logo railhub.png"
                 alt="RAILHUB"
-                width={140}
-                height={42}
+                width={950}
+                height={275}
+                unoptimized
                 style={{
                   height: '40px',
                   width: 'auto',
                   objectFit: 'contain',
                   display: 'block',
-                  filter: 'drop-shadow(0 2px 6px rgba(0, 0, 0, 0.12))',
                 }}
               />
             </Link>
