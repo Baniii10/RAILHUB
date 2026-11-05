@@ -94,7 +94,7 @@ export default function AdminStaffPage() {
     const supabase = createClient()
     const [staffResult, scheduleResult, assignmentResult, passengersResult, stationsResult] = await Promise.all([
       supabase.from('profiles')
-        .select('id, full_name, email, role, staff_type, station_id, stations(name, code)')
+        .select('*')
         .eq('role', 'conductor')
         .order('full_name'),
       supabase.from('schedules')
@@ -121,11 +121,17 @@ export default function AdminStaffPage() {
       return
     }
 
-    const staffRows = staffResult.data || []
+    const stationRows = stationsResult?.data || []
+    const stationsById = new Map(stationRows.map(station => [station.id, station]))
+    const staffRows = (staffResult.data || []).map(person => ({
+      ...person,
+      staff_type: person.staff_type || 'conductor',
+      stations: stationsById.get(person.station_id) || null,
+    }))
     const scheduleRows = scheduleResult.data || []
     setStaff(staffRows)
     setPassengersList(passengersResult?.data || [])
-    setStations(stationsResult?.data || [])
+    setStations(stationRows)
     setSchedules(scheduleRows)
     setAssignments(assignmentResult.data || [])
     const conductors = staffRows.filter(person => person.staff_type !== 'gate')
