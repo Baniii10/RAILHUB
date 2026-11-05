@@ -25,22 +25,22 @@ import {
 
 const TIMELINE = [
   {
-    year: 'Fase 1 — Inisiasi & Riset',
+    year: 'Fase 1 - Inisiasi & Riset',
     title: 'Perancangan Arsitektur Perkeretaapian Digital',
     desc: 'Memetakan jaringan 50 stasiun antarkota terverifikasi di Pulau Jawa serta menyusun model basis data relasional untuk jadwal, gerbong, kursi, dan tiket.',
   },
   {
-    year: 'Fase 2 — Sistem Booking & Kursi Atomik',
+    year: 'Fase 2 - Sistem Booking & Kursi Atomik',
     title: 'Pencegahan Kursi Ganda & E-Boarding QR',
     desc: 'Mengembangkan mesin reservasi kursi secara real-time dengan penguncian transaksi agar kursi pada jadwal yang sama tidak pernah terjual ganda.',
   },
   {
-    year: 'Fase 3 — Sinergi Penumpang, Petugas & Admin',
+    year: 'Fase 3 - Sinergi Penumpang, Petugas & Admin',
     title: 'Operasional Langsung & Layanan Di Atas Kereta',
     desc: 'Menghubungkan pelacakan status kereta, validasi tiket oleh kondektur bertugas, pemesanan makanan onboard, hingga pelaporan barang hilang.',
   },
   {
-    year: 'Fase 4 — Ekosistem Mobile-First',
+    year: 'Fase 4 - Ekosistem Mobile-First',
     title: 'Pengalaman Aplikasi Modern Se-Pulau Jawa',
     desc: 'Menghadirkan antarmuka responsif bergaya aplikasi mobile dengan hitung mundur keberangkatan, informasi peron, dan program loyalitas penumpang.',
   },
@@ -71,35 +71,35 @@ const FLEET_PORTFOLIO = [
   {
     code: 'KA 1',
     name: 'Argo Bromo Anggrek',
-    corridor: 'Gambir (GMR) — Surabaya Gubeng (SGU)',
+    corridor: 'Gambir (GMR) - Surabaya Gubeng (SGU)',
     classes: 'Eksekutif & Luxury Sleeper',
     highlights: ['Kursi rebah 140° ergonomis', 'Layar hiburan personal', 'Restorasi bistro modern', 'WiFi berkecepatan tinggi'],
   },
   {
     code: 'KA 34',
     name: 'Argo Parahyangan',
-    corridor: 'Gambir (GMR) — Bandung (BD)',
+    corridor: 'Gambir (GMR) - Bandung (BD)',
     classes: 'Eksekutif & Ekonomi New Generation',
     highlights: ['Jendela panoramik jalur Priangan', 'Stopkontak di setiap kursi', 'Kabin kedap suara', 'Layanan antar makanan ke kursi'],
   },
   {
     code: 'KA 68',
     name: 'Taksaka',
-    corridor: 'Gambir (GMR) — Yogyakarta (YK)',
+    corridor: 'Gambir (GMR) - Yogyakarta (YK)',
     classes: 'Eksekutif & Luxury',
     highlights: ['Kabin Hype Trip ramah kerja', 'Lampu baca individual', 'Toilet vakum higienis', 'Ruang bagasi kabin luas'],
   },
   {
     code: 'KA 6',
     name: 'Argo Wilis',
-    corridor: 'Bandung (BD) — Surabaya Gubeng (SGU)',
+    corridor: 'Bandung (BD) - Surabaya Gubeng (SGU)',
     classes: 'Eksekutif',
     highlights: ['Rute lintas selatan eksotis', 'Kursi captain seat putar', 'Sajian kuliner khas Nusantara', 'Pendingin udara adaptif'],
   },
   {
     code: 'KA 92',
     name: 'Lodaya',
-    corridor: 'Bandung (BD) — Solo Balapan (SLO)',
+    corridor: 'Bandung (BD) - Solo Balapan (SLO)',
     classes: 'Eksekutif & Ekonomi',
     highlights: ['Aksesibilitas ramah keluarga', 'Informasi stasiun digital', 'Layanan bantuan petugas sigap', 'Harga kompetitif'],
   },

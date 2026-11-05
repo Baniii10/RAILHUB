@@ -706,7 +706,7 @@ function StaffDashboardContent() {
                           <tr key={t.id} style={{ borderBottom: '1px solid var(--rh-border)' }}>
                             <td style={{ padding: '0.85rem 0.5rem' }}>
                               <strong style={{ color: 'var(--rh-primary)', fontSize: '1rem' }}>
-                                {seat?.seat_number || '—'}
+                                {seat?.seat_number || '-'}
                               </strong>
                               <small style={{ display: 'block', color: 'var(--rh-text-2)' }}>
                                 {carriage?.carriage_class || carriage?.class || 'Eksekutif'} {carriage?.carriage_number ? `(${carriage.carriage_number})` : ''}
@@ -915,7 +915,7 @@ function StaffDashboardContent() {
                         <div>
                           <strong style={{ fontSize: '1rem' }}>{rep.title || 'Laporan Bantuan'}</strong>
                           <div style={{ fontSize: '0.85rem', color: 'var(--rh-text-2)' }}>
-                            Pemohon: <b>{rep.passenger_name}</b> · Booking: <span className="rh-mono">{rep.bookings?.booking_code || '—'}</span>
+                            Pemohon: <b>{rep.passenger_name}</b> · Booking: <span className="rh-mono">{rep.bookings?.booking_code || '-'}</span>
                           </div>
                         </div>
                         <span style={{ fontSize: '0.8rem', padding: '0.2rem 0.6rem', borderRadius: 999, fontWeight: 700, background: rep.status === 'resolved' ? 'var(--rh-success-light)' : 'var(--rh-warning-light)', color: rep.status === 'resolved' ? 'var(--rh-success)' : 'var(--rh-warning)' }}>
@@ -987,7 +987,7 @@ function StaffDashboardContent() {
                         <div>
                           <strong style={{ fontSize: '1rem' }}>{rep.title || 'Barang Tertinggal'}</strong>
                           <div style={{ fontSize: '0.85rem', color: 'var(--rh-text-2)' }}>
-                            Pelapor: <b>{rep.passenger_name}</b> · Booking: <span className="rh-mono">{rep.bookings?.booking_code || '—'}</span>
+                            Pelapor: <b>{rep.passenger_name}</b> · Booking: <span className="rh-mono">{rep.bookings?.booking_code || '-'}</span>
                           </div>
                         </div>
                         <span style={{ fontSize: '0.8rem', padding: '0.2rem 0.6rem', borderRadius: 999, fontWeight: 700, background: rep.status === 'resolved' ? 'var(--rh-success-light)' : 'var(--rh-warning-light)', color: rep.status === 'resolved' ? 'var(--rh-success)' : 'var(--rh-warning)' }}>

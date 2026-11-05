@@ -4827,22 +4827,17 @@ input[type="checkbox"] {
 }
 
 .rh-fun-ticket-card {
-  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s ease, border-color 0.22s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 .rh-fun-ticket-card:hover {
-  transform: translateY(-4px) scale(1.015);
-  box-shadow: 0 16px 32px -8px rgba(11, 27, 54, 0.16), 0 4px 10px rgba(0, 0, 0, 0.05);
-  border-color: #93c5fd;
-}
-
-.rh-fun-ticket-card:hover .rh-ticket-notch-top,
-.rh-fun-ticket-card:hover .rh-ticket-notch-bottom {
-  border-color: #93c5fd;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px -6px rgba(15, 23, 42, 0.09), 0 3px 6px rgba(0, 0, 0, 0.03);
+  border-color: #cbd5e1;
 }
 
 .rh-fun-ticket-card:active {
-  transform: translateY(-1px) scale(0.99);
+  transform: translateY(0);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -4994,4 +4989,704 @@ input[type="checkbox"] {
   border-color: var(--rh-primary);
   background: var(--rh-primary-light);
   box-shadow: 0 0 0 2px rgba(26, 66, 138, 0.12);
+}
+
+
+/* ============================================================
+   WHATSAPP FLOATING BUBBLE (Pure CSS, No styled-jsx mismatch)
+   ============================================================ */
+.rh-wa-desktop {
+  display: none;
+}
+
+@media (min-width: 641px) {
+  .rh-wa-desktop {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 99990;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .rh-wa-tooltip {
+    background-color: #0f172a;
+    color: #ffffff;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    padding: 0.45rem 0.85rem;
+    border-radius: 9999px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    opacity: 0;
+    transform: translateX(8px);
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .rh-wa-tooltip.is-visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .rh-wa-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #25D366;
+  }
+
+  .rh-wa-btn-desktop {
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background-color: #25D366;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 18px rgba(37, 211, 102, 0.4);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    text-decoration: none;
+  }
+
+  .rh-wa-btn-desktop:hover {
+    transform: scale(1.08) translateY(-2px);
+    box-shadow: 0 8px 22px rgba(37, 211, 102, 0.5);
+  }
+}
+
+.rh-wa-mobile {
+  display: block;
+}
+
+@media (min-width: 641px) {
+  .rh-wa-mobile {
+    display: none;
+  }
+}
+
+.rh-wa-btn-mobile {
+  position: fixed;
+  right: 1rem;
+  bottom: calc(4.85rem + env(safe-area-inset-bottom, 0px));
+  z-index: 99999;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background-color: #25D366;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 18px rgba(37, 211, 102, 0.45), 0 2px 6px rgba(0, 0, 0, 0.15);
+  text-decoration: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.rh-wa-btn-mobile:active {
+  transform: scale(0.92);
+  background-color: #1ebd5a;
+}
+
+/* ============================================================
+   PWA GALLERY BENTO (Pure CSS, No styled-jsx mismatch)
+   ============================================================ */
+.rh-bento-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 1.1fr 0.95fr;
+  gap: 1.25rem;
+  align-items: stretch;
+}
+
+.rh-bento-card {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 20px -4px rgba(15, 23, 42, 0.05);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.rh-bento-card:hover {
+  box-shadow: 0 12px 30px -6px rgba(15, 23, 42, 0.1);
+}
+
+.rh-bento-card-app {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  padding: 1.75rem 1.5rem 1.25rem;
+  gap: 1.25rem;
+}
+
+.rh-bento-app-content {
+  flex: 1.1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.rh-bento-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #334155;
+  margin-bottom: 0.85rem;
+  width: fit-content;
+}
+
+.rh-bento-title-dark {
+  margin: 0 0 0.65rem;
+  color: #0f172a;
+  font-size: 1.35rem;
+  font-weight: 800;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+
+.rh-bento-desc-dark {
+  margin: 0 0 1.25rem;
+  color: #475569;
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+
+.rh-bento-install-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.72rem 1rem;
+  background: #0f172a;
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-bottom: 1.25rem;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.rh-bento-install-btn:hover {
+  background: #1e293b;
+  transform: translateY(-1px);
+}
+
+.rh-bento-qr-store-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin-top: auto;
+}
+
+.rh-bento-qr-box {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.rh-bento-qr-box:hover {
+  transform: scale(1.03);
+  border-color: var(--rh-primary);
+}
+
+
+/* ============================================================
+   AUTHENTIC IPHONE 16 MOCKUP FRAME & DYNAMIC ISLAND
+   Craft-Floor: No hairline border + wide shadow combo. Machined solid depth.
+   ============================================================ */
+.rh-bento-phone-col {
+  flex: 0.95;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  position: relative;
+}
+
+/* iPhone 16 Titanium Chassis Frame */
+.rh-iphone16-frame {
+  width: 100%;
+  max-width: 216px;
+  background: #111827; /* Dark Titanium tone */
+  border-radius: 38px 38px 0 0;
+  padding: 8px 8px 0;
+  position: relative;
+  border: none;
+  box-shadow: 
+    0 16px 32px -8px rgba(15, 23, 42, 0.35),
+    inset 0 0 0 2px #334155,
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* Physical Hardware Buttons on Left/Right edges */
+.rh-iphone16-btn {
+  position: absolute;
+  background: #374151;
+  border-radius: 3px;
+  z-index: 0;
+}
+
+/* Left edge: Action Button & Volume */
+.rh-iphone16-btn-action {
+  left: -3px;
+  top: 54px;
+  width: 3px;
+  height: 14px;
+  background: #ea580c;
+}
+.rh-iphone16-btn-vol-up {
+  left: -3px;
+  top: 78px;
+  width: 3px;
+  height: 24px;
+}
+.rh-iphone16-btn-vol-down {
+  left: -3px;
+  top: 110px;
+  width: 3px;
+  height: 24px;
+}
+
+/* Right edge: Power Button & iPhone 16 Camera Control */
+.rh-iphone16-btn-power {
+  right: -3px;
+  top: 72px;
+  width: 3px;
+  height: 36px;
+}
+.rh-iphone16-btn-camera {
+  right: -3px;
+  top: 140px;
+  width: 3px;
+  height: 26px;
+  background: #4b5563;
+}
+
+/* Screen Viewport */
+.rh-iphone16-screen {
+  background: #090e17;
+  border-radius: 30px 30px 0 0;
+  position: relative;
+  overflow: hidden;
+  height: 375px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.8);
+}
+
+/* Dynamic Island */
+.rh-iphone16-island {
+  position: absolute;
+  top: 9px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 74px;
+  height: 20px;
+  background: #000000;
+  border-radius: 20px;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 6px;
+  gap: 5px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+.rh-iphone16-sensor {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #0d121f;
+}
+
+.rh-iphone16-lens {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #111c33;
+  box-shadow: inset 0 0 2px #3b82f6;
+}
+
+/* iPhone Status Bar */
+.rh-iphone16-statusbar {
+  position: relative;
+  z-index: 10;
+  height: 38px;
+  padding: 8px 14px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #ffffff;
+}
+
+.rh-iphone16-time {
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+}
+
+.rh-iphone16-status-icons {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #ffffff;
+}
+
+.rh-iphone16-battery {
+  width: 17px;
+  height: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: 2.5px;
+  padding: 1px;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.rh-iphone16-battery::after {
+  content: '';
+  position: absolute;
+  right: -3px;
+  top: 2px;
+  width: 1.5px;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 0 1px 1px 0;
+}
+
+.rh-iphone16-battery-fill {
+  width: 75%;
+  height: 100%;
+  background: #ffffff;
+  border-radius: 1px;
+}
+
+/* Screenshot Image inside iPhone 16 Screen */
+.rh-iphone16-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Fallback UI when user image is not yet placed in /images/pwa-mobile-preview.png */
+.rh-iphone16-fallback-content {
+  padding: 0.25rem 0.65rem 1rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.rh-mock-logo-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.65rem;
+}
+
+.rh-mock-live-chip {
+  font-size: 0.55rem;
+  background: rgba(234, 88, 12, 0.2);
+  color: #ea580c;
+  padding: 2px 5px;
+  border-radius: 5px;
+  font-weight: 800;
+}
+
+.rh-mock-ticket-box {
+  background: #1e293b;
+  padding: 0.5rem 0.6rem;
+  border-radius: 8px;
+  margin-bottom: 0.65rem;
+  border: 1px solid #334155;
+}
+
+.rh-mock-form {
+  background: #0f172a;
+  padding: 0.55rem;
+  border-radius: 8px;
+  border: 1px solid #1e293b;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.rh-mock-input {
+  background: #1e293b;
+  padding: 0.4rem 0.55rem;
+  border-radius: 6px;
+  font-size: 0.62rem;
+  color: #cbd5e1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.rh-mock-cta {
+  display: block;
+  text-align: center;
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 0.45rem;
+  border-radius: 6px;
+  margin-top: 0.3rem;
+  text-decoration: none;
+}
+
+.rh-mock-drop-hint {
+  margin-top: auto;
+  padding: 0.45rem;
+  background: rgba(234, 88, 12, 0.1);
+  border: 1px dashed rgba(234, 88, 12, 0.4);
+  border-radius: 6px;
+  text-align: center;
+  font-size: 0.56rem;
+  color: #fdba74;
+}
+
+.rh-mock-drop-hint code {
+  display: block;
+  font-size: 0.54rem;
+  color: #ffffff;
+  margin-top: 2px;
+  word-break: break-all;
+}
+
+/* Home Indicator Bar */
+.rh-iphone16-homebar {
+  width: 68px;
+  height: 3.5px;
+  background: rgba(255, 255, 255, 0.65);
+  border-radius: 4px;
+  margin: 6px auto 5px;
+  flex-shrink: 0;
+}
+
+.rh-bento-card-center {
+  min-height: 420px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 1.25rem;
+  background-color: #070d18;
+  color: #ffffff;
+}
+
+.rh-bento-card-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  z-index: 0;
+  transition: transform 0.5s ease;
+}
+
+.rh-bento-card:hover .rh-bento-card-bg {
+  transform: scale(1.03);
+}
+
+.rh-bento-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(7, 13, 24, 0.15) 0%, rgba(7, 13, 24, 0.6) 40%, rgba(7, 13, 24, 0.95) 100%);
+}
+
+.rh-bento-center-content {
+  position: relative;
+  z-index: 1;
+  background: rgba(7, 13, 24, 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-radius: 16px;
+  padding: 1.5rem 1.35rem 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+}
+
+.rh-bento-title-white {
+  margin: 0 0 0.85rem;
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.25;
+  letter-spacing: -0.025em;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.85);
+}
+
+.rh-bento-desc-white {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #f1f5f9;
+  line-height: 1.6;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.85);
+}
+
+.rh-bento-link-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #ffffff;
+  color: #0f172a;
+  padding: 0.55rem 1.15rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-decoration: none;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.rh-bento-link-btn:hover {
+  background: #f1f5f9;
+  transform: translateX(2px);
+}
+
+.rh-bento-col-right {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.rh-bento-card-speed {
+  flex: 1;
+  min-height: 180px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  background-color: #070d18;
+}
+
+.rh-bento-card-overlay-subtle {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(7, 13, 24, 0.15) 0%, rgba(7, 13, 24, 0.6) 100%);
+}
+
+.rh-bento-speed-content {
+  position: relative;
+  z-index: 1;
+}
+
+.rh-bento-card-passenger {
+  flex: 1.35;
+  min-height: 220px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  background-color: #070d18;
+  color: #ffffff;
+}
+
+.rh-bento-card-overlay-dark {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(7, 13, 24, 0.15) 0%, rgba(7, 13, 24, 0.65) 45%, rgba(7, 13, 24, 0.95) 100%);
+}
+
+.rh-bento-passenger-content {
+  position: relative;
+  z-index: 1;
+  background: rgba(7, 13, 24, 0.85);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-radius: 14px;
+  padding: 1.25rem 1.15rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.rh-pwa-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(6px);
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  z-index: 9999;
+  animation: rhFadeIn 0.2s ease-out;
+}
+
+.rh-pwa-modal-card {
+  background: #ffffff;
+  width: 100%;
+  max-width: 480px;
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  animation: rhScaleUp 0.25s ease-out;
+}
+
+@keyframes rhFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes rhScaleUp {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@media (max-width: 1024px) {
+  .rh-bento-grid {
+    grid-template-columns: 1fr;
+  }
+  .rh-bento-card-center {
+    min-height: 340px;
+  }
+  .rh-bento-col-right {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .rh-bento-card-app {
+    flex-direction: column;
+    padding: 1.25rem 1rem;
+  }
+  .rh-bento-phone-col {
+    display: none;
+  }
+  .rh-bento-col-right {
+    grid-template-columns: 1fr;
+  }
+  .rh-bento-card-center {
+    min-height: 300px;
+    padding: 1.25rem 1rem;
+  }
+  .rh-bento-card-passenger {
+    min-height: 180px;
+    padding: 1.25rem 1rem;
+  }
 }

@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import Navbar from '@/components/layout/Navbar'
@@ -9,46 +10,25 @@ import FeaturedServicesSlider from '@/components/home/FeaturedServicesSlider'
 import TrainBumperBanner from '@/components/home/TrainBumperBanner'
 import PromoBannerCarousel from '@/components/home/PromoBannerCarousel'
 import PopularTicketRoutes from '@/components/home/PopularTicketRoutes'
+import TravelClassShowcase from '@/components/home/TravelClassShowcase'
+import PwaGalleryBento from '@/components/home/PwaGalleryBento'
 import { useLang } from '@/contexts/LangContext'
-import {
-  ChevronRight,  Train,
-  Sparkles,  Armchair,
-  Clock,
-} from 'lucide-react'
-
-
-const FLEET_CLASSES = [
-  {
-    title: 'Luxury Sleeper',
-    badge: 'Kenyamanan Tertinggi',
-    summary: 'Kursi rebah 140° · Layar VOD Pribadi · Bistro Hangat Gratis',
-    summaryEn: '140° reclining seat · Personal VOD screen · Warm meal',
-    icon: Armchair,
-    price: 'Mulai Rp 450.000',
-  },
-  {
-    title: 'Eksekutif',
-    badge: 'Paling Populer',
-    summary: 'Captain Seat 2-2 Putar · Meja Kerja Lipat · WiFi Kabin',
-    summaryEn: '2-2 reclining seat · Folding table · Cabin WiFi',
-    icon: Train,
-    price: 'Mulai Rp 250.000',
-  },
-  {
-    title: 'Ekonomi New Gen',
-    badge: 'Terjangkau & Modern',
-    summary: 'Kursi 2-2 Reclining · AC Dingin · Kabin Bebas Bising',
-    summaryEn: '2-2 reclining seat · Air-conditioned cabin',
-    icon: Sparkles,
-    price: 'Mulai Rp 120.000',
-  },
-]
+import { useAuth } from '@/contexts/AuthContext'
+import { ChevronRight } from 'lucide-react'
 
 export default function HomePage() {
   const { t, lang } = useLang()
+  const { user } = useAuth()
+  const [mounted, setMounted] = useState(false)
   const router = useRouter()
 
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
+  // On SSR and initial hydration, render for public/guest view.
+  // After client mount, if an authenticated user session is detected, hide these guest sections.
+  const isGuest = !mounted || !user
 
   return (
     <div>
@@ -103,58 +83,13 @@ export default function HomePage() {
       {/* Popular routes - Fun Ticket Shape & Continuous Mobile Sliding */}
       <PopularTicketRoutes />
 
-      {/* Fleet and cabin comfort */}
-      <section className="rh-section home-fleet-section" style={{ background: '#ffffff', paddingTop: '2rem', paddingBottom: '2rem' }}>
-        <div className="rh-container">
-          <div style={{ marginBottom: '1.25rem', textAlign: 'center' }}>
-            <h2 className="rh-h3" style={{ margin: 0, color: 'var(--rh-navy)', fontSize: '1.35rem', fontWeight: 800 }}>{lang === 'en' ? 'Choose Your Travel Class' : 'Pilihan Kelas Kereta'}</h2>
-          </div>
-
-          {/* Ultra-compact 3-card horizontal grid */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))', gap: '0.75rem' }}>
-            {FLEET_CLASSES.map(fc => {
-              const Icon = fc.icon
-              return (
-                <Link
-                  key={fc.title}
-                  href="/trains"
-                  className="rh-card rh-card-interactive"
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.75rem',
-                    padding: '0.85rem 1rem',
-                    textDecoration: 'none',
-                    background: '#ffffff',
-                    border: '1px solid var(--rh-border)',
-                    borderRadius: 14,
-                  }}
-                >
-                  <div style={{ width: 40, height: 40, borderRadius: 10, background: 'var(--rh-primary-light)', color: 'var(--rh-primary)', display: 'grid', placeItems: 'center', flexShrink: 0 }}>
-                    <Icon size={20} />
-                  </div>
-                  <div style={{ minWidth: 0, flex: 1 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.35rem' }}>
-                      <strong style={{ fontSize: '0.9rem', color: 'var(--rh-navy)' }}>{fc.title}</strong>
-                      <span style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--rh-accent-dark)' }}>{lang === 'en' ? fc.price.replace('Mulai', 'From') : fc.price}</span>
-                    </div>
-                    <span style={{ display: 'block', fontSize: '0.72rem', color: 'var(--rh-text-2)', marginTop: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                      {lang === 'en' ? fc.summaryEn : fc.summary}
-                    </span>
-                  </div>
-                  <ChevronRight size={15} style={{ color: 'var(--rh-text-3)', flexShrink: 0 }} />
-                </Link>
-              )
-            })}
-          </div>
-
-          <div style={{ textAlign: 'center', marginTop: '1.25rem' }}>
-            <Link href="/about" style={{ fontSize: '0.8rem', color: 'var(--rh-primary)', fontWeight: 700, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 3 }}>
-              {lang === 'en' ? 'See All Classes & About the Team' : 'Lihat Seluruh Armada & Portofolio Tim'} <ChevronRight size={14} />
-            </Link>
-          </div>
-        </div>
-      </section>
+      {/* Guest-Only Sections: Class Showcase with Photos & Bento Gallery with PWA App Download */}
+      {isGuest && (
+        <>
+          <TravelClassShowcase />
+          <PwaGalleryBento />
+        </>
+      )}
 
       {/* Compact closing section */}
       <section className="home-bottom-cta" style={{ background: 'var(--rh-primary)', padding: '2.5rem 0 calc(5.5rem + env(safe-area-inset-bottom, 0px))', color: 'white' }}>

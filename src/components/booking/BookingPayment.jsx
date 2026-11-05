@@ -614,8 +614,8 @@ export default function BookingPayment({ bookingId }) {
                         </p>
                       )}
                       {(() => {
-                        const origin = journey?.schedule?.origin_name || journey?.schedule?.origin_code || booking.schedules?.routes?.name?.split('—')?.[0]?.trim() || ''
-                        const dest = journey?.schedule?.destination_name || journey?.schedule?.destination_code || booking.schedules?.routes?.name?.split('—')?.[1]?.trim() || ''
+                        const origin = journey?.schedule?.origin_name || journey?.schedule?.origin_code || booking.schedules?.routes?.name?.split(/\s*(?:—|–|-)\s*/)?.[0]?.trim() || ''
+                        const dest = journey?.schedule?.destination_name || journey?.schedule?.destination_code || booking.schedules?.routes?.name?.split(/\s*(?:—|–|-)\s*/)?.[1]?.trim() || ''
                         const routeStr = origin && dest ? `${origin} → ${dest}` : (booking.schedules?.routes?.name || 'Rute Perjalanan')
                         const trainName = journey?.schedule?.train_name || booking.schedules?.trains?.name || ''
                         const trainNum = journey?.schedule?.train_number || booking.schedules?.trains?.train_number || ''
@@ -811,7 +811,7 @@ export default function BookingPayment({ bookingId }) {
                         <article key={ticket.ticket_number} className="rh-ticket-row">
                           <div><small>Nomor tiket</small><strong className="rh-mono">{ticket.ticket_number}</strong></div>
                           <div><small>Penumpang</small><strong>{ticket.passengers?.full_name || 'Penumpang simulasi'}</strong></div>
-                          <div><small>Kursi</small><strong>{ticket.seats?.seat_number || '—'}</strong></div>
+                          <div><small>Kursi</small><strong>{ticket.seats?.seat_number || '-'}</strong></div>
                           <button
                             className="rh-btn rh-btn-primary rh-btn-sm"
                             type="button"

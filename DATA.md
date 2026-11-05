@@ -1,4 +1,4 @@
-# 🚆 RAILHUB — Dokumentasi Data Operasional (DATA.md)
+# 🚆 RAILHUB - Dokumentasi Data Operasional (DATA.md)
 
 Dokumen ini berisi rangkuman **seluruh data nyata (*curated operational data*)** yang diimplementasikan dan digunakan secara aktif di website **RAILHUB Indonesia** (`https://railhub-indonesia.vercel.app`), disaring langsung dari sumber data mentah (*raw data*) stasiun, jadwal KAI, dan migrasi Supabase untuk keperluan presentasi & pengujian UAS Pemrograman Web Kelompok 14.
 
@@ -81,23 +81,23 @@ Sumber: `schedulesEngine.js` & `202610310001_search_train_schedules.sql`
 ### A. Daftar Kereta Api Aktif
 | Nama Kereta | Nomor KA | Layanan Rute Khas | Tipe Rangkaian |
 |:------------|:--------:|:------------------|:---------------|
-| **Argo Parahyangan** | KA 34 / KA 36 | Gambir (GMR) — Bandung (BD) | Eksekutif & Panoramic |
-| **Argo Bromo Anggrek** | KA 1 / KA 3 | Gambir (GMR) — Surabaya Pasarturi (SBI/SGU) | Luxury Sleeper & Eksekutif New Gen |
-| **Taksaka (Pagi/Malam)** | KA 68 / KA 70 | Gambir (GMR) — Yogyakarta (YK) | Hype Trip Eksekutif |
-| **Argo Dwipangga** | KA 10 | Gambir (GMR) — Solo Balapan (SLO) | Eksekutif New Generation Stainless |
-| **Argo Lawu** | KA 8 | Gambir (GMR) — Solo Balapan (SLO) | Eksekutif New Generation Stainless |
-| **Argo Wilis** | KA 6 | Bandung (BD) — Surabaya Gubeng (SGU) | Eksekutif Panorama Lintas Selatan |
-| **Turangga** | KA 66 | Bandung (BD) — Surabaya Gubeng (SGU) | Eksekutif Night Express |
-| **Sembrani** | KA 64 | Gambir (GMR) — Surabaya Pasarturi (SBI) | Eksekutif & Luxury |
-| **Bima** | KA 60 | Gambir (GMR) — Surabaya Gubeng (SGU) | Eksekutif Klasik |
-| **Jayakarta** | KA 218 | Pasar Senen (PSE) — Surabaya Gubeng (SGU) | Ekonomi Premium 2-2 |
-| **Gaya Baru Malam Selatan** | KA 106 | Pasar Senen (PSE) — Surabaya Gubeng (SGU) | Eksekutif & Ekonomi |
-| **Jayabaya** | KA 108 | Pasar Senen (PSE) — Malang (ML) via Pantura | Eksekutif & Ekonomi |
-| **Airlangga** | KA 236 | Pasar Senen (PSE) — Surabaya Pasarturi (SBI) | Ekonomi Terjangkau (PSO) |
-| **Kertajaya** | KA 220 | Pasar Senen (PSE) — Surabaya Pasarturi (SBI) | Ekonomi Rangkaian Panjang (14 Gerbong) |
-| **Lodaya** | KA 92 | Bandung (BD) — Solo Balapan (SLO) | Eksekutif & Ekonomi |
-| **Malabar** | KA 122 | Bandung (BD) — Malang (ML) | Eksekutif, Bisnis & Ekonomi |
-| **Sancaka** | KA 176 | Yogyakarta (YK) — Surabaya Gubeng (SGU) | Eksekutif & Ekonomi |
+| **Argo Parahyangan** | KA 34 / KA 36 | Gambir (GMR) - Bandung (BD) | Eksekutif & Panoramic |
+| **Argo Bromo Anggrek** | KA 1 / KA 3 | Gambir (GMR) - Surabaya Pasarturi (SBI/SGU) | Luxury Sleeper & Eksekutif New Gen |
+| **Taksaka (Pagi/Malam)** | KA 68 / KA 70 | Gambir (GMR) - Yogyakarta (YK) | Hype Trip Eksekutif |
+| **Argo Dwipangga** | KA 10 | Gambir (GMR) - Solo Balapan (SLO) | Eksekutif New Generation Stainless |
+| **Argo Lawu** | KA 8 | Gambir (GMR) - Solo Balapan (SLO) | Eksekutif New Generation Stainless |
+| **Argo Wilis** | KA 6 | Bandung (BD) - Surabaya Gubeng (SGU) | Eksekutif Panorama Lintas Selatan |
+| **Turangga** | KA 66 | Bandung (BD) - Surabaya Gubeng (SGU) | Eksekutif Night Express |
+| **Sembrani** | KA 64 | Gambir (GMR) - Surabaya Pasarturi (SBI) | Eksekutif & Luxury |
+| **Bima** | KA 60 | Gambir (GMR) - Surabaya Gubeng (SGU) | Eksekutif Klasik |
+| **Jayakarta** | KA 218 | Pasar Senen (PSE) - Surabaya Gubeng (SGU) | Ekonomi Premium 2-2 |
+| **Gaya Baru Malam Selatan** | KA 106 | Pasar Senen (PSE) - Surabaya Gubeng (SGU) | Eksekutif & Ekonomi |
+| **Jayabaya** | KA 108 | Pasar Senen (PSE) - Malang (ML) via Pantura | Eksekutif & Ekonomi |
+| **Airlangga** | KA 236 | Pasar Senen (PSE) - Surabaya Pasarturi (SBI) | Ekonomi Terjangkau (PSO) |
+| **Kertajaya** | KA 220 | Pasar Senen (PSE) - Surabaya Pasarturi (SBI) | Ekonomi Rangkaian Panjang (14 Gerbong) |
+| **Lodaya** | KA 92 | Bandung (BD) - Solo Balapan (SLO) | Eksekutif & Ekonomi |
+| **Malabar** | KA 122 | Bandung (BD) - Malang (ML) | Eksekutif, Bisnis & Ekonomi |
+| **Sancaka** | KA 176 | Yogyakarta (YK) - Surabaya Gubeng (SGU) | Eksekutif & Ekonomi |
 
 ### B. Fasilitas per Kelas Kereta
 - **Luxury Sleeper**: Kursi rebah 140°, layar VOD pribadi, USB & fast-charging, selimut tebal, makanan berat & dessert gratis.
@@ -111,7 +111,7 @@ Sumber: `schedulesEngine.js` & `202610310001_search_train_schedules.sql`
 
 Sumber: `schedulesEngine.js` & database `schedules`
 
-### 1. Koridor Jakarta (PSE) — Surabaya Gubeng (SGU)
+### 1. Koridor Jakarta (PSE) - Surabaya Gubeng (SGU)
 | KA & Nomor | Jam Berangkat | Jam Tiba | Durasi Nyata | Kelas | Sub | Tarif Tiket | Kursi |
 |:-----------|:-------------:|:--------:|:------------:|:------|:---:|:-----------:|:-----:|
 | **Jayakarta (KA 218)** | 17:10 WIB | 06:01 WIB (+1) | 12 Jam 51 Menit | Ekonomi | CA | Rp 430.000 | 24 |
@@ -120,7 +120,7 @@ Sumber: `schedulesEngine.js` & database `schedules`
 | **Airlangga (KA 236)** | 11:20 WIB | 23:05 WIB | 11 Jam 45 Menit | Ekonomi | C | Rp 104.000 | 8 |
 | **Kertajaya (KA 220)** | 14:30 WIB | 01:25 WIB (+1) | 10 Jam 55 Menit | Ekonomi | CA | Rp 310.000 | 32 |
 
-### 2. Koridor Jakarta (GMR) — Surabaya Gubeng/Pasarturi (SGU/SBI)
+### 2. Koridor Jakarta (GMR) - Surabaya Gubeng/Pasarturi (SGU/SBI)
 | KA & Nomor | Jam Berangkat | Jam Tiba | Durasi Nyata | Kelas | Sub | Tarif Tiket | Kursi |
 |:-----------|:-------------:|:--------:|:------------:|:------|:---:|:-----------:|:-----:|
 | **Argo Bromo Anggrek (KA 1)** | 08:20 WIB | 16:30 WIB | 8 Jam 10 Menit | Eksekutif | AA | Rp 650.000 | 38 |
@@ -129,7 +129,7 @@ Sumber: `schedulesEngine.js` & database `schedules`
 | **Bima (KA 60)** | 17:00 WIB | 03:30 WIB (+1) | 10 Jam 30 Menit | Eksekutif | AA | Rp 590.000 | 19 |
 | **Argo Semeru (KA 18)** | 06:20 WIB | 16:50 WIB | 10 Jam 30 Menit | Eksekutif | A | Rp 580.000 | 25 |
 
-### 3. Koridor Jakarta (GMR) — Yogyakarta (YK)
+### 3. Koridor Jakarta (GMR) - Yogyakarta (YK)
 | KA & Nomor | Jam Berangkat | Jam Tiba | Durasi Nyata | Kelas | Sub | Tarif Tiket | Kursi |
 |:-----------|:-------------:|:--------:|:------------:|:------|:---:|:-----------:|:-----:|
 | **Taksaka Pagi (KA 68)** | 09:20 WIB | 15:30 WIB | 6 Jam 10 Menit | Eksekutif | AA | Rp 550.000 | 34 |
@@ -137,7 +137,7 @@ Sumber: `schedulesEngine.js` & database `schedules`
 | **Argo Dwipangga (KA 10)** | 08:50 WIB | 14:55 WIB | 6 Jam 05 Menit | Eksekutif | AA | Rp 580.000 | 22 |
 | **Argo Lawu (KA 8)** | 20:45 WIB | 02:50 WIB (+1) | 6 Jam 05 Menit | Eksekutif | AA | Rp 580.000 | 17 |
 
-### 4. Koridor Bandung (BD) — Surabaya Gubeng (SGU)
+### 4. Koridor Bandung (BD) - Surabaya Gubeng (SGU)
 | KA & Nomor | Jam Berangkat | Jam Tiba | Durasi Nyata | Kelas | Sub | Tarif Tiket | Kursi |
 |:-----------|:-------------:|:--------:|:------------:|:------|:---:|:-----------:|:-----:|
 | **Argo Wilis (KA 6)** | 07:45 WIB | 17:35 WIB | 9 Jam 50 Menit | Eksekutif | AA | Rp 600.000 | 31 |

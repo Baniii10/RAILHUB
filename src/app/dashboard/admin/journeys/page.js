@@ -305,7 +305,7 @@ export default function AdminJourneysPage() {
                       {filteredSchedules.map(schedule => (
                         <tr key={schedule.id}>
                           <td style={{ padding: '0.85rem 0.6rem', borderBottom: '1px solid var(--rh-border)' }}>
-                            <strong style={{ display: 'block' }}>{schedule.trains?.name || 'Kereta'} · {schedule.trains?.train_number || '—'}</strong>
+                            <strong style={{ display: 'block' }}>{schedule.trains?.name || 'Kereta'} · {schedule.trains?.train_number || '-'}</strong>
                             <small style={{ color: 'var(--rh-text-2)' }}>{schedule.routes?.name || 'Rute tidak tersedia'}</small>
                           </td>
                           <td style={{ padding: '0.85rem 0.6rem', borderBottom: '1px solid var(--rh-border)', whiteSpace: 'nowrap' }}>

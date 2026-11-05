@@ -1,4 +1,4 @@
-# 🚆 RAILHUB — Sistem Informasi Reservasi & Operasional Kereta Api Terpadu
+# 🚆 RAILHUB - Sistem Informasi Reservasi & Operasional Kereta Api Terpadu
 
 [![Next.js](https://img.shields.io/badge/Next.js-16.4.3_Turbopack-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19.0.0-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
@@ -7,7 +7,7 @@
 [![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 [![License](https://img.shields.io/badge/License-Academic_Simulation-1A428A?style=for-the-badge)](LICENSE)
 
-**RAILHUB** adalah platform web *full-stack* modern berskala enterprise untuk simulasi reservasi tiket, manajemen perjalanan, dan kendali operasional terpadu jaringan kereta api antarkota di Pulau Jawa. Sistem ini mengintegrasikan seluruh siklus perjalanan kereta api—mulai dari pencarian jadwal multi-stasiun, pemilihan kursi interaktif 40-seat gerbong, pemesanan tiket atomik bebas *double-booking*, penerbitan *e-boarding pass* berbasis QR Code, *reschedule* dan pembatalan otomatis 2 jam sebelum keberangkatan, pemesanan makanan & minuman restorasi kereta (*onboard dining*), meja layanan bantuan & barang tertinggal, hingga sistem operasional dinas petugas kondektur dan panel *monitoring* administrator dengan sistem navigasi sidebar modern.
+**RAILHUB** adalah platform web *full-stack* modern berskala enterprise untuk simulasi reservasi tiket, manajemen perjalanan, dan kendali operasional terpadu jaringan kereta api antarkota di Pulau Jawa. Sistem ini mengintegrasikan seluruh siklus perjalanan kereta api-mulai dari pencarian jadwal multi-stasiun, pemilihan kursi interaktif 40-seat gerbong, pemesanan tiket atomik bebas *double-booking*, penerbitan *e-boarding pass* berbasis QR Code, *reschedule* dan pembatalan otomatis 2 jam sebelum keberangkatan, pemesanan makanan & minuman restorasi kereta (*onboard dining*), meja layanan bantuan & barang tertinggal, hingga sistem operasional dinas petugas kondektur dan panel *monitoring* administrator dengan sistem navigasi sidebar modern.
 
 > 🌐 **Production URL:** [https://railhub-indonesia.vercel.app](https://railhub-indonesia.vercel.app)  
 > 📌 *Catatan: Proyek ini merupakan simulasi komputasi berbasis data nyata jaringan perkeretaapian Indonesia untuk keperluan akademik dan pengujian sistem.*
@@ -268,15 +268,15 @@ RAILHUB menerapkan arsitektur pengamanan data berlapis untuk menjaga integritas 
 └─────────────────────────────────────────────────────────────┘
 ```
 
-1. **Lapisan 1 — Frontend (Client-Side Validation):**
+1. **Lapisan 1 - Frontend (Client-Side Validation):**
    - Validasi interaktif pemesanan: stasiun keberangkatan dan tujuan tidak boleh sama, tanggal berangkat tidak boleh di masa lampau, data penumpang wajib mengisi nomor identitas 16 digit yang valid.
    - Mengganti seluruh 31 dialog bawaan browser (`window.alert`, `window.confirm`) dengan komponen kustom `RailConfirmDialog` dan `ConfirmDialogContext` yang konsisten dengan estetika RailHub.
-2. **Lapisan 2 — Backend & Server Guard (Next.js Middleware):**
+2. **Lapisan 2 - Backend & Server Guard (Next.js Middleware):**
    - `src/middleware.js` dan `src/lib/auth/roles.js` secara ketat memverifikasi sesi dan hak akses akun:
      - Akun ber-role `admin` dilarang memasuki area pemesanan penumpang biasa, dan langsung diarahkan ke `/dashboard/admin`.
      - Akun ber-role `conductor` atau `gate` hanya dapat mengakses `/dashboard/staff`.
      - Penumpang dilarang mengakses panel kendali operasional dan ditolak dengan HTTP 307 redirect.
-3. **Lapisan 3 — Database (PostgreSQL Constraints & RLS):**
+3. **Lapisan 3 - Database (PostgreSQL Constraints & RLS):**
    - Kebijakan RLS membatasi hak baca dan tulis: penumpang hanya dapat melihat data tiket dan pemesanan milik akunnya sendiri (`auth.uid() = user_id`).
    - Petugas kereta hanya diizinkan membaca manifest dan memvalidasi tiket pada jadwal yang ditugaskan kepada mereka di `staff_assignments`.
    - Transaksi pemesanan dan pembatalan dibungkus dalam blok atomik database untuk mencegah inkonsistensi saat terjadi kegagalan jaringan di tengah proses.
@@ -364,20 +364,20 @@ Struktur database RAILHUB dibangun melalui skema dasar dan 20 file migrasi modul
 2. Jalankan skema dasar: `supabase/schema.sql`.
 3. Jalankan data master awal: `supabase/seed.sql` (mengisi data stasiun, rute, kereta, gerbong, 40 kursi per gerbong, dan produk menu restorasi).
 4. Jalankan file migrasi secara berurutan sesuai timestamp nomor:
-   - `202610310001_search_train_schedules.sql` — Pencarian jadwal & kalkulasi ketersediaan kursi.
-   - `202610310002_secure_passenger_booking.sql` — Booking atomik dan penerbitan tiket ber-QR.
-   - `202610310003_staff_operations.sql` — Penugasan staf dan verifikasi boarding tiket.
-   - `202610310004_passenger_services.sql` — Menu restorasi dan laporan bantuan penumpang.
-   - `202610310005_simulated_schedule_calendar.sql` s/d `202610310007_expand_simulated_schedule_calendar.sql` — Kalender jadwal dinas 90 hari.
-   - `202611010001_ensure_40_seats_per_carriage.sql` — Standardisasi formasi 40 kursi gerbong.
-   - `202611010002_manage_paid_bookings.sql` — Mesin reschedule dan pembatalan tiket.
-   - `202611010003_food_order_checkout.sql` & `202611010004_ticket_payment_method.sql` — Rekam metode bayar resmi.
-   - `202611010006_enable_simulated_payments.sql` — Otomasi status pembayaran simulasi.
-   - `202611010007_expand_station_catalog.sql` — Katalog 50 stasiun koridor pulau Jawa.
-   - `202611020001_staff_passenger_journey_flow.sql` — State machine status dinas perjalanan KA.
-   - `20261104192451_role_station_access.sql` — Validasi stasiun penugasan gerbang/kondektur.
-   - `20261105061114_remove_midtrans_and_harden_roles.sql` — Hardening isolasi role pengguna.
-   - `20261105193000_reschedule_cancel_2hours.sql` — Enforce cutoff fleksibilitas 2 jam keberangkatan.
+   - `202610310001_search_train_schedules.sql` - Pencarian jadwal & kalkulasi ketersediaan kursi.
+   - `202610310002_secure_passenger_booking.sql` - Booking atomik dan penerbitan tiket ber-QR.
+   - `202610310003_staff_operations.sql` - Penugasan staf dan verifikasi boarding tiket.
+   - `202610310004_passenger_services.sql` - Menu restorasi dan laporan bantuan penumpang.
+   - `202610310005_simulated_schedule_calendar.sql` s/d `202610310007_expand_simulated_schedule_calendar.sql` - Kalender jadwal dinas 90 hari.
+   - `202611010001_ensure_40_seats_per_carriage.sql` - Standardisasi formasi 40 kursi gerbong.
+   - `202611010002_manage_paid_bookings.sql` - Mesin reschedule dan pembatalan tiket.
+   - `202611010003_food_order_checkout.sql` & `202611010004_ticket_payment_method.sql` - Rekam metode bayar resmi.
+   - `202611010006_enable_simulated_payments.sql` - Otomasi status pembayaran simulasi.
+   - `202611010007_expand_station_catalog.sql` - Katalog 50 stasiun koridor pulau Jawa.
+   - `202611020001_staff_passenger_journey_flow.sql` - State machine status dinas perjalanan KA.
+   - `20261104192451_role_station_access.sql` - Validasi stasiun penugasan gerbang/kondektur.
+   - `20261105061114_remove_midtrans_and_harden_roles.sql` - Hardening isolasi role pengguna.
+   - `20261105193000_reschedule_cancel_2hours.sql` - Enforce cutoff fleksibilitas 2 jam keberangkatan.
 
 ### Generator Jadwal Otomatis Real-Time (Procedural Reschedule)
 Aplikasi dilengkapi dengan generator jadwal prosedural cerdas di `src/lib/data/scheduleGenerator.js` dan endpoint `/api/schedules/reschedule`. Setiap kali sistem dijalankan, generator akan memastikan tersedianya puluhan jadwal perjalanan aktif real-time untuk hari ini dan hari-hari berikutnya menggunakan kombinasi acak armada nyata dan koridor antarkota.

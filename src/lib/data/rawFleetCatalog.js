@@ -96,7 +96,7 @@ export const RAW_TRAIN_FLEET = [
     ],
     serviceClass: 'Eksekutif & Ekonomi',
     typicalDurationHours: 10.3,
-    tag: 'Pantura — Malang',
+    tag: 'Pantura - Malang',
   },
   {
     id: '11111111-1111-1111-1111-111111111104',
@@ -200,7 +200,7 @@ export const RAW_TRAIN_FLEET = [
     ],
     serviceClass: 'Eksekutif & Ekonomi',
     typicalDurationHours: 4.1,
-    tag: 'Yogya — Surabaya Cepat',
+    tag: 'Yogya - Surabaya Cepat',
   },
   {
     id: '11111111-1111-1111-1111-111111111113',

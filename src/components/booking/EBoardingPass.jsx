@@ -32,7 +32,7 @@ export default function EBoardingPass({ booking, ticket, qrImage, journey }) {
         <RailHubTrainLogo height={26} />
         <div>
           <span>Kode pemesanan</span>
-          <strong>{booking?.booking_code || '—'}</strong>
+          <strong>{booking?.booking_code || '-'}</strong>
         </div>
       </header>
 
@@ -46,8 +46,8 @@ export default function EBoardingPass({ booking, ticket, qrImage, journey }) {
 
       <div className="rh-boarding-pass-route">
         <div>
-          <strong>{departure ? formatTime(departure) : '—'}</strong>
-          <b>{route.originCode || '—'}</b>
+          <strong>{departure ? formatTime(departure) : '-'}</strong>
+          <b>{route.originCode || '-'}</b>
           <span>{route.originName || 'Stasiun asal'}</span>
         </div>
         <div className="rh-boarding-pass-track" aria-hidden="true">
@@ -56,8 +56,8 @@ export default function EBoardingPass({ booking, ticket, qrImage, journey }) {
           <i />
         </div>
         <div>
-          <strong>{arrival ? formatTime(arrival) : '—'}</strong>
-          <b>{route.destinationCode || '—'}</b>
+          <strong>{arrival ? formatTime(arrival) : '-'}</strong>
+          <b>{route.destinationCode || '-'}</b>
           <span>{route.destinationName || 'Stasiun tujuan'}</span>
         </div>
       </div>
@@ -77,7 +77,7 @@ export default function EBoardingPass({ booking, ticket, qrImage, journey }) {
         </div>
         <div>
           <dt>Kursi</dt>
-          <dd>{ticket?.seats?.seat_number || '—'}</dd>
+          <dd>{ticket?.seats?.seat_number || '-'}</dd>
         </div>
       </dl>
 
@@ -88,7 +88,7 @@ export default function EBoardingPass({ booking, ticket, qrImage, journey }) {
         ) : (
           <div className="rh-boarding-pass-qr-placeholder">QR sedang dibuat</div>
         )}
-        <strong>{ticket?.ticket_number || '—'}</strong>
+        <strong>{ticket?.ticket_number || '-'}</strong>
         <small>{ticket?.is_validated ? 'Sudah divalidasi petugas' : 'Siapkan identitas penumpang saat pemeriksaan'}</small>
       </div>
     </article>

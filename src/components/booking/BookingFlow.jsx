@@ -410,7 +410,7 @@ export default function BookingFlow({
                             <Mail size={17} aria-hidden="true" />
                             <span>
                               <small>Email akun</small>
-                              <strong>{user?.email || '—'}</strong>
+                              <strong>{user?.email || '-'}</strong>
                             </span>
                           </div>
                           <div className="rh-booking-contact-item">

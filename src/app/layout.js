@@ -24,7 +24,7 @@ export const viewport = {
 export const metadata = {
   title: {
     template: '%s | RAILHUB',
-    default: 'RAILHUB — Railway Super App',
+    default: 'RAILHUB - Railway Super App',
   },
   description: 'Platform perjalanan kereta api terpadu untuk Pulau Jawa. Pesan tiket, lacak perjalanan, dan nikmati layanan digital berkelas dunia.',
   keywords: ['kereta api', 'tiket kereta', 'KAI', 'booking', 'railway', 'Java'],
@@ -38,7 +38,7 @@ export const metadata = {
     apple: '/apple-icon.png?v=2',
   },
   openGraph: {
-    title: 'RAILHUB — Railway Super App',
+    title: 'RAILHUB - Railway Super App',
     description: 'Platform perjalanan kereta api terpadu untuk Pulau Jawa.',
     type: 'website',
     images: ['/images/Fix logo railhub.png'],

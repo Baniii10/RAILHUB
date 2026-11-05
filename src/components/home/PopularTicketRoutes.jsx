@@ -97,47 +97,18 @@ function TicketCard({ route, onClick, lang }) {
         flexDirection: 'column',
         justifyContent: 'space-between',
         background: '#ffffff',
-        borderRadius: 16,
+        borderRadius: 14,
         border: '1px solid #e2e8f0',
-        boxShadow: '0 4px 14px -2px rgba(15, 23, 42, 0.05), 0 1px 3px rgba(0, 0, 0, 0.03)',
+        boxShadow: '0 2px 8px -2px rgba(15, 23, 42, 0.06)',
         cursor: 'pointer',
-        overflow: 'hidden',
-        transition: 'all 0.2s ease',
+        transition: 'transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease',
         minWidth: 290,
         maxWidth: 340,
         flex: '0 0 auto',
-        padding: '1.15rem 1.25rem 1rem',
+        padding: '1.15rem 1.25rem 1.05rem',
       }}
     >
-      {/* Semicircular Ticket Punch Notches on Left & Right */}
-      <div
-        style={{
-          position: 'absolute',
-          left: -8,
-          bottom: 44,
-          width: 16,
-          height: 16,
-          borderRadius: '50%',
-          background: 'var(--rh-surface, #f8fafc)',
-          borderRight: '1px solid #cbd5e1',
-          zIndex: 2,
-        }}
-      />
-      <div
-        style={{
-          position: 'absolute',
-          right: -8,
-          bottom: 44,
-          width: 16,
-          height: 16,
-          borderRadius: '50%',
-          background: 'var(--rh-surface, #f8fafc)',
-          borderLeft: '1px solid #cbd5e1',
-          zIndex: 2,
-        }}
-      />
-
-      {/* TOP ROW: Minimalist Tag & Duration */}
+      {/* TOP ROW: Tag & Duration (Craft-floor & UI/UX Pro Max: No undersized text) */}
       <div
         style={{
           display: 'flex',
@@ -148,13 +119,13 @@ function TicketCard({ route, onClick, lang }) {
       >
         <span
           style={{
-            fontSize: '0.68rem',
+            fontSize: '0.78rem',
             fontWeight: 700,
             textTransform: 'uppercase',
             letterSpacing: '0.04em',
             color: '#1a428a',
             background: '#eff6ff',
-            padding: '0.2rem 0.55rem',
+            padding: '0.3rem 0.65rem',
             borderRadius: 6,
           }}
         >
@@ -165,13 +136,13 @@ function TicketCard({ route, onClick, lang }) {
           style={{
             display: 'inline-flex',
             alignItems: 'center',
-            gap: 4,
-            fontSize: '0.72rem',
+            gap: 5,
+            fontSize: '0.8125rem',
             fontWeight: 600,
             color: '#64748b',
           }}
         >
-          <Clock size={12} strokeWidth={2.2} />
+          <Clock size={14} strokeWidth={2.2} />
           {lang === 'en' ? route.duration.replace('Jam', 'h').replace('Menit', 'm') : route.duration}
         </span>
       </div>
@@ -189,7 +160,7 @@ function TicketCard({ route, onClick, lang }) {
         <div style={{ minWidth: 0 }}>
           <div
             style={{
-              fontSize: '1.35rem',
+              fontSize: '1.4rem',
               fontWeight: 800,
               color: '#0f172a',
               letterSpacing: '-0.02em',
@@ -200,7 +171,7 @@ function TicketCard({ route, onClick, lang }) {
           </div>
           <div
             style={{
-              fontSize: '0.75rem',
+              fontSize: '0.8125rem',
               color: '#64748b',
               fontWeight: 500,
               marginTop: 2,
@@ -227,7 +198,7 @@ function TicketCard({ route, onClick, lang }) {
         <div style={{ minWidth: 0, textAlign: 'right' }}>
           <div
             style={{
-              fontSize: '1.35rem',
+              fontSize: '1.4rem',
               fontWeight: 800,
               color: '#0f172a',
               letterSpacing: '-0.02em',
@@ -238,7 +209,7 @@ function TicketCard({ route, onClick, lang }) {
           </div>
           <div
             style={{
-              fontSize: '0.75rem',
+              fontSize: '0.8125rem',
               color: '#64748b',
               fontWeight: 500,
               marginTop: 2,
@@ -249,26 +220,26 @@ function TicketCard({ route, onClick, lang }) {
         </div>
       </div>
 
-      {/* BOTTOM ROW: Perforated Divider, Price & Simple Button */}
+      {/* BOTTOM ROW: Clean Divider, Price & Button */}
       <div
         style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          borderTop: '1px dashed #cbd5e1',
-          paddingTop: '0.75rem',
+          borderTop: '1px solid #f1f5f9',
+          paddingTop: '0.85rem',
           marginTop: '0.25rem',
         }}
       >
         <div>
-          <span style={{ fontSize: '0.65rem', color: '#64748b', display: 'block', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
+          <span style={{ fontSize: '0.78rem', color: '#64748b', display: 'block', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
             {lang === 'en' ? 'Starting From' : 'Mulai Dari'}
           </span>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, flexWrap: 'wrap' }}>
             {route.originalPrice && (
               <span
                 style={{
-                  fontSize: '0.74rem',
+                  fontSize: '0.8125rem',
                   color: '#94a3b8',
                   textDecoration: 'line-through',
                   fontWeight: 600,
@@ -279,7 +250,7 @@ function TicketCard({ route, onClick, lang }) {
             )}
             <span
               style={{
-                fontSize: '0.98rem',
+                fontSize: '1.05rem',
                 fontWeight: 800,
                 color: route.originalPrice ? '#ea580c' : '#0f172a',
                 letterSpacing: '-0.01em',
@@ -294,18 +265,18 @@ function TicketCard({ route, onClick, lang }) {
           style={{
             display: 'inline-flex',
             alignItems: 'center',
-            gap: 3,
-            padding: '0.4rem 0.85rem',
+            gap: 4,
+            padding: '0.45rem 0.95rem',
             borderRadius: 8,
             background: '#1a428a',
             color: '#ffffff',
-            fontSize: '0.78rem',
+            fontSize: '0.85rem',
             fontWeight: 700,
             transition: 'background 0.15s ease',
           }}
         >
           {lang === 'en' ? 'Select' : 'Pilih'}
-          <ChevronRight size={13} strokeWidth={2.8} />
+          <ChevronRight size={14} strokeWidth={2.8} />
         </div>
       </div>
     </div>
@@ -339,12 +310,11 @@ export default function PopularTicketRoutes() {
         background: 'var(--rh-surface, #f8fafc)',
         paddingTop: '2.5rem',
         paddingBottom: '2.5rem',
-        overflow: 'hidden',
         position: 'relative',
       }}
     >
       <div className="rh-container">
-        {/* Section Header */}
+        {/* Section Header: Craft-Floor - No banned kicker/eyebrow */}
         <div
           style={{
             marginBottom: '1.35rem',
@@ -356,27 +326,14 @@ export default function PopularTicketRoutes() {
           }}
         >
           <div>
-            <span
-              style={{
-                fontSize: '0.72rem',
-                fontWeight: 700,
-                textTransform: 'uppercase',
-                color: '#1a428a',
-                letterSpacing: '0.05em',
-                display: 'block',
-                marginBottom: '0.2rem',
-              }}
-            >
-              {lang === 'en' ? 'Popular Routes' : 'Rute Terfavorit'}
-            </span>
             <h2
               className="rh-h3"
               style={{
                 margin: 0,
                 color: '#0f172a',
-                fontSize: 'clamp(1.2rem, 2.2vw, 1.45rem)',
+                fontSize: 'clamp(1.3rem, 2.4vw, 1.6rem)',
                 fontWeight: 800,
-                letterSpacing: '-0.02em',
+                letterSpacing: '-0.025em',
               }}
             >
               {lang === 'en' ? 'Favorite Train Journeys' : 'Pilihan Tiket Kereta Favorit'}

@@ -524,7 +524,7 @@ function PassengerDashboardContent() {
                                 {booking.schedules?.trains?.train_number || 'KA'} · {booking.schedules?.routes?.name || 'Rute'}
                               </span>
                               <small style={{ color: 'var(--rh-text-3)', display: 'block', marginTop: 4 }}>
-                                Keberangkatan: {booking.schedules?.departure_time ? `${formatDate(booking.schedules.departure_time)} · ${formatTime(booking.schedules.departure_time)} WIB` : '—'}
+                                Keberangkatan: {booking.schedules?.departure_time ? `${formatDate(booking.schedules.departure_time)} · ${formatTime(booking.schedules.departure_time)} WIB` : '-'}
                               </small>
                             </div>
 
@@ -618,7 +618,7 @@ function PassengerDashboardContent() {
                                             Gerbong {t.seats?.carriages?.carriage_number || '1'}
                                           </span>
                                           <span className="rh-badge rh-badge-primary" style={{ fontSize: '0.7rem' }}>
-                                            Kursi {t.seats?.seat_number || '—'}
+                                            Kursi {t.seats?.seat_number || '-'}
                                           </span>
                                         </div>
                                         <small style={{ display: 'block', color: t.is_validated ? 'var(--rh-success)' : canBoard ? 'var(--rh-primary)' : 'var(--rh-text-2)', fontSize: '0.72rem', marginTop: 4 }}>

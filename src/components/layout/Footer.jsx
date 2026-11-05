@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
@@ -125,12 +126,23 @@ function LogoQris() {
 }
 
 export default function Footer() {
-  const { user, loading } = useAuth()
+  const { user } = useAuth()
   const pathname = usePathname()
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
   const isRestricted = pathname?.startsWith('/dashboard') || pathname?.startsWith('/booking')
 
-  // STRICT: Footer HANYA ADA DI GUEST SAJA (loading atau user sudah login = TIDAK ADA FOOTER)
-  if (loading || user || isRestricted) {
+  // Always hide on restricted routes (dashboard & booking)
+  if (isRestricted) {
+    return null
+  }
+
+  // Once mounted on client, hide if user is logged in
+  if (mounted && user) {
     return null
   }
 
@@ -469,7 +481,7 @@ export default function Footer() {
           }}
         >
           <div>
-            © 2026 RAILHUB — Kelompok 14. Proyek Pemrograman Web.
+            © 2026 RAILHUB - Kelompok 14. Proyek Pemrograman Web.
           </div>
           <div>
             Simulasi Edukasi Kereta Api · Bukan Situs Resmi PT KAI

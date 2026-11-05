@@ -393,7 +393,7 @@ export default function AdminStaffPage() {
                             style={{ marginTop: 4, accentColor: 'var(--rh-primary)' }}
                           />
                           <span style={{ minWidth: 0 }}>
-                            <strong style={{ display: 'block' }}>{schedule.trains?.name || 'Kereta'} · {schedule.trains?.train_number || '—'}</strong>
+                            <strong style={{ display: 'block' }}>{schedule.trains?.name || 'Kereta'} · {schedule.trains?.train_number || '-'}</strong>
                             <span style={{ display: 'block', color: 'var(--rh-text-2)', fontSize: '0.9rem' }}>{schedule.routes?.name || 'Rute tidak tersedia'}</span>
                             <small style={{ display: 'block', marginTop: '0.25rem', color: 'var(--rh-text-2)' }}>
                               {formatDate(schedule.departure_time)} · {formatTime(schedule.departure_time)} WIB

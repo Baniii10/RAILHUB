@@ -76,7 +76,7 @@ export default function LiveJourneyMapTracker({ booking, ticket, countdown, jour
           return <li key={stop.id} className={passed ? 'is-passed' : current ? 'is-current' : ''}>
             <span className="journey-stop-marker">{passed ? <CheckCircle2 size={18} /> : <MapPin size={18} />}</span>
             <div><strong>{stop.name}</strong>{stop.code && <small>{stop.code}</small>}</div>
-            <time><Clock3 size={14} /> {stop.time || '—'} WIB</time>
+            <time><Clock3 size={14} /> {stop.time || '-'} WIB</time>
           </li>
         })}
       </ol>
@@ -85,7 +85,7 @@ export default function LiveJourneyMapTracker({ booking, ticket, countdown, jour
         <button type="button" className="rh-btn rh-btn-ghost" onClick={() => onSelectTab?.('tickets')}><QrCode size={16} /> Tiket digital</button>
         {booking?.id && <Link href={`/booking/payment/${booking.id}`} className="rh-btn rh-btn-ghost"><Train size={16} /> Detail perjalanan</Link>}
       </div>
-      {ticket && <p className="journey-seat">Kursi <strong>{ticket.seats?.seat_number || '—'}</strong> · Gerbong <strong>{ticket.seats?.carriages?.carriage_number || '—'}</strong></p>}
+      {ticket && <p className="journey-seat">Kursi <strong>{ticket.seats?.seat_number || '-'}</strong> · Gerbong <strong>{ticket.seats?.carriages?.carriage_number || '-'}</strong></p>}
     </div>
   </section>
 }
