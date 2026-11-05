@@ -717,26 +717,21 @@ export default function BookingPayment({ bookingId }) {
                   <h2 className="rh-h3" style={{ marginBottom: '1rem' }}>Tiket penumpang</h2>
                   <div style={{ display: 'grid', gap: '1rem' }}>
                     {tickets.map(ticket => (
-                      <article key={ticket.ticket_number} className="rh-card">
-                        <div className="rh-card-body" style={{ display: 'grid', gap: '.85rem' }}>
-                          <div>
-                            <span style={{ color: 'var(--rh-text-2)', fontSize: '0.875rem' }}>Nomor tiket</span>
-                            <strong className="rh-mono" style={{ display: 'block' }}>{ticket.ticket_number}</strong>
-                            <span style={{ display: 'block', marginTop: '0.5rem' }}>{ticket.passengers?.full_name || 'Penumpang simulasi'}</span>
-                            <span style={{ color: 'var(--rh-text-2)' }}>Kursi {ticket.seats?.seat_number || '—'}</span>
-                          </div>
-                          {boardingPassOpen && canOpenBoardingPass && (
-                            <div className="rh-boarding-pass-inline">
-                              <EBoardingPass
-                                booking={booking}
-                                ticket={ticket}
-                                qrImage={qrCodes[ticket.ticket_number]}
-                                journey={journey}
-                              />
-                            </div>
-                          )}
-                        </div>
-                      </article>
+                      boardingPassOpen && canOpenBoardingPass ? (
+                        <EBoardingPass
+                          key={ticket.ticket_number}
+                          booking={booking}
+                          ticket={ticket}
+                          qrImage={qrCodes[ticket.ticket_number]}
+                          journey={journey}
+                        />
+                      ) : (
+                        <article key={ticket.ticket_number} className="rh-ticket-row">
+                          <div><small>Nomor tiket</small><strong className="rh-mono">{ticket.ticket_number}</strong></div>
+                          <div><small>Penumpang</small><strong>{ticket.passengers?.full_name || 'Penumpang simulasi'}</strong></div>
+                          <div><small>Kursi</small><strong>{ticket.seats?.seat_number || '—'}</strong></div>
+                        </article>
+                      )
                     ))}
                   </div>
                 </section>
