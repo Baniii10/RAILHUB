@@ -165,14 +165,17 @@ Sumber: `202610310004_passenger_services.sql` & `orders/page.js`
 
 ## 5. Role Pengujian UAS
 
-Akun pengujian dibuat manual melalui Supabase Auth. Jangan menyimpan email dan password akun admin/petugas di source code atau dokumentasi repository.
+Akun pengujian dapat diakses langsung melalui fitur **1-Click Login Cepat** pada halaman login (`/auth/login`):
 
-| Role Pengujian | Destinasi Redirect | Hak Akses Utama |
-|:---------------|:-------------------|:----------------|
-| **👤 Penumpang** | `/dashboard/passenger` | Cari jadwal, pilih kursi, bayar tiket simulasi, lacak perjalanan, pesan makanan, refund/reschedule. |
-| **🎫 Petugas Gerbang** | `/dashboard/staff` | Scan QR boarding pass pada stasiun yang ditetapkan. |
-| **🚆 Petugas Kereta** | `/dashboard/staff` | Manifest penumpang, status perjalanan, dan layanan pada perjalanan tugas. |
-| **🛡️ Administrator** | `/dashboard/admin` | Kelola operasional, jadwal, petugas, layanan, dan rekap booking. |
+| Role Pengujian | Akun & Armada | Destinasi Redirect | Hak Akses Utama |
+|:---------------|:--------------|:-------------------|:----------------|
+| **👤 Penumpang** | `penumpang.demo@railhub.id` | `/dashboard/passenger` | Cari jadwal, pilih kursi, bayar tiket simulasi, lacak perjalanan, pesan makanan, refund/reschedule. |
+| **🚆 Petugas KA Argo Bromo** | `petugas.argobromo@railhub.id` (KA 1) | `/dashboard/staff` | Validasi tiket digital QR boarding pass, manifest penumpang, update status perjalanan (Departed/Arrived), & pesanan makanan. |
+| **🚆 Petugas KA Taksaka** | `petugas.taksaka@railhub.id` (KA 68) | `/dashboard/staff` | Validasi tiket digital QR boarding pass, manifest penumpang, update status perjalanan, & pesanan restorasi. |
+| **🚆 Petugas KA Argo Parahyangan** | `petugas.parahyangan@railhub.id` (KA 34) | `/dashboard/staff` | Validasi tiket digital QR boarding pass, manifest penumpang, update status perjalanan, & pesanan restorasi. |
+| **🚆 Petugas KA Argo Wilis** | `petugas.argowilis@railhub.id` (KA 6) | `/dashboard/staff` | Validasi tiket digital QR boarding pass, manifest penumpang, update status perjalanan, & pesanan restorasi. |
+| **🚆 Petugas KA Turangga** | `petugas.turangga@railhub.id` (KA 66) | `/dashboard/staff` | Validasi tiket digital QR boarding pass, manifest penumpang, update status perjalanan, & pesanan restorasi. |
+| **🛡️ Administrator** | `admin.operasional@railhub.id` | `/dashboard/admin` | Kelola master data stasiun, kereta, gerbong, kursi, rute, jadwal, tarif, penugasan petugas, dan rekap pemesanan. |
 
 ---
 

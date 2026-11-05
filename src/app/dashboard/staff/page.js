@@ -67,7 +67,7 @@ function StaffDashboardContent() {
   const searchParams = useSearchParams()
   const { user, profile, loading: authLoading } = useAuth()
   const isGate = profile?.staff_type === 'gate'
-  const availableTabs = isGate ? GATE_TABS : TABS
+  const availableTabs = TABS
   const requestedTab = searchParams.get('tab')
   const activeTab = availableTabs.some(tab => tab.id === requestedTab) ? requestedTab : 'overview'
   const [stationName, setStationName] = useState('')
@@ -372,7 +372,7 @@ function StaffDashboardContent() {
                   Dashboard Petugas
                 </h1>
                 <p style={{ margin: 0, color: 'var(--rh-text-2)', fontSize: '0.9rem' }}>
-                  <strong>{isGate ? 'PETUGAS GERBANG' : 'KONDEKTUR KERETA'}</strong> · {profile?.full_name || 'Petugas'} · ID <span className="rh-mono">STF-{user?.id?.slice(0, 8).toUpperCase()}</span>
+                  <strong>PETUGAS KERETA</strong> · {profile?.full_name || 'Petugas'} · ID <span className="rh-mono">STF-{user?.id?.slice(0, 8).toUpperCase()}</span>
                 </p>
                 <p style={{ margin: '.35rem 0 0', color: 'var(--rh-text-2)', fontSize: '.85rem' }}>
                   {isGate ? `Lokasi tugas: ${stationName || 'Stasiun Gambir (GMR)'} · Tugas: scan dan validasi boarding.` : journeys[0] ? `Tugas aktif: ${journeys[0].schedules?.trains?.name || 'Kereta'} · ${journeys[0].schedules?.routes?.name || 'Rute'} · Total ${journeys.length} perjalanan.` : 'Belum ada perjalanan yang ditugaskan oleh admin.'}
@@ -498,7 +498,7 @@ function StaffDashboardContent() {
                 <h3 className="rh-h4" style={{ margin: '0 0 0.75rem' }}>Aksi Cepat Petugas</h3>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
                   <button type="button" className="rh-btn rh-btn-primary" onClick={() => selectTab('validation')}>
-                    <TicketCheck size={16} /> Buka Scanner Gerbang Boarding
+                    <TicketCheck size={16} /> Buka Scanner Validasi Tiket
                   </button>
                   <button type="button" className="rh-btn rh-btn-secondary" onClick={() => selectTab('passengers')}>
                     <Users size={16} /> Buka Manifest Penumpang
@@ -566,7 +566,7 @@ function StaffDashboardContent() {
           {activeTab === 'validation' && (
             <section className="rh-card" style={{ padding: '1.5rem' }}>
               <div style={{ marginBottom: '1.25rem' }}>
-                <span className="rh-badge rh-badge-primary">Pintu Gerbang Boarding</span>
+                <span className="rh-badge rh-badge-primary">Validasi Tiket &amp; Boarding</span>
                 <h2 className="rh-h3" style={{ margin: '0.4rem 0 0.2rem' }}>Validasi Tiket Digital QR Code</h2>
                 <p style={{ margin: 0, color: 'var(--rh-text-2)', fontSize: '0.88rem' }}>
                   Arahkan kamera ke QR Code boarding pass tiket penumpang, atau masukkan kode tiket secara manual.
@@ -616,7 +616,7 @@ function StaffDashboardContent() {
                       <>
                         {validation.success ? <CheckCircle2 size={56} color="var(--rh-success)" /> : <XCircle size={56} color="var(--rh-danger)" />}
                         <strong style={{ fontSize: '1.4rem', marginTop: '0.5rem', color: validation.success ? 'var(--rh-success)' : 'var(--rh-danger)' }}>
-                          {validation.success ? 'GERBANG TERBUKA · TIKET VALID' : 'AKSES DITOLAK'}
+                          {validation.success ? 'TIKET VALID · BOARDING BERHASIL' : 'AKSES DITOLAK'}
                         </strong>
                         <p style={{ margin: '0.4rem 0 0.8rem', fontSize: '0.9rem' }}>{validation.message}</p>
                         {validation.ticket_number && (

@@ -24,10 +24,74 @@ function GoogleIcon({ size = 19 }) {
 }
 
 const DEMO_ACCOUNTS = [
-  { role: 'passenger', title: 'Penumpang', email: 'penumpang.demo@railhub.id', password: 'DemoPassenger2026!', icon: '👤' },
-  { role: 'gate', title: 'Petugas Gerbang', email: 'gate.gambir@railhub.id', password: 'DemoStaff2026!', icon: '🎫' },
-  { role: 'conductor', title: 'Petugas Kereta', email: 'kondektur.parahyangan@railhub.id', password: 'DemoStaff2026!', icon: '🚆' },
-  { role: 'admin', title: 'Administrator', email: 'admin.operasional@railhub.id', password: 'DemoAdmin2026!', icon: '🛡️' },
+  {
+    role: 'passenger',
+    title: 'Penumpang',
+    badge: 'Pemesanan & E-Tiket',
+    email: 'penumpang.demo@railhub.id',
+    password: 'DemoPassenger2026!',
+    icon: '👤',
+    category: 'user',
+  },
+  {
+    role: 'admin',
+    title: 'Administrator',
+    badge: 'Master Jadwal & Rekap',
+    email: 'admin.operasional@railhub.id',
+    password: 'DemoAdmin2026!',
+    icon: '🛡️',
+    category: 'admin',
+  },
+  {
+    role: 'conductor',
+    title: 'Petugas KA Argo Bromo',
+    badge: 'KA 1 (GMR - SBI)',
+    trainName: 'Argo Bromo Anggrek',
+    email: 'petugas.argobromo@railhub.id',
+    password: 'DemoStaff2026!',
+    icon: '🚆',
+    category: 'staff',
+  },
+  {
+    role: 'conductor',
+    title: 'Petugas KA Taksaka',
+    badge: 'KA 68 (GMR - YK)',
+    trainName: 'Taksaka',
+    email: 'petugas.taksaka@railhub.id',
+    password: 'DemoStaff2026!',
+    icon: '🚆',
+    category: 'staff',
+  },
+  {
+    role: 'conductor',
+    title: 'Petugas KA Argo Parahyangan',
+    badge: 'KA 34 (GMR - BD)',
+    trainName: 'Argo Parahyangan',
+    email: 'petugas.parahyangan@railhub.id',
+    password: 'DemoStaff2026!',
+    icon: '🚆',
+    category: 'staff',
+  },
+  {
+    role: 'conductor',
+    title: 'Petugas KA Argo Wilis',
+    badge: 'KA 6 (BD - SGU)',
+    trainName: 'Argo Wilis',
+    email: 'petugas.argowilis@railhub.id',
+    password: 'DemoStaff2026!',
+    icon: '🚆',
+    category: 'staff',
+  },
+  {
+    role: 'conductor',
+    title: 'Petugas KA Turangga',
+    badge: 'KA 66 (BD - SGU)',
+    trainName: 'Turangga',
+    email: 'petugas.turangga@railhub.id',
+    password: 'DemoStaff2026!',
+    icon: '🚆',
+    category: 'staff',
+  },
 ]
 
 export default function LoginPage() {
@@ -128,7 +192,62 @@ export default function LoginPage() {
   async function handleQuickLogin(account) {
     setEmail(account.email)
     setPassword(account.password)
-    await signInWithCredentials(account.email, account.password, `Login berhasil sebagai ${account.title}!`)
+    setError('')
+    setLoading(true)
+
+    const { data, error: authError } = await supabase.auth.signInWithPassword({
+      email: account.email,
+      password: account.password,
+    })
+
+    if (authError) {
+      const msg = authError.message?.toLowerCase() || ''
+      const isNotFound = authError.code === 'invalid_credentials' || msg.includes('invalid') || msg.includes('not found')
+
+      if (isNotFound) {
+        const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+          email: account.email,
+          password: account.password,
+          options: {
+            data: {
+              full_name: account.title,
+              role: account.role,
+            },
+          },
+        })
+
+        if (!signUpError && (signUpData?.session || signUpData?.user)) {
+          toast.success(`Login berhasil sebagai ${account.title}!`)
+          setLoading(false)
+          const destination = account.role === 'admin' ? '/dashboard/admin' : account.role === 'passenger' ? '/dashboard/passenger' : '/dashboard/staff'
+          router.replace(destination)
+          router.refresh()
+          return
+        }
+      }
+
+      setError(authError.message || t.auth.loginError)
+      setLoading(false)
+      return
+    }
+
+    let profileResult = await supabase
+      .from('profiles')
+      .select('id, email, role')
+      .eq('id', data.user.id)
+      .maybeSingle()
+
+    const rawProfile = profileResult?.data || { id: data.user.id, email: data.user.email }
+    const role = getOperationalRole(rawProfile, data.user.email)
+    const profile = normalizeProfile(rawProfile, data.user.email)
+
+    toast.success(`Login berhasil sebagai ${account.title}!`)
+    setLoading(false)
+
+    const requestedNext = new URLSearchParams(window.location.search).get('next')
+    const destination = isSafeNextPath(requestedNext, role) ? requestedNext : getDashboardForProfile(profile, data.user.email)
+    router.replace(destination)
+    router.refresh()
   }
 
   async function handleSubmit(e) {
@@ -444,34 +563,85 @@ export default function LoginPage() {
               <span>Sign in with Google</span>
             </button>
 
-            <div style={{ marginTop: '0.9rem' }}>
-              <div style={{ marginBottom: '0.45rem', fontSize: '0.75rem', fontWeight: 700, color: '#64748b' }}>
-                Login Cepat
+            <div style={{ marginTop: '1.25rem', paddingTop: '1rem', borderTop: '1px dashed #e2e8f0' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.65rem' }}>
+                <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#1e293b', letterSpacing: '-0.01em' }}>
+                  Akses Cepat Pengujian UAS
+                </span>
+                <span style={{ fontSize: '0.7rem', fontWeight: 600, color: '#2563eb', background: '#eff6ff', padding: '2px 8px', borderRadius: 999 }}>
+                  1-Click Login
+                </span>
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '0.4rem' }}>
-                {DEMO_ACCOUNTS.map((account) => (
+
+              {/* Akun Pengguna Utama: Penumpang & Admin */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '0.5rem', marginBottom: '0.75rem' }}>
+                {DEMO_ACCOUNTS.filter(a => a.category !== 'staff').map((account) => (
                   <button
-                    key={account.role}
+                    key={account.email}
+                    type="button"
+                    disabled={loading || googleLoading}
+                    onClick={() => handleQuickLogin(account)}
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'flex-start',
+                      padding: '0.65rem 0.75rem',
+                      borderRadius: 12,
+                      border: '1.5px solid #e2e8f0',
+                      background: account.role === 'admin' ? '#faf5ff' : '#f0fdf4',
+                      color: '#0f172a',
+                      textAlign: 'left',
+                      cursor: loading || googleLoading ? 'not-allowed' : 'pointer',
+                      transition: 'all 0.15s ease',
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, width: '100%' }}>
+                      <span style={{ fontSize: '1.1rem' }}>{account.icon}</span>
+                      <strong style={{ fontSize: '0.8rem', fontWeight: 700, color: '#0f172a' }}>{account.title}</strong>
+                    </div>
+                    <span style={{ fontSize: '0.68rem', color: '#64748b', marginTop: 3 }}>{account.badge}</span>
+                  </button>
+                ))}
+              </div>
+
+              {/* 5 Akun Petugas Kereta (1 Petugas per 1 Kereta) */}
+              <div style={{ marginBottom: '0.45rem', display: 'flex', alignItems: 'center', gap: 6 }}>
+                <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                  Petugas Kereta (1 Akun per Kereta)
+                </span>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(1, minmax(0, 1fr))', gap: '0.4rem', maxHeight: 220, overflowY: 'auto', paddingRight: 2 }}>
+                {DEMO_ACCOUNTS.filter(a => a.category === 'staff').map((account) => (
+                  <button
+                    key={account.email}
                     type="button"
                     disabled={loading || googleLoading}
                     onClick={() => handleQuickLogin(account)}
                     style={{
                       display: 'flex',
                       alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '0.4rem',
-                      padding: '0.55rem 0.5rem',
+                      justifyContent: 'space-between',
+                      padding: '0.55rem 0.75rem',
                       borderRadius: 10,
-                      border: '1px solid #e2e8f0',
-                      background: '#f8fafc',
-                      color: '#334155',
-                      fontSize: '0.76rem',
-                      fontWeight: 700,
+                      border: '1px solid #fed7aa',
+                      background: '#fff7ed',
+                      color: '#0f172a',
+                      textAlign: 'left',
                       cursor: loading || googleLoading ? 'not-allowed' : 'pointer',
+                      transition: 'all 0.15s ease',
                     }}
                   >
-                    <span aria-hidden="true">{account.icon}</span>
-                    <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{account.title}</span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <span style={{ fontSize: '1rem' }}>{account.icon}</span>
+                      <div>
+                        <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#9a3412' }}>{account.title}</div>
+                        <div style={{ fontSize: '0.68rem', color: '#7c2d12' }}>{account.badge}</div>
+                      </div>
+                    </div>
+                    <span style={{ fontSize: '0.68rem', fontWeight: 700, color: '#ea580c', background: '#ffedd5', padding: '2px 8px', borderRadius: 6 }}>
+                      Masuk →
+                    </span>
                   </button>
                 ))}
               </div>

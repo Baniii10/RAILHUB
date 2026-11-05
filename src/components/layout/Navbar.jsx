@@ -246,7 +246,7 @@ export default function Navbar() {
                 unoptimized
                 priority
                 style={{
-                  height: '54px',
+                  height: '56px',
                   width: 'auto',
                   objectFit: 'contain',
                   display: 'block',
@@ -478,7 +478,7 @@ export default function Navbar() {
                 height={275}
                 unoptimized
                 style={{
-                  height: '48px',
+                  height: '50px',
                   width: 'auto',
                   objectFit: 'contain',
                   display: 'block',
