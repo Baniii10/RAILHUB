@@ -46,6 +46,14 @@ export default function BookingFlow({
   trainName,
   price,
   subclass,
+  returnScheduleId = null,
+  returnClass = null,
+  returnDate = null,
+  returnTrain = null,
+  returnPrice = 0,
+  returnFrom = null,
+  returnToStation = null,
+  pairedBookingId = null,
 }) {
   const router = useRouter()
   const { user, profile, loading: authLoading } = useAuth()
@@ -54,7 +62,22 @@ export default function BookingFlow({
   const [selectedClass, setSelectedClass] = useState(requestedClass || 'Ekonomi')
   const [selectedCarriageId, setSelectedCarriageId] = useState('')
   const [selectedSeats, setSelectedSeats] = useState([])
-  const [passengers, setPassengers] = useState(() => Array.from({ length: passengerCount }, blankPassenger))
+  const [passengers, setPassengers] = useState(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const cached = sessionStorage.getItem('railhub_passenger_cache')
+        if (cached) {
+          const parsed = JSON.parse(cached)
+          if (Array.isArray(parsed) && parsed.length >= passengerCount) {
+            return parsed.slice(0, passengerCount)
+          }
+        }
+      } catch {
+        // ignore cache parse error
+      }
+    }
+    return Array.from({ length: passengerCount }, blankPassenger)
+  })
   const [submitting, setSubmitting] = useState(false)
   const [now, setNow] = useState(0)
   const [step, setStep] = useState('details')
@@ -213,8 +236,26 @@ export default function BookingFlow({
       return
     }
 
-    toast.success('Booking dibuat. Selesaikan pembayaran simulasi dalam 15 menit.')
-    router.push(`/booking/payment/${data}`)
+    if (typeof window !== 'undefined') {
+      try {
+        sessionStorage.setItem('railhub_passenger_cache', JSON.stringify(passengers))
+      } catch {
+        // ignore
+      }
+    }
+
+    if (returnScheduleId) {
+      toast.success('Tiket pergi berhasil disiapkan! Sekarang pilih kursi untuk tiket pulang.')
+      router.push(
+        `/booking/${returnScheduleId}?class=${encodeURIComponent(returnClass || selectedClass)}&pax=${passengerCount}&date=${returnDate}&from=${returnFrom}&to=${returnToStation}&train=${encodeURIComponent(returnTrain || 'Kereta Pulang')}&price=${returnPrice}&pairedBookingId=${data}`
+      )
+    } else if (pairedBookingId) {
+      toast.success('Tiket pulang berhasil dipesan! Silakan lanjutkan pembayaran.')
+      router.push(`/booking/payment/${data}`)
+    } else {
+      toast.success('Booking dibuat. Selesaikan pembayaran simulasi dalam 15 menit.')
+      router.push(`/booking/payment/${data}`)
+    }
   }
 
   return (
@@ -225,6 +266,20 @@ export default function BookingFlow({
           <Link href={returnTo} className="rh-btn rh-btn-ghost rh-btn-sm rh-booking-back">
             <ArrowLeft size={16} /> Kembali ke jadwal
           </Link>
+          {returnScheduleId && (
+            <div style={{ marginBottom: '1.25rem', padding: '0.85rem 1.25rem', borderRadius: 12, background: 'rgba(26, 66, 138, 0.06)', border: '1.5px solid var(--rh-primary)' }}>
+              <span className="rh-badge rh-badge-primary" style={{ fontWeight: 800, marginBottom: 4 }}>Perjalanan Pulang-Pergi (PP) · Bagian 1</span>
+              <strong style={{ display: 'block', fontSize: '1rem', color: 'var(--rh-primary)' }}>Pilih Kursi untuk Kereta Pergi: {origin} &rarr; {destination}</strong>
+              <small style={{ color: 'var(--rh-text-2)' }}>Setelah langkah ini, Anda akan langsung memilih kursi untuk Kereta Pulang ({returnFrom} &rarr; {returnToStation}). Data penumpang disimpan otomatis.</small>
+            </div>
+          )}
+          {pairedBookingId && (
+            <div style={{ marginBottom: '1.25rem', padding: '0.85rem 1.25rem', borderRadius: 12, background: 'rgba(34, 197, 94, 0.08)', border: '1.5px solid #22c55e' }}>
+              <span className="rh-badge rh-badge-success" style={{ fontWeight: 800, marginBottom: 4 }}>Perjalanan Pulang-Pergi (PP) · Bagian 2</span>
+              <strong style={{ display: 'block', fontSize: '1rem', color: '#15803d' }}>Pilih Kursi untuk Kereta Pulang: {origin} &rarr; {destination}</strong>
+              <small style={{ color: 'var(--rh-text-2)' }}>Tiket pergi telah tersimpan. Konfirmasikan kursi tiket pulang untuk menyelesaikan seluruh reservasi Anda.</small>
+            </div>
+          )}
           <header className="rh-booking-page-heading">
             <span className="rh-label">Pemesanan perjalanan</span>
             <h1 className="rh-h2">Lengkapi data perjalanan</h1>

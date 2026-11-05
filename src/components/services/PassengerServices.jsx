@@ -58,26 +58,41 @@ export default function PassengerServices({ userId, bookingId: initialBookingId,
     const supabase = createClient()
 
     async function loadServices() {
+      if (!userId) {
+        setLoading(false)
+        return
+      }
+
+      let bookingQuery = supabase
+        .from('bookings')
+        .select('id, booking_code, status, schedule_id, booking_seats(passenger_id, seat_id, passengers(id, full_name), seats(seat_number))')
+        .eq('user_id', userId)
+        .eq('status', 'paid')
+        .order('created_at', { ascending: false })
+
+      if (initialBookingId && typeof initialBookingId === 'string' && initialBookingId !== 'undefined' && initialBookingId.trim() !== '') {
+        bookingQuery = bookingQuery.eq('id', initialBookingId)
+      }
+
+      let reportQuery = supabase
+        .from('passenger_reports')
+        .select('id, category, title, status, response_note, created_at, bookings(booking_code)')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false })
+        .limit(20)
+
+      if (initialBookingId && typeof initialBookingId === 'string' && initialBookingId !== 'undefined' && initialBookingId.trim() !== '') {
+        reportQuery = reportQuery.eq('booking_id', initialBookingId)
+      }
+
       const [bookingResult, productResult, reportResult] = await Promise.all([
-        supabase
-          .from('bookings')
-          .select('id, booking_code, status, schedule_id, booking_seats(passenger_id, seat_id, passengers(id, full_name), seats(seat_number))')
-          .eq('user_id', userId)
-          .eq('id', initialBookingId)
-          .eq('status', 'paid')
-          .order('created_at', { ascending: false }),
+        bookingQuery,
         supabase
           .from('food_products')
           .select('id, name, description, price, food_categories(name)')
           .eq('is_active', true)
           .order('name'),
-        supabase
-          .from('passenger_reports')
-          .select('id, category, title, status, response_note, created_at, bookings(booking_code)')
-          .eq('user_id', userId)
-          .eq('booking_id', initialBookingId)
-          .order('created_at', { ascending: false })
-          .limit(20),
+        reportQuery,
       ])
 
       if (!active) return

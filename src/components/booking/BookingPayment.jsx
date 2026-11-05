@@ -207,7 +207,7 @@ export default function BookingPayment({ bookingId }) {
   }
 
   const departureTime = new Date(booking?.schedules?.departure_time || 0).getTime()
-  const canManagePaidTicket = booking?.status === 'paid' && departureTime > now + 24 * 60 * 60 * 1000
+  const canManagePaidTicket = booking?.status === 'paid' && departureTime > now + 2 * 60 * 60 * 1000
   const canOpenBoardingPass = booking?.status === 'paid'
     && now >= departureTime - 2 * 60 * 60 * 1000
     && now < departureTime
@@ -249,7 +249,7 @@ export default function BookingPayment({ bookingId }) {
     const options = (data || []).filter(option => (
       option.schedule_id !== booking.schedule_id
       && option.carriage_class === tickets[0]?.seats?.carriages?.carriage_class
-      && new Date(option.departure_time).getTime() > Date.now() + 24 * 60 * 60 * 1000
+      && new Date(option.departure_time).getTime() > Date.now() + 2 * 60 * 60 * 1000
     ))
     setScheduleOptions(options)
     if (options.length === 0) toast('Tidak ada jadwal sekelas yang tersedia pada tanggal tersebut.')
@@ -494,7 +494,7 @@ export default function BookingPayment({ bookingId }) {
                       )}
                       {!canManagePaidTicket && departureTime > 0 && (
                         <p style={{ color: 'var(--rh-text-2)', fontSize: '.875rem', marginTop: '.45rem' }}>
-                          Reschedule dan pembatalan tersedia sampai 24 jam sebelum keberangkatan.
+                          Reschedule dan pembatalan tiket tersedia sampai maksimal 2 jam sebelum waktu keberangkatan.
                         </p>
                       )}
                     </div>

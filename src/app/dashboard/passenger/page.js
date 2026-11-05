@@ -10,6 +10,8 @@ import {
   ArrowLeft,
   ArrowRight,
   CalendarDays,
+  Check,
+  Clock,
   CheckCircle2,
   ChevronRight,
   Clock3,
@@ -478,6 +480,10 @@ function PassengerDashboardContent() {
                   {bookings.map(booking => {
                     const isPaid = booking.status === 'paid'
                     const relatedTickets = ticketDetails.filter(t => t.booking_id === booking.id)
+                    const depTime = new Date(booking.schedules?.departure_time || 0).getTime()
+                    const isPast = depTime > 0 && currentTime >= depTime
+                    const canBoard = isPaid && !isPast && currentTime >= (depTime - 2 * 60 * 60 * 1000)
+                    const canReschedule = isPaid && !isPast && depTime > (currentTime + 2 * 60 * 60 * 1000)
 
                     return (
                       <article key={booking.id} className="rh-card" style={{ overflow: 'hidden' }}>
@@ -522,10 +528,33 @@ function PassengerDashboardContent() {
                               </small>
                             </div>
 
-                            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                              <Link href={`/booking/payment/${booking.id}`} className="rh-btn rh-btn-primary rh-btn-sm">
-                                {isPaid ? 'Kelola / Reschedule' : 'Lanjutkan Bayar'}
-                              </Link>
+                            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
+                              {isPaid ? (
+                                <>
+                                  {canReschedule ? (
+                                    <Link href={`/booking/payment/${booking.id}`} className="rh-btn rh-btn-ghost rh-btn-sm" style={{ border: '1px solid var(--rh-border)' }}>
+                                      <RefreshCw size={14} /> Reschedule / Batal
+                                    </Link>
+                                  ) : (
+                                    <span className="rh-badge rh-badge-muted" style={{ fontSize: '0.75rem', padding: '0.35rem 0.65rem' }}>
+                                      Reschedule Ditutup (&le; 2 Jam)
+                                    </span>
+                                  )}
+                                  {canBoard && (
+                                    <button
+                                      type="button"
+                                      onClick={() => setSelectedTicketForQR({ ...relatedTickets[0], qrImage: qrCodes[relatedTickets[0]?.ticket_number], booking })}
+                                      className="rh-btn rh-btn-primary rh-btn-sm"
+                                    >
+                                      <Ticket size={14} /> Buka E-Boarding Pass
+                                    </button>
+                                  )}
+                                </>
+                              ) : (
+                                <Link href={`/booking/payment/${booking.id}`} className="rh-btn rh-btn-primary rh-btn-sm">
+                                  Lanjutkan Bayar
+                                </Link>
+                              )}
                               <button
                                 type="button"
                                 onClick={() => selectTab('overview')}
@@ -555,19 +584,25 @@ function PassengerDashboardContent() {
                                       gap: '0.85rem',
                                       alignItems: 'center',
                                     }}>
-                                      {/* QR Code thumbnail */}
-                                      {qrImage ? (
+                                      {/* QR Code thumbnail - Hanya tampil jika sudah memasuki 2 jam sebelum keberangkatan */}
+                                      {canBoard && qrImage ? (
                                         <div
                                           onClick={() => setSelectedTicketForQR({ ...t, qrImage, booking })}
                                           style={{ cursor: 'pointer', flexShrink: 0, textAlign: 'center' }}
-                                          title="Klik untuk memperbesar QR"
+                                          title="Klik untuk memperbesar E-Boarding Pass"
                                         >
                                           <Image src={qrImage} alt="QR Tiket" width={72} height={72} style={{ borderRadius: 8, border: '1px solid #CBD5E1' }} unoptimized />
-                                          <small style={{ fontSize: '0.65rem', color: 'var(--rh-primary)', display: 'block', marginTop: 2, fontWeight: 700 }}>Perbesar</small>
+                                          <small style={{ fontSize: '0.65rem', color: 'var(--rh-primary)', display: 'block', marginTop: 2, fontWeight: 700 }}>Perbesar QR</small>
+                                        </div>
+                                      ) : isPast ? (
+                                        <div style={{ width: 72, height: 72, background: '#f1f5f9', borderRadius: 8, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: 4, flexShrink: 0 }}>
+                                          <Check size={20} color="var(--rh-text-3)" />
+                                          <span style={{ fontSize: '0.6rem', color: 'var(--rh-text-3)', marginTop: 2, fontWeight: 700 }}>Selesai</span>
                                         </div>
                                       ) : (
-                                        <div style={{ width: 72, height: 72, background: 'white', borderRadius: 8, display: 'grid', placeItems: 'center', flexShrink: 0 }}>
-                                          <QrCode size={28} color="var(--rh-primary)" />
+                                        <div style={{ width: 72, height: 72, background: '#f8fafc', borderRadius: 8, border: '1px dashed #cbd5e1', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: 4, flexShrink: 0 }}>
+                                          <Clock size={20} color="#94a3b8" />
+                                          <span style={{ fontSize: '0.62rem', color: '#64748b', marginTop: 2, fontWeight: 700, lineHeight: 1.1 }}>Aktif H-2 Jam</span>
                                         </div>
                                       )}
 
@@ -586,8 +621,14 @@ function PassengerDashboardContent() {
                                             Kursi {t.seats?.seat_number || '—'}
                                           </span>
                                         </div>
-                                        <small style={{ display: 'block', color: t.is_validated ? 'var(--rh-success)' : 'var(--rh-text-2)', fontSize: '0.72rem', marginTop: 4 }}>
-                                          {t.is_validated ? '✓ Sudah Divalidasi Petugas' : '• Belum Boarding'}
+                                        <small style={{ display: 'block', color: t.is_validated ? 'var(--rh-success)' : canBoard ? 'var(--rh-primary)' : 'var(--rh-text-2)', fontSize: '0.72rem', marginTop: 4 }}>
+                                          {t.is_validated
+                                            ? '✓ Sudah Divalidasi Petugas'
+                                            : canBoard
+                                              ? '● Boarding Dibuka (Tunjukkan QR ke petugas)'
+                                              : isPast
+                                                ? 'Perjalanan telah selesai'
+                                                : 'E-boarding pass aktif 2 jam sebelum berangkat'}
                                         </small>
                                       </div>
                                     </div>

@@ -23,7 +23,8 @@ RAILHUB is a JavaScript Next.js railway travel simulation backed by Supabase. It
 17. Run `supabase\migrations\202611020001_staff_passenger_journey_flow.sql` to enforce valid journey-status transitions for staff/admin updates; passenger ticket details then show the shared status history.
 18. Run `supabase\migrations\20261104192451_role_station_access.sql` to configure gate/conductor access and station-scoped ticket validation.
 19. Run `supabase\migrations\20261105061114_remove_midtrans_and_harden_roles.sql` to remove obsolete gateway objects from databases that previously enabled them.
-20. Start the app with `npm run dev`.
+20. Run `supabase\migrations\20261105193000_reschedule_cancel_2hours.sql` to set the real-time reschedule and cancellation cutoff to 2 hours before departure.
+21. Start the app with `npm run dev`.
 
 The Supabase URL and anonymous key are public client configuration; never put a service-role key in the browser or in `.env.local` variables prefixed with `NEXT_PUBLIC_`.
 
@@ -36,7 +37,7 @@ The Supabase URL and anonymous key are public client configuration; never put a 
 - A catalog capped at 50 active, verified intercity stations from `stations_java.csv`; simulated hub connections use the five train records supplied in `sample_trains.csv`. These added connections, distances, times, and fares are demonstrations, not official routes or schedules.
 - Passenger seat selection, fictional passenger details, atomic booking, simulated demo payment, and private QR tickets.
 - Passenger dashboard with RLS-protected booking and payment summaries; open a ticket to order onboard food and drinks.
-- E-boarding passes unlock two hours before departure. Paid tickets can be rescheduled or cancelled at least 24 hours before departure; rescheduling charges 20% of a positive fare difference, and cancellation records a 20% fee and 80% simulated refund. No real money is processed.
+- E-boarding passes unlock two hours before departure. Paid tickets can be rescheduled or cancelled up to 2 hours before departure; rescheduling charges 20% of a positive fare difference, and cancellation records a 20% fee and 80% simulated refund. No real money is processed.
 - Admin database overview and staff assignment; staff dashboard with assigned-journey status updates and one-time ticket validation.
 - Passenger food ordering and journey reports connected to the assigned staff service desk.
 - Food orders use a menu-selection step followed by a simulated payment confirmation; no real payment gateway is contacted.

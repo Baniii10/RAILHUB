@@ -16,11 +16,16 @@ async function TrainsPageContent({ searchParams }) {
   const origin = (firstValue(params?.from) || firstValue(params?.origin) || '').trim().toUpperCase()
   const destination = (firstValue(params?.to) || firstValue(params?.destination) || '').trim().toUpperCase()
   const date = (firstValue(params?.date) || '').trim()
+  const returnDate = (firstValue(params?.returnDate) || '').trim()
   const passengerValue = Number(firstValue(params?.pax) || firstValue(params?.passengers) || 1)
 
   const validDate = /^\d{4}-\d{2}-\d{2}$/.test(date)
     && !Number.isNaN(Date.parse(`${date}T00:00:00Z`))
     && new Date(`${date}T00:00:00Z`).toISOString().slice(0, 10) === date
+
+  const validReturnDate = /^\d{4}-\d{2}-\d{2}$/.test(returnDate)
+    && !Number.isNaN(Date.parse(`${returnDate}T00:00:00Z`))
+    && new Date(`${returnDate}T00:00:00Z`).toISOString().slice(0, 10) === returnDate
 
   const validSearch = /^[A-Za-z0-9_-]{1,10}$/.test(origin)
     && /^[A-Za-z0-9_-]{1,10}$/.test(destination)
@@ -32,7 +37,15 @@ async function TrainsPageContent({ searchParams }) {
 
   return (
     <TrainsPageChrome empty={!validSearch}>
-      {validSearch && <TrainSearchResults origin={origin} destination={destination} date={date} passengers={passengerValue} />}
+      {validSearch && (
+        <TrainSearchResults
+          origin={origin}
+          destination={destination}
+          date={date}
+          returnDate={validReturnDate ? returnDate : null}
+          passengers={passengerValue}
+        />
+      )}
     </TrainsPageChrome>
   )
 }

@@ -62,7 +62,7 @@ function getDayLabel(dateStr) {
   return { dayName, dateFormatted, isToday: false }
 }
 
-export default function TrainSearchResults({ origin, destination, date, passengers }) {
+export default function TrainSearchResults({ origin, destination, date, returnDate = null, passengers }) {
   const router = useRouter()
   const { user } = useAuth()
   const [rows, setRows] = useState([])
@@ -76,6 +76,8 @@ export default function TrainSearchResults({ origin, destination, date, passenge
   const [showFilterModal, setShowFilterModal] = useState(false)
   const [showSortModal, setShowSortModal] = useState(false)
   const [reloadKey, setReloadKey] = useState(0)
+  const [activeLeg, setActiveLeg] = useState('outbound') // 'outbound' | 'inbound'
+  const [selectedOutbound, setSelectedOutbound] = useState(null)
 
   const originStation = useMemo(() => getStationByCode(origin) || { code: origin, name: origin, city: 'Indonesia' }, [origin])
   const destinationStation = useMemo(() => getStationByCode(destination) || { code: destination, name: destination, city: 'Indonesia' }, [destination])
@@ -84,14 +86,15 @@ export default function TrainSearchResults({ origin, destination, date, passenge
   const dateTabs = useMemo(() => {
     const tabs = []
     for (let offset = -1; offset <= 3; offset++) {
-      const tabDate = addDays(date, offset)
+      const effectiveDate = activeLeg === 'inbound' && returnDate ? returnDate : date
+      const tabDate = addDays(effectiveDate, offset)
       const { dayName, dateFormatted, isToday } = getDayLabel(tabDate)
       tabs.push({
         date: tabDate,
         dayName,
         dateFormatted,
         isToday,
-        isActive: tabDate === date,
+        isActive: tabDate === (activeLeg === 'inbound' && returnDate ? returnDate : date),
       })
     }
     return tabs
@@ -107,10 +110,14 @@ export default function TrainSearchResults({ origin, destination, date, passenge
       try {
         const supabase = createClient()
         // 1. Attempt Supabase query
+        const currentOrigin = activeLeg === 'inbound' ? destination : origin
+        const currentDestination = activeLeg === 'inbound' ? origin : destination
+        const currentDate = activeLeg === 'inbound' && returnDate ? returnDate : date
+
         const { data: dbData, error: dbError } = await supabase.rpc('search_train_schedules', {
-          p_origin_code: origin,
-          p_destination_code: destination,
-          p_departure_date: date,
+          p_origin_code: currentOrigin,
+          p_destination_code: currentDestination,
+          p_departure_date: currentDate,
           p_passengers: passengers,
         })
 
@@ -143,7 +150,7 @@ export default function TrainSearchResults({ origin, destination, date, passenge
 
     loadData()
     return () => { active = false }
-  }, [origin, destination, date, passengers, reloadKey])
+  }, [origin, destination, date, returnDate, activeLeg, passengers, reloadKey])
 
   // Available classes for filter chips
   const classOptions = useMemo(() => {
@@ -558,6 +565,57 @@ export default function TrainSearchResults({ origin, destination, date, passenge
         </div>
       )}
 
+      {/* Pulang-Pergi (PP) Progress Stepper Banner */}
+      {returnDate && (
+        <div style={{
+          marginBottom: '1rem',
+          padding: '1rem 1.25rem',
+          borderRadius: 14,
+          background: activeLeg === 'outbound' ? 'rgba(26, 66, 138, 0.06)' : 'rgba(34, 197, 94, 0.08)',
+          border: `1.5px solid ${activeLeg === 'outbound' ? 'var(--rh-primary)' : '#22c55e'}`,
+          display: 'flex',
+          flexWrap: 'wrap',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: '1rem',
+        }}>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: 4 }}>
+              <span className={`rh-badge ${activeLeg === 'outbound' ? 'rh-badge-primary' : 'rh-badge-success'}`} style={{ fontWeight: 800 }}>
+                {activeLeg === 'outbound' ? 'Langkah 1 dari 2' : 'Langkah 2 dari 2'}
+              </span>
+              <span style={{ fontSize: '0.8rem', fontWeight: 700, color: activeLeg === 'outbound' ? 'var(--rh-primary)' : '#15803d' }}>
+                {activeLeg === 'outbound' ? 'Perjalanan Pergi' : 'Perjalanan Pulang'}
+              </span>
+            </div>
+            <strong style={{ fontSize: '1.05rem', display: 'block', color: 'var(--rh-text-1)' }}>
+              {activeLeg === 'outbound'
+                ? `Pilih Kereta Pergi: ${originStation.name} (${origin}) → ${destinationStation.name} (${destination})`
+                : `Pilih Kereta Pulang: ${destinationStation.name} (${destination}) → ${originStation.name} (${origin})`}
+            </strong>
+            <small style={{ color: 'var(--rh-text-2)' }}>
+              {activeLeg === 'outbound'
+                ? `Tanggal Berangkat: ${formatDate(date)} • Tanggal Pulang: ${formatDate(returnDate)}`
+                : `Tanggal Pulang: ${formatDate(returnDate)} • Kereta Pergi: ${selectedOutbound?.train_name} (${selectedOutbound?.carriage_class})`}
+            </small>
+          </div>
+
+          {activeLeg === 'inbound' && (
+            <button
+              type="button"
+              onClick={() => {
+                setActiveLeg('outbound')
+                window.scrollTo({ top: 0, behavior: 'smooth' })
+              }}
+              className="rh-btn rh-btn-ghost rh-btn-sm"
+              style={{ border: '1px solid #86efac', color: '#15803d' }}
+            >
+              &larr; Ganti Kereta Pergi
+            </button>
+          )}
+        </div>
+      )}
+
       {/* ============================================================
           SCHEDULE RESULTS LIST (Matches Screenshot 2 Exact Cards)
           ============================================================ */}
@@ -869,17 +927,44 @@ export default function TrainSearchResults({ origin, destination, date, passenge
                       <span style={{ fontSize: '0.78rem', color: 'var(--rh-text-3)' }}>
                         <span className="rh-hide-mobile">Tersedia </span>{row.available_seats} kursi
                       </span>
-                      <Link
-                        href={bookingUrl}
-                        className="rh-btn rh-btn-primary rh-btn-sm"
-                        style={{
-                          borderRadius: 8,
-                          padding: '0.45rem 1.15rem',
-                          fontWeight: 700,
-                        }}
-                      >
-                        Pilih
-                      </Link>
+                      {returnDate && activeLeg === 'outbound' ? (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSelectedOutbound(row)
+                            setActiveLeg('inbound')
+                            window.scrollTo({ top: 0, behavior: 'smooth' })
+                            toast.success(`Kereta pergi ${row.train_name} dipilih. Silakan pilih kereta pulang!`)
+                          }}
+                          className="rh-btn rh-btn-primary rh-btn-sm"
+                          style={{ borderRadius: 8, padding: '0.45rem 1.15rem', fontWeight: 700 }}
+                        >
+                          Pilih Kereta Pergi &rarr;
+                        </button>
+                      ) : returnDate && activeLeg === 'inbound' && selectedOutbound ? (
+                        <Link
+                          href={user
+                            ? `/booking/${selectedOutbound.schedule_id}?class=${encodeURIComponent(selectedOutbound.carriage_class)}&from=${selectedOutbound.origin_code}&to=${selectedOutbound.destination_code}&date=${date}&pax=${passengers}&train=${encodeURIComponent(selectedOutbound.train_name)}&price=${selectedOutbound.price}&returnScheduleId=${row.schedule_id}&returnClass=${encodeURIComponent(row.carriage_class)}&returnDate=${returnDate}&returnTrain=${encodeURIComponent(row.train_name)}&returnPrice=${row.price}&returnFrom=${destination}&returnTo=${origin}`
+                            : `/auth/login?next=${encodeURIComponent(`/booking/${selectedOutbound.schedule_id}?class=${encodeURIComponent(selectedOutbound.carriage_class)}&from=${selectedOutbound.origin_code}&to=${selectedOutbound.destination_code}&date=${date}&pax=${passengers}&train=${encodeURIComponent(selectedOutbound.train_name)}&price=${selectedOutbound.price}&returnScheduleId=${row.schedule_id}&returnClass=${encodeURIComponent(row.carriage_class)}&returnDate=${returnDate}&returnTrain=${encodeURIComponent(row.train_name)}&returnPrice=${row.price}&returnFrom=${destination}&returnTo=${origin}`)}`
+                          }
+                          className="rh-btn rh-btn-primary rh-btn-sm"
+                          style={{ borderRadius: 8, padding: '0.45rem 1.15rem', fontWeight: 700, background: '#16a34a', borderColor: '#16a34a' }}
+                        >
+                          Pilih & Lanjut Booking PP &rarr;
+                        </Link>
+                      ) : (
+                        <Link
+                          href={bookingUrl}
+                          className="rh-btn rh-btn-primary rh-btn-sm"
+                          style={{
+                            borderRadius: 8,
+                            padding: '0.45rem 1.15rem',
+                            fontWeight: 700,
+                          }}
+                        >
+                          Pilih
+                        </Link>
+                      )}
                     </div>
                   </div>
                 </div>

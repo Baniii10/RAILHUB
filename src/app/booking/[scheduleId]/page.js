@@ -37,18 +37,38 @@ async function BookingPageContent({ params, searchParams }) {
   const price = Number(Array.isArray(query.price) ? query.price[0] : query.price) || 430000
   const subclass = Array.isArray(query.subclass) ? query.subclass[0] : query.subclass || 'CA'
 
-  return <BookingFlow
-    scheduleId={scheduleId}
-    requestedClass={requestedClass || ''}
-    passengerCount={passengerCount}
-    returnTo={returnTo}
-    origin={origin}
-    destination={destination}
-    departureDate={departureDate}
-    trainName={trainName}
-    price={price}
-    subclass={subclass}
-  />
+  // Round trip parameters
+  const returnScheduleId = Array.isArray(query.returnScheduleId) ? query.returnScheduleId[0] : query.returnScheduleId
+  const returnClass = Array.isArray(query.returnClass) ? query.returnClass[0] : query.returnClass
+  const returnDate = Array.isArray(query.returnDate) ? query.returnDate[0] : query.returnDate
+  const returnTrain = Array.isArray(query.returnTrain) ? query.returnTrain[0] : query.returnTrain
+  const returnPrice = Number(Array.isArray(query.returnPrice) ? query.returnPrice[0] : query.returnPrice) || 0
+  const returnFrom = Array.isArray(query.returnFrom) ? query.returnFrom[0] : query.returnFrom
+  const returnToStation = Array.isArray(query.returnTo) ? query.returnTo[0] : query.returnTo
+  const pairedBookingId = Array.isArray(query.pairedBookingId) ? query.pairedBookingId[0] : query.pairedBookingId
+
+  return (
+    <BookingFlow
+      scheduleId={scheduleId}
+      requestedClass={requestedClass || ''}
+      passengerCount={passengerCount}
+      returnTo={returnTo}
+      origin={origin}
+      destination={destination}
+      departureDate={departureDate}
+      trainName={trainName}
+      price={price}
+      subclass={subclass}
+      returnScheduleId={returnScheduleId}
+      returnClass={returnClass}
+      returnDate={returnDate}
+      returnTrain={returnTrain}
+      returnPrice={returnPrice}
+      returnFrom={returnFrom}
+      returnToStation={returnToStation}
+      pairedBookingId={pairedBookingId}
+    />
+  )
 }
 
 export default function BookingPage({ params, searchParams }) {
