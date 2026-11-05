@@ -2168,14 +2168,7 @@ input[type="checkbox"]:focus-visible {
 
 @media (min-width: 1024px) {
   .rh-footer-main-grid {
-    grid-template-columns: 1.8fr 1.6fr 0.9fr 0.9fr 0.8fr 1.5fr;
-    gap: 2rem 1.5rem;
-  }
-}
-
-@media (min-width: 1280px) {
-  .rh-footer-main-grid {
-    grid-template-columns: 2fr 1.8fr 1fr 1fr 0.9fr 1.6fr;
+    grid-template-columns: 1.8fr 1.2fr 1.2fr 1.1fr 1.7fr;
     gap: 2.5rem 2rem;
   }
 }

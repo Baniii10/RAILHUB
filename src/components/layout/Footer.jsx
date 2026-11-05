@@ -148,43 +148,29 @@ export default function Footer() {
     { name: 'X', icon: IconXTwitter, href: 'https://x.com' },
   ]
 
-  const layananLinksCol1 = [
-    { label: 'Kereta Antar Kota', href: '/trains' },
-    { label: 'Kereta Komuter', href: '/trains' },
-    { label: 'LRT Jabodebek', href: '/trains' },
-    { label: 'Kereta Bandara', href: '/trains' },
-  ]
-
-  const layananLinksCol2 = [
-    { label: 'Kereta Panoramic', href: '/trains' },
-    { label: 'Luxury & Priority', href: '/trains' },
-    { label: 'Wisata Kereta', href: '/about' },
-    { label: 'RailFood On-Board', href: '/contact' },
-  ]
-
-  const produkLinks = [
-    { label: 'Tiket Reguler', href: '/trains' },
-    { label: 'Tiket Wisata', href: '/trains' },
-    { label: 'Pengiriman Kargo', href: '/contact' },
-    { label: 'RailPay E-Wallet', href: '/dashboard/passenger' },
-    { label: 'Asuransi Perjalanan', href: '/faq' },
-    { label: 'Porter Stasiun', href: '/faq' },
+  // Menu yang benar-benar ada di website RAILHUB
+  const layananLinks = [
+    { label: 'Cari Tiket Kereta', href: '/trains' },
+    { label: 'Pilih Kursi Gerbong', href: '/trains' },
+    { label: 'E-Boarding Pass', href: '/dashboard/passenger' },
+    { label: 'Lacak Kereta (Live)', href: '/dashboard/passenger' },
+    { label: 'Restorasi On-Board', href: '/dashboard/orders' },
   ]
 
   const informasiLinks = [
-    { label: 'Berita & Info', href: '/about' },
-    { label: 'Peta Stasiun', href: '/trains' },
+    { label: 'Beranda', href: '/about' },
+    { label: 'Tentang RAILHUB', href: '/about' },
+    { label: 'Bantuan & FAQ', href: '/faq' },
     { label: 'Syarat & Ketentuan', href: '/faq' },
-    { label: 'Kebijakan Privacy', href: '/faq' },
-    { label: 'Feedback', href: '/contact' },
-    { label: 'Careers', href: '/about' },
+    { label: 'Kebijakan Privasi', href: '/faq' },
+    { label: 'Kontak Pelanggan', href: '/contact' },
   ]
 
   const membershipLinks = [
-    { label: 'Login', href: '/auth/login' },
-    { label: 'Daftar', href: '/auth/register' },
+    { label: 'Masuk / Login', href: '/auth/login' },
+    { label: 'Daftar Akun', href: '/auth/register' },
     { label: 'Tiket Saya', href: '/dashboard/passenger' },
-    { label: 'Lacak Kereta', href: '/dashboard/passenger' },
+    { label: 'Pesanan Kuliner', href: '/dashboard/orders' },
   ]
 
   return (
@@ -199,7 +185,7 @@ export default function Footer() {
       }}
     >
       <div className="rh-container rh-footer-container">
-        {/* Main 6-Column Grid Layout matching the reference image */}
+        {/* Main 5-Column Grid Layout matching the reference layout strictly with authentic site features */}
         <div
           className="rh-footer-main-grid"
           style={{
@@ -252,7 +238,7 @@ export default function Footer() {
                 lineHeight: 1.5,
               }}
             >
-              Platform Reservasi & Layanan Kereta Api Terbaik di Indonesia
+              Sistem Informasi &amp; Reservasi Kereta Api Pulau Jawa
             </p>
 
             {/* Social Media Icons row (orange outline icons) */}
@@ -314,8 +300,8 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Column 2: Layanan (Split into 2 subcolumns like reference) */}
-          <div style={{ minWidth: '220px' }}>
+          {/* Column 2: Layanan */}
+          <div>
             <h4
               style={{
                 fontSize: '1rem',
@@ -327,63 +313,8 @@ export default function Footer() {
             >
               Layanan
             </h4>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem 1.25rem' }}>
-              <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                {layananLinksCol1.map((item) => (
-                  <li key={item.label}>
-                    <Link
-                      href={item.href}
-                      style={{
-                        color: '#4B5563',
-                        textDecoration: 'none',
-                        fontSize: '0.875rem',
-                        transition: 'color 0.15s ease',
-                      }}
-                      onMouseEnter={(e) => (e.currentTarget.style.color = '#FF8C00')}
-                      onMouseLeave={(e) => (e.currentTarget.style.color = '#4B5563')}
-                    >
-                      {item.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-              <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                {layananLinksCol2.map((item) => (
-                  <li key={item.label}>
-                    <Link
-                      href={item.href}
-                      style={{
-                        color: '#4B5563',
-                        textDecoration: 'none',
-                        fontSize: '0.875rem',
-                        transition: 'color 0.15s ease',
-                      }}
-                      onMouseEnter={(e) => (e.currentTarget.style.color = '#FF8C00')}
-                      onMouseLeave={(e) => (e.currentTarget.style.color = '#4B5563')}
-                    >
-                      {item.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          {/* Column 3: Produk */}
-          <div>
-            <h4
-              style={{
-                fontSize: '1rem',
-                fontWeight: 700,
-                color: '#111827',
-                marginBottom: '1.25rem',
-                marginTop: 0,
-              }}
-            >
-              Produk
-            </h4>
             <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-              {produkLinks.map((item) => (
+              {layananLinks.map((item) => (
                 <li key={item.label}>
                   <Link
                     href={item.href}
@@ -403,7 +334,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Column 4: Informasi */}
+          {/* Column 3: Informasi */}
           <div>
             <h4
               style={{
@@ -437,7 +368,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Column 5: Membership */}
+          {/* Column 4: Membership / Akun */}
           <div>
             <h4
               style={{
@@ -471,7 +402,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Column 6: Kontak */}
+          {/* Column 5: Kontak */}
           <div style={{ maxWidth: '280px' }}>
             <h4
               style={{
@@ -489,7 +420,7 @@ export default function Footer() {
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
                 <MapPin size={20} color="#FF8C00" style={{ flexShrink: 0, marginTop: '2px' }} />
                 <span style={{ fontSize: '0.875rem', lineHeight: 1.45 }}>
-                  Kantor Operasional RAILHUB, Jl. Stasiun Senen No. 1, Jakarta Pusat, DKI Jakarta 10410
+                  Stasiun Gambir &amp; Senen, Jakarta Pusat, DKI Jakarta 10410
                 </span>
               </div>
 
@@ -497,7 +428,7 @@ export default function Footer() {
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
                 <Clock size={20} color="#FF8C00" style={{ flexShrink: 0, marginTop: '2px' }} />
                 <span style={{ fontSize: '0.875rem', lineHeight: 1.45 }}>
-                  09:00–20:00 (Weekday) &amp; 09:00–17:00 (Weekend)
+                  24 Jam Setiap Hari (Layanan Operasional Kereta)
                 </span>
               </div>
 
@@ -505,7 +436,7 @@ export default function Footer() {
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                 <Mail size={20} color="#FF8C00" style={{ flexShrink: 0 }} />
                 <a
-                  href="mailto:cs@railhub.id"
+                  href="mailto:support@railhub.id"
                   style={{
                     color: '#4B5563',
                     textDecoration: 'none',
@@ -515,7 +446,7 @@ export default function Footer() {
                   onMouseEnter={(e) => (e.currentTarget.style.color = '#FF8C00')}
                   onMouseLeave={(e) => (e.currentTarget.style.color = '#4B5563')}
                 >
-                  Kirim E-mail
+                  Kirim E-mail (support@railhub.id)
                 </a>
               </div>
 
@@ -523,7 +454,7 @@ export default function Footer() {
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                 <Phone size={20} color="#FF8C00" style={{ flexShrink: 0 }} />
                 <a
-                  href="tel:081266100500"
+                  href="tel:121"
                   style={{
                     color: '#4B5563',
                     textDecoration: 'none',
@@ -533,7 +464,7 @@ export default function Footer() {
                   onMouseEnter={(e) => (e.currentTarget.style.color = '#FF8C00')}
                   onMouseLeave={(e) => (e.currentTarget.style.color = '#4B5563')}
                 >
-                  081266100500
+                  121 / 0812-3456-7890
                 </a>
               </div>
             </div>
