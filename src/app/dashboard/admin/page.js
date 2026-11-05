@@ -163,13 +163,17 @@ function AdminDashboardContent() {
         supabase.rpc('get_admin_dashboard_stats'),
         supabase.from('stations').select('id, code, name, city, province').order('name'),
         supabase.from('trains').select('id, name, train_number, service_class').order('name'),
-        supabase.from('routes').select('id, name, distance_km, estimated_duration_minutes').order('name'),
+        supabase.from('routes').select('id, name, distance_km').order('name'),
         supabase.from('schedules').select('id, status, departure_time, arrival_time, trains(name, train_number), routes(name)').order('departure_time', { ascending: false }).limit(100),
-        supabase.from('fares').select('id, route_id, class, base_price, routes(name)').order('base_price'),
-        supabase.from('bookings').select('id, booking_code, total_amount, status, created_at, schedules(departure_time, trains(name, train_number), routes(name)), profiles(full_name, email)').order('created_at', { ascending: false }).limit(100),
-        supabase.from('profiles').select('id, full_name, email, role, phone, created_at').order('created_at', { ascending: false }),
+        supabase.from('fares').select('id, schedule_id, carriage_class, price, currency, schedules(routes(name))').order('price'),
+        supabase.from('bookings').select('id, booking_code, user_id, total_amount, status, created_at, schedules(departure_time, trains(name, train_number), routes(name))').order('created_at', { ascending: false }).limit(100),
+        supabase.from('profiles').select('id, full_name, email, role, phone_number, created_at').order('created_at', { ascending: false }),
         supabase.from('staff_assignments').select('id, staff_id, schedule_id, profiles!staff_assignments_staff_id_fkey(full_name, email), schedules(departure_time, trains(name, train_number), routes(name))').order('created_at', { ascending: false }),
       ])
+
+      const failedResult = [statsRes, stationsRes, trainsRes, routesRes, schedulesRes, faresRes, bookingsRes, profilesRes, assignmentsRes]
+        .find(result => result.error)
+      if (failedResult) throw failedResult.error
 
       // Fallback or real stats
       if (statsRes.data) {
@@ -188,10 +192,14 @@ function AdminDashboardContent() {
       setRoutes(routesRes.data || [])
       setSchedules(schedulesRes.data || [])
       setFares(faresRes.data || [])
-      setBookings(bookingsRes.data || [])
       setAssignments(assignmentsRes.data || [])
 
       const allProfiles = profilesRes.data || []
+      const profilesById = new Map(allProfiles.map(person => [person.id, person]))
+      setBookings((bookingsRes.data || []).map(booking => ({
+        ...booking,
+        profiles: profilesById.get(booking.user_id) || null,
+      })))
       setUsersList(allProfiles)
       setStaffUsers(allProfiles.filter(p => p.role === 'conductor'))
 
@@ -325,7 +333,7 @@ function AdminDashboardContent() {
   const filteredUsers = useMemo(() => {
     return usersList.filter(u => {
       const q = userSearch.trim().toLowerCase()
-      return !q || [u.full_name, u.email, u.role, u.phone].some(v => v?.toLowerCase().includes(q))
+      return !q || [u.full_name, u.email, u.role, u.phone_number].some(v => v?.toLowerCase().includes(q))
     })
   }, [usersList, userSearch])
 
@@ -858,12 +866,12 @@ function AdminDashboardContent() {
                   <tbody>
                     {fares.map(f => (
                       <tr key={f.id} style={{ borderBottom: '1px solid var(--rh-border)' }}>
-                        <td style={{ padding: '0.75rem 0.5rem' }}><strong>{f.routes?.name || 'Rute KA'}</strong></td>
+                        <td style={{ padding: '0.75rem 0.5rem' }}><strong>{f.schedules?.routes?.name || 'Rute KA'}</strong></td>
                         <td style={{ padding: '0.75rem 0.5rem' }}>
-                          <span className="rh-badge rh-badge-primary">{f.class}</span>
+                          <span className="rh-badge rh-badge-primary">{f.carriage_class}</span>
                         </td>
                         <td style={{ padding: '0.75rem 0.5rem', fontWeight: 700, color: 'var(--rh-primary)' }}>
-                          {formatIDR(f.base_price)}
+                          {formatIDR(f.price)}
                         </td>
                       </tr>
                     ))}
