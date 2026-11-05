@@ -9,7 +9,7 @@ import { createClient } from '@/lib/supabase/client'
 import { useLang } from '@/contexts/LangContext'
 import toast from 'react-hot-toast'
 import MobileTrainIllustration from '@/components/auth/MobileTrainIllustration'
-import { getDashboardForProfile, isSafeNextPath } from '@/lib/auth/roles'
+import { getDashboardForProfile, getOperationalRole, isSafeNextPath } from '@/lib/auth/roles'
 
 function GoogleIcon({ size = 19 }) {
   return (
@@ -22,49 +22,6 @@ function GoogleIcon({ size = 19 }) {
   )
 }
 
-const DEMO_ACCOUNTS = [
-  {
-    role: 'passenger',
-    title: 'Penumpang',
-    desc: 'Akun Penumpang',
-    email: 'penumpang.demo@railhub.id',
-    password: 'DemoPassenger2026!',
-    badge: 'Tiket & Perjalanan',
-    badgeColor: '#10b981',
-    icon: '👤',
-  },
-  {
-    role: 'gate',
-    title: 'Petugas Gerbang',
-    desc: 'Scanner Masuk Peron',
-    email: 'gate.gambir@railhub.id',
-    password: 'DemoStaff2026!',
-    badge: 'Gate Stasiun Gambir',
-    badgeColor: '#f59e0b',
-    icon: '🎫',
-  },
-  {
-    role: 'conductor',
-    title: 'Petugas Kereta',
-    desc: 'Kondektur KA',
-    email: 'kondektur.parahyangan@railhub.id',
-    password: 'DemoStaff2026!',
-    badge: 'KA Argo Parahyangan',
-    badgeColor: '#0066cc',
-    icon: '🚆',
-  },
-  {
-    role: 'admin',
-    title: 'Administrator',
-    desc: 'Admin Operasional',
-    email: 'admin.operasional@railhub.id',
-    password: 'DemoAdmin2026!',
-    badge: 'Semua Akses Admin',
-    badgeColor: '#6366f1',
-    icon: '🛡️',
-  },
-]
-
 export default function LoginPage() {
   const { t, lang } = useLang()
   const router = useRouter()
@@ -76,13 +33,6 @@ export default function LoginPage() {
   const [loading,       setLoading]       = useState(false)
   const [googleLoading, setGoogleLoading] = useState(false)
   const [error,         setError]         = useState(() => '')
-
-  async function syncDemoProfile() {
-    const response = await fetch('/api/auth/demo-profile', { method: 'POST' })
-    const result = await response.json()
-    if (!response.ok) throw new Error(result.error || 'Role demo gagal disinkronkan.')
-    return result.profile
-  }
 
   async function handleGoogleAuth() {
     setError('')
@@ -112,88 +62,6 @@ export default function LoginPage() {
       setError(err?.message || 'Gagal memulai autentikasi Google.')
       setGoogleLoading(false)
     }
-  }
-
-  async function handleQuickLogin(account) {
-    setEmail(account.email)
-    setPassword(account.password)
-    setError('')
-    setLoading(true)
-
-    // 1. Try to sign in directly
-    const { data, error: authError } = await supabase.auth.signInWithPassword({
-      email: account.email,
-      password: account.password,
-    })
-
-    if (!authError && data?.session) {
-      let profile
-      try {
-        profile = await syncDemoProfile()
-      } catch (syncError) {
-        setError(`Role demo gagal disinkronkan: ${syncError.message}`)
-        setLoading(false)
-        return
-      }
-
-      toast.success(`Login berhasil sebagai ${account.title}!`)
-      setLoading(false)
-      router.replace(getDashboardForProfile(profile, data.user.email))
-      return
-    }
-
-    // 2. If account does not exist yet in Supabase, auto-create it seamlessly
-    const isNew = authError?.message?.toLowerCase().includes('invalid login credentials')
-      || authError?.code === 'invalid_credentials'
-
-    if (isNew) {
-      toast.loading(`Menyiapkan akun demo ${account.title}...`, { duration: 2500 })
-      const { data: signUpData, error: signUpErr } = await supabase.auth.signUp({
-        email: account.email,
-        password: account.password,
-        options: {
-          data: {
-            full_name: `${account.title} RAILHUB`,
-            phone_number: '081234567890',
-          },
-        },
-      })
-
-      if (signUpErr) {
-        setError(`Gagal membuat akun demo: ${signUpErr.message}`)
-        setLoading(false)
-        return
-      }
-
-      // 3. Log in after sign up
-      const { data: loginData, error: secondLoginErr } = await supabase.auth.signInWithPassword({
-        email: account.email,
-        password: account.password,
-      })
-
-      if (secondLoginErr) {
-        setError('Akun demo berhasil didaftarkan. Silakan klik kembali untuk masuk.')
-        setLoading(false)
-        return
-      }
-
-      let profile
-      try {
-        profile = await syncDemoProfile()
-      } catch (syncError) {
-        setError(`Akun masuk, tetapi role demo gagal disiapkan: ${syncError.message}`)
-        setLoading(false)
-        return
-      }
-
-      toast.success(`Selamat datang, ${account.title}!`)
-      setLoading(false)
-      router.replace(getDashboardForProfile(profile, loginData.user.email))
-      return
-    }
-
-    setError(authError?.message || 'Gagal login demo.')
-    setLoading(false)
   }
 
   async function handleSubmit(e) {
@@ -237,7 +105,8 @@ export default function LoginPage() {
     setLoading(false)
 
     const requestedNext = new URLSearchParams(window.location.search).get('next')
-    router.replace(isSafeNextPath(requestedNext) ? requestedNext : getDashboardForProfile(profile, data.user.email))
+    const role = getOperationalRole(profile)
+    router.replace(isSafeNextPath(requestedNext, role) ? requestedNext : getDashboardForProfile(profile))
   }
 
   return (
@@ -548,37 +417,6 @@ export default function LoginPage() {
               <span>Sign in with Google</span>
             </button>
 
-            {/* Ultra-Minimal Demo Role Login below Google button */}
-            <div style={{ marginTop: '0.75rem', display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.4rem' }}>
-              {DEMO_ACCOUNTS.map(acc => (
-                <button
-                  key={acc.role}
-                  type="button"
-                  disabled={loading || googleLoading}
-                  onClick={() => handleQuickLogin(acc)}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '0.4rem',
-                    padding: '0.45rem 0.5rem',
-                    borderRadius: 10,
-                    background: '#f8fafc',
-                    border: '1px solid #e2e8f0',
-                    fontSize: '0.76rem',
-                    fontWeight: 700,
-                    color: '#334155',
-                    cursor: loading || googleLoading ? 'not-allowed' : 'pointer',
-                    transition: 'all 0.15s ease',
-                  }}
-                  onMouseEnter={e => { e.currentTarget.style.borderColor = acc.badgeColor; e.currentTarget.style.background = '#f1f5f9' }}
-                  onMouseLeave={e => { e.currentTarget.style.borderColor = '#e2e8f0'; e.currentTarget.style.background = '#f8fafc' }}
-                >
-                  <span style={{ fontSize: '0.95rem', lineHeight: 1 }}>{acc.icon}</span>
-                  <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{acc.title}</span>
-                </button>
-              ))}
-            </div>
           </div>
         </div>
       </div>

@@ -41,18 +41,16 @@ export default function Navbar() {
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const router   = useRouter()
-  const dashboardRole = profile?.role
+  const dashboardRole = profile?.staff_type === 'gate' ? 'gate' : profile?.role
     || (pathname.startsWith('/dashboard/admin') ? 'admin' : pathname.startsWith('/dashboard/staff') ? 'conductor' : null)
   const roleLabels = lang === 'en'
-    ? { admin: 'Admin', conductor: 'Staff', passenger: 'Passenger' }
-    : { admin: 'Admin', conductor: 'Petugas', passenger: 'Penumpang' }
+    ? { admin: 'Admin', conductor: 'Staff', gate: 'Gate Staff', passenger: 'Passenger' }
+    : { admin: 'Admin', conductor: 'Petugas', gate: 'Petugas Gerbang', passenger: 'Penumpang' }
   const roleLabel = roleLabels[dashboardRole] || (lang === 'en' ? 'User' : 'Pengguna')
   const profileName = profile?.full_name?.trim()
   const accountName = profileName && profileName.toLowerCase() !== 'penumpang'
     ? profileName.split(' ')[0]
     : roleLabel
-
-    && (!searchParams.get('tab') || searchParams.get('tab') === 'overview' || searchParams.get('tab') === 'journey')
 
   const [scrolled,     setScrolled]     = useState(false)
   const [mobileOpen,   setMobileOpen]   = useState(false)
@@ -82,7 +80,7 @@ export default function Navbar() {
       }
 
       const supabase = createClient()
-      if (dashboardRole === 'conductor') {
+      if (['conductor', 'gate'].includes(dashboardRole)) {
         setActiveJourney(null)
         const { data: assigns } = await supabase
           .from('staff_assignments')
@@ -168,7 +166,7 @@ export default function Navbar() {
 
   function getDashboardHref() {
     if (dashboardRole === 'admin') return '/dashboard/admin'
-    if (dashboardRole === 'conductor') return '/dashboard/staff'
+    if (dashboardRole === 'conductor' || dashboardRole === 'gate') return '/dashboard/staff'
     return '/dashboard/passenger'
   }
 
@@ -178,6 +176,11 @@ export default function Navbar() {
       { href: '/dashboard/admin/journeys', label: 'Perjalanan mendatang' },
       { href: '/dashboard/admin/staff', label: 'Pengelolaan petugas' },
     ]
+    : dashboardRole === 'gate'
+      ? [
+          { href: '/dashboard/staff?tab=overview', label: 'Ringkasan gate' },
+          { href: '/dashboard/staff?tab=validation', label: 'Validasi tiket' },
+        ]
     : dashboardRole === 'conductor'
       ? [
           { href: '/dashboard/staff?tab=overview', label: 'Perjalanan tugas' },
@@ -196,6 +199,11 @@ export default function Navbar() {
         { href: '/dashboard/admin/staff', label: lang === 'en' ? 'Staff' : 'Petugas', icon: User },
         { href: '/dashboard/orders', label: lang === 'en' ? 'Services' : 'Layanan', icon: Utensils },
       ]
+    : dashboardRole === 'gate'
+      ? [
+          { href: '/dashboard/staff?tab=overview', label: lang === 'en' ? 'Summary' : 'Ringkasan', icon: LayoutDashboard },
+          { href: '/dashboard/staff?tab=validation', label: lang === 'en' ? 'Validate' : 'Validasi', icon: TicketCheck },
+        ]
     : dashboardRole === 'conductor'
       ? [
           { href: '/dashboard/staff?tab=overview', label: lang === 'en' ? 'Duties' : 'Tugas', icon: Train },

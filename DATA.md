@@ -163,16 +163,16 @@ Sumber: `202610310004_passenger_services.sql` & `orders/page.js`
 
 ---
 
-## 5. Akun Demo & Role Pengujian UAS
+## 5. Role Pengujian UAS
 
-Sumber: `src/app/auth/login/page.js` (Panel Login 1-Klik Instan)
+Akun pengujian dibuat manual melalui Supabase Auth. Jangan menyimpan email dan password akun admin/petugas di source code atau dokumentasi repository.
 
-| Role Pengujian | Alamat Email | Password | Destinasi Redirect | Hak Akses Utama |
-|:---------------|:-------------|:---------|:-------------------|:----------------|
-| **👤 Penumpang** | `penumpang.demo@railhub.id` | `DemoPassenger2026!` | `/` (Beranda) | Cari jadwal, pilih kursi, bayar tiket, lacak live GPS perjalanan, pesan makanan, refund/reschedule. |
-| **🎫 Petugas Gerbang** | `gate.gambir@railhub.id` | `DemoStaff2026!` | `/dashboard/staff` | Scan kamera QR code boarding pass di peron pintu masuk stasiun, validasi identitas penumpang. |
-| **🚆 Petugas Kereta** | `kondektur.parahyangan@railhub.id` | `DemoStaff2026!` | `/dashboard/staff` | Manifest penumpang per gerbong, cek kursi terisi/kosong, perbarui status perjalanan, bantu kendala penumpang. |
-| **🛡️ Administrator** | `admin.operasional@railhub.id` | `DemoAdmin2026!` | `/dashboard/admin` | Kelola master stasiun, armada KA, jadwal perjalanan, tarif, penugasan staf (*staff assignments*), dan rekap booking. |
+| Role Pengujian | Destinasi Redirect | Hak Akses Utama |
+|:---------------|:-------------------|:----------------|
+| **👤 Penumpang** | `/dashboard/passenger` | Cari jadwal, pilih kursi, bayar tiket simulasi, lacak perjalanan, pesan makanan, refund/reschedule. |
+| **🎫 Petugas Gerbang** | `/dashboard/staff` | Scan QR boarding pass pada stasiun yang ditetapkan. |
+| **🚆 Petugas Kereta** | `/dashboard/staff` | Manifest penumpang, status perjalanan, dan layanan pada perjalanan tugas. |
+| **🛡️ Administrator** | `/dashboard/admin` | Kelola operasional, jadwal, petugas, layanan, dan rekap booking. |
 
 ---
 

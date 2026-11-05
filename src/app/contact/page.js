@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import Navbar from '@/components/layout/Navbar'
-import Footer from '@/components/layout/Footer'
 import toast from 'react-hot-toast'
 import { CheckCircle2, Clock, Headphones, Mail, MapPin, MessageCircle, Phone, Send, Train } from 'lucide-react'
 
@@ -192,7 +191,6 @@ export default function ContactPage() {
         </div>
       </section>
 
-      <Footer />
     </div>
   )
 }

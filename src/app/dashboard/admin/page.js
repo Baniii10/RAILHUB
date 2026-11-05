@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation'
 import {
   Activity,
   AlertCircle,
-  BarChart3,
   CalendarDays,
   CheckCircle2,
   ChevronRight,
@@ -85,7 +84,6 @@ const ADMIN_TABS = [
   { id: 'schedules', label: 'Perjalanan', icon: CalendarDays },
   { id: 'bookings', label: 'Pemesanan', icon: TicketCheck },
   { id: 'staff', label: 'Petugas', icon: ShieldCheck },
-  { id: 'reports', label: 'Laporan', icon: BarChart3 },
 ]
 
 function AdminDashboardContent() {
@@ -226,7 +224,10 @@ function AdminDashboardContent() {
   // Handle Role Change
   async function handleRoleChange(userId, newRole) {
     const supabase = createClient()
-    const { error: err } = await supabase.from('profiles').update({ role: newRole }).eq('id', userId)
+    const { error: err } = await supabase.rpc('admin_set_user_role', {
+      p_user_id: userId,
+      p_role: newRole,
+    })
     if (err) {
       toast.error(`Gagal mengubah role: ${err.message}`)
       return
@@ -1005,6 +1006,7 @@ function AdminDashboardContent() {
                             className="rh-input rh-input-sm"
                             style={{ maxWidth: 170 }}
                             value={u.role}
+                            disabled={u.id === user?.id}
                             onChange={e => handleRoleChange(u.id, e.target.value)}
                           >
                             <option value="passenger">Penumpang</option>

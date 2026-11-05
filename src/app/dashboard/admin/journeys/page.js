@@ -60,7 +60,6 @@ function StatusBadge({ status }) {
 export default function AdminJourneysPage() {
   const router = useRouter()
   const { user, profile, loading: authLoading } = useAuth()
-  const [previewMode, setPreviewMode] = useState(false)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [schedules, setSchedules] = useState([])
@@ -84,11 +83,7 @@ export default function AdminJourneysPage() {
   }, [])
 
   useEffect(() => {
-    const preview = new URLSearchParams(window.location.search).get('preview') === '1'
-    if (preview) {
-      const timer = window.setTimeout(() => setPreviewMode(true), 0)
-      return () => window.clearTimeout(timer)
-    } else if (!authLoading && !user) {
+    if (!authLoading && !user) {
       router.replace('/auth/login?next=%2Fdashboard%2Fadmin%2Fjourneys')
     } else if (!authLoading && profile?.role && profile.role !== 'admin') {
       router.replace(profile.role === 'conductor' ? '/dashboard/staff' : '/dashboard/passenger')
@@ -100,22 +95,6 @@ export default function AdminJourneysPage() {
     if (showLoading) setLoading(true)
     setError('')
 
-    if (previewMode) {
-      const sampleSchedule = {
-        id: 'preview-schedule-1',
-        status: 'scheduled',
-        departure_time: '2026-11-05T00:30:00.000Z',
-        trains: { name: 'Argo Parahyangan', train_number: 'KA 34' },
-        routes: { name: 'Gambir – Bandung' },
-        latestUpdate: null,
-      }
-      const sampleDate = jakartaDateInputValue(new Date(sampleSchedule.departure_time))
-      const inRange = sampleDate >= appliedDates.from && sampleDate <= appliedDates.to
-      setSchedules(inRange ? [sampleSchedule] : [])
-      setAssignmentCounts(inRange ? { [sampleSchedule.id]: 1 } : {})
-      setLoading(false)
-      return
-    }
     if (!user || profile?.role !== 'admin') {
       setLoading(false)
       return
@@ -177,7 +156,7 @@ export default function AdminJourneysPage() {
     ].filter(Boolean)
     setError(dataErrors.join(' '))
     setLoading(false)
-  }, [appliedDates, previewMode, user, profile?.role])
+  }, [appliedDates, user, profile?.role])
 
   useEffect(() => {
     const timer = window.setTimeout(() => loadSchedules(true), 0)
@@ -185,10 +164,10 @@ export default function AdminJourneysPage() {
   }, [loadSchedules])
 
   useEffect(() => {
-    if (previewMode || profile?.role !== 'admin' || !appliedDates.from) return
+    if (profile?.role !== 'admin' || !appliedDates.from) return
     const timer = window.setInterval(() => loadSchedules(false), 30000)
     return () => window.clearInterval(timer)
-  }, [appliedDates.from, loadSchedules, previewMode, profile?.role])
+  }, [appliedDates.from, loadSchedules, profile?.role])
 
   function applyDateFilter(event) {
     event.preventDefault()
@@ -214,7 +193,7 @@ export default function AdminJourneysPage() {
   }
 
   async function updateJourneyStatus(schedule, status) {
-    if (previewMode || updatingSchedule || status === schedule.status) return
+    if (updatingSchedule || status === schedule.status) return
     setUpdatingSchedule(schedule.id)
     const supabase = createClient()
     const { error: updateError } = await supabase.rpc('update_assigned_journey_status', {
@@ -253,11 +232,6 @@ export default function AdminJourneysPage() {
       <Navbar />
       <main style={{ minHeight: '100vh', padding: '2rem 0 5rem', background: 'var(--rh-surface)' }}>
         <div className="rh-container">
-          {previewMode && (
-            <div role="status" className="rh-card" style={{ padding: '1rem 1.25rem', marginBottom: '1rem', borderColor: 'var(--rh-primary)', color: 'var(--rh-text-2)' }}>
-              <strong>Mode preview</strong> — data contoh saja. Perubahan dan tindakan admin dinonaktifkan.
-            </div>
-          )}
 
           <div style={{ marginBottom: '1.25rem' }}>
             <a href="/dashboard/admin" className="rh-btn rh-btn-ghost rh-btn-sm"><ArrowLeft size={15} />Kembali ke ringkasan admin</a>
@@ -269,7 +243,7 @@ export default function AdminJourneysPage() {
                 <h1 className="rh-h2" style={{ marginTop: '0.6rem' }}><CalendarDays size={23} style={{ verticalAlign: 'middle', marginRight: 8 }} />Perjalanan mendatang</h1>
                 <p style={{ color: 'var(--rh-text-2)', marginTop: '0.35rem' }}>Cari jadwal, pantau petugas, dan perbarui status perjalanan dari halaman ini.</p>
               </div>
-              <button type="button" className="rh-btn rh-btn-ghost" onClick={() => loadSchedules(true)} disabled={loading || previewMode}>
+              <button type="button" className="rh-btn rh-btn-ghost" onClick={() => loadSchedules(true)} disabled={loading}>
                 <RefreshCw size={16} /> Muat ulang
               </button>
             </div>
@@ -352,7 +326,7 @@ export default function AdminJourneysPage() {
                               className="rh-input"
                               aria-label={`Ubah status ${schedule.trains?.name || 'perjalanan'}`}
                               value={schedule.status}
-                              disabled={previewMode || updatingSchedule === schedule.id}
+                              disabled={updatingSchedule === schedule.id}
                               onChange={event => updateJourneyStatus(schedule, event.target.value)}
                               style={{ minWidth: 145, padding: '0.5rem' }}
                             >
@@ -366,7 +340,6 @@ export default function AdminJourneysPage() {
                   </table>
                 </div>
               )}
-              {previewMode && <small style={{ display: 'block', marginTop: '0.75rem', color: 'var(--rh-text-2)' }}>Ubah status dinonaktifkan dalam mode preview.</small>}
             </div>
           </section>
         </div>

@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import { createClient } from '@/lib/supabase/client'
 import { formatDate, formatDuration, formatIDR, formatTime } from '@/lib/utils/formatters'
-import { getRichTrainSchedules } from '@/lib/data/schedulesEngine'
 import { getStationByCode } from '@/lib/data/stationsCatalog'
 import { RailHubTrainLogo } from '@/components/ui/VectorLogos'
 import { TrainTrackLoader, ScheduleCardSkeleton } from '@/components/ui/RailLoader'
@@ -98,7 +97,7 @@ export default function TrainSearchResults({ origin, destination, date, passenge
     return tabs
   }, [date])
 
-  // Fetch / generate rich schedules
+  // Fetch bookable schedules from the database.
   useEffect(() => {
     let active = true
     async function loadData() {
@@ -116,10 +115,9 @@ export default function TrainSearchResults({ origin, destination, date, passenge
         })
 
         if (!active) return
+        if (dbError) throw dbError
 
-        let results = []
-        if (dbData && dbData.length > 0) {
-          results = dbData.map(row => ({
+        const results = (dbData || []).map(row => ({
             ...row,
             subclass: 'CA',
             class_label: `${row.carriage_class} (CA)`,
@@ -129,35 +127,12 @@ export default function TrainSearchResults({ origin, destination, date, passenge
             is_next_day: new Date(row.arrival_time).getUTCDate() !== new Date(row.departure_time).getUTCDate(),
             badges: row.price < 350000 ? ['termurah'] : ['rekomendasi'],
           }))
-        }
-
-        // 2. Enrich with rich realistic schedules (guarantees abundant authentic schedules matching screenshots!)
-        const richGenerated = getRichTrainSchedules({
-          originCode: origin,
-          destinationCode: destination,
-          date,
-          passengers,
-        })
-
-        if (results.length === 0) {
-          results = richGenerated
-        } else {
-          // Merge to ensure at least 8-12 rich schedules
-          const existingNames = new Set(results.map(r => r.train_name))
-          const additional = richGenerated.filter(r => !existingNames.has(r.train_name))
-          results = [...results, ...additional]
-        }
 
         setRows(results)
       } catch (err) {
-        console.warn('Fallback to rich engine:', err)
-        const fallback = getRichTrainSchedules({
-          originCode: origin,
-          destinationCode: destination,
-          date,
-          passengers,
-        })
-        setRows(fallback)
+        if (!active) return
+        setRows([])
+        setError(`Jadwal tidak dapat dimuat: ${err.message || 'Terjadi kesalahan.'}`)
       } finally {
         if (active) {
           // Subtle polish timeout for smooth animation
@@ -494,7 +469,7 @@ export default function TrainSearchResults({ origin, destination, date, passenge
           <Train size={36} style={{ color: 'var(--rh-primary)', margin: '0 auto 1rem', opacity: 0.7 }} />
           <h2 className="rh-h3" style={{ margin: 0 }}>Tidak ada jadwal ditemukan</h2>
           <p style={{ color: 'var(--rh-text-2)', margin: '0.5rem auto 1.5rem', maxWidth: 440, fontSize: '0.9rem' }}>
-            Tidak ada kereta yang sesuai dengan filter kelas <strong>{classFilter}</strong> untuk tanggal ini. Coba pilih kelas &quot;Semua&quot; atau tanggal keberangkatan lain.
+            {error || <>Tidak ada kereta yang sesuai dengan filter kelas <strong>{classFilter}</strong> untuk tanggal ini. Coba pilih kelas &quot;Semua&quot; atau tanggal keberangkatan lain.</>}
           </p>
           <button
             type="button"

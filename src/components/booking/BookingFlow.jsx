@@ -9,7 +9,6 @@ import Navbar from '@/components/layout/Navbar'
 import { useAuth } from '@/contexts/AuthContext'
 import { createClient } from '@/lib/supabase/client'
 import { formatDate, formatDuration, formatIDR, formatTime } from '@/lib/utils/formatters'
-import { getStationByCode } from '@/lib/data/stationsCatalog'
 
 function blankPassenger() {
   return { fullName: '', identity: '', phone: '' }
@@ -75,74 +74,21 @@ export default function BookingFlow({
 
         if (!active) return
 
-        if (!error && data?.schedule) {
-          setJourney(data)
-          const classes = (data.fares || []).map(fare => fare.carriage_class)
-          setSelectedClass(current => classes.includes(current) ? current : (classes[0] || ''))
-          return
-        }
+        if (error) throw error
+        if (!data?.schedule) throw new Error('Jadwal tidak ditemukan.')
+        setJourney(data)
+        const classes = (data.fares || []).map(fare => fare.carriage_class)
+        setSelectedClass(current => classes.includes(current) ? current : (classes[0] || ''))
       } catch (err) {
-        console.warn('RPC load error, using simulation fallback:', err)
+        if (!active) return
+        setJourney(null)
+        setLoadError(`Jadwal tidak dapat dimuat: ${err.message || 'Terjadi kesalahan.'}`)
       }
-
-      if (!active) return
-
-      // Simulation fallback for schedules generated across 50 stations network
-      const origStation = getStationByCode(origin) || { code: origin || 'PSE', name: origin || 'Pasar Senen' }
-      const destStation = getStationByCode(destination) || { code: destination || 'SGU', name: destination || 'Surabaya Gubeng' }
-      const cls = requestedClass || 'Ekonomi'
-
-      const simulatedSeats = []
-      const c1Id = 'carriage-1-' + scheduleId.slice(0, 8)
-      const c2Id = 'carriage-2-' + scheduleId.slice(0, 8)
-
-      for (let row = 1; row <= 10; row++) {
-        ;['A', 'B', 'C', 'D'].forEach(col => {
-          simulatedSeats.push({
-            id: `seat-1-${row}${col}-${scheduleId.slice(0, 8)}`,
-            carriage_id: c1Id,
-            carriage_number: 1,
-            seat_number: `${row}${col}`,
-            carriage_class: cls,
-            is_available: true,
-          })
-          simulatedSeats.push({
-            id: `seat-2-${row}${col}-${scheduleId.slice(0, 8)}`,
-            carriage_id: c2Id,
-            carriage_number: 2,
-            seat_number: `${row}${col}`,
-            carriage_class: cls,
-            is_available: true,
-          })
-        })
-      }
-
-      const simJourney = {
-        schedule: {
-          id: scheduleId,
-          train_name: trainName || 'Jayakarta',
-          train_number: 'KA 218',
-          origin_name: origStation.name,
-          origin_code: origStation.code,
-          destination_name: destStation.name,
-          destination_code: destStation.code,
-          departure_time: departureDate ? `${departureDate}T17:10:00+07:00` : new Date().toISOString(),
-          arrival_time: departureDate ? `${departureDate}T06:01:00+07:00` : new Date().toISOString(),
-        },
-        fares: [
-          { carriage_class: cls, price: price || 430000 },
-        ],
-        seats: simulatedSeats,
-      }
-
-      setJourney(simJourney)
-      setSelectedClass(cls)
-      setSelectedCarriageId(c1Id)
     }
 
     loadJourney()
     return () => { active = false }
-  }, [scheduleId, requestedClass, origin, destination, departureDate, trainName, price])
+  }, [scheduleId])
 
   const fare = journey?.fares?.find(item => item.carriage_class === selectedClass)
   const seats = useMemo(
@@ -262,51 +208,8 @@ export default function BookingFlow({
     })
 
     if (error) {
-      // Fallback: If DB RPC fails (e.g. for rich simulated schedule), create simulated booking
-      const simBookingId = crypto.randomUUID()
-      const simBooking = {
-        id: simBookingId,
-        booking_code: 'RH-' + Math.random().toString(36).substring(2, 10).toUpperCase(),
-        schedule_id: scheduleId,
-        total_amount: total,
-        status: 'pending',
-        expires_at: new Date(Date.now() + 15 * 60 * 1000).toISOString(),
-        is_simulated: true,
-        schedules: {
-          departure_time: journey?.schedule?.departure_time,
-          arrival_time: journey?.schedule?.arrival_time,
-          route_id: 'sim-route',
-          routes: { name: `${journey?.schedule?.origin_name} - ${journey?.schedule?.destination_name}` },
-          trains: { name: journey?.schedule?.train_name, train_number: journey?.schedule?.train_number },
-        },
-        tickets: passengers.map((p, idx) => ({
-          ticket_number: 'TKT-' + Math.random().toString(36).substring(2, 9).toUpperCase(),
-          passenger_id: 'p-' + idx,
-          seat_id: selectedSeats[idx] || 'seat-1',
-          passengers: { full_name: p.fullName },
-          seats: {
-            seat_number: (selectedSeats[idx] || '1A').replace(/^seat-\d+-/, '').replace(/-[a-f0-9]+$/, '') || `${idx + 1}A`,
-            carriages: { carriage_class: selectedClass },
-          },
-        })),
-        payment: {
-          id: 'pay-' + simBookingId.slice(0, 8),
-          status: 'pending',
-          method: 'qr_payment',
-        },
-      }
-
-      try {
-        const simStore = JSON.parse(localStorage.getItem('railhub_simulated_bookings') || '{}')
-        simStore[simBookingId] = simBooking
-        localStorage.setItem('railhub_simulated_bookings', JSON.stringify(simStore))
-      } catch (e) {
-        console.warn('localStorage error', e)
-      }
-
       setSubmitting(false)
-      toast.success('Booking simulasi dibuat. Selesaikan pembayaran simulasi dalam 15 menit.')
-      router.push(`/booking/payment/${simBookingId}`)
+      toast.error(`Booking gagal dibuat: ${error.message}`)
       return
     }
 

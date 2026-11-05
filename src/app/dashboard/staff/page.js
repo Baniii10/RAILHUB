@@ -110,14 +110,14 @@ function StaffDashboardContent() {
     if (authLoading) return
     if (!user) {
       router.replace('/auth/login?next=%2Fdashboard%2Fstaff')
-    } else if (profile?.role && profile.role !== 'conductor' && profile.role !== 'admin') {
-      router.replace(profile.role === 'passenger' ? '/dashboard/passenger' : '/')
+    } else if (profile?.role && profile.role !== 'conductor') {
+      router.replace(profile.role === 'admin' ? '/dashboard/admin' : '/dashboard/passenger')
     }
   }, [authLoading, user, profile, router])
 
   // Load operational data
   const loadStaffData = useCallback(async () => {
-    if (!user || (profile?.role !== 'conductor' && profile?.role !== 'admin')) return
+    if (!user || profile?.role !== 'conductor') return
     if (!hasLoaded) setLoading(true)
     setError('')
     const supabase = createClient()
@@ -219,7 +219,7 @@ function StaffDashboardContent() {
 
   // Periodic 30s auto reload
   useEffect(() => {
-    if (!user || (profile?.role !== 'conductor' && profile?.role !== 'admin')) return
+    if (!user || profile?.role !== 'conductor') return
     const timer = window.setInterval(() => setReloadKey(key => key + 1), 30000)
     return () => window.clearInterval(timer)
   }, [user, profile?.role])
@@ -292,10 +292,10 @@ function StaffDashboardContent() {
   // Update Food Order status
   async function updateOrderStatus(orderId, newStatus) {
     const supabase = createClient()
-    const { error: err } = await supabase
-      .from('food_orders')
-      .update({ status: newStatus, updated_at: new Date().toISOString() })
-      .eq('id', orderId)
+    const { error: err } = await supabase.rpc('staff_update_food_order', {
+      p_order_id: orderId,
+      p_status: newStatus,
+    })
     if (err) {
       toast.error(`Gagal mengubah status pesanan: ${err.message}`)
       return
@@ -308,14 +308,11 @@ function StaffDashboardContent() {
   async function updateReportStatus(reportId, newStatus) {
     const supabase = createClient()
     const note = reportNoteInputs[reportId]?.trim() || null
-    const { error: err } = await supabase
-      .from('passenger_reports')
-      .update({
-        status: newStatus,
-        response_note: note,
-        updated_at: new Date().toISOString(),
-      })
-      .eq('id', reportId)
+    const { error: err } = await supabase.rpc('staff_update_passenger_report', {
+      p_report_id: reportId,
+      p_status: newStatus,
+      p_response_note: note || '',
+    })
     if (err) {
       toast.error(`Gagal memperbarui status laporan: ${err.message}`)
       return

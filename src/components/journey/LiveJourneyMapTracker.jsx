@@ -11,8 +11,9 @@ function parseRoute(name = '') {
 
 function buildStops(booking) {
   const schedule = booking?.schedules
+  if (!schedule) return []
   const routeStops = schedule?.routes?.route_stops || []
-  const departure = new Date(schedule?.departure_time || '2026-01-01T00:00:00+07:00')
+  const departure = new Date(schedule.departure_time)
   if (routeStops.length) return [...routeStops].sort((a, b) => a.stop_order - b.stop_order).map((stop, index, all) => ({
     id: stop.id || `${stop.stop_order}-${stop.stations?.code}`,
     name: stop.stations?.name || 'Stasiun',
@@ -29,7 +30,18 @@ function buildStops(booking) {
 }
 
 export default function LiveJourneyMapTracker({ booking, ticket, countdown, journeyProgress = 0, onSelectTab }) {
-  const progress = Math.min(100, Math.max(0, booking ? journeyProgress : 42))
+  if (!booking) {
+    return <section className="rh-card journey-tracker" aria-labelledby="journey-empty-title">
+      <div className="journey-tracker-body" style={{ textAlign: 'center', padding: '2.5rem 1.5rem' }}>
+        <Train size={38} style={{ margin: '0 auto 0.75rem', color: 'var(--rh-primary)' }} />
+        <h2 id="journey-empty-title" className="rh-h3">Belum ada perjalanan aktif</h2>
+        <p style={{ color: 'var(--rh-text-2)' }}>Perjalanan akan tampil setelah tiket dibayar dan jadwalnya masih aktif.</p>
+        <Link href="/trains" className="rh-btn rh-btn-primary">Cari jadwal kereta</Link>
+      </div>
+    </section>
+  }
+
+  const progress = Math.min(100, Math.max(0, journeyProgress))
   const stops = buildStops(booking)
   const nextStop = stops.find(stop => stop.progress > progress) || stops.at(-1)
   const countdownLabel = countdown?.isDeparted
@@ -45,8 +57,8 @@ export default function LiveJourneyMapTracker({ booking, ticket, countdown, jour
       </video>
       <div className="journey-tracker-media-copy">
         <span><Radio size={14} /> Live perjalanan</span>
-        <h2 id="journey-tracker-title">{booking?.schedules?.trains?.name || 'RAILHUB Express'}</h2>
-        <p>{booking?.schedules?.routes?.name || 'Gambir — Bandung'}</p>
+        <h2 id="journey-tracker-title">{booking.schedules?.trains?.name || 'Kereta'}</h2>
+        <p>{booking.schedules?.routes?.name || 'Rute belum tersedia'}</p>
       </div>
     </div>
 

@@ -79,15 +79,9 @@ Di menu **Project Settings ➔ Environment Variables**, pastikan variabel beriku
 # --- SUPABASE CONFIGURATION (Wajib untuk database, jadwal & auth) ---
 NEXT_PUBLIC_SUPABASE_URL=https://[YOUR-PROJECT-ID].supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=[YOUR-SUPABASE-ANON-KEY]
-SUPABASE_SERVICE_ROLE_KEY=[YOUR-SUPABASE-SERVICE-ROLE-KEY]
 
 # --- APP URL CONFIGURATION ---
 NEXT_PUBLIC_APP_URL=https://railhub-indonesia.vercel.app
-
-# --- MIDTRANS PAYMENT GATEWAY (Jika payment aktif) ---
-NEXT_PUBLIC_MIDTRANS_CLIENT_KEY=[YOUR-MIDTRANS-CLIENT-KEY]
-MIDTRANS_SERVER_KEY=[YOUR-MIDTRANS-SERVER-KEY]
-MIDTRANS_IS_PRODUCTION=false
 ```
 
 ---

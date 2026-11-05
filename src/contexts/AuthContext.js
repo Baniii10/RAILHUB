@@ -16,7 +16,7 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true)
   const supabase = useMemo(() => createClient(), [])
 
-  const fetchProfile = useCallback(async (userId, email) => {
+  const fetchProfile = useCallback(async (userId) => {
     try {
       const { data, error } = await supabase
         .from('profiles')
@@ -27,7 +27,7 @@ export function AuthProvider({ children }) {
       if (error && error.code !== 'PGRST116') {
         console.warn('Unable to load user profile:', error.message)
       }
-      setProfile(data ? normalizeProfile(data, email) : null)
+      setProfile(data ? normalizeProfile(data) : null)
     } catch {
       setProfile(null)
     } finally {
@@ -51,7 +51,7 @@ export function AuthProvider({ children }) {
       }
       setUser(currentUser)
       if (currentUser) {
-        fetchProfile(currentUser.id, currentUser.email)
+        fetchProfile(currentUser.id)
       } else {
         setLoading(false)
       }
@@ -65,7 +65,7 @@ export function AuthProvider({ children }) {
         const currentUser = session?.user ?? null
         setUser(currentUser)
         if (currentUser) {
-          await fetchProfile(currentUser.id, currentUser.email)
+          await fetchProfile(currentUser.id)
         } else {
           setProfile(null)
           setLoading(false)

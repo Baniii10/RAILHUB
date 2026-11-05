@@ -18,11 +18,12 @@ RAILHUB is a JavaScript Next.js railway travel simulation backed by Supabase. It
 12. Run `supabase\migrations\202611010002_manage_paid_bookings.sql` to enable ticket rescheduling and cancellation rules.
 13. Run `supabase\migrations\202611010003_food_order_checkout.sql` to record the selected simulated food-order payment method.
 14. Run `supabase\migrations\202611010004_ticket_payment_method.sql` to let passengers select and record a ticket payment method.
-15. Run `supabase\migrations\202611010005_midtrans_sandbox_payments.sql` only if you explicitly want the optional Midtrans Sandbox API and webhook support.
-16. Run `supabase\migrations\202611010006_enable_simulated_payments.sql` to enable demo ticket and food payments after the Midtrans migration has been applied.
-17. Run `supabase\migrations\202611010007_expand_station_catalog.sql` to enable up to 50 active, verified intercity stations from the supplied data package and add simulated connecting schedules using its five train records.
-18. Run `supabase\migrations\202611020001_staff_passenger_journey_flow.sql` to enforce valid journey-status transitions for staff/admin updates; passenger ticket details then show the shared status history.
-19. Start the app with `npm run dev`.
+15. Run `supabase\migrations\202611010006_enable_simulated_payments.sql` to enable demo ticket and food payments.
+16. Run `supabase\migrations\202611010007_expand_station_catalog.sql` to enable up to 50 active, verified intercity stations from the supplied data package and add simulated connecting schedules using its five train records.
+17. Run `supabase\migrations\202611020001_staff_passenger_journey_flow.sql` to enforce valid journey-status transitions for staff/admin updates; passenger ticket details then show the shared status history.
+18. Run `supabase\migrations\20261104192451_role_station_access.sql` to configure gate/conductor access and station-scoped ticket validation.
+19. Run `supabase\migrations\20261105061114_remove_midtrans_and_harden_roles.sql` to remove obsolete gateway objects from databases that previously enabled them.
+20. Start the app with `npm run dev`.
 
 The Supabase URL and anonymous key are public client configuration; never put a service-role key in the browser or in `.env.local` variables prefixed with `NEXT_PUBLIC_`.
 
@@ -40,7 +41,6 @@ The Supabase URL and anonymous key are public client configuration; never put a 
 - Passenger food ordering and journey reports connected to the assigned staff service desk.
 - Food orders use a menu-selection step followed by a simulated payment confirmation; no real payment gateway is contacted.
 - Ticket checkout lets passengers select QRIS, e-wallet, or bank transfer as a demo method. The app marks the simulated payment as successful and issues tickets; no real money is processed.
-- Optional Midtrans Sandbox API and webhook support remains available in the server routes, but is not used by the demo checkout. It requires server-only credentials and a publicly reachable HTTPS notification URL.
 
 ## Create an admin account
 
@@ -54,9 +54,7 @@ WHERE lower(email) = lower('your-account@example.com');
 
 Confirm that the query updated one row. Then sign out and back in to RAILHUB and open `/dashboard/admin`. Never expose a service-role key or grant admin role through the public registration form.
 
-To view the dashboard layout without an account, open `/dashboard/admin?preview=1`. The upcoming journeys, staff management, food orders, and passenger reports pages can be previewed at `/dashboard/admin/journeys?preview=1`, `/dashboard/admin/staff?preview=1`, `/dashboard/orders?preview=1`, and `/dashboard/reports?preview=1`. These use sample data only and disable admin actions; they do not grant access to live admin data.
-
-Apply the migrations above in order before using the application. The Midtrans migration and credentials are only needed if you explicitly enable the optional gateway; the default demo checkout does not process real payments. Seed data and sample accounts are development-only.
+Apply the migrations above in order before using the application. The checkout is simulation-only and does not process real money. Seed data and sample accounts are development-only.
 
 ## Validation
 

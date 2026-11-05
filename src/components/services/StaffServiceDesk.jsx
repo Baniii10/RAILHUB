@@ -46,13 +46,6 @@ export default function StaffServiceDesk({ scheduleIds, isAdmin = false, showOrd
     const supabase = createClient()
 
     async function loadOperations() {
-      if (isAdmin && new URLSearchParams(window.location.search).get('preview') === '1') {
-        setOrders([])
-        setReports([])
-        setLoading(false)
-        return
-      }
-
       if (!isAdmin && scheduleIds.length === 0) {
         setOrders([])
         setReports([])

@@ -4,6 +4,7 @@ import { Montserrat, Roboto_Mono } from 'next/font/google'
 import { AuthProvider } from '@/contexts/AuthContext'
 import { LangProvider } from '@/contexts/LangContext'
 import RouteTransition from '@/components/layout/RouteTransition'
+import Footer from '@/components/layout/Footer'
 import './globals.css'
 
 const montserrat = Montserrat({ subsets: ['latin'], variable: '--font-montserrat', display: 'swap' })
@@ -41,6 +42,7 @@ export default function RootLayout({ children }) {
           <AuthProvider>
             <Suspense fallback={null}><RouteTransition /></Suspense>
             <div id="main-content" tabIndex={-1}>{children}</div>
+            <Footer />
             <Toaster
               position="top-right"
               toastOptions={{

@@ -32,7 +32,6 @@ function assignableScheduleId(schedules, currentId) {
 export default function AdminStaffPage() {
   const router = useRouter()
   const { user, profile, loading: authLoading } = useAuth()
-  const [previewMode, setPreviewMode] = useState(false)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [staff, setStaff] = useState([])
@@ -52,11 +51,6 @@ export default function AdminStaffPage() {
   const [scheduleDate, setScheduleDate] = useState('')
 
   useEffect(() => {
-    const preview = new URLSearchParams(window.location.search).get('preview') === '1'
-    if (preview) {
-      const timer = window.setTimeout(() => setPreviewMode(true), 0)
-      return () => window.clearTimeout(timer)
-    }
     if (!authLoading && !user) {
       router.replace('/auth/login?next=%2Fdashboard%2Fadmin%2Fstaff')
     } else if (!authLoading && profile?.role && profile.role !== 'admin') {
@@ -65,28 +59,6 @@ export default function AdminStaffPage() {
   }, [authLoading, profile?.role, router, user])
 
   const loadStaffData = useCallback(async () => {
-    if (previewMode) {
-      const sampleSchedule = {
-        id: 'preview-schedule-1',
-        status: 'scheduled',
-        departure_time: '2026-11-05T00:30:00.000Z',
-        trains: { name: 'Argo Parahyangan', train_number: 'KA 34' },
-        routes: { name: 'Gambir – Bandung' },
-      }
-      const sampleStaff = { id: 'preview-staff-1', full_name: 'Contoh Petugas', email: 'petugas@example.test' }
-      setStaff([sampleStaff])
-      setSchedules([sampleSchedule])
-      setAssignments([{
-        id: 'preview-assignment-1',
-        schedule_id: sampleSchedule.id,
-        profiles: sampleStaff,
-        schedules: sampleSchedule,
-      }])
-      setSelectedStaff(sampleStaff.id)
-      setSelectedSchedule(sampleSchedule.id)
-      setLoading(false)
-      return
-    }
     if (!user || profile?.role !== 'admin') return
 
     setLoading(true)
@@ -138,7 +110,7 @@ export default function AdminStaffPage() {
     setSelectedStaff(current => conductors.some(person => person.id === current) ? current : conductors[0]?.id || '')
     setSelectedSchedule(current => assignableScheduleId(scheduleRows, current))
     setLoading(false)
-  }, [previewMode, user, profile?.role])
+  }, [user, profile?.role])
 
   useEffect(() => {
     const timer = window.setTimeout(() => loadStaffData(), 0)
@@ -168,7 +140,10 @@ export default function AdminStaffPage() {
   async function demoteFromStaff(userId) {
     if (!confirm('Hapus status petugas akun ini dan kembalikan ke penumpang biasa?')) return
     const supabase = createClient()
-    const { error: err } = await supabase.from('profiles').update({ role: 'passenger' }).eq('id', userId)
+    const { error: err } = await supabase.rpc('admin_set_user_role', {
+      p_user_id: userId,
+      p_role: 'passenger',
+    })
     if (err) {
       toast.error(`Gagal menghapus status petugas: ${err.message}`)
       return
@@ -179,7 +154,7 @@ export default function AdminStaffPage() {
 
   async function assignStaff(event) {
     event.preventDefault()
-    if (previewMode || !selectedStaff || !selectedSchedule || submitting) return
+    if (!selectedStaff || !selectedSchedule || submitting) return
     setSubmitting(true)
     const supabase = createClient()
     const { error: assignmentError } = await supabase.rpc('admin_assign_staff', {
@@ -196,7 +171,6 @@ export default function AdminStaffPage() {
   }
 
   async function removeAssignment(assignmentId) {
-    if (previewMode) return
     if (!window.confirm('Hapus penugasan petugas ini?')) return
     const supabase = createClient()
     const { error: removeError } = await supabase.rpc('admin_remove_staff_assignment', {
@@ -234,11 +208,6 @@ export default function AdminStaffPage() {
       <Navbar />
       <main style={{ minHeight: '100vh', padding: '2rem 0 5rem', background: 'var(--rh-surface)' }}>
         <div className="rh-container">
-          {previewMode && (
-            <div role="status" className="rh-card" style={{ padding: '1rem 1.25rem', marginBottom: '1rem', borderColor: 'var(--rh-primary)', color: 'var(--rh-text-2)' }}>
-              <strong>Mode preview</strong> — data contoh saja. Perubahan dan tindakan admin dinonaktifkan.
-            </div>
-          )}
 
           <div style={{ marginBottom: '1.25rem' }}>
             <a href="/dashboard/admin" className="rh-btn rh-btn-ghost rh-btn-sm"><ArrowLeft size={15} />Kembali ke ringkasan admin</a>
@@ -250,7 +219,7 @@ export default function AdminStaffPage() {
               <h1 className="rh-h2" style={{ marginTop: '0.6rem' }}><Users size={24} style={{ verticalAlign: 'middle', marginRight: 8 }} />Pengelolaan petugas</h1>
               <p style={{ color: 'var(--rh-text-2)', marginTop: '0.35rem' }}>Atur penugasan petugas untuk perjalanan mendatang dan pantau penugasan yang sudah dibuat.</p>
             </div>
-            <button type="button" className="rh-btn rh-btn-ghost" onClick={() => setReloadKey(key => key + 1)} disabled={loading || previewMode}>
+            <button type="button" className="rh-btn rh-btn-ghost" onClick={() => setReloadKey(key => key + 1)} disabled={loading}>
               <RefreshCw size={16} /> Muat ulang
             </button>
           </header>
@@ -432,7 +401,7 @@ export default function AdminStaffPage() {
                     )}
                   </div>
                   <div>
-                    <button className="rh-btn rh-btn-primary" type="submit" disabled={submitting || previewMode || loading || !selectedSchedule}>
+                    <button className="rh-btn rh-btn-primary" type="submit" disabled={submitting || loading || !selectedSchedule}>
                       {submitting && <RefreshCw size={15} className="rh-spin" />}
                       {submitting ? 'Menyimpan…' : 'Tugaskan petugas'}
                     </button>
@@ -461,7 +430,7 @@ export default function AdminStaffPage() {
                       <strong style={{ display: 'block' }}>{assignment.schedules?.trains?.name || 'Kereta'} · {assignment.schedules?.routes?.name || 'Rute tidak tersedia'}</strong>
                       <small style={{ color: 'var(--rh-text-2)' }}>{assignment.schedules?.departure_time ? `${formatDate(assignment.schedules.departure_time)} · ${formatTime(assignment.schedules.departure_time)}` : ''}</small>
                     </div>
-                    <button className="rh-btn rh-btn-ghost rh-btn-sm" type="button" onClick={() => removeAssignment(assignment.id)} disabled={previewMode}>Hapus penugasan</button>
+                    <button className="rh-btn rh-btn-ghost rh-btn-sm" type="button" onClick={() => removeAssignment(assignment.id)}>Hapus penugasan</button>
                   </article>
                 ))}
               </div>

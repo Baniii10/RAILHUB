@@ -1,5 +1,8 @@
+'use client'
+
 import Link from 'next/link'
 import { Train } from 'lucide-react'
+import { useAuth } from '@/contexts/AuthContext'
 
 const FOOTER_LINKS = [
   { href: '/trains', label: 'Cari Kereta' },
@@ -10,6 +13,10 @@ const FOOTER_LINKS = [
 ]
 
 export default function Footer() {
+  const { user, loading } = useAuth()
+
+  if (loading || user) return null
+
   return (
     <footer
       style={{

@@ -73,6 +73,7 @@ function PassengerDashboardContent() {
 
   // Scheduled departure countdown
   const [countdown, setCountdown] = useState({ hours: 0, minutes: 0, seconds: 0, isDeparted: false })
+  const [currentTime, setCurrentTime] = useState(0)
 
   // Progress estimate derived from schedule times
   const [journeyProgress, setJourneyProgress] = useState(0)
@@ -141,6 +142,8 @@ function PassengerDashboardContent() {
         setBookings([])
         setPayments({})
         setTicketCounts({})
+        setTicketDetails([])
+        setQrCodes({})
         setLoading(false)
         return
       }
@@ -162,32 +165,9 @@ function PassengerDashboardContent() {
         console.warn('Ticket query warning:', ticketResult.error)
       }
 
-      let allBookings = bookingRows || []
-      let loadedTickets = ticketResult.data || []
-      let loadedPayments = Object.fromEntries((paymentResult.data || []).map(p => [p.booking_id, p]))
-
-      // Merge simulated bookings from localStorage so demo tickets always show up
-      try {
-        const simStore = JSON.parse(localStorage.getItem('railhub_simulated_bookings') || '{}')
-        const simList = Object.values(simStore)
-        if (simList.length > 0) {
-          const existingIds = new Set(allBookings.map(b => b.id))
-          const newSims = simList.filter(s => !existingIds.has(s.id))
-          allBookings = [...allBookings, ...newSims]
-          newSims.forEach(sim => {
-            if (sim.payment) loadedPayments[sim.id] = sim.payment
-            if (sim.tickets && Array.isArray(sim.tickets)) {
-              sim.tickets.forEach(st => {
-                if (!loadedTickets.some(lt => lt.ticket_number === st.ticket_number)) {
-                  loadedTickets.push({ ...st, booking_id: sim.id })
-                }
-              })
-            }
-          })
-        }
-      } catch (e) {
-        console.warn('Sim load error in dashboard:', e)
-      }
+      const allBookings = bookingRows || []
+      const loadedTickets = ticketResult.data || []
+      const loadedPayments = Object.fromEntries((paymentResult.data || []).map(p => [p.booking_id, p]))
 
       setBookings(allBookings)
       setPayments(loadedPayments)
@@ -220,10 +200,24 @@ function PassengerDashboardContent() {
     return () => { active = false }
   }, [user])
 
+  useEffect(() => {
+    const updateTime = () => setCurrentTime(Date.now())
+    updateTime()
+    const timer = window.setInterval(updateTime, 60_000)
+    return () => window.clearInterval(timer)
+  }, [])
+
   // Active paid booking for scheduled journey status and countdown
   const activePaidBooking = useMemo(() => {
-    return bookings.find(b => b.status === 'paid') || bookings[0] || null
-  }, [bookings])
+    if (!currentTime) return null
+    return bookings
+      .filter(booking => {
+        if (booking.status !== 'paid' || !booking.schedules?.departure_time) return false
+        const endTime = Date.parse(booking.schedules.arrival_time || booking.schedules.departure_time)
+        return Number.isFinite(endTime) && endTime >= currentTime
+      })
+      .sort((a, b) => Date.parse(a.schedules.departure_time) - Date.parse(b.schedules.departure_time))[0] || null
+  }, [bookings, currentTime])
   const activeTicket = useMemo(
     () => ticketDetails.find(ticket => ticket.booking_id === activePaidBooking?.id) || null,
     [activePaidBooking?.id, ticketDetails]
@@ -265,8 +259,12 @@ function PassengerDashboardContent() {
 
   // Share Journey handler
   function handleShareJourney() {
-    const trainName = activePaidBooking?.schedules?.trains?.name || 'KA Argo Bromo Anggrek'
-    const route = activePaidBooking?.schedules?.routes?.name || 'Gambir — Surabaya'
+    if (!activePaidBooking) {
+      toast.error('Belum ada perjalanan aktif untuk dibagikan.')
+      return
+    }
+    const trainName = activePaidBooking.schedules?.trains?.name || 'Kereta'
+    const route = activePaidBooking.schedules?.routes?.name || 'Rute belum tersedia'
     const shareText = `Perjalanan saya dengan ${trainName} (${route}) di RAILHUB. Lihat jadwal dan estimasi progres di: https://railhub.id/dashboard/passenger?tab=journey`
 
     if (navigator.clipboard) {
