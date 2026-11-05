@@ -17,6 +17,8 @@ import {
   CreditCard,
   FileCheck,
   HelpCircle,
+  History,
+  KeyRound,
   Layers,
   MapPin,
   PlusCircle,
@@ -27,6 +29,7 @@ import {
   Shield,
   ShieldCheck,
   Sparkles,
+  Star,
   Ticket,
   Train,
   UserCheck,
@@ -77,8 +80,8 @@ function PassengerDashboardContent() {
   // Profile real settings
   const [fullNameInput, setFullNameInput] = useState('')
   const [phoneInput, setPhoneInput] = useState('')
-  const [cityInput, setCityInput] = useState('Jakarta')
   const [savingProfile, setSavingProfile] = useState(false)
+  const [showEditProfile, setShowEditProfile] = useState(false)
 
   function selectTab(tab) {
     router.push(`/dashboard/passenger?tab=${TAB_ALIASES[tab] || tab}`, { scroll: false })
@@ -225,6 +228,9 @@ function PassengerDashboardContent() {
     () => ticketDetails.find(ticket => ticket.booking_id === activePaidBooking?.id) || null,
     [activePaidBooking?.id, ticketDetails]
   )
+  const profileName = profile?.full_name || user?.user_metadata?.full_name || 'Penumpang RAILHUB'
+  const profileInitials = profileName.split(/\s+/).slice(0, 2).map(part => part[0]).join('').toUpperCase()
+  const profileComplete = [profileName, profile?.phone_number, user?.email].filter(Boolean).length
 
   // Calculate live countdown to departure
   useEffect(() => {
@@ -651,135 +657,44 @@ function PassengerDashboardContent() {
 
 
           {activeTab === 'account' && (
-            <div style={{ display: 'grid', gap: '1.5rem', maxWidth: 800 }}>
-              <div>
-                <h2 className="rh-h3" style={{ margin: 0 }}>Pengaturan Akun</h2>
-                <p style={{ margin: '0.25rem 0 0', color: 'var(--rh-text-2)', fontSize: '0.9rem' }}>
-                  Perbarui nama dan nomor telepon yang digunakan untuk layanan perjalanan Anda.
-                </p>
-              </div>
-
-              <section className="rh-card">
-                <div className="rh-card-body" style={{ display: 'flex', alignItems: 'flex-start', gap: '0.9rem' }}>
-                  <span className="rh-icon-wrap"><ShieldCheck size={20} aria-hidden="true" /></span>
-                  <div>
-                    <h3 className="rh-h4" style={{ margin: 0 }}>Verifikasi Identitas</h3>
-                    <p style={{ margin: '0.35rem 0 0', color: 'var(--rh-text-2)', fontSize: '0.88rem' }}>
-                      Verifikasi dokumen belum tersedia. RAILHUB tidak meminta unggahan KTP sampai penyimpanan terenkripsi dan proses verifikasi resmi siap digunakan.
-                    </p>
+            <div className="passenger-profile-page">
+              <section className="passenger-profile-hero">
+                <div className="passenger-profile-sky" aria-hidden="true"><Train size={88} /></div>
+                <div className="passenger-profile-card">
+                  <div className="passenger-profile-identity">
+                    <span className="passenger-profile-avatar">{profileInitials}</span>
+                    <div><h2>{profileName}</h2><p><Star size={17} /> Penumpang RAILHUB</p><small>{user?.email}</small></div>
+                  </div>
+                  <div className="passenger-profile-actions">
+                    <button type="button" onClick={() => setShowEditProfile(value => !value)}><UserRound size={20} /> Lihat profil</button>
+                    <button type="button" onClick={() => selectTab('tickets')}><QrCode size={20} /> QR tiket</button>
                   </div>
                 </div>
               </section>
 
-              {/* Profile Real Settings */}
-              <section className="rh-card">
-                <div className="rh-card-header">
-                  <h3 className="rh-h4" style={{ margin: 0 }}>Pengaturan Profil Pengguna</h3>
-                </div>
-                <div className="rh-card-body">
-                  <form onSubmit={handleSaveProfile} style={{ display: 'grid', gap: '1rem' }}>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem' }}>
-                      <label className="rh-input-group">
-                        <span className="rh-label-text">Nama Lengkap</span>
-                        <input
-                          type="text"
-                          value={fullNameInput}
-                          onChange={e => setFullNameInput(e.target.value)}
-                          className="rh-input"
-                          required
-                        />
-                      </label>
-
-                      <label className="rh-input-group">
-                        <span className="rh-label-text">Nomor Telepon</span>
-                        <input
-                          type="tel"
-                          value={phoneInput}
-                          onChange={e => setPhoneInput(e.target.value)}
-                          className="rh-input"
-                          placeholder="0812xxxxxxxx"
-                        />
-                      </label>
-                    </div>
-
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem' }}>
-                      <label className="rh-input-group">
-                        <span className="rh-label-text">Email Terdaftar</span>
-                        <input
-                          type="email"
-                          value={user?.email || ''}
-                          className="rh-input"
-                          disabled
-                          style={{ background: 'var(--rh-surface-2)', cursor: 'not-allowed' }}
-                        />
-                      </label>
-
-                      <label className="rh-input-group">
-                        <span className="rh-label-text">Kota Domisili</span>
-                        <input
-                          type="text"
-                          value={cityInput}
-                          onChange={e => setCityInput(e.target.value)}
-                          className="rh-input"
-                        />
-                      </label>
-                    </div>
-
-                    <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '0.5rem' }}>
-                      <button type="submit" disabled={savingProfile} className="rh-btn rh-btn-primary">
-                        {savingProfile ? 'Menyimpan…' : 'Perbarui Pengaturan'}
-                      </button>
-                    </div>
-                  </form>
-                </div>
+              <section className="passenger-profile-complete">
+                <Sparkles size={24} />
+                <div><h3>Lengkapi profil perjalanan</h3><p>Data yang lengkap mempercepat pemesanan dan layanan bantuan selama perjalanan.</p></div>
+                <span>{profileComplete}/3 lengkap</span>
+                <button type="button" onClick={() => setShowEditProfile(true)}>LENGKAPI SEKARANG</button>
               </section>
 
-              {/* Security & Privacy Settings Card */}
-              <section className="rh-card">
-                <div className="rh-card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <Shield size={20} color="var(--rh-primary)" />
-                    <h3 className="rh-h4" style={{ margin: 0 }}>Keamanan Akun & Kebijakan Privasi</h3>
-                  </div>
-                  <span className="rh-badge rh-badge-success" style={{ fontSize: '0.78rem' }}>
-                    <ShieldCheck size={13} /> Sesi Terautentikasi
-                  </span>
-                </div>
-                <div className="rh-card-body" style={{ display: 'grid', gap: '1rem' }}>
-                  <p style={{ margin: 0, fontSize: '0.88rem', color: 'var(--rh-text-2)', lineHeight: 1.6 }}>
-                    Akses data akun mengikuti sesi login dan kebijakan akses berbasis kepemilikan. Jangan membagikan kode tiket atau detail identitas kepada pihak lain.
-                  </p>
+              {showEditProfile && <section id="edit-profile" className="rh-card passenger-profile-form">
+                <h3 className="rh-h4">Data profil</h3>
+                <form onSubmit={handleSaveProfile}>
+                  <label className="rh-input-group"><span className="rh-label-text">Nama lengkap</span><input type="text" value={fullNameInput} onChange={event => setFullNameInput(event.target.value)} className="rh-input" required /></label>
+                  <label className="rh-input-group"><span className="rh-label-text">Nomor telepon</span><input type="tel" value={phoneInput} onChange={event => setPhoneInput(event.target.value)} className="rh-input" placeholder="0812xxxxxxxx" /></label>
+                  <label className="rh-input-group"><span className="rh-label-text">Email terdaftar</span><input type="email" value={user?.email || ''} className="rh-input" disabled /></label>
+                  <button type="submit" disabled={savingProfile} className="rh-btn rh-btn-primary">{savingProfile ? 'Menyimpan…' : 'Simpan profil'}</button>
+                </form>
+              </section>}
 
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '0.75rem' }}>
-                    <div style={{ padding: '0.85rem', borderRadius: 10, background: 'var(--rh-surface)', border: '1px solid var(--rh-border)' }}>
-                      <div style={{ fontWeight: 700, fontSize: '0.85rem', color: 'var(--rh-navy)', marginBottom: '0.2rem' }}>
-                        <ShieldCheck size={15} aria-hidden="true" style={{ verticalAlign: -3, marginRight: 6 }} />Keamanan Sesi & Kata Sandi
-                      </div>
-                      <div style={{ fontSize: '0.78rem', color: 'var(--rh-text-2)' }}>
-                        Login dan pemulihan sesi ditangani melalui Supabase Auth.
-                      </div>
-                    </div>
-
-                    <div style={{ padding: '0.85rem', borderRadius: 10, background: 'var(--rh-surface)', border: '1px solid var(--rh-border)' }}>
-                      <div style={{ fontWeight: 700, fontSize: '0.85rem', color: 'var(--rh-navy)', marginBottom: '0.2rem' }}>
-                        <FileCheck size={15} aria-hidden="true" style={{ verticalAlign: -3, marginRight: 6 }} />Privasi Data
-                      </div>
-                      <div style={{ fontSize: '0.78rem', color: 'var(--rh-text-2)' }}>
-                        RAILHUB tidak menerima unggahan dokumen identitas dari halaman akun ini.
-                      </div>
-                    </div>
-                  </div>
-
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem', paddingTop: '0.5rem', borderTop: '1px solid var(--rh-border)' }}>
-                    <span style={{ fontSize: '0.8rem', color: 'var(--rh-text-3)' }}>
-                      Pelajari selengkapnya mengenai regulasi dan arsitektur keamanan:
-                    </span>
-                    <Link href="/about" className="rh-btn rh-btn-ghost rh-btn-sm" style={{ fontWeight: 700, color: 'var(--rh-primary)' }}>
-                      Baca Kebijakan Privasi Lengkap →
-                    </Link>
-                  </div>
-                </div>
-              </section>
+              <nav className="passenger-profile-menu" aria-label="Menu akun">
+                <button type="button" onClick={() => setShowEditProfile(true)}><span><KeyRound size={20} /> Ubah data akun</span><ChevronRight size={21} /></button>
+                <button type="button" onClick={() => selectTab('tickets')}><span><History size={20} /> Riwayat tiket</span><ChevronRight size={21} /></button>
+                <Link href="/about"><span><ShieldCheck size={20} /> Keamanan &amp; privasi</span><ChevronRight size={21} /></Link>
+                <button type="button" onClick={() => selectTab('tickets')}><span><Users size={20} /> Daftar penumpang</span><ChevronRight size={21} /></button>
+              </nav>
             </div>
           )}
         </div>

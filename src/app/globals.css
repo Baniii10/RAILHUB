@@ -4490,3 +4490,39 @@ input[type="checkbox"]:focus-visible {
   .staff-tabs-nav { scrollbar-width: none; }
   .staff-tabs-nav::-webkit-scrollbar { display: none; }
 }
+.passenger-profile-page { width: min(100%, 760px); margin: 0 auto; display: grid; gap: 1.25rem; }
+.passenger-profile-hero { position: relative; padding-top: 120px; }
+.passenger-profile-sky { position: absolute; inset: 0 0 70px; display: flex; align-items: flex-start; justify-content: flex-end; padding: 1rem 2rem; overflow: hidden; border-radius: 24px 24px 0 0; color: rgba(255,255,255,.28); background: linear-gradient(135deg, #183f86, #2563eb 58%, #f28c18); }
+.passenger-profile-card { position: relative; margin: 0 1.25rem; padding: 1.35rem; border: 1px solid var(--rh-border); border-radius: 22px; background: white; box-shadow: 0 14px 35px rgba(20, 52, 98, .12); }
+.passenger-profile-identity { display: flex; align-items: center; gap: 1rem; }
+.passenger-profile-avatar { width: 76px; height: 76px; display: grid; flex: 0 0 76px; place-items: center; border-radius: 50%; color: white; background: var(--rh-secondary); font-size: 1.6rem; font-weight: 850; }
+.passenger-profile-identity h2 { margin: 0; color: var(--rh-navy); font-size: clamp(1.15rem, 4vw, 1.55rem); text-transform: uppercase; }
+.passenger-profile-identity p { display: flex; align-items: center; gap: .4rem; margin: .3rem 0 .15rem; color: var(--rh-text-2); }
+.passenger-profile-identity p svg { color: var(--rh-secondary); }
+.passenger-profile-identity small { color: var(--rh-text-3); overflow-wrap: anywhere; }
+.passenger-profile-actions { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; margin-top: 1.15rem; }
+.passenger-profile-actions button { min-height: 52px; display: inline-flex; align-items: center; justify-content: center; gap: .55rem; border: 1px solid var(--rh-border); border-radius: 15px; background: white; color: var(--rh-text); font: inherit; cursor: pointer; }
+.passenger-profile-complete { display: grid; grid-template-columns: auto 1fr auto; align-items: start; gap: .75rem; padding: 1.35rem; border-radius: 20px; color: white; background: linear-gradient(135deg, #f4a62a, #ef6a54 48%, #7c3aed); box-shadow: 0 12px 28px rgba(104, 57, 170, .18); }
+.passenger-profile-complete h3 { margin: 0 0 .35rem; color: white; }
+.passenger-profile-complete p { margin: 0; color: rgba(255,255,255,.9); line-height: 1.55; }
+.passenger-profile-complete > span { padding: .25rem .55rem; border-radius: 999px; background: rgba(255,255,255,.18); font-size: .75rem; font-weight: 750; white-space: nowrap; }
+.passenger-profile-complete button { grid-column: 1 / -1; min-height: 50px; margin-top: .45rem; border: 0; border-radius: 14px; color: var(--rh-primary); background: white; font-weight: 850; cursor: pointer; }
+.passenger-profile-form { padding: 1.25rem; scroll-margin-top: 100px; }
+.passenger-profile-form h3 { margin: 0 0 1rem; }
+.passenger-profile-form form { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+.passenger-profile-form form > :last-child { align-self: end; min-height: 46px; }
+.passenger-profile-menu { display: grid; padding: 0 .25rem; }
+.passenger-profile-menu button, .passenger-profile-menu a { min-height: 66px; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0 .25rem; border: 0; border-bottom: 1px solid var(--rh-border); color: var(--rh-text); background: transparent; font: inherit; font-weight: 650; text-decoration: none; cursor: pointer; }
+.passenger-profile-menu span { display: inline-flex; align-items: center; gap: .85rem; }
+.passenger-profile-menu span svg { color: var(--rh-text-2); }
+@media (max-width: 640px) {
+  .passenger-profile-page { gap: 1rem; }
+  .passenger-profile-hero { margin: -2rem calc(50% - 50vw) 0; padding: 110px 0 0; }
+  .passenger-profile-sky { border-radius: 0; }
+  .passenger-profile-card { margin: 0 1rem; padding: 1.1rem; }
+  .passenger-profile-avatar { width: 64px; height: 64px; flex-basis: 64px; font-size: 1.35rem; }
+  .passenger-profile-identity h2 { font-size: 1.05rem; }
+  .passenger-profile-complete { grid-template-columns: auto 1fr; padding: 1.15rem; }
+  .passenger-profile-complete > span { grid-column: 2; }
+  .passenger-profile-form form { grid-template-columns: 1fr; }
+}
