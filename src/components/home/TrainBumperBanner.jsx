@@ -39,7 +39,8 @@ export default function TrainBumperBanner() {
         }}
       >
         {/* Hardware-accelerated CSS animations (Zero lag, pure GPU transform) */}
-        <style dangerouslySetInnerHTML={{ __html: `
+        <style dangerouslySetInnerHTML={{
+          __html: `
           @keyframes rhBumperTrackLoop {
             0% { transform: translate3d(0, 0, 0); }
             100% { transform: translate3d(-100px, 0, 0); }
@@ -347,18 +348,15 @@ export default function TrainBumperBanner() {
               {/* Glow backdrop behind text */}
               <ellipse cx="110" cy="30" rx="95" ry="25" fill="#1A428A" opacity="0.35" filter="blur(10px)" />
 
-              {/* RAILHUB Wordmark */}
-              <text
+              {/* RAILHUB Logo */}
+              <image
+                href="/images/Fix logo railhub.png"
                 x="0"
-                y="36"
-                fill="#FFFFFF"
-                fontSize="38"
-                fontWeight="900"
-                letterSpacing="-1"
-                fontFamily="system-ui, -apple-system, sans-serif"
-              >
-                RAIL<tspan fill="#FF8C00">HUB</tspan>
-              </text>
+                y="-4"
+                height="46"
+                preserveAspectRatio="xMinYMid meet"
+                style={{ filter: 'drop-shadow(0 2px 8px rgba(0, 0, 0, 0.25))' }}
+              />
 
               {/* Subtitle Badge */}
               <rect x="2" y="47" width="195" height="18" rx="9" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.2)" strokeWidth="0.8" />

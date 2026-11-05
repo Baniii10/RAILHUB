@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import {
   Train,
@@ -28,11 +29,11 @@ import { createClient } from '@/lib/supabase/client'
 import toast from 'react-hot-toast'
 
 const publicNavLinks = (t) => [
-  { href: '/',         label: t.nav.home },
-  { href: '/trains',   label: t.nav.book },
-  { href: '/about',    label: t.nav.about },
-  { href: '/faq',      label: t.nav.faq },
-  { href: '/contact',  label: t.nav.contact },
+  { href: '/', label: t.nav.home },
+  { href: '/trains', label: t.nav.book },
+  { href: '/about', label: t.nav.about },
+  { href: '/faq', label: t.nav.faq },
+  { href: '/contact', label: t.nav.contact },
 ]
 
 export default function Navbar() {
@@ -40,7 +41,7 @@ export default function Navbar() {
   const { user, profile, signOut } = useAuth()
   const pathname = usePathname()
   const searchParams = useSearchParams()
-  const router   = useRouter()
+  const router = useRouter()
   const dashboardRole = profile?.staff_type === 'gate' ? 'gate' : profile?.role
     || (pathname.startsWith('/dashboard/admin') ? 'admin' : pathname.startsWith('/dashboard/staff') ? 'conductor' : null)
   const roleLabels = lang === 'en'
@@ -52,10 +53,10 @@ export default function Navbar() {
     ? profileName.split(' ')[0]
     : roleLabel
 
-  const [scrolled,     setScrolled]     = useState(false)
-  const [mobileOpen,   setMobileOpen]   = useState(false)
+  const [scrolled, setScrolled] = useState(false)
+  const [mobileOpen, setMobileOpen] = useState(false)
   const [userMenuOpen, setUserMenuOpen] = useState(false)
-  const [notifOpen,    setNotifOpen]    = useState(false)
+  const [notifOpen, setNotifOpen] = useState(false)
   const [notifications, setNotifications] = useState([])
   const [unreadCount, setUnreadCount] = useState(0)
   const [activeJourney, setActiveJourney] = useState(null)
@@ -178,47 +179,47 @@ export default function Navbar() {
     ]
     : dashboardRole === 'gate'
       ? [
-          { href: '/dashboard/staff?tab=overview', label: 'Ringkasan gate' },
-          { href: '/dashboard/staff?tab=validation', label: 'Validasi tiket' },
-        ]
-    : dashboardRole === 'conductor'
-      ? [
+        { href: '/dashboard/staff?tab=overview', label: 'Ringkasan gate' },
+        { href: '/dashboard/staff?tab=validation', label: 'Validasi tiket' },
+      ]
+      : dashboardRole === 'conductor'
+        ? [
           { href: '/dashboard/staff?tab=overview', label: 'Perjalanan tugas' },
           { href: '/dashboard/staff?tab=validation', label: 'Validasi tiket' },
           { href: '/dashboard/staff?tab=services', label: 'Layanan penumpang' },
         ]
-      : null
+        : null
   const isStaffArea = Boolean(dashboardNavLinks)
   const navLinks = isStaffArea ? (dashboardNavLinks || []) : publicNavLinks(t)
   const homeHref = isStaffArea ? getDashboardHref() : '/'
 
   const mobileBottomItems = dashboardRole === 'admin'
     ? [
-        { href: '/dashboard/admin', label: lang === 'en' ? 'Summary' : 'Ringkasan', icon: LayoutDashboard },
-        { href: '/dashboard/admin/journeys', label: lang === 'en' ? 'Schedule' : 'Jadwal', icon: Train },
-        { href: '/dashboard/admin/staff', label: lang === 'en' ? 'Staff' : 'Petugas', icon: User },
-        { href: '/dashboard/orders', label: lang === 'en' ? 'Services' : 'Layanan', icon: Utensils },
-      ]
+      { href: '/dashboard/admin', label: lang === 'en' ? 'Summary' : 'Ringkasan', icon: LayoutDashboard },
+      { href: '/dashboard/admin/journeys', label: lang === 'en' ? 'Schedule' : 'Jadwal', icon: Train },
+      { href: '/dashboard/admin/staff', label: lang === 'en' ? 'Staff' : 'Petugas', icon: User },
+      { href: '/dashboard/orders', label: lang === 'en' ? 'Services' : 'Layanan', icon: Utensils },
+    ]
     : dashboardRole === 'gate'
       ? [
-          { href: '/dashboard/staff?tab=overview', label: lang === 'en' ? 'Summary' : 'Ringkasan', icon: LayoutDashboard },
-          { href: '/dashboard/staff?tab=validation', label: lang === 'en' ? 'Validate' : 'Validasi', icon: TicketCheck },
-        ]
-    : dashboardRole === 'conductor'
-      ? [
+        { href: '/dashboard/staff?tab=overview', label: lang === 'en' ? 'Summary' : 'Ringkasan', icon: LayoutDashboard },
+        { href: '/dashboard/staff?tab=validation', label: lang === 'en' ? 'Validate' : 'Validasi', icon: TicketCheck },
+      ]
+      : dashboardRole === 'conductor'
+        ? [
           { href: '/dashboard/staff?tab=overview', label: lang === 'en' ? 'Duties' : 'Tugas', icon: Train },
           { href: '/dashboard/staff?tab=validation', label: lang === 'en' ? 'Validate' : 'Validasi', icon: TicketCheck },
           { href: '/dashboard/staff?tab=passengers', label: lang === 'en' ? 'Passengers' : 'Penumpang', icon: User },
           { href: '/dashboard/staff?tab=services', label: lang === 'en' ? 'Services' : 'Layanan', icon: Utensils },
         ]
-      : user
-        ? [
+        : user
+          ? [
             { href: '/', label: t.nav.home, icon: Home },
             { href: '/trains', label: lang === 'en' ? 'Schedule' : 'Jadwal', icon: Train },
             { href: '/dashboard/passenger?tab=overview', label: lang === 'en' ? 'Journey' : 'Perjalanan', icon: Ticket },
             { href: '/dashboard/passenger?tab=account', label: lang === 'en' ? 'Account' : 'Akun', icon: User },
           ]
-        : [
+          : [
             { href: '/', label: t.nav.home, icon: Home },
             { href: '/trains', label: lang === 'en' ? 'Schedule' : 'Jadwal', icon: Train },
             { href: '/auth/login', label: lang === 'en' ? 'Account' : 'Akun', icon: User },
@@ -236,11 +237,21 @@ export default function Navbar() {
         <div className="rh-container">
           <div className="rh-navbar-inner">
             {/* Logo */}
-            <Link href={homeHref} className="rh-logo" style={{ gap: '0.625rem' }}>
-              <div className="rh-logo-mark">
-                <Train size={18} strokeWidth={2.5} />
-              </div>
-              <span>RAILHUB</span>
+            <Link href={homeHref} className="rh-logo" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }}>
+              <Image
+                src="/images/Fix logo railhub.png"
+                alt="RAILHUB"
+                width={140}
+                height={46}
+                priority
+                style={{
+                  height: '46px',
+                  width: 'auto',
+                  objectFit: 'contain',
+                  display: 'block',
+                  filter: 'drop-shadow(0 2px 6px rgba(0, 0, 0, 0.12))',
+                }}
+              />
             </Link>
 
             {/* Desktop Nav */}
@@ -459,9 +470,20 @@ export default function Navbar() {
             }}
             onClick={e => e.stopPropagation()}
           >
-            <Link href={homeHref} className="rh-logo" style={{ marginBottom: '1.5rem' }}>
-              <div className="rh-logo-mark"><Train size={16} strokeWidth={2.5} /></div>
-              <span>RAILHUB</span>
+            <Link href={homeHref} className="rh-logo" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', marginBottom: '1.5rem' }}>
+              <Image
+                src="/images/Fix logo railhub.png"
+                alt="RAILHUB"
+                width={130}
+                height={42}
+                style={{
+                  height: '42px',
+                  width: 'auto',
+                  objectFit: 'contain',
+                  display: 'block',
+                  filter: 'drop-shadow(0 2px 6px rgba(0, 0, 0, 0.12))',
+                }}
+              />
             </Link>
 
             {navLinks.map(link => (

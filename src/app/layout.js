@@ -5,6 +5,7 @@ import { AuthProvider } from '@/contexts/AuthContext'
 import { LangProvider } from '@/contexts/LangContext'
 import RouteTransition from '@/components/layout/RouteTransition'
 import Footer from '@/components/layout/Footer'
+import WhatsAppBubble from '@/components/layout/WhatsAppBubble'
 import './globals.css'
 
 const montserrat = Montserrat({ subsets: ['latin'], variable: '--font-montserrat', display: 'swap' })
@@ -26,10 +27,19 @@ export const metadata = {
   },
   description: 'Platform perjalanan kereta api terpadu untuk Pulau Jawa. Pesan tiket, lacak perjalanan, dan nikmati layanan digital berkelas dunia.',
   keywords: ['kereta api', 'tiket kereta', 'KAI', 'booking', 'railway', 'Java'],
+  icons: {
+    icon: [
+      { url: '/images/Fix logo railhub.png' },
+      { url: '/logo.png' },
+    ],
+    shortcut: '/images/Fix logo railhub.png',
+    apple: '/images/Fix logo railhub.png',
+  },
   openGraph: {
     title: 'RAILHUB — Railway Super App',
     description: 'Platform perjalanan kereta api terpadu untuk Pulau Jawa.',
     type: 'website',
+    images: ['/images/Fix logo railhub.png'],
   },
 }
 
@@ -43,6 +53,7 @@ export default function RootLayout({ children }) {
             <Suspense fallback={null}><RouteTransition /></Suspense>
             <div id="main-content" tabIndex={-1}>{children}</div>
             <Suspense fallback={null}><Footer /></Suspense>
+            <WhatsAppBubble />
             <Toaster
               position="top-right"
               toastOptions={{

@@ -1,5 +1,7 @@
 'use client'
 
+import Image from 'next/image'
+
 /**
  * Custom Vector Logos & SVG Iconography
  * Designed for RAILHUB design system:
@@ -10,48 +12,20 @@
 
 export function RailHubBrandLogo({ size = 32, className = '' }) {
   return (
-    <svg
-      width={size}
+    <Image
+      src="/images/Fix logo railhub.png"
+      alt="RAILHUB"
+      width={size * 2}
       height={size}
-      viewBox="0 0 48 48"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
       className={className}
-      aria-hidden="true"
-    >
-      <rect width="48" height="48" rx="12" fill="url(#rh-brand-bg)" />
-      {/* Dynamic aerodynamic train nose */}
-      <path
-        d="M12 32C12 23 15 14 26 14C34 14 36 19 36 24V32H12Z"
-        fill="white"
-      />
-      {/* Windshield visor */}
-      <path
-        d="M23 17C29 17 32 19 33 22H19C20 19 21.5 17 23 17Z"
-        fill="#1A428A"
-      />
-      {/* Front speed streak in RailHub orange */}
-      <path
-        d="M12 27L36 27L34 30L12 30V27Z"
-        fill="#FF8C00"
-      />
-      {/* Dual headlights */}
-      <circle cx="18" cy="30" r="1.5" fill="#FFE500" />
-      <circle cx="30" cy="30" r="1.5" fill="#FFE500" />
-      {/* Rail track below */}
-      <path
-        d="M8 36H40M13 36L11 39M24 36V39M35 36L37 39"
-        stroke="#E7ECF6"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-      <defs>
-        <linearGradient id="rh-brand-bg" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#1A428A" />
-          <stop offset="1" stopColor="#1A428A" />
-        </linearGradient>
-      </defs>
-    </svg>
+      style={{
+        height: `${size}px`,
+        width: 'auto',
+        objectFit: 'contain',
+        display: 'inline-block',
+        filter: 'drop-shadow(0 2px 5px rgba(0, 0, 0, 0.10))',
+      }}
+    />
   )
 }
 
@@ -61,48 +35,22 @@ export function RailHubBrandLogo({ size = 32, className = '' }) {
 export function RailHubTrainLogo({ height = 22, className = '' }) {
   return (
     <div
-      className={`inline-flex items-center gap-1.5 font-bold tracking-wider select-none ${className}`}
-      style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+      className={`inline-flex items-center select-none ${className}`}
       aria-label="RAILHUB Operator"
     >
-      <svg
+      <Image
+        src="/images/Fix logo railhub.png"
+        alt="RAILHUB"
+        width={height * 2}
         height={height}
-        viewBox="0 0 64 24"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        style={{ display: 'block', height: `${height}px`, width: 'auto' }}
-      >
-        {/* Speed wing left (Deep Royal Blue) */}
-        <path
-          d="M2 19L14 5H24L12 19H2Z"
-          fill="#1A428A"
-        />
-        {/* Modern forward chevron (Vibrant Orange) */}
-        <path
-          d="M18 19L30 5H38L26 19H18Z"
-          fill="#FF8C00"
-        />
-        {/* Aerodynamic wing right (Deep Blue) */}
-        <path
-          d="M32 19L44 5H52L40 19H32Z"
-          fill="#1A428A"
-        />
-        {/* Accent dot / spark */}
-        <circle cx="56" cy="8" r="3" fill="#FF8C00" />
-      </svg>
-      <span
         style={{
-          fontFamily: 'var(--font-sans, sans-serif)',
-          fontWeight: 900,
-          fontSize: '0.875rem',
-          letterSpacing: '-0.02em',
-          background: 'linear-gradient(90deg, #1A428A 0%, #4F4F4F 60%, #FF8C00 100%)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
+          height: `${height}px`,
+          width: 'auto',
+          objectFit: 'contain',
+          display: 'block',
+          filter: 'drop-shadow(0 2px 5px rgba(0, 0, 0, 0.10))',
         }}
-      >
-        RAILHUB
-      </span>
+      />
     </div>
   )
 }

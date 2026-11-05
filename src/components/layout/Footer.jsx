@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { Train, MapPin, Clock, Mail, Phone } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
@@ -194,35 +194,22 @@ export default function Footer() {
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '0.65rem',
                 textDecoration: 'none',
               }}
             >
-              <div
+              <Image
+                src="/images/Fix logo railhub.png"
+                alt="RAILHUB"
+                width={140}
+                height={42}
                 style={{
-                  width: 36,
-                  height: 36,
-                  borderRadius: 8,
-                  background: 'linear-gradient(135deg, #1A428A 0%, #0F2D6B 100%)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: 'white',
-                  boxShadow: '0 4px 10px rgba(26, 66, 138, 0.25)',
+                  height: '40px',
+                  width: 'auto',
+                  objectFit: 'contain',
+                  display: 'block',
+                  filter: 'drop-shadow(0 2px 6px rgba(0, 0, 0, 0.12))',
                 }}
-              >
-                <Train size={20} strokeWidth={2.4} />
-              </div>
-              <span
-                style={{
-                  fontSize: '1.25rem',
-                  fontWeight: 900,
-                  letterSpacing: '-0.02em',
-                  color: '#1A428A',
-                }}
-              >
-                RAIL<span style={{ color: '#FF8C00' }}>HUB</span>
-              </span>
+              />
             </Link>
 
             <p
