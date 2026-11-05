@@ -1078,6 +1078,24 @@ input[type="checkbox"]:focus-visible {
   }
 }
 
+.rh-search-page-card {
+  position: relative;
+  z-index: 2;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+@media (max-width: 640px) {
+  .rh-search-page-card {
+    margin: 0.25rem 0 2rem !important;
+    border-radius: 20px !important;
+    box-shadow: 0 16px 40px -8px rgba(5, 17, 36, 0.55), 0 4px 14px rgba(0, 0, 0, 0.15) !important;
+  }
+  .rh-detail-journey-heading {
+    font-size: 1.18rem !important;
+    margin-bottom: 0.85rem !important;
+  }
+}
+
 /* ── Minimalist Journey Details (KAI Style Overhaul) ── */
 .rh-detail-journey-container {
   width: 100%;
@@ -4690,4 +4708,117 @@ input[type="checkbox"]:focus-visible {
   .passenger-profile-avatar { width: 64px; height: 64px; flex-basis: 64px; font-size: 1.35rem; }
   .passenger-profile-identity h2 { font-size: 1.05rem; }
   .passenger-profile-form form { grid-template-columns: 1fr; }
+}
+
+
+/* ============================================================
+   RAILHUB CUSTOM DIALOGS & MULTIPLE CHOICE ENHANCEMENTS
+   ============================================================ */
+
+@keyframes rhFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes rhScaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.93) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.rh-confirm-dialog-card {
+  animation: rhScaleIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+}
+
+/* Force eliminate any lingering browser default form appearance */
+select,
+.rh-select,
+.rh-input select,
+input[type="radio"],
+input[type="checkbox"] {
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+}
+
+/* Branded multiple-choice option card hover & selection */
+.rh-choice-card {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.85rem 1.15rem;
+  border-radius: 14px;
+  border: 1.5px solid var(--rh-border, #cbd5e1);
+  background: #ffffff;
+  cursor: pointer;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+}
+
+.rh-choice-card:hover {
+  border-color: #93c5fd;
+  background: #f8fafc;
+  transform: translateY(-1px);
+}
+
+.rh-choice-card.is-selected {
+  border-color: #2563eb;
+  background: rgba(37, 99, 235, 0.05);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+
+/* ============================================================
+   FUN TICKET SHAPE & CONTINUOUS MOBILE SLIDER
+   ============================================================ */
+
+@keyframes rhTicketSlideRight {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+.rh-ticket-slide-track {
+  animation: rhTicketSlideRight 30s linear infinite;
+  will-change: transform;
+}
+
+.rh-ticket-slide-track:hover,
+.rh-ticket-slide-track:active {
+  animation-play-state: paused;
+}
+
+.rh-fun-ticket-card {
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s ease, border-color 0.22s ease;
+}
+
+.rh-fun-ticket-card:hover {
+  transform: translateY(-4px) scale(1.015);
+  box-shadow: 0 16px 32px -8px rgba(11, 27, 54, 0.16), 0 4px 10px rgba(0, 0, 0, 0.05);
+  border-color: #93c5fd;
+}
+
+.rh-fun-ticket-card:hover .rh-ticket-notch-top,
+.rh-fun-ticket-card:hover .rh-ticket-notch-bottom {
+  border-color: #93c5fd;
+}
+
+.rh-fun-ticket-card:active {
+  transform: translateY(-1px) scale(0.99);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rh-ticket-slide-track {
+    animation: none;
+    overflow-x: auto;
+  }
 }

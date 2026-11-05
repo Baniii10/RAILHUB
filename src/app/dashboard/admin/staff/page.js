@@ -6,6 +6,7 @@ import { ArrowLeft, RefreshCw, ShieldCheck, UserRound, Users } from 'lucide-reac
 import toast from 'react-hot-toast'
 import Navbar from '@/components/layout/Navbar'
 import { useAuth } from '@/contexts/AuthContext'
+import { useConfirm } from '@/contexts/ConfirmDialogContext'
 import { createClient } from '@/lib/supabase/client'
 import { formatDate, formatTime } from '@/lib/utils/formatters'
 
@@ -32,6 +33,7 @@ function assignableScheduleId(schedules, currentId) {
 export default function AdminStaffPage() {
   const router = useRouter()
   const { user, profile, loading: authLoading } = useAuth()
+  const { confirm } = useConfirm()
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [staff, setStaff] = useState([])
@@ -138,7 +140,14 @@ export default function AdminStaffPage() {
   }
 
   async function demoteFromStaff(userId) {
-    if (!confirm('Hapus status petugas akun ini dan kembalikan ke penumpang biasa?')) return
+    const ok = await confirm({
+      title: 'Nonaktifkan Status Petugas',
+      message: 'Apakah Anda yakin ingin menghapus status petugas akun ini dan mengembalikannya menjadi penumpang biasa?',
+      confirmText: 'Ya, Nonaktifkan Petugas',
+      cancelText: 'Batal',
+      variant: 'danger',
+    })
+    if (!ok) return
     const supabase = createClient()
     const { error: err } = await supabase.rpc('admin_set_user_role', {
       p_user_id: userId,
@@ -171,7 +180,14 @@ export default function AdminStaffPage() {
   }
 
   async function removeAssignment(assignmentId) {
-    if (!window.confirm('Hapus penugasan petugas ini?')) return
+    const ok = await confirm({
+      title: 'Hapus Penugasan Petugas',
+      message: 'Apakah Anda yakin ingin menghapus penugasan petugas ini dari jadwal perjalanan kereta?',
+      confirmText: 'Ya, Hapus Penugasan',
+      cancelText: 'Batal',
+      variant: 'danger',
+    })
+    if (!ok) return
     const supabase = createClient()
     const { error: removeError } = await supabase.rpc('admin_remove_staff_assignment', {
       p_assignment_id: assignmentId,

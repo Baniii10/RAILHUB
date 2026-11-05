@@ -124,7 +124,31 @@ export default function TrainSearchResults({ origin, destination, date, returnDa
         if (!active) return
         if (dbError) throw dbError
 
-        const results = (dbData || []).map(row => ({
+        let schedulesData = dbData || []
+
+        // If no schedules or fewer than 3 departures found, trigger automatic real-time rescheduling
+        if (schedulesData.length < 3) {
+          try {
+            const res = await fetch('/api/schedules/reschedule', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                origin: currentOrigin,
+                destination: currentDestination,
+                date: currentDate,
+                passengers,
+              }),
+            })
+            const json = await res.json()
+            if (json?.data && json.data.length > 0) {
+              schedulesData = json.data
+            }
+          } catch (rescheduleErr) {
+            console.warn('[TrainSearchResults] Auto-reschedule fallback notice:', rescheduleErr)
+          }
+        }
+
+        const results = schedulesData.map(row => ({
             ...row,
             subclass: 'CA',
             class_label: `${row.carriage_class} (CA)`,

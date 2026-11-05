@@ -3,6 +3,7 @@ import { Suspense } from 'react'
 import { Montserrat, Roboto_Mono } from 'next/font/google'
 import { AuthProvider } from '@/contexts/AuthContext'
 import { LangProvider } from '@/contexts/LangContext'
+import { ConfirmDialogProvider } from '@/contexts/ConfirmDialogContext'
 import RouteTransition from '@/components/layout/RouteTransition'
 import Footer from '@/components/layout/Footer'
 import WhatsAppBubble from '@/components/layout/WhatsAppBubble'
@@ -29,11 +30,12 @@ export const metadata = {
   keywords: ['kereta api', 'tiket kereta', 'KAI', 'booking', 'railway', 'Java'],
   icons: {
     icon: [
-      { url: '/images/Fix logo railhub.png' },
-      { url: '/logo.png' },
+      { url: '/icon.svg?v=2', type: 'image/svg+xml' },
+      { url: '/icon.png?v=2', sizes: '512x512', type: 'image/png' },
+      { url: '/favicon.ico?v=2', sizes: 'any' },
     ],
-    shortcut: '/images/Fix logo railhub.png',
-    apple: '/images/Fix logo railhub.png',
+    shortcut: '/favicon.ico?v=2',
+    apple: '/apple-icon.png?v=2',
   },
   openGraph: {
     title: 'RAILHUB — Railway Super App',
@@ -48,7 +50,8 @@ export default function RootLayout({ children }) {
     <html lang="id">
       <body className={`${montserrat.variable} ${robotoMono.variable}`}>
         <a className="rh-skip-link" href="#main-content">Lewati ke konten utama</a>
-        <LangProvider>
+        <ConfirmDialogProvider>
+          <LangProvider>
           <AuthProvider>
             <Suspense fallback={null}><RouteTransition /></Suspense>
             <div id="main-content" tabIndex={-1}>{children}</div>
@@ -74,6 +77,7 @@ export default function RootLayout({ children }) {
             />
           </AuthProvider>
         </LangProvider>
+        </ConfirmDialogProvider>
       </body>
     </html>
   )

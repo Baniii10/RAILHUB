@@ -9,6 +9,7 @@ import toast from 'react-hot-toast'
 import Navbar from '@/components/layout/Navbar'
 import EBoardingPass from '@/components/booking/EBoardingPass'
 import { useAuth } from '@/contexts/AuthContext'
+import { useConfirm } from '@/contexts/ConfirmDialogContext'
 import { createClient } from '@/lib/supabase/client'
 import { formatDate, formatIDR, formatTime } from '@/lib/utils/formatters'
 import PassengerServices from '@/components/services/PassengerServices'
@@ -32,6 +33,7 @@ function localDateValue(value) {
 export default function BookingPayment({ bookingId }) {
   const router = useRouter()
   const { user, loading: authLoading } = useAuth()
+  const { confirm } = useConfirm()
   const [booking, setBooking] = useState(null)
   const [payment, setPayment] = useState(null)
   const [tickets, setTickets] = useState([])
@@ -190,7 +192,14 @@ export default function BookingPayment({ bookingId }) {
 
   async function cancelBooking() {
     if (!booking || processing) return
-    if (!window.confirm('Batalkan booking ini? Kursi yang ditahan akan dilepas.')) return
+    const ok = await confirm({
+      title: 'Batalkan Pemesanan',
+      message: 'Batalkan booking ini? Kursi yang ditahan akan dilepas kembali untuk penumpang lain.',
+      confirmText: 'Ya, Batalkan',
+      cancelText: 'Pertahankan Booking',
+      variant: 'danger',
+    })
+    if (!ok) return
     setProcessing(true)
 
     const supabase = createClient()
@@ -302,11 +311,14 @@ export default function BookingPayment({ bookingId }) {
     }
 
     const additionalAmount = rescheduleFareDifference + rescheduleFee
-    if (!window.confirm(
-      `Biaya reschedule simulasi: ${formatIDR(rescheduleFee)}. `
-      + `Tambahan tarif: ${formatIDR(rescheduleFareDifference)}. `
-      + `Total tambahan yang dicatat: ${formatIDR(additionalAmount)}. Tidak ada pembayaran uang sungguhan. Lanjutkan?`
-    )) return
+    const ok = await confirm({
+      title: 'Konfirmasi Reschedule Tiket',
+      message: `Biaya reschedule: ${formatIDR(rescheduleFee)}.\nTambahan tarif: ${formatIDR(rescheduleFareDifference)}.\nTotal biaya perubahan: ${formatIDR(additionalAmount)}.\n\nPerubahan jadwal akan langsung diterapkan ke tiket Anda. Lanjutkan?`,
+      confirmText: 'Lanjutkan Reschedule',
+      cancelText: 'Batal',
+      variant: 'primary',
+    })
+    if (!ok) return
 
     setProcessing(true)
     const { data, error: rescheduleError } = await createClient().rpc('reschedule_own_paid_booking', {
@@ -328,10 +340,14 @@ export default function BookingPayment({ bookingId }) {
     if (!booking || processing) return
     const fee = Math.round(Number(booking.total_amount) * 0.2 * 100) / 100
     const refund = Number(booking.total_amount) - fee
-    if (!window.confirm(
-      `Batalkan tiket ini? Biaya pembatalan 20% sebesar ${formatIDR(fee)}. `
-      + `Pengembalian simulasi: ${formatIDR(refund)}. Tidak ada uang sungguhan yang diproses.`
-    )) return
+    const ok = await confirm({
+      title: 'Batalkan Tiket Kereta',
+      message: `Apakah Anda yakin ingin membatalkan tiket ini?\n\n• Biaya pembatalan (20%): ${formatIDR(fee)}\n• Estimasi pengembalian dana: ${formatIDR(refund)}\n\nTiket yang dibatalkan tidak dapat dikembalikan.`,
+      confirmText: 'Ya, Batalkan Tiket',
+      cancelText: 'Pertahankan Tiket',
+      variant: 'danger',
+    })
+    if (!ok) return
 
     setProcessing(true)
     const { data, error: cancelError } = await createClient().rpc('cancel_own_paid_booking', {

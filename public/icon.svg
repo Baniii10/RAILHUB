@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" fill="none">
+  <defs>
+    <linearGradient id="rhWingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff8548" />
+      <stop offset="50%" stop-color="#ff6f3c" />
+      <stop offset="100%" stop-color="#ea580c" />
+    </linearGradient>
+    <linearGradient id="rhGoldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fde047" />
+      <stop offset="60%" stop-color="#ffc93c" />
+      <stop offset="100%" stop-color="#f59e0b" />
+    </linearGradient>
+    <filter id="rhIconShadow" x="-10%" y="-10%" width="125%" height="125%">
+      <feDropShadow dx="0" dy="1.5" stdDeviation="1.5" flood-color="#0b1b36" flood-opacity="0.25" />
+    </filter>
+  </defs>
+
+  <!-- Stylized Aerodynamic Speed Wing and Train Mark (Square aspect ratio 1:1) -->
+  <g filter="url(#rhIconShadow)">
+    <!-- Upper Wing Fin -->
+    <path
+      d="M32 10 L54 10 L48 18 L26 18 Z"
+      fill="url(#rhWingGrad)"
+    />
+
+    <!-- Main Aerodynamic Swept Wing -->
+    <path
+      d="M10 27 Q22 17 38 17 L52 17 L44 26 Q32 26 21 31 L14 36 Z"
+      fill="url(#rhWingGrad)"
+    />
+
+    <!-- Golden Yellow Train Nose & Rail Accent -->
+    <path
+      d="M23 34 Q34 32 45 32 L49 32 L43 40 Q35 40 27 42 L23 44 Z"
+      fill="url(#rhGoldGrad)"
+    />
+
+    <!-- Lower Rail Grounding Accent -->
+    <rect x="23" y="47" width="7" height="7" rx="2" fill="url(#rhGoldGrad)" />
+  </g>
+</svg>

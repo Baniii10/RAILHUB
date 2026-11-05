@@ -403,7 +403,7 @@ function StaffDashboardContent() {
 
           <label className="dashboard-tab-select rh-show-mobile-only">
             <span>Menu petugas</span>
-            <select value={activeTab} onChange={event => selectTab(event.target.value)}>
+            <select className="rh-input rh-select" value={activeTab} onChange={event => selectTab(event.target.value)}>
               {availableTabs.map(tab => <option key={tab.id} value={tab.id}>{tab.label}</option>)}
             </select>
           </label>

@@ -8,6 +8,7 @@ import MobilePortalHeader from '@/components/home/MobilePortalHeader'
 import FeaturedServicesSlider from '@/components/home/FeaturedServicesSlider'
 import TrainBumperBanner from '@/components/home/TrainBumperBanner'
 import PromoBannerCarousel from '@/components/home/PromoBannerCarousel'
+import PopularTicketRoutes from '@/components/home/PopularTicketRoutes'
 import { useLang } from '@/contexts/LangContext'
 import {
   ChevronRight,  Train,
@@ -15,14 +16,6 @@ import {
   Clock,
 } from 'lucide-react'
 
-const POPULAR_ROUTES = [
-  { from: 'GMR', fromName: 'Gambir (Jakarta)',   to: 'BD',  toName: 'Bandung',         duration: '3 Jam', price: 'Mulai Rp 150.000', tag: 'Favorit Akhir Pekan', enTag: 'Weekend Favorite' },
-  { from: 'GMR', fromName: 'Gambir (Jakarta)',   to: 'YK',  toName: 'Yogyakarta',      duration: '7 Jam', price: 'Mulai Rp 250.000', tag: 'Rute Wisata', enTag: 'Leisure Route' },
-  { from: 'GMR', fromName: 'Gambir (Jakarta)',   to: 'SGU', toName: 'Surabaya Gubeng', duration: '8 Jam 15 Menit', price: 'Mulai Rp 350.000', tag: 'Lintas Pantura', enTag: 'North Coast' },
-  { from: 'BD',  fromName: 'Bandung',            to: 'SGU', toName: 'Surabaya Gubeng', duration: '11 Jam', price: 'Mulai Rp 300.000', tag: 'Lintas Selatan', enTag: 'Southern Line' },
-  { from: 'YK',  fromName: 'Yogyakarta',         to: 'GMR', toName: 'Gambir (Jakarta)',duration: '7 Jam', price: 'Mulai Rp 250.000', tag: 'Bisnis & Wisata', enTag: 'Business & Leisure' },
-  { from: 'SLO', fromName: 'Solo Balapan',       to: 'BD',  toName: 'Bandung',         duration: '8 Jam 45 Menit', price: 'Mulai Rp 195.000', tag: 'Antar Budaya', enTag: 'Cross-Cultural' },
-]
 
 const FLEET_CLASSES = [
   {
@@ -55,18 +48,6 @@ export default function HomePage() {
   const { t, lang } = useLang()
   const router = useRouter()
 
-  function openPopularRoute(event, route) {
-    event.preventDefault()
-    const tomorrow = new Date()
-    tomorrow.setDate(tomorrow.getDate() + 1)
-    const date = [
-      tomorrow.getFullYear(),
-      String(tomorrow.getMonth() + 1).padStart(2, '0'),
-      String(tomorrow.getDate()).padStart(2, '0'),
-    ].join('-')
-
-    router.push(`/trains?from=${route.from}&to=${route.to}&date=${date}&pax=1`)
-  }
 
 
   return (
@@ -119,67 +100,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Popular routes */}
-      <section className="rh-section" style={{ background: 'var(--rh-surface)', paddingTop: '2rem', paddingBottom: '2rem' }}>
-        <div className="rh-container">
-          <div style={{ marginBottom: '1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '0.5rem' }}>
-            <div>
-              <h2 className="rh-h3" style={{ margin: 0, color: 'var(--rh-navy)', fontSize: '1.35rem', fontWeight: 800 }}>{lang === 'en' ? 'Favorite Routes' : 'Rute Favorit Penumpang'}</h2>
-            </div>
-            <span style={{ fontSize: '0.75rem', color: 'var(--rh-text-3)', fontWeight: 600 }}>
-              {lang === 'en' ? 'Swipe for more routes →' : 'Geser untuk rute lainnya →'}
-            </span>
-          </div>
-
-          {/* Horizontal swipeable track on mobile to eliminate vertical scrolling */}
-          <div className="rh-popular-routes-track">
-            {POPULAR_ROUTES.map((route, i) => (
-              <Link
-                key={i}
-                href="/trains"
-                onClick={event => openPopularRoute(event, route)}
-                className="rh-card rh-card-interactive"
-                style={{
-                  display: 'block',
-                  textDecoration: 'none',
-                  padding: '1rem',
-                  background: '#ffffff',
-                  border: '1px solid var(--rh-border)',
-                  boxShadow: '0 2px 6px rgba(0,0,0,0.03)',
-                  borderRadius: 14,
-                }}
-              >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.6rem' }}>
-                  <span style={{ fontSize: '0.65rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--rh-primary)', background: 'var(--rh-primary-light)', padding: '0.12rem 0.5rem', borderRadius: 6 }}>
-                    {lang === 'en' ? route.enTag : route.tag}
-                  </span>
-                  <span style={{ fontSize: '0.72rem', color: 'var(--rh-text-2)', display: 'flex', alignItems: 'center', gap: 3 }}>
-                    <Clock size={11} /> {lang === 'en' ? route.duration.replace('Jam', 'h').replace('Menit', 'm') : route.duration}
-                  </span>
-                </div>
-
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem', marginBottom: '0.65rem' }}>
-                  <div style={{ width: 30, height: 30, borderRadius: 8, background: 'var(--rh-primary-light)', display: 'grid', placeItems: 'center', color: 'var(--rh-primary)', flexShrink: 0 }}>
-                    <Train size={15} />
-                  </div>
-                  <strong style={{ fontSize: '0.92rem', color: 'var(--rh-charcoal)', letterSpacing: '-0.01em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                    {route.fromName} → {route.toName}
-                  </strong>
-                </div>
-
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px dashed var(--rh-border)', paddingTop: '0.5rem' }}>
-                  <span style={{ fontSize: '0.85rem', color: 'var(--rh-accent-dark)', fontWeight: 800 }}>
-                    {lang === 'en' ? route.price.replace('Mulai', 'From') : route.price}
-                  </span>
-                  <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--rh-primary)', display: 'inline-flex', alignItems: 'center', gap: 2 }}>
-                    {lang === 'en' ? 'View' : 'Cek'} <ChevronRight size={13} />
-                  </span>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* Popular routes - Fun Ticket Shape & Continuous Mobile Sliding */}
+      <PopularTicketRoutes />
 
       {/* Fleet and cabin comfort */}
       <section className="rh-section home-fleet-section" style={{ background: '#ffffff', paddingTop: '2rem', paddingBottom: '2rem' }}>

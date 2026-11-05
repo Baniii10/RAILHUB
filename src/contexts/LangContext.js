@@ -1,5 +1,6 @@
 'use client'
 import { createContext, useCallback, useContext, useEffect, useSyncExternalStore } from 'react'
+import { useConfirm } from '@/contexts/ConfirmDialogContext'
 import { getTranslations } from '@/lib/i18n/translations'
 import toast from 'react-hot-toast'
 
@@ -33,6 +34,7 @@ function subscribeLanguage(listener) {
 }
 
 export function LangProvider({ children }) {
+  const { confirm } = useConfirm()
   const lang = useSyncExternalStore(subscribeLanguage, getLanguage, () => 'id')
   const t = getTranslations(lang)
 
@@ -43,16 +45,22 @@ export function LangProvider({ children }) {
     }
   }, [lang])
 
-  const toggleLang = useCallback(() => {
+  const toggleLang = useCallback(async () => {
     const currentLang = getLanguage()
     const nextLang = currentLang === 'id' ? 'en' : 'id'
     const targetLabel = nextLang === 'en' ? 'Bahasa Inggris (English)' : 'Bahasa Indonesia'
     
-    const confirmMessage = currentLang === 'id'
-      ? `Apakah Anda yakin ingin mengubah bahasa tampilan ke ${targetLabel}?`
-      : `Are you sure you want to change the display language to ${targetLabel}?`
+    const ok = await confirm({
+      title: currentLang === 'id' ? 'Ubah Bahasa Tampilan' : 'Change Display Language',
+      message: currentLang === 'id'
+        ? `Apakah Anda yakin ingin mengubah bahasa tampilan ke ${targetLabel}?`
+        : `Are you sure you want to change the display language to ${targetLabel}?`,
+      confirmText: currentLang === 'id' ? 'Ganti Bahasa' : 'Switch Language',
+      cancelText: currentLang === 'id' ? 'Batal' : 'Cancel',
+      variant: 'globe',
+    })
 
-    if (typeof window !== 'undefined' && window.confirm(confirmMessage)) {
+    if (ok) {
       window.localStorage.setItem('railhub-language', nextLang)
       document.cookie = `railhub-lang=${nextLang}; path=/; max-age=31536000; SameSite=Lax`
       document.documentElement.lang = nextLang
@@ -60,7 +68,7 @@ export function LangProvider({ children }) {
       window.dispatchEvent(new Event('railhub-lang-change'))
       toast.success(nextLang === 'en' ? 'Language switched to English' : 'Bahasa berhasil diubah ke Bahasa Indonesia')
     }
-  }, [])
+  }, [confirm])
 
   return (
     <LangContext.Provider value={{ lang, t, toggleLang }}>

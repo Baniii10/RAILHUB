@@ -35,6 +35,7 @@ import toast from 'react-hot-toast'
 import Navbar from '@/components/layout/Navbar'
 import LiveRoleClock from '@/components/ui/LiveRoleClock'
 import { useAuth } from '@/contexts/AuthContext'
+import { useConfirm } from '@/contexts/ConfirmDialogContext'
 import { createClient } from '@/lib/supabase/client'
 import { formatDate, formatIDR, formatTime } from '@/lib/utils/formatters'
 import { getJourneyStatusLabel, JOURNEY_STATUSES } from '@/lib/operations/journey-status'
@@ -89,6 +90,7 @@ const ADMIN_TABS = [
 function AdminDashboardContent() {
   const router = useRouter()
   const { user, profile, loading: authLoading } = useAuth()
+  const { confirm } = useConfirm()
   const [activeTab, setActiveTab] = useState('overview')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -262,7 +264,14 @@ function AdminDashboardContent() {
 
   // Handle Remove Staff Assignment
   async function handleRemoveAssignment(assignmentId) {
-    if (!confirm('Hapus penugasan petugas ini?')) return
+    const ok = await confirm({
+      title: 'Hapus Penugasan Petugas',
+      message: 'Apakah Anda yakin ingin menghapus penugasan petugas ini dari jadwal perjalanan?',
+      confirmText: 'Ya, Hapus',
+      cancelText: 'Batal',
+      variant: 'danger',
+    })
+    if (!ok) return
     const supabase = createClient()
     const { error: err } = await supabase.rpc('admin_remove_staff_assignment', {
       p_assignment_id: assignmentId,
