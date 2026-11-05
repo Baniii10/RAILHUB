@@ -80,10 +80,10 @@ export default function TrainSearchResults({ origin, destination, date, passenge
   const originStation = useMemo(() => getStationByCode(origin) || { code: origin, name: origin, city: 'Indonesia' }, [origin])
   const destinationStation = useMemo(() => getStationByCode(destination) || { code: destination, name: destination, city: 'Indonesia' }, [destination])
 
-  // Horizontal date tabs around the selected date (-2 to +4 days)
+  // Keep the date strip compact: one day before and three days after.
   const dateTabs = useMemo(() => {
     const tabs = []
-    for (let offset = -2; offset <= 4; offset++) {
+    for (let offset = -1; offset <= 3; offset++) {
       const tabDate = addDays(date, offset)
       const { dayName, dateFormatted, isToday } = getDayLabel(tabDate)
       tabs.push({
@@ -212,7 +212,7 @@ export default function TrainSearchResults({ origin, destination, date, passenge
   }
 
   return (
-    <div style={{ maxWidth: 840, margin: '0 auto', width: '100%', paddingBottom: '5rem' }}>
+    <div className="rh-trains-results" style={{ maxWidth: 840, margin: '0 auto', width: '100%', paddingBottom: '1rem' }}>
       {/* ============================================================
           TOP APP HEADER BAR (Matches Screenshot 2 Blue Header)
           ============================================================ */}
@@ -220,17 +220,17 @@ export default function TrainSearchResults({ origin, destination, date, passenge
         style={{
           background: 'var(--rh-primary)',
           color: '#ffffff',
-          borderRadius: 16,
-          padding: '1.25rem 1.25rem',
-          marginBottom: '0.875rem',
-          boxShadow: '0 8px 24px rgba(26, 66, 138, 0.25)',
+          borderRadius: 12,
+          padding: '0.875rem 1rem',
+          marginBottom: '0.5rem',
+          boxShadow: '0 4px 14px rgba(26, 66, 138, 0.2)',
           position: 'relative',
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.875rem' }}>
           <button
             type="button"
-            onClick={() => router.push('/')}
+            onClick={() => router.back()}
             className="rh-btn rh-btn-ghost"
             style={{
               color: '#ffffff',
@@ -238,7 +238,7 @@ export default function TrainSearchResults({ origin, destination, date, passenge
               borderRadius: '50%',
               background: 'rgba(255, 255, 255, 0.12)',
             }}
-            aria-label="Kembali ke beranda"
+            aria-label="Kembali"
           >
             <ArrowLeft size={20} />
           </button>
@@ -331,21 +331,21 @@ export default function TrainSearchResults({ origin, destination, date, passenge
           background: '#ffffff',
           borderRadius: 14,
           border: '1px solid var(--rh-border)',
-          padding: '0.5rem 0.5rem',
-          marginBottom: '0.875rem',
+          padding: '0.25rem',
+          marginBottom: '0.5rem',
           boxShadow: 'var(--shadow-sm)',
         }}
       >
         <div
           style={{
             display: 'flex',
-            gap: '0.5rem',
+            gap: '0.25rem',
             overflowX: 'auto',
             scrollSnapType: 'x mandatory',
             WebkitOverflowScrolling: 'touch',
             scrollbarWidth: 'none',
             msOverflowStyle: 'none',
-            padding: '0.25rem',
+            padding: 0,
           }}
         >
           {dateTabs.map(tab => (
@@ -355,8 +355,8 @@ export default function TrainSearchResults({ origin, destination, date, passenge
               onClick={() => handleSelectDate(tab.date)}
               style={{
                 flex: '0 0 auto',
-                minWidth: '85px',
-                padding: '0.625rem 0.5rem',
+                minWidth: '76px',
+                padding: '0.45rem 0.4rem',
                 borderRadius: 10,
                 border: tab.isActive ? '2px solid var(--rh-accent)' : '1px solid transparent',
                 background: tab.isActive ? 'rgba(255, 140, 0, 0.08)' : 'transparent',
@@ -404,6 +404,67 @@ export default function TrainSearchResults({ origin, destination, date, passenge
         </div>
       </section>
 
+      <aside
+        aria-label="Filter dan urutkan jadwal"
+        style={{
+          display: 'grid',
+          gridTemplateColumns: '1fr 1px 1fr',
+          alignItems: 'center',
+          marginBottom: '0.5rem',
+          border: '1px solid var(--rh-border)',
+          borderRadius: 12,
+          background: '#ffffff',
+          boxShadow: 'var(--shadow-sm)',
+        }}
+      >
+        <button
+          type="button"
+          onClick={() => setShowSortModal(true)}
+          style={{
+            display: 'flex',
+            minHeight: 44,
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '0.45rem',
+            border: 0,
+            background: 'transparent',
+            color: 'var(--rh-navy)',
+            fontSize: '0.8rem',
+            fontWeight: 750,
+            cursor: 'pointer',
+          }}
+        >
+          <ArrowUpDown size={15} style={{ color: 'var(--rh-accent)' }} />
+          Urutkan
+        </button>
+
+        <span style={{ width: 1, height: 24, background: 'var(--rh-border)' }} />
+
+        <button
+          type="button"
+          onClick={() => setShowFilterModal(true)}
+          style={{
+            display: 'flex',
+            minHeight: 44,
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '0.45rem',
+            border: 0,
+            background: 'transparent',
+            color: 'var(--rh-navy)',
+            fontSize: '0.8rem',
+            fontWeight: 750,
+            cursor: 'pointer',
+          }}
+        >
+          <Filter size={15} style={{ color: 'var(--rh-accent)' }} />
+          Filter
+          {(classFilter !== 'Semua' || timeFilter !== 'all') && (
+            <span aria-label="Filter aktif" style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--rh-accent)' }} />
+          )}
+        </button>
+      </aside>
+
       {/* ============================================================
           CLASS FILTER PILLS (Matches Screenshot 2 Filter Chips)
           ============================================================ */}
@@ -412,8 +473,8 @@ export default function TrainSearchResults({ origin, destination, date, passenge
           display: 'flex',
           gap: '0.5rem',
           overflowX: 'auto',
-          paddingBottom: '0.25rem',
-          marginBottom: '1rem',
+          paddingBottom: '0.125rem',
+          marginBottom: '0.625rem',
           scrollbarWidth: 'none',
         }}
       >
@@ -425,7 +486,7 @@ export default function TrainSearchResults({ origin, destination, date, passenge
               type="button"
               onClick={() => setClassFilter(cls)}
               style={{
-                padding: '0.5rem 1.1rem',
+                padding: '0.4rem 0.9rem',
                 borderRadius: 9999,
                 fontSize: '0.85rem',
                 fontWeight: isSelected ? 700 : 500,
@@ -485,7 +546,7 @@ export default function TrainSearchResults({ origin, destination, date, passenge
           SCHEDULE RESULTS LIST (Matches Screenshot 2 Exact Cards)
           ============================================================ */}
       {!loading && filteredAndSortedRows.length > 0 && (
-        <div style={{ display: 'grid', gap: '0.875rem' }}>
+        <div style={{ display: 'grid', gap: '0.625rem' }}>
           {filteredAndSortedRows.map(row => {
             const isExpanded = expandedId === row.schedule_id
             const bookingUrl = user
@@ -498,14 +559,14 @@ export default function TrainSearchResults({ origin, destination, date, passenge
                 className="rh-card"
                 style={{
                   background: '#ffffff',
-                  borderRadius: 16,
+                  borderRadius: 14,
                   border: '1px solid var(--rh-border)',
                   boxShadow: 'var(--shadow-sm)',
                   overflow: 'hidden',
                   transition: 'box-shadow 0.2s, border-color 0.2s',
                 }}
               >
-                <div style={{ padding: '1.25rem 1.25rem 1rem' }}>
+                <div style={{ padding: '1rem 1rem 0.75rem' }}>
                   {/* Card Header: Train Name & Subclass (Left) + Logo & Price (Right) */}
                   <div
                     style={{
@@ -513,13 +574,13 @@ export default function TrainSearchResults({ origin, destination, date, passenge
                       justifyContent: 'space-between',
                       alignItems: 'flex-start',
                       gap: '0.75rem',
-                      marginBottom: '0.75rem',
+                      marginBottom: '0.5rem',
                     }}
                   >
                     <div>
                       <h2
                         style={{
-                          fontSize: '1.15rem',
+                          fontSize: '1.05rem',
                           fontWeight: 800,
                           color: 'var(--rh-navy)',
                           margin: 0,
@@ -544,7 +605,7 @@ export default function TrainSearchResults({ origin, destination, date, passenge
                       <RailHubTrainLogo height={20} />
                       <div
                         style={{
-                          fontSize: '1.2rem',
+                          fontSize: '1.1rem',
                           fontWeight: 800,
                           color: 'var(--rh-accent-dark)',
                           marginTop: '0.25rem',
@@ -561,20 +622,20 @@ export default function TrainSearchResults({ origin, destination, date, passenge
 
                   {/* Feature Badges Row (Terlaris, Harga Termurah, Rekomendasi) */}
                   {row.badges && row.badges.length > 0 && (
-                    <div style={{ display: 'flex', gap: '0.35rem', flexWrap: 'wrap', marginBottom: '0.875rem' }}>
+                    <div style={{ display: 'flex', gap: '0.3rem', flexWrap: 'wrap', marginBottom: '0.5rem' }}>
                       {row.badges.includes('terlaris') && (
                         <span
                           style={{
                             fontSize: '0.7rem',
                             fontWeight: 700,
-                            padding: '0.2rem 0.55rem',
+                            padding: '0.15rem 0.45rem',
                             borderRadius: 6,
                             background: 'var(--rh-secondary-light)',
                             color: 'var(--rh-secondary)',
                             border: '1px solid #FFD9D1',
                           }}
                         >
-                          🔥 Terlaris
+                          Terlaris
                         </span>
                       )}
                       {row.badges.includes('termurah') && (
@@ -582,7 +643,7 @@ export default function TrainSearchResults({ origin, destination, date, passenge
                           style={{
                             fontSize: '0.7rem',
                             fontWeight: 700,
-                            padding: '0.2rem 0.55rem',
+                            padding: '0.15rem 0.45rem',
                             borderRadius: 6,
                             background: 'var(--rh-warning-light)',
                             color: 'var(--rh-accent-dark)',
@@ -597,14 +658,14 @@ export default function TrainSearchResults({ origin, destination, date, passenge
                           style={{
                             fontSize: '0.7rem',
                             fontWeight: 700,
-                            padding: '0.2rem 0.55rem',
+                            padding: '0.15rem 0.45rem',
                             borderRadius: 6,
                             background: 'var(--rh-primary-light)',
                             color: 'var(--rh-primary)',
                             border: '1px solid #BFDBFE',
                           }}
                         >
-                          👍 Rekomendasi
+                          Rekomendasi
                         </span>
                       )}
                       {row.badges.includes('tercepat') && (
@@ -612,14 +673,14 @@ export default function TrainSearchResults({ origin, destination, date, passenge
                           style={{
                             fontSize: '0.7rem',
                             fontWeight: 700,
-                            padding: '0.2rem 0.55rem',
+                            padding: '0.15rem 0.45rem',
                             borderRadius: 6,
                             background: 'var(--rh-primary-light)',
                             color: 'var(--rh-primary)',
                             border: '1px solid #A7F3D0',
                           }}
                         >
-                          ⚡ Tercepat
+                          Tercepat
                         </span>
                       )}
                     </div>
@@ -631,15 +692,15 @@ export default function TrainSearchResults({ origin, destination, date, passenge
                       display: 'grid',
                       gridTemplateColumns: 'minmax(0, 1fr) auto minmax(0, 1fr)',
                       alignItems: 'center',
-                      gap: '0.75rem',
-                      padding: '0.5rem 0',
+                      gap: '0.5rem',
+                      padding: '0.25rem 0',
                     }}
                   >
                     {/* Origin */}
                     <div>
                       <div
                         style={{
-                          fontSize: '1.35rem',
+                          fontSize: '1.2rem',
                           fontWeight: 800,
                           color: 'var(--rh-navy)',
                           lineHeight: 1,
@@ -652,7 +713,7 @@ export default function TrainSearchResults({ origin, destination, date, passenge
                           fontSize: '0.825rem',
                           color: 'var(--rh-text-2)',
                           fontWeight: 600,
-                          marginTop: '0.3rem',
+                          marginTop: '0.2rem',
                           whiteSpace: 'nowrap',
                           overflow: 'hidden',
                           textOverflow: 'ellipsis',
@@ -683,7 +744,7 @@ export default function TrainSearchResults({ origin, destination, date, passenge
                           display: 'flex',
                           alignItems: 'center',
                           gap: '0.25rem',
-                          width: '100px',
+                          width: '80px',
                         }}
                       >
                         <div style={{ height: 1.5, flex: 1, background: 'var(--rh-border)' }} />
@@ -711,7 +772,7 @@ export default function TrainSearchResults({ origin, destination, date, passenge
                       >
                         <span
                           style={{
-                            fontSize: '1.35rem',
+                            fontSize: '1.2rem',
                             fontWeight: 800,
                             color: 'var(--rh-navy)',
                             lineHeight: 1,
@@ -739,7 +800,7 @@ export default function TrainSearchResults({ origin, destination, date, passenge
                           fontSize: '0.825rem',
                           color: 'var(--rh-text-2)',
                           fontWeight: 600,
-                          marginTop: '0.3rem',
+                          marginTop: '0.2rem',
                           whiteSpace: 'nowrap',
                           overflow: 'hidden',
                           textOverflow: 'ellipsis',
@@ -757,8 +818,8 @@ export default function TrainSearchResults({ origin, destination, date, passenge
                   <div
                     style={{
                       borderTop: '1px solid var(--rh-border)',
-                      marginTop: '0.75rem',
-                      paddingTop: '0.75rem',
+                      marginTop: '0.5rem',
+                      paddingTop: '0.5rem',
                       display: 'flex',
                       justifyContent: 'space-between',
                       alignItems: 'center',
@@ -790,7 +851,7 @@ export default function TrainSearchResults({ origin, destination, date, passenge
 
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                       <span style={{ fontSize: '0.78rem', color: 'var(--rh-text-3)' }}>
-                        Tersedia {row.available_seats} kursi
+                        <span className="rh-hide-mobile">Tersedia </span>{row.available_seats} kursi
                       </span>
                       <Link
                         href={bookingUrl}
@@ -813,7 +874,7 @@ export default function TrainSearchResults({ origin, destination, date, passenge
                     style={{
                       background: 'var(--rh-surface)',
                       borderTop: '1px solid var(--rh-border)',
-                      padding: '1.25rem',
+                      padding: '1rem',
                       fontSize: '0.85rem',
                     }}
                   >
@@ -859,88 +920,6 @@ export default function TrainSearchResults({ origin, destination, date, passenge
           })}
         </div>
       )}
-
-      {/* ============================================================
-          FLOATING BOTTOM ACTION BAR (Matches Screenshot 2 URUTKAN & FILTER)
-          ============================================================ */}
-      <aside
-        aria-label="Filter dan urutkan jadwal"
-        style={{
-          position: 'fixed',
-          bottom: 'calc(4rem + env(safe-area-inset-bottom, 0px))',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          zIndex: 80,
-          width: 'min(92vw, 360px)',
-          background: 'rgba(255, 255, 255, 0.98)',
-          backdropFilter: 'blur(16px)',
-          borderRadius: 9999,
-          boxShadow: '0 8px 30px rgba(15, 37, 82, 0.22)',
-          border: '1px solid rgba(226, 232, 240, 0.8)',
-          padding: '0.4rem 0.6rem',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-around',
-        }}
-      >
-        {/* URUTKAN BUTTON */}
-        <button
-          type="button"
-          onClick={() => setShowSortModal(true)}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            background: 'none',
-            border: 'none',
-            color: 'var(--rh-navy)',
-            fontWeight: 800,
-            fontSize: '0.825rem',
-            letterSpacing: '0.04em',
-            cursor: 'pointer',
-            padding: '0.45rem 1rem',
-            borderRadius: 9999,
-          }}
-        >
-          <ArrowUpDown size={15} style={{ color: 'var(--rh-accent)' }} />
-          <span>URUTKAN</span>
-        </button>
-
-        <div style={{ width: 1, height: 22, background: 'var(--rh-border)' }} />
-
-        {/* FILTER BUTTON */}
-        <button
-          type="button"
-          onClick={() => setShowFilterModal(true)}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            background: 'none',
-            border: 'none',
-            color: 'var(--rh-navy)',
-            fontWeight: 800,
-            fontSize: '0.825rem',
-            letterSpacing: '0.04em',
-            cursor: 'pointer',
-            padding: '0.45rem 1rem',
-            borderRadius: 9999,
-          }}
-        >
-          <Filter size={15} style={{ color: 'var(--rh-accent)' }} />
-          <span>FILTER</span>
-          {(classFilter !== 'Semua' || timeFilter !== 'all') && (
-            <span
-              style={{
-                width: 7,
-                height: 7,
-                borderRadius: '50%',
-                background: 'var(--rh-accent)',
-              }}
-            />
-          )}
-        </button>
-      </aside>
 
       {/* ============================================================
           SORT MODAL / BOTTOM SHEET

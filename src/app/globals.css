@@ -4160,7 +4160,8 @@ input[type="checkbox"]:focus-visible {
     padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
   }
 
-  body:has(.rh-footer-container) {
+  body:has(.rh-footer-container),
+  body:has(.rh-trains-results) {
     padding-bottom: 0;
   }
 }

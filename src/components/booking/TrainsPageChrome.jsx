@@ -1,7 +1,6 @@
 'use client'
 
-import Link from 'next/link'
-import { ArrowLeft, Search } from 'lucide-react'
+import { Search } from 'lucide-react'
 import Navbar from '@/components/layout/Navbar'
 import SearchWidget from '@/components/booking/SearchWidget'
 import { useLang } from '@/contexts/LangContext'
@@ -11,12 +10,9 @@ export default function TrainsPageChrome({ empty, children }) {
 
   return (
     <>
-      <Navbar />
-      <main style={{ minHeight: '100vh', padding: '2rem 0 5rem', background: 'var(--rh-surface)' }}>
+      {empty && <Navbar />}
+      <main style={{ minHeight: '100vh', padding: empty ? '2rem 0 5rem' : '0.5rem 0 1.5rem', background: 'var(--rh-surface)' }}>
         <div className="rh-container">
-          <Link href="/" className="rh-btn rh-btn-ghost rh-btn-sm" style={{ marginBottom: '1.25rem' }}>
-            <ArrowLeft size={16} aria-hidden="true" /> {lang === 'en' ? 'Back to home' : 'Kembali ke beranda'}
-          </Link>
           {empty ? (
             <section className="rh-card" style={{ maxWidth: 640, margin: '1.5rem auto', textAlign: 'center' }}>
               <div className="rh-card-body" style={{ padding: '2.5rem 1.75rem' }}>
