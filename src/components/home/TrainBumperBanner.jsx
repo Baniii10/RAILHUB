@@ -367,13 +367,6 @@ export default function TrainBumperBanner() {
               </text>
             </g>
 
-            {/* Click to book badge */}
-            <g transform="translate(2, 75)">
-              <rect x="0" y="0" width="150" height="24" rx="12" fill="linear-gradient(90deg, #FF8C00, #FFA726)" />
-              <text x="14" y="16" fill="#0F172A" fontSize="9.5" fontWeight="900" fontFamily="system-ui, sans-serif">
-                CEK JADWAL SEKARANG ➔
-              </text>
-            </g>
           </g>
         </svg>
       </Link>
