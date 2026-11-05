@@ -32,6 +32,11 @@ export default function LiveJourneyMapTracker({ booking, ticket, countdown, jour
   const progress = Math.min(100, Math.max(0, booking ? journeyProgress : 42))
   const stops = buildStops(booking)
   const nextStop = stops.find(stop => stop.progress > progress) || stops.at(-1)
+  const countdownLabel = countdown?.isDeparted
+    ? 'Kereta sudah berangkat'
+    : countdown && typeof countdown === 'object'
+      ? `${countdown.hours || 0}j ${countdown.minutes || 0}m ${countdown.seconds || 0}d`
+      : countdown || nextStop?.time || 'Sesuai jadwal'
 
   return <section className="rh-card journey-tracker" aria-labelledby="journey-tracker-title">
     <div className="journey-tracker-media">
@@ -49,7 +54,7 @@ export default function LiveJourneyMapTracker({ booking, ticket, countdown, jour
       <div className="journey-tracker-summary">
         <div><small>Posisi perjalanan</small><strong>{Math.round(progress)}%</strong></div>
         <div><small>Berikutnya</small><strong>{nextStop?.name}</strong></div>
-        <div><small>Estimasi</small><strong>{countdown || nextStop?.time || 'Sesuai jadwal'}</strong></div>
+        <div><small>Estimasi</small><strong>{countdownLabel}</strong></div>
       </div>
       <div className="journey-progress" role="progressbar" aria-label="Progres perjalanan" aria-valuenow={Math.round(progress)} aria-valuemin="0" aria-valuemax="100"><span style={{ width: `${progress}%` }} /></div>
       <ol className="journey-stops" aria-label="Semua pemberhentian">
