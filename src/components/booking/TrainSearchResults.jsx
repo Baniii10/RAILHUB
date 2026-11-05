@@ -316,7 +316,14 @@ export default function TrainSearchResults({ origin, destination, date, passenge
                   <X size={18} />
                 </button>
               </div>
-              <SearchWidget compact={true} />
+              <SearchWidget
+                compact={true}
+                initialOrigin={origin}
+                initialDestination={destination}
+                initialDate={date}
+                initialPax={passengers}
+                onSearch={() => setShowSearchModal(false)}
+              />
             </div>
           </div>
         )}
@@ -532,13 +539,22 @@ export default function TrainSearchResults({ origin, destination, date, passenge
           <p style={{ color: 'var(--rh-text-2)', margin: '0.5rem auto 1.5rem', maxWidth: 440, fontSize: '0.9rem' }}>
             {error || <>Tidak ada kereta yang sesuai dengan filter kelas <strong>{classFilter}</strong> untuk tanggal ini. Coba pilih kelas &quot;Semua&quot; atau tanggal keberangkatan lain.</>}
           </p>
-          <button
-            type="button"
-            className="rh-btn rh-btn-primary"
-            onClick={() => { setClassFilter('Semua'); setTimeFilter('all') }}
-          >
-            Reset Semua Filter
-          </button>
+          <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <button
+              type="button"
+              className="rh-btn rh-btn-primary"
+              onClick={() => { setClassFilter('Semua'); setTimeFilter('all') }}
+            >
+              Reset Semua Filter
+            </button>
+            <button
+              type="button"
+              className="rh-btn rh-btn-secondary"
+              onClick={() => setShowSearchModal(true)}
+            >
+              Ganti Rute Stasiun
+            </button>
+          </div>
         </div>
       )}
 

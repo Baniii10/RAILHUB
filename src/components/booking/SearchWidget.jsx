@@ -152,7 +152,14 @@ function LiveClockMinimal({ lang = 'id' }) {
   )
 }
 
-export default function SearchWidget({ compact = false }) {
+export default function SearchWidget({
+  compact = false,
+  initialOrigin = '',
+  initialDestination = '',
+  initialDate = '',
+  initialPax = 1,
+  onSearch,
+}) {
   const { lang, t } = useLang()
   const router = useRouter()
 
@@ -161,9 +168,10 @@ export default function SearchWidget({ compact = false }) {
   const [stationError, setStationError] = useState('')
 
   // Form State
-  const [origin, setOrigin] = useState('')
-  const [destination, setDestination] = useState('')
+  const [origin, setOrigin] = useState(initialOrigin || '')
+  const [destination, setDestination] = useState(initialDestination || '')
   const [date, setDate] = useState(() => {
+    if (initialDate) return initialDate
     const tomorrow = new Date()
     tomorrow.setDate(tomorrow.getDate() + 1)
     return formatLocalDate(tomorrow)
@@ -174,10 +182,26 @@ export default function SearchWidget({ compact = false }) {
     after.setDate(after.getDate() + 3)
     return formatLocalDate(after)
   })
-  const [adults, setAdults] = useState(1)
+  const [adults, setAdults] = useState(() => Number(initialPax) || 1)
   const [infants, setInfants] = useState(0)
   const [loading, setLoading] = useState(false)
   const [mounted, setMounted] = useState(false)
+
+  // Sync initial props and always clear stuck loading
+  useEffect(() => {
+    if (initialOrigin) setOrigin(initialOrigin)
+    if (initialDestination) setDestination(initialDestination)
+    if (initialDate) setDate(initialDate)
+    if (initialPax) setAdults(Number(initialPax) || 1)
+    setLoading(false)
+  }, [initialOrigin, initialDestination, initialDate, initialPax])
+
+  // Release loading on browser history navigation (back/forward)
+  useEffect(() => {
+    const handlePopState = () => setLoading(false)
+    window.addEventListener('popstate', handlePopState)
+    return () => window.removeEventListener('popstate', handlePopState)
+  }, [])
 
   // Pickers modal/popover states
   const [activePicker, setActivePicker] = useState(null) // 'origin' | 'destination' | null
@@ -273,6 +297,7 @@ export default function SearchWidget({ compact = false }) {
     const temp = origin
     setOrigin(destination)
     setDestination(temp)
+    setLoading(false)
   }
 
   function handleSelectStation(code) {
@@ -288,6 +313,7 @@ export default function SearchWidget({ compact = false }) {
     }
     setActivePicker(null)
     setStationQuery('')
+    setLoading(false)
   }
 
   function handleSearch(e) {
@@ -326,7 +352,17 @@ export default function SearchWidget({ compact = false }) {
     if (isRoundTrip && returnDate) {
       params.append('returnDate', returnDate)
     }
+
+    if (typeof onSearch === 'function') {
+      onSearch({ origin, destination, date, adults, returnDate: isRoundTrip ? returnDate : null })
+    }
+
     router.push(`/trains?${params.toString()}`)
+
+    // Auto-release loading state after short timeout so button is never permanently locked
+    setTimeout(() => {
+      setLoading(false)
+    }, 1200)
   }
 
   const originStation = stations.find(s => s.code === origin)
@@ -641,7 +677,7 @@ export default function SearchWidget({ compact = false }) {
         {/* ── ACTION BUTTON: CARI KERETA ── */}
         <button
           type="submit"
-          disabled={loading || stationsLoading}
+          disabled={loading || (stationsLoading && stations.length === 0)}
           className="rh-detail-submit-btn"
         >
           {loading ? (
