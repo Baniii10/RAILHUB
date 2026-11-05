@@ -876,8 +876,8 @@ input[type="checkbox"]:focus-visible {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 68px;
-  gap: 2rem;
+  height: 72px;
+  gap: 1.5rem;
 }
 
 .rh-logo {

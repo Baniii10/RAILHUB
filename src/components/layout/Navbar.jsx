@@ -237,15 +237,15 @@ export default function Navbar() {
         <div className="rh-container">
           <div className="rh-navbar-inner">
             {/* Logo */}
-            <Link href={homeHref} className="rh-logo" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }}>
+            <Link href={homeHref} className="rh-logo" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', flexShrink: 0 }}>
               <Image
                 src="/images/Fix logo railhub.png"
                 alt="RAILHUB"
-                width={160}
-                height={48}
+                width={200}
+                height={58}
                 priority
                 style={{
-                  height: '48px',
+                  height: '56px',
                   width: 'auto',
                   objectFit: 'contain',
                   display: 'block',
@@ -470,14 +470,14 @@ export default function Navbar() {
             }}
             onClick={e => e.stopPropagation()}
           >
-            <Link href={homeHref} className="rh-logo" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', marginBottom: '1.5rem' }}>
+            <Link href={homeHref} className="rh-logo" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', marginBottom: '1.5rem', flexShrink: 0 }}>
               <Image
                 src="/images/Fix logo railhub.png"
                 alt="RAILHUB"
-                width={130}
-                height={42}
+                width={180}
+                height={52}
                 style={{
-                  height: '42px',
+                  height: '50px',
                   width: 'auto',
                   objectFit: 'contain',
                   display: 'block',
