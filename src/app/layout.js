@@ -42,7 +42,7 @@ export default function RootLayout({ children }) {
           <AuthProvider>
             <Suspense fallback={null}><RouteTransition /></Suspense>
             <div id="main-content" tabIndex={-1}>{children}</div>
-            <Footer />
+            <Suspense fallback={null}><Footer /></Suspense>
             <Toaster
               position="top-right"
               toastOptions={{
