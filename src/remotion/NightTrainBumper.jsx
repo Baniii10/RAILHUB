@@ -507,88 +507,59 @@ export function NightTrainBumper(props = {}) {
           opacity="0.85"
         />
 
-        {/* 12. OFFICIAL RAILHUB BUMPER LOGO & TITLE OVERLAY ("diatas ada logo railhub") */}
-        <g transform={`translate(${width / 2}, 54)`}>
-          {/* Ambient Spotlight Behind Logo */}
-          <ellipse
-            cx="0"
-            cy="0"
-            rx="190"
-            ry="45"
-            fill="radial-gradient(ellipse at center, rgba(37, 99, 235, 0.45) 0%, rgba(15, 23, 42, 0) 70%)"
-            opacity="0.9"
-          />
-
-          {/* Glassmorphic Brand Container Plate */}
-          <rect
-            x="-165"
-            y="-34"
-            width="330"
-            height="68"
-            rx="20"
-            fill="rgba(6, 11, 24, 0.72)"
-            stroke="rgba(255, 255, 255, 0.16)"
-            strokeWidth="1.2"
-            filter="url(#rhLogoGlow)"
-          />
-
-          {/* Logo Badge Icon (Sleek High-Speed Train Badge) */}
-          <g transform="translate(-135, -20)">
-            {/* Orange Accent Shield */}
-            <rect x="0" y="0" width="40" height="40" rx="12" fill="#ea580c" />
-            <rect x="2" y="2" width="36" height="36" rx="10" fill="linear-gradient(135deg, #f97316 0%, #c2410c 100%)" />
-            {/* High-Speed Train Silhouette Inside Badge */}
-            <path
-              d="M10 28 L10 16 Q10 11 20 11 Q30 11 30 16 L30 28 Z"
-              fill="#ffffff"
-            />
-            <rect x="13" y="15" width="14" height="6" rx="2" fill="#0f172a" />
-            <circle cx="15" cy="24" r="2" fill="#ea580c" />
-            <circle cx="25" cy="24" r="2" fill="#ea580c" />
-          </g>
-
-          {/* Wordmark "RAILHUB" */}
-          <text
-            x="-82"
-            y="2"
-            fill="#ffffff"
-            fontSize="26"
-            fontWeight="900"
-            letterSpacing="0.12em"
-            fontFamily="Montserrat, 'Segoe UI', system-ui, sans-serif"
-          >
-            RAIL<tspan fill="#ea580c">HUB</tspan>
-          </text>
-
-          {/* Subtitle / Bumper Tagline */}
-          <text
-            x="-80"
-            y="20"
-            fill="#93c5fd"
-            fontSize="9"
-            fontWeight="700"
-            letterSpacing="0.28em"
-            opacity="0.95"
-            fontFamily="system-ui, sans-serif"
-          >
-            EXPRESS NIGHT INTERCITY
-          </text>
-
-          {/* Live Motion Status Indicator */}
-          <g transform="translate(122, -18)">
-            <circle cx="0" cy="0" r="4" fill="#22c55e" filter="url(#rhBloom)" />
-            <circle
-              cx="0"
-              cy="0"
-              r="7"
-              fill="none"
-              stroke="#22c55e"
-              strokeWidth="1.2"
-              opacity={Math.sin((frame / 10) * Math.PI) * 0.4 + 0.6}
-            />
-          </g>
-        </g>
+        {/* Ambient Spotlight Behind Logo */}
+        <ellipse
+          cx={width / 2}
+          cy="48"
+          rx="180"
+          ry="40"
+          fill="radial-gradient(ellipse at center, rgba(37, 99, 235, 0.45) 0%, rgba(15, 23, 42, 0) 70%)"
+          opacity="0.95"
+        />
       </svg>
+
+      {/* 12. OFFICIAL FIX LOGO RAILHUB ON TOP ("logo diatasnya ya yg fix logo railhub") */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 18,
+          left: '50%',
+          transform: 'translateX(-50%)',
+          zIndex: 30,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          pointerEvents: 'none',
+        }}
+      >
+        <div
+          style={{
+            padding: '7px 24px',
+            borderRadius: 18,
+            background: 'rgba(5, 10, 22, 0.82)',
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+            border: '1px solid rgba(255, 255, 255, 0.18)',
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.6), 0 0 24px rgba(37, 99, 235, 0.35)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <img
+            src="/images/Fix logo railhub.png"
+            alt="RAILHUB Official Logo"
+            style={{
+              height: 42,
+              width: 'auto',
+              maxWidth: 220,
+              objectFit: 'contain',
+              display: 'block',
+              filter: 'drop-shadow(0 2px 10px rgba(0, 0, 0, 0.65))',
+            }}
+          />
+        </div>
+      </div>
     </div>
   )
 }
