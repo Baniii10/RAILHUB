@@ -265,15 +265,7 @@ export default function PwaGalleryBento() {
                   : 'Argo Bromo Anggrek, Argo Lawu, Taksaka Hype Trip, Gajayana, hingga Kereta Cepat Whoosh - nikmati kemudahan reservasi tiket seluruh jalur kereta api utama Indonesia tanpa biaya tersembunyi.'}
               </p>
 
-              <div style={{ marginTop: 'auto', paddingTop: '1.25rem' }}>
-                <Link
-                  href="/trains"
-                  className="rh-bento-link-btn"
-                >
-                  <span>{lang === 'en' ? 'Explore Schedules' : 'Lihat Jadwal Lengkap'}</span>
-                  <ArrowRight size={15} />
-                </Link>
-              </div>
+              
             </div>
           </div>
 
@@ -298,32 +290,7 @@ export default function PwaGalleryBento() {
                 <div className="rh-bento-card-overlay-subtle" />
               </div>
 
-              <div className="rh-bento-speed-content">
-                <div
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: 7,
-                    height: 32,
-                    background: 'rgba(7, 13, 24, 0.88)',
-                    backdropFilter: 'blur(10px)',
-                    WebkitBackdropFilter: 'blur(10px)',
-                    padding: '0 13px 0 10px',
-                    borderRadius: 999,
-                    color: '#ffffff',
-                    fontSize: '0.8125rem',
-                    fontWeight: 700,
-                    border: '1px solid rgba(255, 255, 255, 0.22)',
-                    boxShadow: '0 4px 14px rgba(0, 0, 0, 0.35)',
-                  }}
-                >
-                  <ShieldCheck size={15} style={{ color: '#22c55e', flexShrink: 0, display: 'block' }} />
-                  <span style={{ lineHeight: 1, display: 'inline-block', transform: 'translateY(0.5px)' }}>
-                    On-Time Arrival 99.4%
-                  </span>
-                </div>
-              </div>
+              
             </div>
 
             {/* CARD 4: Passenger Lifestyle (Bottom) */}
