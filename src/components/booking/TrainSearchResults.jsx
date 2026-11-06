@@ -352,7 +352,10 @@ export default function TrainSearchResults({ origin, destination, date, returnDa
                 initialOrigin={origin}
                 initialDestination={destination}
                 initialDate={date}
+                initialReturnDate={returnDate || ''}
+                initialIsRoundTrip={Boolean(returnDate)}
                 initialPax={passengers}
+                isNight={false}
                 onSearch={() => setShowSearchModal(false)}
               />
             </div>

@@ -1300,10 +1300,11 @@ input[type="checkbox"]:focus-visible {
 }
 
 .rh-detail-val-bold {
-  font-size: 0.98rem;
+  font-size: 0.95rem;
   font-weight: 700;
   color: #0f172a;
   line-height: 1.3;
+  white-space: nowrap !important;
 }
 
 .rh-detail-hidden-date-input {
@@ -5941,15 +5942,16 @@ input[type="checkbox"] {
 }
 
 /* 2. Elevated Dark Columns / Boxes */
+.rh-detail-box.is-night-box,
 .rh-detail-journey-container.is-night .rh-detail-box,
 .rh-hero-night .rh-detail-box,
 .rh-search-card.rh-night-theme .rh-detail-box,
 .rh-search-page-card.rh-night-theme .rh-detail-box {
-  background: rgba(13, 27, 54, 0.82);
-  border: 1.5px solid rgba(255, 255, 255, 0.14);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  background: rgba(13, 27, 54, 0.88) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.18) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
 }
 
 .rh-detail-journey-container.is-night .rh-detail-box:hover,

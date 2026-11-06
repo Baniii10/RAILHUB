@@ -420,7 +420,7 @@ export default function SearchWidget({
       {!compact && (
         <>
           <LiveClockMinimal lang={lang} isNight={isNight} />
-          <h2 className="rh-detail-journey-heading">
+          <h2 className="rh-detail-journey-heading" style={{ color: isNight ? '#ffffff' : undefined, textShadow: isNight ? '0 2px 8px rgba(0,0,0,0.5)' : undefined }}>
             {lang === 'en' ? 'Journey Details' : 'Detail Perjalanan'}
           </h2>
         </>
@@ -428,7 +428,7 @@ export default function SearchWidget({
 
       <form onSubmit={handleSearch}>
         {/* ── CARD 1: ORIGIN & DESTINATION (UNIFIED BOX) ── */}
-        <div className="rh-detail-box rh-detail-box-stations">
+        <div className={`rh-detail-box rh-detail-box-stations ${isNight ? 'is-night-box' : ''}`} style={isNight ? { background: 'rgba(13, 27, 54, 0.88)', borderColor: 'rgba(255, 255, 255, 0.18)' } : undefined}>
           {/* Keberangkatan */}
           <button
             type="button"
@@ -499,7 +499,7 @@ export default function SearchWidget({
         </div>
 
         {/* ── CARD 2: DATE & ROUND TRIP TOGGLE ── */}
-        <div className="rh-detail-box rh-detail-box-date">
+        <div className={`rh-detail-box rh-detail-box-date ${isNight ? 'is-night-box' : ''}`} style={isNight ? { background: 'rgba(13, 27, 54, 0.88)', borderColor: 'rgba(255, 255, 255, 0.18)' } : undefined}>
           <div className="rh-detail-date-row">
             {/* Left: Date Display & Native Picker Trigger */}
             <div
@@ -587,7 +587,7 @@ export default function SearchWidget({
         {/* ── CARD 3: PASSENGERS ── */}
         <div className="rh-detail-box-passenger-wrapper" ref={passengerRef}>
           <div
-            className="rh-detail-box rh-detail-box-passenger"
+            className={`rh-detail-box rh-detail-box-passenger ${isNight ? 'is-night-box' : ''}`} style={isNight ? { background: 'rgba(13, 27, 54, 0.88)', borderColor: 'rgba(255, 255, 255, 0.18)' } : undefined}
             onClick={() => setPassengerOpen(prev => !prev)}
             role="button"
             tabIndex={0}

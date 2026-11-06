@@ -28,8 +28,18 @@ export default function HomePage() {
   useEffect(() => {
     setMounted(true)
     const checkTime = () => {
-      const hr = new Date().getHours()
-      setIsDay(hr >= 6 && hr < 18)
+      try {
+        const jktHourStr = new Intl.DateTimeFormat('en-US', {
+          timeZone: 'Asia/Jakarta',
+          hour: 'numeric',
+          hour12: false,
+        }).format(new Date())
+        const hr = parseInt(jktHourStr, 10)
+        setIsDay(hr >= 6 && hr < 18)
+      } catch {
+        const hr = new Date().getHours()
+        setIsDay(hr >= 6 && hr < 18)
+      }
     }
 
     checkTime()
