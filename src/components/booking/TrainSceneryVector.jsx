@@ -1,8 +1,16 @@
 'use client'
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 
 export default function TrainSceneryVector({ isDay = false }) {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
   return (
     <div
       className="rh-scenery-wrapper"
@@ -122,7 +130,7 @@ export default function TrainSceneryVector({ isDay = false }) {
 
       {/* Panoramic Vector Canvas */}
       <svg
-        viewBox="0 0 1440 680"
+        viewBox={isMobile ? "200 0 1040 680" : "0 0 1440 680"}
         preserveAspectRatio="xMidYBottom slice"
         style={{
           position: 'absolute',
@@ -304,13 +312,13 @@ export default function TrainSceneryVector({ isDay = false }) {
 
         {/* 2. Celestial Body: Luminous Moon (Night) OR Radiant Golden Sun (Day) */}
         {!isDay ? (
-          <g transform="translate(1220, 45)" opacity="0.9">
+          <g transform={isMobile ? "translate(790, 45)" : "translate(1220, 45)"} opacity="0.9">
             <circle cx="28" cy="28" r="42" fill="url(#moonGlow)" />
             <circle cx="28" cy="28" r="20" fill="#f8fafc" />
             <circle cx="35" cy="23" r="18" fill="#0c234a" />
           </g>
         ) : (
-          <g transform="translate(1180, 40)">
+          <g transform={isMobile ? "translate(780, 40)" : "translate(1180, 40)"}>
             <circle cx="36" cy="36" r="62" fill="url(#sunGlow)" />
             <circle cx="36" cy="36" r="26" fill="#fbbf24" />
             <circle cx="36" cy="36" r="20" fill="#fffbeb" />
@@ -381,7 +389,7 @@ export default function TrainSceneryVector({ isDay = false }) {
 
         {/* 6. Layer 3: Near Hills & Valley Base */}
         <path
-          d="M0 580 L0 470 Q200 450 400 480 Q600 445 800 470 Q1000 440 1200 465 Q1340 450 1440 470 L1440 580 Z"
+          d="M-300 1400 L-300 470 Q200 450 400 480 Q600 445 800 470 Q1000 440 1200 465 Q1340 450 1740 470 L1740 1400 Z"
           fill="url(#hillsNear)"
         />
 
@@ -623,12 +631,12 @@ export default function TrainSceneryVector({ isDay = false }) {
 
         {/* 11. Anchoring Bottom Gradient Bed */}
         <rect
-          x="0"
-          y="580"
-          width="1440"
-          height="100"
+          x="-600"
+          y="560"
+          width="2640"
+          height="1400"
           fill="url(#hillsNear)"
-          opacity="0.98"
+          opacity="1"
         />
       </svg>
     </div>
