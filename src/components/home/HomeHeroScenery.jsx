@@ -248,3 +248,4 @@ export default function HomeHeroScenery({ isDay = true }) {
     </div>
   )
 }
+

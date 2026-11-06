@@ -65,10 +65,14 @@ export default function TrainsPageChrome({ empty, children }) {
               style={{
                 maxWidth: 620,
                 margin: 'clamp(0.5rem, 2.5vw, 1.75rem) auto',
-                background: '#ffffff',
+                background: isDay ? 'rgba(255, 255, 255, 0.76)' : 'rgba(10, 25, 48, 0.78)',
+                backdropFilter: 'blur(20px) saturate(180%)',
+                WebkitBackdropFilter: 'blur(20px) saturate(180%)',
                 borderRadius: 'clamp(20px, 4vw, 26px)',
-                boxShadow: '0 25px 60px -12px rgba(5, 17, 36, 0.45), 0 8px 24px -6px rgba(0, 0, 0, 0.15)',
-                border: '1px solid rgba(255, 255, 255, 0.9)',
+                boxShadow: isDay
+                  ? '0 25px 60px -12px rgba(2, 44, 102, 0.28), 0 10px 30px -8px rgba(0, 0, 0, 0.12), inset 0 1px 2px rgba(255, 255, 255, 0.9)'
+                  : '0 25px 60px -12px rgba(0, 0, 0, 0.55), 0 10px 30px -8px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.2)',
+                border: isDay ? '1.5px solid rgba(255, 255, 255, 0.85)' : '1.5px solid rgba(255, 255, 255, 0.18)',
                 overflow: 'hidden',
               }}
             >
@@ -122,7 +126,7 @@ export default function TrainsPageChrome({ empty, children }) {
                   className="rh-h3"
                   style={{
                     margin: '0 0 0.4rem',
-                    color: '#0f172a',
+                    color: isDay ? '#0f172a' : '#ffffff',
                     fontSize: 'clamp(1.3rem, 4vw, 1.7rem)',
                     fontWeight: 800,
                     letterSpacing: '-0.025em',
@@ -134,7 +138,7 @@ export default function TrainsPageChrome({ empty, children }) {
                 {/* Subtitle */}
                 <p
                   style={{
-                    color: '#64748b',
+                    color: isDay ? '#64748b' : 'rgba(255, 255, 255, 0.85)',
                     margin: '0 0 1.5rem',
                     fontSize: 'clamp(0.85rem, 2.5vw, 0.92rem)',
                     lineHeight: 1.5,

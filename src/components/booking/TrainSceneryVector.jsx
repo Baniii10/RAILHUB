@@ -68,6 +68,24 @@ export default function TrainSceneryVector({ isDay = false }) {
         .rh-anim-speedline { animation: rhSpeedLine 3s linear infinite; stroke-dasharray: 20, 10; }
         .rh-anim-sun-rays { transform-origin: 36px 36px; animation: rhSunRaysRotate 60s linear infinite; }
         .rh-anim-bird { animation: rhBirdFlap 3s ease-in-out infinite; }
+        @keyframes rhExpressTrainRide {
+          0% {
+            transform: translate(-1200px, 48px);
+          }
+          100% {
+            transform: translate(1500px, 48px);
+          }
+        }
+        .rh-anim-express-train {
+          animation: rhExpressTrainRide 14s linear infinite;
+          will-change: transform;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .rh-anim-express-train {
+            animation: none;
+            transform: translate(140px, 48px);
+          }
+        }
       ` }} />
 
       {/* Atmospheric Ambient Glows */}
@@ -425,7 +443,7 @@ export default function TrainSceneryVector({ isDay = false }) {
         </g>
 
         {/* 9. Modern Streamlined High-Speed Express Train */}
-        <g id="railhubExpressTrain" transform="translate(140, 48)">
+        <g id="railhubExpressTrain" className="rh-anim-express-train" transform="translate(140, 48)">
           {/* Luminous Headlight Beam illuminating the track */}
           <polygon
             points="725,432 1180,410 1200,470 725,444"

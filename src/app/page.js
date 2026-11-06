@@ -83,9 +83,14 @@ export default function HomePage() {
               <div
                 className="rh-search-card"
                 style={{
-                  background: '#ffffff',
+                  background: isDay ? 'rgba(255, 255, 255, 0.78)' : 'rgba(10, 25, 48, 0.76)',
+                  backdropFilter: 'blur(20px) saturate(180%)',
+                  WebkitBackdropFilter: 'blur(20px) saturate(180%)',
                   borderRadius: 24,
-                  boxShadow: '0 18px 45px rgba(5, 17, 36, 0.22)',
+                  boxShadow: isDay
+                    ? '0 24px 60px -12px rgba(2, 44, 102, 0.25), 0 10px 30px -8px rgba(0, 0, 0, 0.1), inset 0 1px 2px rgba(255, 255, 255, 0.85)'
+                    : '0 24px 60px -12px rgba(0, 0, 0, 0.5), 0 10px 30px -8px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.2)',
+                  border: isDay ? '1.5px solid rgba(255, 255, 255, 0.8)' : '1.5px solid rgba(255, 255, 255, 0.18)',
                   overflow: 'hidden',
                 }}
               >
