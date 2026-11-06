@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
 import {
   Armchair,
@@ -9,6 +9,11 @@ import {
   Briefcase,
   Check,
   ChevronRight,
+  Wifi,
+  Tv,
+  Coffee,
+  BatteryCharging,
+  ShieldCheck,
 } from 'lucide-react'
 import { useLang } from '@/contexts/LangContext'
 
@@ -17,15 +22,13 @@ const TRAVEL_CLASSES = [
     id: 'luxury',
     title: 'Luxury Sleeper',
     badge: 'Kenyamanan Tertinggi',
-    badgeEn: 'Ultimate Luxury',
     badgeColor: '#b45309',
+    badgeBg: 'rgba(245, 158, 11, 0.12)',
     price: 'Mulai Rp 450.000',
     priceEn: 'From Rp 450.000',
     image: '/images/kelas-luxury.webp',
     fallbackBg: 'linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4338ca 100%)',
     icon: Armchair,
-    quickChips: ['Recline 140°', 'Layar VOD', 'Free Meal & Snack'],
-    quickChipsEn: ['140° Recline', 'Personal VOD', 'Free Meal & Snack'],
     description: 'Pengalaman perjalanan paling eksklusif dengan privasi maksimal dan layanan setara first-class penerbangan internasional.',
     descriptionEn: 'The most exclusive travel experience with maximum privacy and first-class airline standard service.',
     features: [
@@ -45,15 +48,13 @@ const TRAVEL_CLASSES = [
     id: 'eksekutif',
     title: 'Eksekutif',
     badge: 'Paling Populer',
-    badgeEn: 'Most Popular',
     badgeColor: '#1a428a',
+    badgeBg: 'rgba(26, 66, 138, 0.12)',
     price: 'Mulai Rp 250.000',
     priceEn: 'From Rp 250.000',
-    image: '/images/interior-eksekutif.webp',
+    image: '/images/interior-eksekutif.webp', // File exists in public/images
     fallbackBg: 'linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #2563eb 100%)',
     icon: Train,
-    quickChips: ['Captain Seat 2-2', 'Rotasi 180°', 'WiFi Kabin'],
-    quickChipsEn: ['Captain Seat 2-2', '180° Rotating', 'Cabin WiFi'],
     description: 'Pilihan utama perjalanan dinas dan liburan keluarga dengan ruang kaki super lega dan kursi captain seat yang dapat diputar.',
     descriptionEn: 'The top choice for business and family travel with extra legroom and rotating captain seats.',
     features: [
@@ -73,15 +74,13 @@ const TRAVEL_CLASSES = [
     id: 'bisnis',
     title: 'Bisnis',
     badge: 'Pilihan Fleksibel',
-    badgeEn: 'Flexible Choice',
     badgeColor: '#0369a1',
+    badgeBg: 'rgba(2, 132, 199, 0.12)',
     price: 'Mulai Rp 180.000',
     priceEn: 'From Rp 180.000',
     image: '/images/kelas-bisnis.webp',
     fallbackBg: 'linear-gradient(135deg, #0c4a6e 0%, #0284c7 50%, #38bdf8 100%)',
     icon: Briefcase,
-    quickChips: ['Formasi 2-2', 'Pijakan Kaki', 'Akses Resto'],
-    quickChipsEn: ['2-2 Seating', 'Footrest', 'Dining Access'],
     description: 'Kombinasi ideal antara kenyamanan perjalanan antarkota dan efisiensi biaya dengan interior kabin yang lapang.',
     descriptionEn: 'The ideal combination of intercity travel comfort and cost efficiency with a spacious cabin interior.',
     features: [
@@ -101,15 +100,13 @@ const TRAVEL_CLASSES = [
     id: 'ekonomi',
     title: 'Ekonomi New Gen',
     badge: 'Terjangkau & Modern',
-    badgeEn: 'Affordable & Modern',
     badgeColor: '#047857',
+    badgeBg: 'rgba(5, 150, 105, 0.12)',
     price: 'Mulai Rp 120.000',
     priceEn: 'From Rp 120.000',
-    image: '/images/interior-ekonomi.webp',
+    image: '/images/interior-ekonomi.webp', // File exists in public/images
     fallbackBg: 'linear-gradient(135deg, #064e3b 0%, #059669 50%, #34d399 100%)',
     icon: Sparkles,
-    quickChips: ['Individual Recline', 'Hadap Depan', 'Fast USB Port'],
-    quickChipsEn: ['Individual Recline', 'Forward Facing', 'Fast USB Port'],
     description: 'Revolusi kelas ekonomi dengan kursi individual reclining seat yang menghadap searah laju kereta untuk kenyamanan maksimal.',
     descriptionEn: 'Revolutionary economy class with individual reclining seats facing the direction of travel.',
     features: [
@@ -130,128 +127,164 @@ const TRAVEL_CLASSES = [
 export default function TravelClassShowcase() {
   const { lang } = useLang()
   const [imgErrors, setImgErrors] = useState({})
-  const [activeIdx, setActiveIdx] = useState(0)
-  const sliderRef = useRef(null)
 
   function handleImageError(id) {
     setImgErrors(prev => ({ ...prev, [id]: true }))
   }
 
-  function handleScroll() {
-    if (!sliderRef.current) return
-    const el = sliderRef.current
-    const card = el.querySelector('.rh-class-showcase-card')
-    if (!card) return
-    const cardWidth = card.offsetWidth + 14
-    const newIdx = Math.round(el.scrollLeft / cardWidth)
-    if (newIdx !== activeIdx && newIdx >= 0 && newIdx < TRAVEL_CLASSES.length) {
-      setActiveIdx(newIdx)
-    }
-  }
-
-  function scrollToIndex(idx) {
-    if (!sliderRef.current) return
-    const el = sliderRef.current
-    const card = el.querySelector('.rh-class-showcase-card')
-    if (!card) return
-    const cardWidth = card.offsetWidth + 14
-    el.scrollTo({ left: idx * cardWidth, behavior: 'smooth' })
-    setActiveIdx(idx)
-  }
-
   return (
     <section className="rh-section home-classes-showcase" style={{ background: '#ffffff', paddingTop: '2.5rem', paddingBottom: '3rem' }}>
       <div className="rh-container">
-        {/* Header */}
-        <div style={{ textAlign: 'center', maxWidth: 640, margin: '0 auto 1.75rem' }}>
-          <h2 className="rh-h2" style={{ margin: '0 0 0.5rem', color: 'var(--rh-navy)', fontSize: 'clamp(1.35rem, 2.7vw, 1.95rem)', fontWeight: 800, letterSpacing: '-0.025em' }}>
+        {/* Header Title & Subtitle: Craft-floor - No banned kicker, balanced line length */}
+        <div style={{ textAlign: 'center', maxWidth: 640, margin: '0 auto 2.25rem' }}>
+          <h2 className="rh-h2" style={{ margin: '0 0 0.75rem', color: 'var(--rh-navy)', fontSize: 'clamp(1.4rem, 2.7vw, 2rem)', fontWeight: 800, letterSpacing: '-0.025em' }}>
             {lang === 'en' ? 'Choose Your Travel Class' : 'Pilihan Kelas Kereta Api'}
           </h2>
-          <p style={{ margin: '0 auto', maxWidth: '52ch', color: 'var(--rh-text-2)', fontSize: '0.9rem', lineHeight: 1.55 }}>
+          <p style={{ margin: '0 auto', maxWidth: '52ch', color: 'var(--rh-text-2)', fontSize: '0.94rem', lineHeight: 1.6, textWrap: 'balance' }}>
             {lang === 'en'
-              ? 'Enjoy the best intercity journey with our modern cabin fleet.'
-              : 'Pilihan kabin modern dengan kenyamanan terbaik untuk perjalanan antarkota Anda.'}
+              ? 'Enjoy the best intercity journey with our modern fleet designed to match your vacation, family, and business needs.'
+              : 'Nikmati kenyamanan perjalanan antarkota terbaik dengan pilihan armada modern sesuai gaya liburan, keluarga, dan dinas bisnis Anda.'}
           </p>
         </div>
 
-        {/* Showcase Grid / Mobile Snap Slider */}
-        <div
-          ref={sliderRef}
-          onScroll={handleScroll}
-          className="rh-class-showcase-slider"
-        >
+        {/* 4 Class Cards Grid with Photos */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 270px), 1fr))', gap: '1.25rem' }}>
           {TRAVEL_CLASSES.map(cls => {
             const hasError = imgErrors[cls.id]
             const Icon = cls.icon
             const features = lang === 'en' ? cls.featuresEn : cls.features
-            const chips = lang === 'en' ? cls.quickChipsEn : cls.quickChips
-            const badgeLabel = lang === 'en' ? cls.badgeEn : cls.badge
 
             return (
               <article
                 key={cls.id}
-                className="rh-card rh-class-showcase-card"
+                className="rh-card rh-card-interactive"
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  padding: 0,
+                  overflow: 'hidden',
+                  background: '#ffffff',
+                  border: '1px solid var(--rh-border)',
+                  borderRadius: 18,
+                  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)',
+                  transition: 'transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease',
+                }}
               >
-                {/* Hero Photo Banner - FOTO UTAMA */}
-                <div className="rh-class-card-hero">
+                {/* Card Image Banner */}
+                <div
+                  style={{
+                    position: 'relative',
+                    width: '100%',
+                    height: 190,
+                    background: cls.fallbackBg,
+                    overflow: 'hidden',
+                  }}
+                >
                   {!hasError ? (
                     <img
                       src={cls.image}
                       alt={`Interior ${cls.title}`}
                       onError={() => handleImageError(cls.id)}
-                      className="rh-class-card-img"
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        display: 'block',
+                        transition: 'transform 0.35s ease',
+                      }}
                     />
                   ) : (
-                    <div className="rh-class-card-img-fallback" style={{ background: cls.fallbackBg }}>
-                      <div className="rh-class-fallback-icon">
+                    /* Fallback Illustration Banner if image not yet filled in public/ */
+                    <div
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: 'white',
+                        textAlign: 'center',
+                        padding: '1rem',
+                        position: 'relative',
+                      }}
+                    >
+                      <div style={{ position: 'absolute', inset: 0, opacity: 0.15, background: 'radial-gradient(circle at 50% 50%, #ffffff, transparent)' }} />
+                      <div style={{ width: 52, height: 52, borderRadius: '50%', background: 'rgba(255,255,255,0.18)', display: 'grid', placeItems: 'center', marginBottom: 8, backdropFilter: 'blur(4px)' }}>
                         <Icon size={26} color="#ffffff" />
                       </div>
-                      <strong style={{ fontSize: '1rem', letterSpacing: '0.02em', color: '#fff' }}>{cls.title}</strong>
+                      <strong style={{ fontSize: '1rem', letterSpacing: '0.02em' }}>{cls.title}</strong>
+                      <span style={{ fontSize: '0.74rem', opacity: 0.85, marginTop: 2 }}>Foto interior kabin resmi</span>
                     </div>
                   )}
 
-                  {/* Gradient Overlay for Contrast */}
-                  <div className="rh-class-card-gradient" />
+                  {/* Gradient shadow overlay for text contrast */}
+                  <div
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      background: 'linear-gradient(180deg, rgba(0,0,0,0.3) 0%, transparent 40%, rgba(0,0,0,0.65) 100%)',
+                      pointerEvents: 'none',
+                    }}
+                  />
 
-                  {/* Top Badge */}
-                  <div className="rh-class-badge" style={{ color: cls.badgeColor }}>
-                    {badgeLabel}
+                  {/* Class Badge (Top-Left) */}
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: 12,
+                      left: 12,
+                      padding: '0.3rem 0.75rem',
+                      borderRadius: 8,
+                      background: 'rgba(255, 255, 255, 0.95)',
+                      backdropFilter: 'blur(6px)',
+                      color: cls.badgeColor,
+                      fontSize: '0.78rem',
+                      fontWeight: 800,
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+                      letterSpacing: '0.02em',
+                    }}
+                  >
+                    {cls.badge}
                   </div>
 
-                  {/* Price Tag */}
-                  <div className="rh-class-price-tag">
+                  {/* Price Tag (Bottom-Right overlay) */}
+                  <div
+                    style={{
+                      position: 'absolute',
+                      bottom: 12,
+                      right: 12,
+                      padding: '0.35rem 0.85rem',
+                      borderRadius: 8,
+                      background: 'rgba(15, 23, 42, 0.9)',
+                      backdropFilter: 'blur(6px)',
+                      color: '#ffffff',
+                      fontSize: '0.85rem',
+                      fontWeight: 800,
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
+                    }}
+                  >
                     {lang === 'en' ? cls.priceEn : cls.price}
-                  </div>
-
-                  {/* Title overlay directly on photo for Mobile Hero Effect */}
-                  <div className="rh-class-hero-overlay-title">
-                    <h3 className="rh-class-title-text">
-                      {cls.title}
-                    </h3>
                   </div>
                 </div>
 
-                {/* Card Content Body */}
-                <div className="rh-class-card-body">
-                  {/* Desktop Description (Hidden on mobile) */}
-                  <p className="rh-class-desktop-desc">
+                {/* Card Body */}
+                <div style={{ padding: '1.25rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.45rem' }}>
+                    <h3 className="rh-h4" style={{ margin: 0, fontSize: '1.2rem', color: 'var(--rh-navy)', fontWeight: 800 }}>
+                      {cls.title}
+                    </h3>
+                  </div>
+
+                  <p style={{ margin: '0 0 1rem', color: 'var(--rh-text-2)', fontSize: '0.875rem', lineHeight: 1.55, flex: '0 0 auto' }}>
                     {lang === 'en' ? cls.descriptionEn : cls.description}
                   </p>
 
-                  {/* Mobile Quick Chips (Concise highlights instead of wall of text) */}
-                  <div className="rh-class-chips-row">
-                    {chips.map((chip, cIdx) => (
-                      <span key={cIdx} className="rh-class-chip">
-                        {chip}
-                      </span>
-                    ))}
-                  </div>
-
-                  {/* Desktop 4 Feature Bullets (Hidden on mobile) */}
-                  <ul className="rh-class-desktop-features">
-                    {features.map((feat, fIdx) => (
-                      <li key={fIdx} className="rh-class-feature-item">
-                        <span className="rh-class-check-circle">
+                  {/* Feature Bullets */}
+                  <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 1.25rem', display: 'grid', gap: '0.5rem', flex: 1 }}>
+                    {features.map((feat, idx) => (
+                      <li key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem', fontSize: '0.82rem', color: '#334155', lineHeight: 1.45 }}>
+                        <span style={{ width: 18, height: 18, borderRadius: '50%', background: 'rgba(5, 150, 105, 0.12)', color: '#059669', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>
                           <Check size={12} strokeWidth={3} />
                         </span>
                         <span>{feat}</span>
@@ -262,7 +295,17 @@ export default function TravelClassShowcase() {
                   {/* Action Button */}
                   <Link
                     href={`/trains?class=${encodeURIComponent(cls.id)}`}
-                    className="rh-btn rh-btn-primary rh-class-action-btn"
+                    className="rh-btn rh-btn-primary"
+                    style={{
+                      width: '100%',
+                      justifyContent: 'center',
+                      fontSize: '0.875rem',
+                      padding: '0.7rem 1rem',
+                      borderRadius: 10,
+                      textDecoration: 'none',
+                      gap: '0.35rem',
+                      fontWeight: 700,
+                    }}
                   >
                     <span>{lang === 'en' ? `Book ${cls.title}` : `Pilih Tiket ${cls.title}`}</span>
                     <ChevronRight size={15} />
@@ -273,25 +316,12 @@ export default function TravelClassShowcase() {
           })}
         </div>
 
-        {/* Mobile Swipe Indicators (Dots) */}
-        <div className="rh-class-mobile-dots rh-show-mobile-only">
-          {TRAVEL_CLASSES.map((cls, idx) => (
-            <button
-              key={cls.id}
-              type="button"
-              onClick={() => scrollToIndex(idx)}
-              aria-label={`Lihat kelas ${cls.title}`}
-              className={`rh-class-dot ${activeIdx === idx ? 'is-active' : ''}`}
-            />
-          ))}
-        </div>
-
         {/* Bottom Link */}
         <div style={{ textAlign: 'center', marginTop: '1.75rem' }}>
           <Link
             href="/trains"
             style={{
-              fontSize: '0.875rem',
+              fontSize: '0.85rem',
               color: 'var(--rh-primary)',
               fontWeight: 700,
               textDecoration: 'none',
@@ -308,3 +338,4 @@ export default function TravelClassShowcase() {
     </section>
   )
 }
+

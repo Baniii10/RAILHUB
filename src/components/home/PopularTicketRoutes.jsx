@@ -119,13 +119,13 @@ function TicketCard({ route, onClick, lang }) {
       >
         <span
           style={{
-            fontSize: '0.8125rem',
+            fontSize: '0.78rem',
             fontWeight: 700,
             textTransform: 'uppercase',
             letterSpacing: '0.04em',
             color: '#1a428a',
             background: '#eff6ff',
-            padding: '0.35rem 0.7rem',
+            padding: '0.3rem 0.65rem',
             borderRadius: 6,
           }}
         >
@@ -137,12 +137,12 @@ function TicketCard({ route, onClick, lang }) {
             display: 'inline-flex',
             alignItems: 'center',
             gap: 5,
-            fontSize: '0.85rem',
+            fontSize: '0.8125rem',
             fontWeight: 600,
             color: '#64748b',
           }}
         >
-          <Clock size={15} strokeWidth={2.2} />
+          <Clock size={14} strokeWidth={2.2} />
           {lang === 'en' ? route.duration.replace('Jam', 'h').replace('Menit', 'm') : route.duration}
         </span>
       </div>
@@ -232,14 +232,14 @@ function TicketCard({ route, onClick, lang }) {
         }}
       >
         <div>
-          <span style={{ fontSize: '0.8125rem', color: '#64748b', display: 'block', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
+          <span style={{ fontSize: '0.78rem', color: '#64748b', display: 'block', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
             {lang === 'en' ? 'Starting From' : 'Mulai Dari'}
           </span>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, flexWrap: 'wrap' }}>
             {route.originalPrice && (
               <span
                 style={{
-                  fontSize: '0.85rem',
+                  fontSize: '0.8125rem',
                   color: '#94a3b8',
                   textDecoration: 'line-through',
                   fontWeight: 600,
@@ -250,7 +250,7 @@ function TicketCard({ route, onClick, lang }) {
             )}
             <span
               style={{
-                fontSize: '1.1rem',
+                fontSize: '1.05rem',
                 fontWeight: 800,
                 color: route.originalPrice ? '#ea580c' : '#0f172a',
                 letterSpacing: '-0.01em',

@@ -249,15 +249,12 @@ export default function TrainSearchResults({ origin, destination, date, returnDa
           ============================================================ */}
       <header
         style={{
-          background: 'rgba(10, 25, 48, 0.75)',
-          backdropFilter: 'blur(16px)',
-          WebkitBackdropFilter: 'blur(16px)',
+          background: 'var(--rh-primary)',
           color: '#ffffff',
-          borderRadius: 14,
+          borderRadius: 12,
           padding: '0.875rem 1rem',
           marginBottom: '0.5rem',
-          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.35)',
-          border: '1px solid rgba(255, 255, 255, 0.16)',
+          boxShadow: '0 4px 14px rgba(26, 66, 138, 0.2)',
           position: 'relative',
         }}
       >
@@ -369,14 +366,12 @@ export default function TrainSearchResults({ origin, destination, date, returnDa
       <section
         aria-label="Pilih tanggal keberangkatan"
         style={{
-          background: 'rgba(10, 25, 48, 0.72)',
-          backdropFilter: 'blur(16px)',
-          WebkitBackdropFilter: 'blur(16px)',
+          background: '#ffffff',
           borderRadius: 14,
-          border: '1px solid rgba(255, 255, 255, 0.14)',
+          border: '1px solid var(--rh-border)',
           padding: '0.25rem',
           marginBottom: '0.5rem',
-          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+          boxShadow: 'var(--shadow-sm)',
         }}
       >
         <div
@@ -401,8 +396,8 @@ export default function TrainSearchResults({ origin, destination, date, returnDa
                 minWidth: '76px',
                 padding: '0.45rem 0.4rem',
                 borderRadius: 10,
-                border: tab.isActive ? '1.5px solid #f97316' : '1px solid transparent',
-                background: tab.isActive ? 'rgba(249, 115, 22, 0.22)' : 'transparent',
+                border: tab.isActive ? '2px solid var(--rh-accent)' : '1px solid transparent',
+                background: tab.isActive ? 'rgba(255, 140, 0, 0.08)' : 'transparent',
                 cursor: 'pointer',
                 textAlign: 'center',
                 transition: 'all 0.15s ease',
@@ -413,7 +408,7 @@ export default function TrainSearchResults({ origin, destination, date, returnDa
                 style={{
                   fontSize: '0.875rem',
                   fontWeight: tab.isActive ? 800 : 600,
-                  color: tab.isActive ? '#fb923c' : '#ffffff',
+                  color: tab.isActive ? 'var(--rh-accent-dark)' : 'var(--rh-text)',
                   lineHeight: 1.2,
                 }}
               >
@@ -423,7 +418,7 @@ export default function TrainSearchResults({ origin, destination, date, returnDa
                 style={{
                   fontSize: '0.725rem',
                   fontWeight: tab.isActive ? 700 : 500,
-                  color: tab.isActive ? '#fed7aa' : 'rgba(255, 255, 255, 0.7)',
+                  color: tab.isActive ? 'var(--rh-accent)' : 'var(--rh-text-3)',
                   marginTop: '0.2rem',
                 }}
               >
@@ -437,7 +432,7 @@ export default function TrainSearchResults({ origin, destination, date, returnDa
                     left: '25%',
                     right: '25%',
                     height: 3,
-                    background: '#f97316',
+                    background: 'var(--rh-accent)',
                     borderRadius: 2,
                   }}
                 />
@@ -454,12 +449,10 @@ export default function TrainSearchResults({ origin, destination, date, returnDa
           gridTemplateColumns: '1fr 1px 1fr',
           alignItems: 'center',
           marginBottom: '0.5rem',
-          border: '1px solid rgba(255, 255, 255, 0.14)',
+          border: '1px solid var(--rh-border)',
           borderRadius: 12,
-          background: 'rgba(10, 25, 48, 0.72)',
-          backdropFilter: 'blur(16px)',
-          WebkitBackdropFilter: 'blur(16px)',
-          boxShadow: '0 8px 24px rgba(0, 0, 0, 0.25)',
+          background: '#ffffff',
+          boxShadow: 'var(--shadow-sm)',
         }}
       >
         <button
@@ -473,17 +466,17 @@ export default function TrainSearchResults({ origin, destination, date, returnDa
             gap: '0.45rem',
             border: 0,
             background: 'transparent',
-            color: '#ffffff',
+            color: 'var(--rh-navy)',
             fontSize: '0.8rem',
             fontWeight: 750,
             cursor: 'pointer',
           }}
         >
-          <ArrowUpDown size={15} style={{ color: '#fb923c' }} />
+          <ArrowUpDown size={15} style={{ color: 'var(--rh-accent)' }} />
           Urutkan
         </button>
 
-        <span style={{ width: 1, height: 24, background: 'rgba(255, 255, 255, 0.15)' }} />
+        <span style={{ width: 1, height: 24, background: 'var(--rh-border)' }} />
 
         <button
           type="button"
@@ -496,13 +489,13 @@ export default function TrainSearchResults({ origin, destination, date, returnDa
             gap: '0.45rem',
             border: 0,
             background: 'transparent',
-            color: '#ffffff',
+            color: 'var(--rh-navy)',
             fontSize: '0.8rem',
             fontWeight: 750,
             cursor: 'pointer',
           }}
         >
-          <Filter size={15} style={{ color: '#fb923c' }} />
+          <Filter size={15} style={{ color: 'var(--rh-accent)' }} />
           Filter
           {(classFilter !== 'Semua' || timeFilter !== 'all') && (
             <span aria-label="Filter aktif" style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--rh-accent)' }} />
@@ -536,14 +529,12 @@ export default function TrainSearchResults({ origin, destination, date, returnDa
                 fontSize: '0.85rem',
                 fontWeight: isSelected ? 700 : 500,
                 cursor: 'pointer',
-                border: isSelected ? '1.5px solid #f97316' : '1px solid rgba(255, 255, 255, 0.14)',
-                background: isSelected ? 'rgba(249, 115, 22, 0.28)' : 'rgba(10, 25, 48, 0.65)',
-                backdropFilter: 'blur(12px)',
-                WebkitBackdropFilter: 'blur(12px)',
-                color: isSelected ? '#ffffff' : 'rgba(255, 255, 255, 0.85)',
+                border: isSelected ? '1.5px solid var(--rh-accent)' : '1px solid var(--rh-border)',
+                background: isSelected ? 'rgba(255, 140, 0, 0.12)' : '#ffffff',
+                color: isSelected ? 'var(--rh-accent-dark)' : 'var(--rh-text-2)',
                 whiteSpace: 'nowrap',
                 transition: 'all 0.15s ease',
-                boxShadow: isSelected ? '0 2px 10px rgba(249, 115, 22, 0.35)' : 'none',
+                boxShadow: isSelected ? '0 2px 8px rgba(255, 140, 0, 0.2)' : 'none',
               }}
             >
               {cls}
@@ -557,7 +548,7 @@ export default function TrainSearchResults({ origin, destination, date, returnDa
           ============================================================ */}
       {loading && (
         <div>
-          <div className="rh-card" style={{ marginBottom: '1rem', background: 'rgba(10, 25, 48, 0.72)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', border: '1px solid rgba(255, 255, 255, 0.14)', borderRadius: 16 }}>
+          <div className="rh-card" style={{ marginBottom: '1rem', background: '#ffffff', borderRadius: 16 }}>
             <TrainTrackLoader
               text="Mencari jadwal kereta terbaik…"
               subtext={`Menghubungkan stasiun ${origin} menuju ${destination}`}
@@ -573,8 +564,8 @@ export default function TrainSearchResults({ origin, destination, date, returnDa
           ERROR OR EMPTY STATE
           ============================================================ */}
       {!loading && filteredAndSortedRows.length === 0 && (
-        <div className="rh-card" style={{ padding: '3rem 1.5rem', textAlign: 'center', background: 'rgba(10, 25, 48, 0.75)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', border: '1px solid rgba(255, 255, 255, 0.14)', borderRadius: 16, color: '#ffffff' }}>
-          <Train size={36} style={{ color: '#38bdf8', margin: '0 auto 1rem', opacity: 0.9 }} />
+        <div className="rh-card" style={{ padding: '3rem 1.5rem', textAlign: 'center', background: '#ffffff', borderRadius: 16 }}>
+          <Train size={36} style={{ color: 'var(--rh-primary)', margin: '0 auto 1rem', opacity: 0.7 }} />
           <h2 className="rh-h3" style={{ margin: 0 }}>Tidak ada jadwal ditemukan</h2>
           <p style={{ color: 'var(--rh-text-2)', margin: '0.5rem auto 1.5rem', maxWidth: 440, fontSize: '0.9rem' }}>
             {error || <>Tidak ada kereta yang sesuai dengan filter kelas <strong>{classFilter}</strong> untuk tanggal ini. Coba pilih kelas &quot;Semua&quot; atau tanggal keberangkatan lain.</>}
@@ -665,14 +656,12 @@ export default function TrainSearchResults({ origin, destination, date, returnDa
                 key={`${row.schedule_id}-${row.subclass || row.carriage_class}`}
                 className="rh-card"
                 style={{
-                  background: 'rgba(10, 25, 48, 0.72)',
-                  backdropFilter: 'blur(16px)',
-                  WebkitBackdropFilter: 'blur(16px)',
+                  background: '#ffffff',
                   borderRadius: 14,
-                  border: '1px solid rgba(255, 255, 255, 0.14)',
-                  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.35)',
+                  border: '1px solid var(--rh-border)',
+                  boxShadow: 'var(--shadow-sm)',
                   overflow: 'hidden',
-                  transition: 'box-shadow 0.2s, border-color 0.2s, transform 0.2s',
+                  transition: 'box-shadow 0.2s, border-color 0.2s',
                 }}
               >
                 <div style={{ padding: '1rem 1rem 0.75rem' }}>
@@ -691,7 +680,7 @@ export default function TrainSearchResults({ origin, destination, date, returnDa
                         style={{
                           fontSize: '1.05rem',
                           fontWeight: 800,
-                          color: '#ffffff',
+                          color: 'var(--rh-navy)',
                           margin: 0,
                           lineHeight: 1.2,
                         }}
@@ -701,7 +690,7 @@ export default function TrainSearchResults({ origin, destination, date, returnDa
                       <div
                         style={{
                           fontSize: '0.85rem',
-                          color: 'rgba(255, 255, 255, 0.7)',
+                          color: 'var(--rh-text-3)',
                           fontWeight: 500,
                           marginTop: '0.15rem',
                         }}
@@ -716,13 +705,13 @@ export default function TrainSearchResults({ origin, destination, date, returnDa
                         style={{
                           fontSize: '1.1rem',
                           fontWeight: 800,
-                          color: '#fb923c',
+                          color: 'var(--rh-accent-dark)',
                           marginTop: '0.25rem',
                           lineHeight: 1.2,
                         }}
                       >
                         {formatIDR(row.price)}
-                        <span style={{ fontSize: '0.75rem', fontWeight: 500, color: 'rgba(255, 255, 255, 0.65)', marginLeft: 3 }}>
+                        <span style={{ fontSize: '0.75rem', fontWeight: 500, color: 'var(--rh-text-3)', marginLeft: 3 }}>
                           /Org
                         </span>
                       </div>
@@ -739,9 +728,9 @@ export default function TrainSearchResults({ origin, destination, date, returnDa
                             fontWeight: 700,
                             padding: '0.15rem 0.45rem',
                             borderRadius: 6,
-                            background: 'rgba(239, 68, 68, 0.22)',
-                            color: '#fca5a5',
-                            border: '1px solid rgba(239, 68, 68, 0.4)',
+                            background: 'var(--rh-secondary-light)',
+                            color: 'var(--rh-secondary)',
+                            border: '1px solid #FFD9D1',
                           }}
                         >
                           Terlaris
@@ -754,9 +743,9 @@ export default function TrainSearchResults({ origin, destination, date, returnDa
                             fontWeight: 700,
                             padding: '0.15rem 0.45rem',
                             borderRadius: 6,
-                            background: 'rgba(245, 158, 11, 0.22)',
-                            color: '#fde047',
-                            border: '1px solid rgba(245, 158, 11, 0.4)',
+                            background: 'var(--rh-warning-light)',
+                            color: 'var(--rh-accent-dark)',
+                            border: '1px solid #FDE68A',
                           }}
                         >
                           Harga Termurah
@@ -769,9 +758,9 @@ export default function TrainSearchResults({ origin, destination, date, returnDa
                             fontWeight: 700,
                             padding: '0.15rem 0.45rem',
                             borderRadius: 6,
-                            background: 'rgba(59, 130, 246, 0.22)',
-                            color: '#93c5fd',
-                            border: '1px solid rgba(59, 130, 246, 0.4)',
+                            background: 'var(--rh-primary-light)',
+                            color: 'var(--rh-primary)',
+                            border: '1px solid #BFDBFE',
                           }}
                         >
                           Rekomendasi
@@ -784,9 +773,9 @@ export default function TrainSearchResults({ origin, destination, date, returnDa
                             fontWeight: 700,
                             padding: '0.15rem 0.45rem',
                             borderRadius: 6,
-                            background: 'rgba(16, 185, 129, 0.22)',
-                            color: '#6ee7b7',
-                            border: '1px solid rgba(16, 185, 129, 0.4)',
+                            background: 'var(--rh-primary-light)',
+                            color: 'var(--rh-primary)',
+                            border: '1px solid #A7F3D0',
                           }}
                         >
                           Tercepat
@@ -811,7 +800,7 @@ export default function TrainSearchResults({ origin, destination, date, returnDa
                         style={{
                           fontSize: '1.2rem',
                           fontWeight: 800,
-                          color: '#ffffff',
+                          color: 'var(--rh-navy)',
                           lineHeight: 1,
                         }}
                       >
@@ -820,7 +809,7 @@ export default function TrainSearchResults({ origin, destination, date, returnDa
                       <div
                         style={{
                           fontSize: '0.825rem',
-                          color: '#f1f5f9',
+                          color: 'var(--rh-text-2)',
                           fontWeight: 600,
                           marginTop: '0.2rem',
                           whiteSpace: 'nowrap',
@@ -830,7 +819,7 @@ export default function TrainSearchResults({ origin, destination, date, returnDa
                       >
                         {row.origin_name}
                       </div>
-                      <div style={{ fontSize: '0.75rem', color: 'rgba(255, 255, 255, 0.65)' }}>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--rh-text-3)' }}>
                         ({row.origin_code})
                       </div>
                     </div>
@@ -839,7 +828,8 @@ export default function TrainSearchResults({ origin, destination, date, returnDa
                     <div style={{ textAlign: 'center', padding: '0 0.5rem' }}>
                       <span
                         style={{
-                          fontSize: '0.75rem', color: 'rgba(255, 255, 255, 0.65)',
+                          fontSize: '0.75rem',
+                          color: 'var(--rh-text-3)',
                           fontWeight: 600,
                           display: 'block',
                           marginBottom: '0.25rem',
@@ -855,16 +845,16 @@ export default function TrainSearchResults({ origin, destination, date, returnDa
                           width: '80px',
                         }}
                       >
-                        <div style={{ height: 1.5, flex: 1, background: 'rgba(255, 255, 255, 0.2)' }} />
+                        <div style={{ height: 1.5, flex: 1, background: 'var(--rh-border)' }} />
                         <div
                           style={{
                             width: 6,
                             height: 6,
                             borderRadius: '50%',
-                            background: '#38bdf8',
+                            background: 'var(--rh-primary)',
                           }}
                         />
-                        <div style={{ height: 1.5, flex: 1, background: 'rgba(255, 255, 255, 0.2)' }} />
+                        <div style={{ height: 1.5, flex: 1, background: 'var(--rh-border)' }} />
                       </div>
                     </div>
 
@@ -881,9 +871,9 @@ export default function TrainSearchResults({ origin, destination, date, returnDa
                         <span
                           style={{
                             fontSize: '1.2rem',
-                          fontWeight: 800,
-                          color: '#ffffff',
-                          lineHeight: 1,
+                            fontWeight: 800,
+                            color: 'var(--rh-navy)',
+                            lineHeight: 1,
                           }}
                         >
                           {row.arrival_time_label || formatTime(row.arrival_time)}
@@ -906,7 +896,7 @@ export default function TrainSearchResults({ origin, destination, date, returnDa
                       <div
                         style={{
                           fontSize: '0.825rem',
-                          color: '#f1f5f9',
+                          color: 'var(--rh-text-2)',
                           fontWeight: 600,
                           marginTop: '0.2rem',
                           whiteSpace: 'nowrap',
@@ -916,7 +906,7 @@ export default function TrainSearchResults({ origin, destination, date, returnDa
                       >
                         {row.destination_name}
                       </div>
-                      <div style={{ fontSize: '0.75rem', color: 'rgba(255, 255, 255, 0.65)' }}>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--rh-text-3)' }}>
                         ({row.destination_code})
                       </div>
                     </div>
@@ -925,7 +915,7 @@ export default function TrainSearchResults({ origin, destination, date, returnDa
                   {/* Actions & Accordion Button */}
                   <div
                     style={{
-                      borderTop: '1px solid rgba(255, 255, 255, 0.12)',
+                      borderTop: '1px solid var(--rh-border)',
                       marginTop: '0.5rem',
                       paddingTop: '0.5rem',
                       display: 'flex',
@@ -940,7 +930,7 @@ export default function TrainSearchResults({ origin, destination, date, returnDa
                       style={{
                         background: 'none',
                         border: 'none',
-                        color: '#38bdf8',
+                        color: 'var(--rh-primary)',
                         fontSize: '0.8rem',
                         fontWeight: 600,
                         cursor: 'pointer',
@@ -958,7 +948,7 @@ export default function TrainSearchResults({ origin, destination, date, returnDa
                     </button>
 
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                      <span style={{ fontSize: '0.78rem', color: '#4ade80', fontWeight: 600 }}>
+                      <span style={{ fontSize: '0.78rem', color: 'var(--rh-text-3)' }}>
                         <span className="rh-hide-mobile">Tersedia </span>{row.available_seats} kursi
                       </span>
                       {returnDate && activeLeg === 'outbound' ? (
@@ -994,8 +984,6 @@ export default function TrainSearchResults({ origin, destination, date, returnDa
                             borderRadius: 8,
                             padding: '0.45rem 1.15rem',
                             fontWeight: 700,
-                            background: 'linear-gradient(135deg, #f97316 0%, #ea580c 100%)',
-                            boxShadow: '0 4px 14px rgba(234, 88, 12, 0.4)',
                           }}
                         >
                           Pilih
@@ -1009,15 +997,15 @@ export default function TrainSearchResults({ origin, destination, date, returnDa
                 {isExpanded && (
                   <div
                     style={{
-                      background: 'rgba(6, 15, 30, 0.75)',
-                      borderTop: '1px solid rgba(255, 255, 255, 0.12)',
+                      background: 'var(--rh-surface)',
+                      borderTop: '1px solid var(--rh-border)',
                       padding: '1rem',
                       fontSize: '0.85rem',
                     }}
                   >
                     <div style={{ display: 'grid', gap: '1rem' }}>
                       <div>
-                        <strong style={{ color: '#ffffff', display: 'block', marginBottom: '0.35rem' }}>
+                        <strong style={{ color: 'var(--rh-navy)', display: 'block', marginBottom: '0.35rem' }}>
                           Fasilitas Gerbong {row.carriage_class}:
                         </strong>
                         <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
@@ -1028,15 +1016,15 @@ export default function TrainSearchResults({ origin, destination, date, returnDa
                                 display: 'inline-flex',
                                 alignItems: 'center',
                                 gap: '0.35rem',
-                                background: 'rgba(255, 255, 255, 0.08)',
-                                border: '1px solid rgba(255, 255, 255, 0.14)',
+                                background: '#ffffff',
+                                border: '1px solid var(--rh-border)',
                                 padding: '0.25rem 0.6rem',
                                 borderRadius: 6,
                                 fontSize: '0.78rem',
-                                color: '#e2e8f0',
+                                color: 'var(--rh-text-2)',
                               }}
                             >
-                              <Check size={13} style={{ color: '#38bdf8' }} /> {amenity}
+                              <Check size={13} style={{ color: 'var(--rh-accent)' }} /> {amenity}
                             </span>
                           ))}
                         </div>

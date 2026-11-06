@@ -2,7 +2,7 @@
 
 import React from 'react'
 
-export default function TrainSceneryVector({ isDay = false }) {
+export default function TrainSceneryVector() {
   return (
     <div
       className="rh-scenery-wrapper"
@@ -13,7 +13,6 @@ export default function TrainSceneryVector({ isDay = false }) {
         overflow: 'hidden',
         pointerEvents: 'none',
         zIndex: 0,
-        transition: 'all 0.6s ease',
       }}
     >
       <style dangerouslySetInnerHTML={{ __html: `
@@ -48,14 +47,6 @@ export default function TrainSceneryVector({ isDay = false }) {
           50% { opacity: 0.8; }
           100% { stroke-dashoffset: 0; opacity: 0.2; }
         }
-        @keyframes rhSunRaysRotate {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
-        @keyframes rhBirdFlap {
-          0%, 100% { transform: translateY(0px) scaleY(1); }
-          50% { transform: translateY(-4px) scaleY(0.85); }
-        }
 
         .rh-anim-star-1 { animation: rhStarTwinkle 3s ease-in-out infinite; }
         .rh-anim-star-2 { animation: rhStarTwinkle 4.2s ease-in-out 1s infinite; }
@@ -66,8 +57,6 @@ export default function TrainSceneryVector({ isDay = false }) {
         .rh-anim-signal { animation: rhSignalGlow 2.5s ease-in-out infinite; }
         .rh-anim-spark { animation: rhSparkGlow 1.8s ease-in-out infinite; }
         .rh-anim-speedline { animation: rhSpeedLine 3s linear infinite; stroke-dasharray: 20, 10; }
-        .rh-anim-sun-rays { transform-origin: 36px 36px; animation: rhSunRaysRotate 60s linear infinite; }
-        .rh-anim-bird { animation: rhBirdFlap 3s ease-in-out infinite; }
       ` }} />
 
       {/* Atmospheric Ambient Glows */}
@@ -80,11 +69,8 @@ export default function TrainSceneryVector({ isDay = false }) {
           width: '100%',
           maxWidth: 1200,
           height: 380,
-          background: isDay
-            ? 'radial-gradient(ellipse at 50% 20%, rgba(254, 240, 138, 0.45) 0%, rgba(56, 189, 248, 0.22) 50%, transparent 70%)'
-            : 'radial-gradient(ellipse at 50% 20%, rgba(59, 130, 246, 0.25) 0%, rgba(37, 99, 235, 0.1) 45%, transparent 70%)',
+          background: 'radial-gradient(ellipse at 50% 20%, rgba(59, 130, 246, 0.25) 0%, rgba(37, 99, 235, 0.1) 45%, transparent 70%)',
           filter: 'blur(35px)',
-          transition: 'background 0.6s ease',
         }}
       />
       <div
@@ -94,11 +80,8 @@ export default function TrainSceneryVector({ isDay = false }) {
           left: 0,
           right: 0,
           height: 320,
-          background: isDay
-            ? 'radial-gradient(ellipse at 50% 100%, rgba(34, 197, 94, 0.3) 0%, rgba(56, 189, 248, 0) 75%)'
-            : 'radial-gradient(ellipse at 50% 100%, rgba(29, 78, 216, 0.35) 0%, rgba(10, 25, 47, 0) 75%)',
+          background: 'radial-gradient(ellipse at 50% 100%, rgba(29, 78, 216, 0.35) 0%, rgba(10, 25, 47, 0) 75%)',
           filter: 'blur(25px)',
-          transition: 'background 0.6s ease',
         }}
       />
 
@@ -119,81 +102,32 @@ export default function TrainSceneryVector({ isDay = false }) {
         <defs>
           {/* Gradients */}
           <linearGradient id="scenerySky" x1="0%" y1="0%" x2="0%" y2="100%">
-            {isDay ? (
-              <>
-                <stop offset="0%" stopColor="#38bdf8" />
-                <stop offset="30%" stopColor="#60a5fa" />
-                <stop offset="60%" stopColor="#93c5fd" />
-                <stop offset="85%" stopColor="#bfdbfe" />
-                <stop offset="100%" stopColor="#e0f2fe" />
-              </>
-            ) : (
-              <>
-                <stop offset="0%" stopColor="#061325" />
-                <stop offset="30%" stopColor="#0a2246" />
-                <stop offset="60%" stopColor="#113872" />
-                <stop offset="85%" stopColor="#174f9d" />
-                <stop offset="100%" stopColor="#1d63c6" />
-              </>
-            )}
+            <stop offset="0%" stopColor="#061325" />
+            <stop offset="30%" stopColor="#0a2246" />
+            <stop offset="60%" stopColor="#113872" />
+            <stop offset="85%" stopColor="#174f9d" />
+            <stop offset="100%" stopColor="#1d63c6" />
           </linearGradient>
 
           <linearGradient id="mountainFar" x1="0%" y1="0%" x2="0%" y2="100%">
-            {isDay ? (
-              <>
-                <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.85" />
-                <stop offset="100%" stopColor="#1d4ed8" stopOpacity="0.95" />
-              </>
-            ) : (
-              <>
-                <stop offset="0%" stopColor="#183c72" stopOpacity="0.85" />
-                <stop offset="100%" stopColor="#0a1e3b" stopOpacity="0.95" />
-              </>
-            )}
+            <stop offset="0%" stopColor="#183c72" stopOpacity="0.85" />
+            <stop offset="100%" stopColor="#0a1e3b" stopOpacity="0.95" />
           </linearGradient>
 
           <linearGradient id="mountainMid" x1="0%" y1="0%" x2="0%" y2="100%">
-            {isDay ? (
-              <>
-                <stop offset="0%" stopColor="#059669" />
-                <stop offset="100%" stopColor="#047857" />
-              </>
-            ) : (
-              <>
-                <stop offset="0%" stopColor="#1c4889" />
-                <stop offset="100%" stopColor="#081834" />
-              </>
-            )}
+            <stop offset="0%" stopColor="#1c4889" />
+            <stop offset="100%" stopColor="#081834" />
           </linearGradient>
 
           <linearGradient id="hillsNear" x1="0%" y1="0%" x2="0%" y2="100%">
-            {isDay ? (
-              <>
-                <stop offset="0%" stopColor="#16a34a" />
-                <stop offset="100%" stopColor="#14532d" />
-              </>
-            ) : (
-              <>
-                <stop offset="0%" stopColor="#123060" />
-                <stop offset="100%" stopColor="#040e20" />
-              </>
-            )}
+            <stop offset="0%" stopColor="#123060" />
+            <stop offset="100%" stopColor="#040e20" />
           </linearGradient>
 
           <linearGradient id="viaductGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-            {isDay ? (
-              <>
-                <stop offset="0%" stopColor="#94a3b8" />
-                <stop offset="50%" stopColor="#64748b" />
-                <stop offset="100%" stopColor="#334155" />
-              </>
-            ) : (
-              <>
-                <stop offset="0%" stopColor="#1d427d" />
-                <stop offset="50%" stopColor="#112952" />
-                <stop offset="100%" stopColor="#061226" />
-              </>
-            )}
+            <stop offset="0%" stopColor="#1d427d" />
+            <stop offset="50%" stopColor="#112952" />
+            <stop offset="100%" stopColor="#061226" />
           </linearGradient>
 
           <linearGradient id="trainBodyGrad" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -215,17 +149,8 @@ export default function TrainSceneryVector({ isDay = false }) {
           </linearGradient>
 
           <linearGradient id="windowGlow" x1="0%" y1="0%" x2="0%" y2="100%">
-            {isDay ? (
-              <>
-                <stop offset="0%" stopColor="#bae6fd" />
-                <stop offset="100%" stopColor="#38bdf8" />
-              </>
-            ) : (
-              <>
-                <stop offset="0%" stopColor="#fef08a" />
-                <stop offset="100%" stopColor="#fde047" />
-              </>
-            )}
+            <stop offset="0%" stopColor="#fef08a" />
+            <stop offset="100%" stopColor="#fde047" />
           </linearGradient>
 
           <linearGradient id="windshieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -236,9 +161,9 @@ export default function TrainSceneryVector({ isDay = false }) {
           </linearGradient>
 
           <linearGradient id="lightBeamGrad" x1="0%" y1="50%" x2="100%" y2="50%">
-            <stop offset="0%" stopColor="#fef08a" stopOpacity={isDay ? "0.45" : "0.85"} />
-            <stop offset="25%" stopColor="#facc15" stopOpacity={isDay ? "0.2" : "0.45"} />
-            <stop offset="70%" stopColor="#60a5fa" stopOpacity={isDay ? "0.08" : "0.15"} />
+            <stop offset="0%" stopColor="#fef08a" stopOpacity="0.85" />
+            <stop offset="25%" stopColor="#facc15" stopOpacity="0.45" />
+            <stop offset="70%" stopColor="#60a5fa" stopOpacity="0.15" />
             <stop offset="100%" stopColor="#38bdf8" stopOpacity="0" />
           </linearGradient>
 
@@ -255,76 +180,39 @@ export default function TrainSceneryVector({ isDay = false }) {
             <stop offset="65%" stopColor="#93c5fd" stopOpacity="0.2" />
             <stop offset="100%" stopColor="#3b82f6" stopOpacity="0" />
           </radialGradient>
-
-          <radialGradient id="sunGlow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#fffbeb" stopOpacity="1" />
-            <stop offset="35%" stopColor="#fef08a" stopOpacity="0.85" />
-            <stop offset="70%" stopColor="#facc15" stopOpacity="0.3" />
-            <stop offset="100%" stopColor="#f59e0b" stopOpacity="0" />
-          </radialGradient>
         </defs>
 
-        {/* 1. Starry Night Sky (Night Only) */}
-        {!isDay && (
-          <g opacity="0.8">
-            <circle cx="95" cy="90" r="1.5" fill="#ffffff" className="rh-anim-star-1" />
-            <circle cx="170" cy="55" r="1.2" fill="#dbeafe" className="rh-anim-star-2" />
-            <circle cx="280" cy="110" r="2" fill="#ffffff" className="rh-anim-star-3" />
-            <circle cx="390" cy="45" r="1.4" fill="#bfdbfe" className="rh-anim-star-1" />
-            <circle cx="510" cy="80" r="1.6" fill="#ffffff" className="rh-anim-star-2" />
-            <circle cx="670" cy="60" r="1.8" fill="#dbeafe" className="rh-anim-star-3" />
-            <circle cx="830" cy="95" r="1.3" fill="#ffffff" className="rh-anim-star-1" />
-            <circle cx="980" cy="50" r="2.2" fill="#dbeafe" className="rh-anim-star-2" />
-            <circle cx="1120" cy="85" r="1.5" fill="#ffffff" className="rh-anim-star-3" />
-            <circle cx="1260" cy="40" r="1.3" fill="#bfdbfe" className="rh-anim-star-1" />
-            <circle cx="1360" cy="75" r="1.7" fill="#ffffff" className="rh-anim-star-2" />
+        {/* 1. Starry Night Sky Elements */}
+        <g opacity="0.8">
+          <circle cx="95" cy="90" r="1.5" fill="#ffffff" className="rh-anim-star-1" />
+          <circle cx="170" cy="55" r="1.2" fill="#dbeafe" className="rh-anim-star-2" />
+          <circle cx="280" cy="110" r="2" fill="#ffffff" className="rh-anim-star-3" />
+          <circle cx="390" cy="45" r="1.4" fill="#bfdbfe" className="rh-anim-star-1" />
+          <circle cx="510" cy="80" r="1.6" fill="#ffffff" className="rh-anim-star-2" />
+          <circle cx="670" cy="60" r="1.8" fill="#dbeafe" className="rh-anim-star-3" />
+          <circle cx="830" cy="95" r="1.3" fill="#ffffff" className="rh-anim-star-1" />
+          <circle cx="980" cy="50" r="2.2" fill="#dbeafe" className="rh-anim-star-2" />
+          <circle cx="1120" cy="85" r="1.5" fill="#ffffff" className="rh-anim-star-3" />
+          <circle cx="1260" cy="40" r="1.3" fill="#bfdbfe" className="rh-anim-star-1" />
+          <circle cx="1360" cy="75" r="1.7" fill="#ffffff" className="rh-anim-star-2" />
 
-            {/* Star Cluster Constellation */}
-            <path d="M1210 65 L1218 80 L1235 84 L1222 95 L1226 112 L1210 102" fill="none" stroke="rgba(255,255,255,0.18)" strokeWidth="0.8" strokeDasharray="3,3" />
-          </g>
-        )}
+          {/* Star Cluster Constellation */}
+          <path d="M1210 65 L1218 80 L1235 84 L1222 95 L1226 112 L1210 102" fill="none" stroke="rgba(255,255,255,0.18)" strokeWidth="0.8" strokeDasharray="3,3" />
+        </g>
 
-        {/* 2. Celestial Body: Luminous Moon (Night) OR Radiant Golden Sun (Day) */}
-        {!isDay ? (
-          <g transform="translate(1220, 45)" opacity="0.9">
-            <circle cx="28" cy="28" r="42" fill="url(#moonGlow)" />
-            <circle cx="28" cy="28" r="20" fill="#f8fafc" />
-            <circle cx="35" cy="23" r="18" fill="#0c234a" />
-          </g>
-        ) : (
-          <g transform="translate(1180, 40)">
-            <circle cx="36" cy="36" r="62" fill="url(#sunGlow)" />
-            <circle cx="36" cy="36" r="26" fill="#fbbf24" />
-            <circle cx="36" cy="36" r="20" fill="#fffbeb" />
-            <g className="rh-anim-sun-rays" stroke="#fde047" strokeWidth="2.5" opacity="0.75" strokeLinecap="round">
-              <line x1="36" y1="-8" x2="36" y2="4" />
-              <line x1="36" y1="68" x2="36" y2="80" />
-              <line x1="-8" y1="36" x2="4" y2="36" />
-              <line x1="68" y1="36" x2="80" y2="36" />
-              <line x1="5" y1="5" x2="14" y2="14" />
-              <line x1="58" y1="58" x2="67" y2="67" />
-              <line x1="5" y1="67" x2="14" y2="58" />
-              <line x1="58" y1="14" x2="67" y2="5" />
-            </g>
-          </g>
-        )}
-
-        {/* Soaring Birds (Day Only) */}
-        {isDay && (
-          <g className="rh-anim-bird" stroke="#1e3a8a" strokeWidth="1.6" fill="none" opacity="0.65" strokeLinecap="round">
-            <path d="M220 95 Q228 86 236 95 Q244 86 252 95" />
-            <path d="M260 110 Q266 103 272 110 Q278 103 284 110" />
-            <path d="M420 80 Q427 74 434 80 Q441 74 448 80" />
-            <path d="M780 100 Q786 94 792 100 Q798 94 804 100" />
-          </g>
-        )}
+        {/* 2. Luminous Travel Moon */}
+        <g transform="translate(1220, 45)" opacity="0.9">
+          <circle cx="28" cy="28" r="42" fill="url(#moonGlow)" />
+          <circle cx="28" cy="28" r="20" fill="#f8fafc" />
+          <circle cx="35" cy="23" r="18" fill="#0c234a" />
+        </g>
 
         {/* 3. Floating Misty Clouds */}
-        <g className="rh-anim-cloud-1" opacity={isDay ? "0.8" : "0.3"} fill={isDay ? "#ffffff" : "#93c5fd"}>
+        <g className="rh-anim-cloud-1" opacity="0.3" fill="#93c5fd">
           <path d="M60 170 Q110 145 170 170 Q220 150 260 175 Q290 190 240 200 Q160 205 90 195 Z" />
           <path d="M680 150 Q730 125 790 150 Q840 135 880 158 Q900 175 850 182 Q780 185 710 178 Z" />
         </g>
-        <g className="rh-anim-cloud-2" opacity={isDay ? "0.65" : "0.22"} fill={isDay ? "#ffffff" : "#60a5fa"}>
+        <g className="rh-anim-cloud-2" opacity="0.22" fill="#60a5fa">
           <path d="M340 185 Q390 160 450 185 Q500 168 540 190 Q560 205 510 212 Q440 215 370 208 Z" />
           <path d="M1040 165 Q1090 145 1150 165 Q1190 152 1230 172 Q1250 188 1200 194 Q1130 198 1070 190 Z" />
         </g>
@@ -347,11 +235,11 @@ export default function TrainSceneryVector({ isDay = false }) {
         />
 
         {/* Tree Silhouettes on Ridges */}
-        <g fill={isDay ? "#065f46" : "#0e244d"} opacity={isDay ? "0.75" : "0.6"}>
-          <path d="M140 395 L144 380 L148 395 M152 393 L156 375 L160 393 M164 396 L168 384 L172 396" stroke={isDay ? "#065f46" : "#0e244d"} strokeWidth="2" />
-          <path d="M440 382 L444 368 L448 382 M452 380 L456 364 L460 380 M464 383 L468 371 L472 383" stroke={isDay ? "#065f46" : "#0e244d"} strokeWidth="2" />
-          <path d="M960 362 L964 348 L968 362 M972 360 L976 344 L980 360 M984 363 L988 351 L992 363" stroke={isDay ? "#065f46" : "#0e244d"} strokeWidth="2" />
-          <path d="M1300 365 L1304 350 L1308 365 M1312 363 L1316 347 L1320 363 M1324 366 L1328 354 L1332 366" stroke={isDay ? "#065f46" : "#0e244d"} strokeWidth="2" />
+        <g fill="#0e244d" opacity="0.6">
+          <path d="M140 395 L144 380 L148 395 M152 393 L156 375 L160 393 M164 396 L168 384 L172 396" stroke="#0e244d" strokeWidth="2" />
+          <path d="M440 382 L444 368 L448 382 M452 380 L456 364 L460 380 M464 383 L468 371 L472 383" stroke="#0e244d" strokeWidth="2" />
+          <path d="M960 362 L964 348 L968 362 M972 360 L976 344 L980 360 M984 363 L988 351 L992 363" stroke="#0e244d" strokeWidth="2" />
+          <path d="M1300 365 L1304 350 L1308 365 M1312 363 L1316 347 L1320 363 M1324 366 L1328 354 L1332 366" stroke="#0e244d" strokeWidth="2" />
         </g>
 
         {/* High Elevation Railway Signal Mast (Sinyal Hijau) */}
@@ -376,7 +264,7 @@ export default function TrainSceneryVector({ isDay = false }) {
           />
 
           {/* Viaduct Arch Piers */}
-          <g fill={isDay ? "#475569" : "#07152b"} opacity="0.95">
+          <g fill="#07152b" opacity="0.95">
             <path d="M60 518 L60 605 Q115 560 170 605 L170 518 Z" />
             <path d="M210 516 L210 605 Q265 560 320 605 L320 516 Z" />
             <path d="M360 515 L360 605 Q415 558 470 605 L470 515 Z" />
@@ -389,14 +277,14 @@ export default function TrainSceneryVector({ isDay = false }) {
           </g>
 
           {/* Safety Balustrade Railing */}
-          <line x1="0" y1="497" x2="1440" y2="497" stroke={isDay ? "rgba(255, 255, 255, 0.7)" : "rgba(147, 197, 253, 0.4)"} strokeWidth="1.6" />
+          <line x1="0" y1="497" x2="1440" y2="497" stroke="rgba(147, 197, 253, 0.4)" strokeWidth="1.6" />
         </g>
 
         {/* 8. Electrification Catenary Masts & Power Lines */}
-        <g id="catenaryWires" stroke={isDay ? "rgba(100, 116, 139, 0.6)" : "rgba(191, 219, 254, 0.5)"} strokeWidth="1">
+        <g id="catenaryWires" stroke="rgba(191, 219, 254, 0.5)" strokeWidth="1">
           {/* Messenger & Contact wires */}
           <path d="M0 442 Q360 432 720 434 Q1080 432 1440 442" fill="none" strokeWidth="0.9" />
-          <path d="M0 460 Q360 450 720 452 Q1080 450 1440 460" fill="none" strokeWidth="1.3" stroke={isDay ? "rgba(71, 85, 105, 0.8)" : "rgba(224, 242, 254, 0.65)"} />
+          <path d="M0 460 Q360 450 720 452 Q1080 450 1440 460" fill="none" strokeWidth="1.3" stroke="rgba(224, 242, 254, 0.65)" />
 
           {/* Droppers */}
           <line x1="160" y1="440" x2="160" y2="457" strokeWidth="0.7" />
@@ -410,17 +298,17 @@ export default function TrainSceneryVector({ isDay = false }) {
           <line x1="1280" y1="440" x2="1280" y2="457" strokeWidth="0.7" />
 
           {/* Steel Electrification Masts */}
-          <g stroke={isDay ? "#1e40af" : "#1d4ed8"} strokeWidth="2.6" strokeLinecap="round">
+          <g stroke="#1d4ed8" strokeWidth="2.6" strokeLinecap="round">
             <line x1="110" y1="425" x2="110" y2="506" />
-            <line x1="100" y1="430" x2="126" y2="430" strokeWidth="2" stroke={isDay ? "#3b82f6" : "#60a5fa"} />
+            <line x1="100" y1="430" x2="126" y2="430" strokeWidth="2" stroke="#60a5fa" />
             <line x1="380" y1="420" x2="380" y2="502" />
-            <line x1="370" y1="425" x2="396" y2="425" strokeWidth="2" stroke={isDay ? "#3b82f6" : "#60a5fa"} />
+            <line x1="370" y1="425" x2="396" y2="425" strokeWidth="2" stroke="#60a5fa" />
             <line x1="650" y1="418" x2="650" y2="500" />
-            <line x1="640" y1="423" x2="666" y2="423" strokeWidth="2" stroke={isDay ? "#3b82f6" : "#60a5fa"} />
+            <line x1="640" y1="423" x2="666" y2="423" strokeWidth="2" stroke="#60a5fa" />
             <line x1="920" y1="418" x2="920" y2="500" />
-            <line x1="910" y1="423" x2="936" y2="423" strokeWidth="2" stroke={isDay ? "#3b82f6" : "#60a5fa"} />
+            <line x1="910" y1="423" x2="936" y2="423" strokeWidth="2" stroke="#60a5fa" />
             <line x1="1190" y1="420" x2="1190" y2="502" />
-            <line x1="1180" y1="425" x2="1206" y2="425" strokeWidth="2" stroke={isDay ? "#3b82f6" : "#60a5fa"} />
+            <line x1="1180" y1="425" x2="1206" y2="425" strokeWidth="2" stroke="#60a5fa" />
           </g>
         </g>
 
@@ -438,7 +326,7 @@ export default function TrainSceneryVector({ isDay = false }) {
             <rect x="20" y="420" width="145" height="26" rx="5" fill="url(#trainBodyGrad)" />
             <rect x="20" y="430" width="145" height="4.5" fill="url(#trainStripeBlue)" />
             <rect x="20" y="435" width="145" height="2.5" fill="url(#trainStripeOrange)" />
-            {/* Passenger windows */}
+            {/* Passenger windows glowing warm yellow */}
             <rect x="32" y="422" width="15" height="7" rx="2" fill="url(#windowGlow)" />
             <rect x="52" y="422" width="15" height="7" rx="2" fill="url(#windowGlow)" />
             <rect x="72" y="422" width="15" height="7" rx="2" fill="url(#windowGlow)" />
@@ -461,126 +349,119 @@ export default function TrainSceneryVector({ isDay = false }) {
 
           {/* Mid Dining / Executive Coach */}
           <g id="carMid">
-            <rect x="174" y="420" width="150" height="26" rx="5" fill="url(#trainBodyGrad)" />
-            <rect x="174" y="430" width="150" height="4.5" fill="url(#trainStripeBlue)" />
-            <rect x="174" y="435" width="150" height="2.5" fill="url(#trainStripeOrange)" />
+            <rect x="174" y="420" width="155" height="26" rx="5" fill="url(#trainBodyGrad)" />
+            <rect x="174" y="430" width="155" height="4.5" fill="url(#trainStripeBlue)" />
+            <rect x="174" y="435" width="155" height="2.5" fill="url(#trainStripeOrange)" />
             {/* Windows */}
-            <rect x="186" y="422" width="15" height="7" rx="2" fill="url(#windowGlow)" />
-            <rect x="206" y="422" width="15" height="7" rx="2" fill="url(#windowGlow)" />
-            <rect x="226" y="422" width="15" height="7" rx="2" fill="url(#windowGlow)" />
-            <rect x="246" y="422" width="15" height="7" rx="2" fill="url(#windowGlow)" />
-            <rect x="266" y="422" width="15" height="7" rx="2" fill="url(#windowGlow)" />
-            <rect x="286" y="422" width="15" height="7" rx="2" fill="url(#windowGlow)" />
-            <rect x="306" y="422" width="10" height="7" rx="2" fill="url(#windowGlow)" />
-            {/* Roof Air Conditioner hump */}
-            <rect x="210" y="417" width="75" height="3" rx="1.5" fill="#cbd5e1" />
-            {/* Wheels / Bogies */}
+            <rect x="188" y="422" width="16" height="7" rx="2" fill="url(#windowGlow)" />
+            <rect x="210" y="422" width="16" height="7" rx="2" fill="url(#windowGlow)" />
+            <rect x="232" y="422" width="16" height="7" rx="2" fill="url(#windowGlow)" />
+            <rect x="254" y="422" width="16" height="7" rx="2" fill="url(#windowGlow)" />
+            <rect x="276" y="422" width="16" height="7" rx="2" fill="url(#windowGlow)" />
+            <rect x="298" y="422" width="16" height="7" rx="2" fill="url(#windowGlow)" />
+            {/* Roof Pantograph with subtle spark */}
+            <path d="M242 420 L256 408 L270 420 M250 408 L274 408" stroke="#94a3b8" strokeWidth="1.8" fill="none" />
+            <line x1="246" y1="408" x2="278" y2="408" stroke="#38bdf8" strokeWidth="2.5" />
+            <circle cx="262" cy="408" r="3" fill="#67e8f9" className="rh-anim-spark" />
+            {/* Wheels */}
             <rect x="188" y="446" width="30" height="4.5" rx="2" fill="#0f172a" />
-            <rect x="280" y="446" width="30" height="4.5" rx="2" fill="#0f172a" />
+            <rect x="282" y="446" width="30" height="4.5" rx="2" fill="#0f172a" />
             <circle cx="195" cy="450" r="4" fill="#334155" />
             <circle cx="211" cy="450" r="4" fill="#334155" />
-            <circle cx="287" cy="450" r="4" fill="#334155" />
-            <circle cx="303" cy="450" r="4" fill="#334155" />
+            <circle cx="289" cy="450" r="4" fill="#334155" />
+            <circle cx="305" cy="450" r="4" fill="#334155" />
           </g>
 
           {/* Flexible Gangway Coupler */}
-          <rect x="324" y="424" width="9" height="20" rx="1.5" fill="#1e293b" />
+          <rect x="329" y="424" width="9" height="20" rx="1.5" fill="#1e293b" />
 
-          {/* Second Passenger / Business Coach with Pantograph */}
-          <g id="carPantograph">
-            <rect x="333" y="420" width="150" height="26" rx="5" fill="url(#trainBodyGrad)" />
-            <rect x="333" y="430" width="150" height="4.5" fill="url(#trainStripeBlue)" />
-            <rect x="333" y="435" width="150" height="2.5" fill="url(#trainStripeOrange)" />
-            {/* Windows */}
-            <rect x="345" y="422" width="15" height="7" rx="2" fill="url(#windowGlow)" />
-            <rect x="365" y="422" width="15" height="7" rx="2" fill="url(#windowGlow)" />
-            <rect x="385" y="422" width="15" height="7" rx="2" fill="url(#windowGlow)" />
-            <rect x="405" y="422" width="15" height="7" rx="2" fill="url(#windowGlow)" />
-            <rect x="425" y="422" width="15" height="7" rx="2" fill="url(#windowGlow)" />
-            <rect x="445" y="422" width="15" height="7" rx="2" fill="url(#windowGlow)" />
-            <rect x="465" y="422" width="10" height="7" rx="2" fill="url(#windowGlow)" />
-            {/* High-speed Single-Arm Pantograph touching catenary contact wire */}
-            <g stroke={isDay ? "#0284c7" : "#38bdf8"} strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="395" y1="420" x2="410" y2="408" />
-              <line x1="410" y1="408" x2="425" y2="395" />
-              <line x1="415" y1="395" x2="435" y2="395" strokeWidth="2.4" stroke={isDay ? "#f97316" : "#fb923c"} />
-            </g>
-            {/* Blue spark on overhead contact */}
-            <circle cx="425" cy="395" r="3.5" fill="#67e8f9" className="rh-anim-spark" />
-            {/* Wheels / Bogies */}
-            <rect x="347" y="446" width="30" height="4.5" rx="2" fill="#0f172a" />
-            <rect x="439" y="446" width="30" height="4.5" rx="2" fill="#0f172a" />
-            <circle cx="354" cy="450" r="4" fill="#334155" />
-            <circle cx="370" cy="450" r="4" fill="#334155" />
-            <circle cx="446" cy="450" r="4" fill="#334155" />
-            <circle cx="462" cy="450" r="4" fill="#334155" />
+          {/* Second Mid Coach */}
+          <g id="carMid2">
+            <rect x="338" y="420" width="155" height="26" rx="5" fill="url(#trainBodyGrad)" />
+            <rect x="338" y="430" width="155" height="4.5" fill="url(#trainStripeBlue)" />
+            <rect x="338" y="435" width="155" height="2.5" fill="url(#trainStripeOrange)" />
+            <rect x="352" y="422" width="16" height="7" rx="2" fill="url(#windowGlow)" />
+            <rect x="374" y="422" width="16" height="7" rx="2" fill="url(#windowGlow)" />
+            <rect x="396" y="422" width="16" height="7" rx="2" fill="url(#windowGlow)" />
+            <rect x="418" y="422" width="16" height="7" rx="2" fill="url(#windowGlow)" />
+            <rect x="440" y="422" width="16" height="7" rx="2" fill="url(#windowGlow)" />
+            <rect x="462" y="422" width="16" height="7" rx="2" fill="url(#windowGlow)" />
+            {/* Wheels */}
+            <rect x="352" y="446" width="30" height="4.5" rx="2" fill="#0f172a" />
+            <rect x="446" y="446" width="30" height="4.5" rx="2" fill="#0f172a" />
+            <circle cx="359" cy="450" r="4" fill="#334155" />
+            <circle cx="375" cy="450" r="4" fill="#334155" />
+            <circle cx="453" cy="450" r="4" fill="#334155" />
+            <circle cx="469" cy="450" r="4" fill="#334155" />
           </g>
 
           {/* Flexible Gangway Coupler */}
-          <rect x="483" y="424" width="9" height="20" rx="1.5" fill="#1e293b" />
+          <rect x="493" y="424" width="9" height="20" rx="1.5" fill="#1e293b" />
 
-          {/* Lead Aerodynamic Bullet Locomotive */}
-          <g id="locoLead">
-            {/* Sleek Bullet Nose Profile */}
+          {/* Aerodynamic Locomotive / Lead Car */}
+          <g id="carLead">
+            {/* Streamlined Bullet Nose Body */}
             <path
-              d="M492 420 H660 Q700 422 725 436 Q732 440 735 444 L732 446 H492 Z"
+              d="M502 420 L640 420 Q680 420 705 429 Q730 439 746 446 L502 446 Z"
               fill="url(#trainBodyGrad)"
             />
-            {/* Dynamic Swept Livery Stripes */}
+            {/* Blue Speed Livery */}
             <path
-              d="M492 430 H655 Q690 432 715 440 L710 444.5 H492 Z"
+              d="M502 430 L640 430 Q675 430 698 436 Q718 442 735 446 L724 446 Q708 441 692 437 Q670 433 640 433 L502 433 Z"
               fill="url(#trainStripeBlue)"
             />
+            {/* Dynamic Orange Speed Livery */}
             <path
-              d="M492 435 H650 Q680 436 705 442.5 L702 445 H492 Z"
+              d="M502 435 L640 435 Q670 435 690 439 Q705 443 718 446 L707 446 Q695 442 682 439 Q665 436 640 436 L502 436 Z"
               fill="url(#trainStripeOrange)"
             />
-            {/* Passenger windows */}
-            <rect x="504" y="422" width="15" height="7" rx="2" fill="url(#windowGlow)" />
-            <rect x="524" y="422" width="15" height="7" rx="2" fill="url(#windowGlow)" />
-            <rect x="544" y="422" width="15" height="7" rx="2" fill="url(#windowGlow)" />
-            <rect x="564" y="422" width="15" height="7" rx="2" fill="url(#windowGlow)" />
-            <rect x="584" y="422" width="15" height="7" rx="2" fill="url(#windowGlow)" />
-            <rect x="604" y="422" width="15" height="7" rx="2" fill="url(#windowGlow)" />
+
             {/* Aerodynamic Cockpit Windshield */}
             <path
-              d="M665 423 L700 431 Q704 433 695 436 L660 434 Z"
+              d="M648 422 L680 422 Q700 424 712 430 L654 430 Z"
               fill="url(#windshieldGrad)"
-              stroke="rgba(255,255,255,0.7)"
-              strokeWidth="0.8"
             />
-            {/* Twin High-Intensity LED Headlights */}
-            <circle cx="726" cy="438" r="3.2" fill="#fef08a" className="rh-anim-headlight" />
-            <circle cx="729" cy="442" r="3" fill="#ffffff" className="rh-anim-headlight" />
-            <circle cx="726" cy="438" r="1.5" fill="#ffffff" />
-            {/* Wheels / Bogies */}
-            <rect x="506" y="446" width="30" height="4.5" rx="2" fill="#0f172a" />
-            <rect x="635" y="446" width="35" height="4.5" rx="2" fill="#0f172a" />
-            <circle cx="513" cy="450" r="4" fill="#334155" />
-            <circle cx="529" cy="450" r="4" fill="#334155" />
-            <circle cx="643" cy="450" r="4" fill="#334155" />
-            <circle cx="661" cy="450" r="4" fill="#334155" />
-          </g>
 
-          {/* Aerodynamic High Speed Trails */}
-          <g stroke="rgba(255, 255, 255, 0.45)" strokeWidth="1.2" className="rh-anim-speedline">
-            <line x1="740" y1="438" x2="840" y2="438" />
-            <line x1="735" y1="443" x2="815" y2="443" />
-            <line x1="720" y1="447" x2="860" y2="447" strokeWidth="1.6" stroke={isDay ? "rgba(2, 132, 199, 0.5)" : "rgba(56, 189, 248, 0.55)"} />
+            {/* Passenger Windows */}
+            <rect x="516" y="422" width="16" height="7" rx="2" fill="url(#windowGlow)" />
+            <rect x="538" y="422" width="16" height="7" rx="2" fill="url(#windowGlow)" />
+            <rect x="560" y="422" width="16" height="7" rx="2" fill="url(#windowGlow)" />
+            <rect x="582" y="422" width="16" height="7" rx="2" fill="url(#windowGlow)" />
+            <rect x="604" y="422" width="16" height="7" rx="2" fill="url(#windowGlow)" />
+
+            {/* Bright Dual LED Headlights */}
+            <ellipse cx="740" cy="442" rx="4" ry="3" fill="#fef08a" className="rh-anim-headlight" />
+            <ellipse cx="740" cy="442" rx="1.8" ry="1.5" fill="#ffffff" />
+            <circle cx="724" cy="433" r="2.2" fill="#fef08a" />
+
+            {/* Wheels */}
+            <rect x="518" y="446" width="30" height="4.5" rx="2" fill="#0f172a" />
+            <rect x="626" y="446" width="30" height="4.5" rx="2" fill="#0f172a" />
+            <circle cx="525" cy="450" r="4" fill="#334155" />
+            <circle cx="541" cy="450" r="4" fill="#334155" />
+            <circle cx="633" cy="450" r="4" fill="#334155" />
+            <circle cx="649" cy="450" r="4" fill="#334155" />
+
+            {/* Aerodynamic Speed Lines */}
+            <g stroke="rgba(255,255,255,0.6)" strokeWidth="1.5" strokeLinecap="round">
+              <line x1="755" y1="438" x2="790" y2="438" className="rh-anim-speedline" />
+              <line x1="748" y1="445" x2="775" y2="445" className="rh-anim-speedline" />
+              <line x1="720" y1="422" x2="748" y2="422" className="rh-anim-speedline" />
+            </g>
           </g>
         </g>
 
-        {/* 10. Railway Track Ballast, Sleepers & Steel Rails */}
-        <g id="railwayTracks">
-          {/* Granite Crushed Stone Ballast */}
+        {/* 10. Foreground Twin Steel Rails & Sleepers */}
+        <g id="foregroundTracks">
+          {/* Ballast Bed */}
           <path
-            d="M0 498 Q360 492 720 494 Q1080 492 1440 498 L1440 508 Q1080 502 720 504 Q360 502 0 508 Z"
-            fill={isDay ? "#64748b" : "#1e293b"}
+            d="M0 498 Q360 492 720 494 Q1080 492 1440 498 L1440 512 Q1080 506 720 508 Q360 506 0 512 Z"
+            fill="#1e293b"
             opacity="0.9"
           />
 
           {/* Railway Sleepers / Bantalan Rel */}
-          <g stroke={isDay ? "#475569" : "#334155"} strokeWidth="2.8" opacity="0.95">
+          <g stroke="#334155" strokeWidth="2.8" opacity="0.95">
             {Array.from({ length: 48 }).map((_, i) => {
               const x = i * 31 + 6
               return <line key={i} x1={x} y1="495" x2={x + 3} y2="504" />
