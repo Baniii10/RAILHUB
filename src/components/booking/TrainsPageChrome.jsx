@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { Search, Train } from 'lucide-react'
 import Navbar from '@/components/layout/Navbar'
 import SearchWidget from '@/components/booking/SearchWidget'
@@ -8,6 +9,12 @@ import { useLang } from '@/contexts/LangContext'
 
 export default function TrainsPageChrome({ empty, children }) {
   const { lang } = useLang()
+  const [isDay, setIsDay] = useState(true)
+
+  useEffect(() => {
+    const hr = new Date().getHours()
+    setIsDay(hr >= 6 && hr < 18)
+  }, [])
 
   return (
     <>
@@ -18,13 +25,28 @@ export default function TrainsPageChrome({ empty, children }) {
           minHeight: '100vh',
           padding: empty ? 'clamp(1.5rem, 4vw, 3rem) 0 clamp(3.5rem, 8vw, 6rem)' : '0.5rem 0 1.5rem',
           background: empty
-            ? 'linear-gradient(180deg, #07162c 0%, #0d2857 26%, #12376e 54%, #1a4f94 82%, #1e5cb3 100%)'
+            ? isDay
+              ? 'linear-gradient(180deg, #0284c7 0%, #0ea5e9 26%, #38bdf8 54%, #7dd3fc 82%, #bae6fd 100%)'
+              : 'linear-gradient(180deg, #07162c 0%, #0d2857 26%, #12376e 54%, #1a4f94 82%, #1e5cb3 100%)'
             : 'var(--rh-surface)',
-          overflow: 'hidden',
+          overflow: empty ? 'hidden' : 'visible',
+          transition: 'background 0.6s ease',
         }}
       >
-        {/* Background Vector Scenery & Express Train */}
-        {empty && <TrainSceneryVector />}
+        {/* Background Vector Scenery & Express Train (Siang / Malam) */}
+        {empty && (
+          <div
+            style={{
+              position: 'fixed',
+              inset: 0,
+              pointerEvents: 'none',
+              zIndex: 0,
+              overflow: 'hidden',
+            }}
+          >
+            <TrainSceneryVector isDay={isDay} />
+          </div>
+        )}
 
         <div
           className="rh-container"
