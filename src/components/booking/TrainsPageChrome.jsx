@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Search, Train } from 'lucide-react'
 import Navbar from '@/components/layout/Navbar'
 import SearchWidget from '@/components/booking/SearchWidget'
 import TrainSceneryVector from '@/components/booking/TrainSceneryVector'
@@ -82,44 +81,7 @@ export default function TrainsPageChrome({ empty, children }) {
                   textAlign: 'center',
                 }}
               >
-                {/* Search Icon Badge */}
-                <div
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: 52,
-                    height: 52,
-                    borderRadius: '16px',
-                    background: 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)',
-                    border: '1px solid #bfdbfe',
-                    color: '#2563eb',
-                    margin: '0 auto 0.85rem',
-                    boxShadow: '0 4px 14px rgba(37, 99, 235, 0.12)',
-                  }}
-                >
-                  <Search size={26} strokeWidth={2.4} aria-hidden="true" />
-                </div>
-
-                {/* Official Pill */}
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '0.75rem' }}>
-                  <span
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '6px',
-                      padding: '4px 12px',
-                      borderRadius: '999px',
-                      background: 'rgba(37, 99, 235, 0.08)',
-                      color: '#1d4ed8',
-                      fontSize: '0.78rem',
-                      fontWeight: 600,
-                    }}
-                  >
-                    <Train size={13} strokeWidth={2.5} />
-                    {lang === 'en' ? 'Official Train Ticketing' : 'Pemesanan Resmi Tiket Kereta Api'}
-                  </span>
-                </div>
+                
 
                 {/* Title */}
                 <h1
