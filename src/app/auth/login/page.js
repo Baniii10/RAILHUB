@@ -9,7 +9,7 @@ import { createClient } from '@/lib/supabase/client'
 import { useAuth } from '@/contexts/AuthContext'
 import { useLang } from '@/contexts/LangContext'
 import toast from 'react-hot-toast'
-import MobileTrainIllustration from '@/components/auth/MobileTrainIllustration'
+import NightTrainBumperPlayer from '@/components/auth/NightTrainBumperPlayer'
 import { getDashboardForProfile, getOperationalRole, isSafeNextPath, normalizeProfile } from '@/lib/auth/roles'
 
 function GoogleIcon({ size = 19 }) {
@@ -263,7 +263,7 @@ export default function LoginPage() {
       <div className="rh-login-viewport" style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
         <div className="rh-login-container">
           {/* Top Header Vector Illustration */}
-          <MobileTrainIllustration />
+          <NightTrainBumperPlayer />
 
           {/* Bottom Form Sheet */}
           <div className="rh-login-sheet">

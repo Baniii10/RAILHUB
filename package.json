@@ -11,9 +11,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test:roles": "node --test tests/auth-roles.test.mjs"
+    "test:roles": "node --test tests/auth-roles.test.mjs",
+    "remotion:preview": "remotion preview src/remotion/index.js",
+    "remotion:render": "remotion render src/remotion/index.js NightTrainBumper out/night-train-bumper.mp4"
   },
   "dependencies": {
+    "@remotion/player": "^4.0.541",
     "@supabase/ssr": "^0.12.7",
     "@supabase/supabase-js": "^2.118.0",
     "date-fns": "^4.4.0",
@@ -24,7 +27,8 @@
     "qrcode": "^1.5.4",
     "react": "19.3.0",
     "react-dom": "19.3.0",
-    "react-hot-toast": "^2.6.1"
+    "react-hot-toast": "^2.6.1",
+    "remotion": "^4.0.541"
   },
   "devDependencies": {
     "@tailwindcss/turbopack": "^4",
