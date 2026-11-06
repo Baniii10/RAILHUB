@@ -8,6 +8,7 @@ import SearchWidget from '@/components/booking/SearchWidget'
 import MobilePortalHeader from '@/components/home/MobilePortalHeader'
 import FeaturedServicesSlider from '@/components/home/FeaturedServicesSlider'
 import TrainBumperBanner from '@/components/home/TrainBumperBanner'
+import HomeHeroScenery from '@/components/home/HomeHeroScenery'
 import PromoBannerCarousel from '@/components/home/PromoBannerCarousel'
 import PopularTicketRoutes from '@/components/home/PopularTicketRoutes'
 import TravelClassShowcase from '@/components/home/TravelClassShowcase'
@@ -17,13 +18,22 @@ import { useAuth } from '@/contexts/AuthContext'
 import { ChevronRight } from 'lucide-react'
 
 export default function HomePage() {
-  const { t, lang } = useLang()
+    const { t, lang } = useLang()
   const { user } = useAuth()
   const [mounted, setMounted] = useState(false)
+  const [isDay, setIsDay] = useState(true)
   const router = useRouter()
 
   useEffect(() => {
     setMounted(true)
+    const checkTime = () => {
+      const hr = new Date().getHours()
+      setIsDay(hr >= 6 && hr < 18)
+    }
+
+    checkTime()
+    const interval = setInterval(checkTime, 60000)
+    return () => clearInterval(interval)
   }, [])
 
   // On SSR and initial hydration, render for public/guest view.
@@ -38,25 +48,46 @@ export default function HomePage() {
       <TrainBumperBanner />
 
       {/* Hero and search */}
-      <section className="rh-hero" style={{ paddingBottom: '2.5rem' }}>
-        <div className="rh-pattern-dots" style={{ position: 'absolute', inset: 0, opacity: 0.35 }} />
+      <section
+        className={`rh-hero ${isDay ? 'rh-hero-day rh-theme-day' : 'rh-hero-night rh-theme-night'}`}
+        style={{
+          paddingBottom: '2.5rem',
+          background: isDay
+            ? 'linear-gradient(180deg, #0284c7 0%, #0ea5e9 35%, #38bdf8 65%, #7dd3fc 100%)'
+            : 'linear-gradient(180deg, #050d1a 0%, #0a1f3d 35%, #0f2c59 70%, #07162c 100%)',
+          transition: 'background 0.5s ease',
+          position: 'relative',
+          overflow: 'hidden',
+        }}
+      >
+        {/* Subtle Sun, Clouds & 5% Transparent Nature Scenery */}
+        <HomeHeroScenery isDay={isDay} />
+
+        <div className="rh-pattern-dots" style={{ position: 'absolute', inset: 0, opacity: isDay ? 0.12 : 0.25, pointerEvents: 'none' }} />
 
         <div className="rh-container" style={{ position: 'relative', zIndex: 1 }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))', gap: 'clamp(1.5rem, 3.5vw, 3rem)', alignItems: 'center' }}>
             {/* Desktop Headline */}
             <div className="animate-fade-in rh-hide-mobile">
-              <h1 className="rh-h1" style={{ color: 'white', marginBottom: '1rem', maxWidth: 500, lineHeight: 1.18 }}>
+              <h1 className="rh-h1" style={{ color: 'white', marginBottom: '1rem', maxWidth: 500, lineHeight: 1.18, textShadow: isDay ? '0 2px 10px rgba(2, 132, 199, 0.4)' : '0 2px 12px rgba(0, 0, 0, 0.5)' }}>
                 {t.hero.title}
               </h1>
 
-              <p className="rh-body-lg" style={{ color: 'rgba(255,255,255,0.85)', margin: 0, maxWidth: 440, lineHeight: 1.6 }}>
+              <p className="rh-body-lg" style={{ color: 'rgba(255,255,255,0.92)', margin: 0, maxWidth: 440, lineHeight: 1.6, textShadow: isDay ? '0 1px 6px rgba(2, 132, 199, 0.3)' : '0 1px 8px rgba(0, 0, 0, 0.5)' }}>
                 {t.hero.subtitle}
               </p>
             </div>
 
-            {/* Elevated Search Widget Card */}
+            {/* Elevated Search Widget Card with iPhone Glassmorphism */}
             <div className="animate-slide-right">
-              <div className="rh-search-card" style={{ boxShadow: '0 12px 36px rgba(0,0,0,0.18)' }}>
+              <div
+                className={`rh-search-card rh-search-glass-card ${isDay ? 'rh-search-glass-day' : 'rh-search-glass-night'}`}
+                style={{
+                  borderRadius: 24,
+                  overflow: 'hidden',
+                  transition: 'all 0.3s ease',
+                }}
+              >
                 <SearchWidget />
               </div>
             </div>

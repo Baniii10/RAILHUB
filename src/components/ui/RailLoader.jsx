@@ -129,36 +129,38 @@ export function ScheduleCardSkeleton() {
       style={{
         padding: '1.25rem',
         marginBottom: '0.875rem',
-        background: '#ffffff',
-        border: '1px solid var(--rh-border)',
+        background: 'rgba(10, 25, 48, 0.72)',
+        backdropFilter: 'blur(16px)',
+        WebkitBackdropFilter: 'blur(16px)',
+        border: '1px solid rgba(255, 255, 255, 0.14)',
         borderRadius: 16,
         overflow: 'hidden',
         position: 'relative',
       }}
     >
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-        <div style={{ width: 140, height: 18, background: 'var(--rh-primary-light)', borderRadius: 6 }} className="rh-skeleton" />
-        <div style={{ width: 100, height: 22, background: 'var(--rh-primary-light)', borderRadius: 6 }} className="rh-skeleton" />
+        <div style={{ width: 140, height: 18, background: 'rgba(255, 255, 255, 0.12)', borderRadius: 6 }} className="rh-skeleton" />
+        <div style={{ width: 100, height: 22, background: 'rgba(255, 255, 255, 0.12)', borderRadius: 6 }} className="rh-skeleton" />
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', gap: '0.75rem', alignItems: 'center', margin: '1rem 0' }}>
         <div>
-          <div style={{ width: 60, height: 22, background: 'var(--rh-surface-2)', borderRadius: 4, marginBottom: 6 }} className="rh-skeleton" />
-          <div style={{ width: 110, height: 14, background: 'var(--rh-surface-2)', borderRadius: 4 }} className="rh-skeleton" />
+          <div style={{ width: 60, height: 22, background: 'rgba(255, 255, 255, 0.08)', borderRadius: 4, marginBottom: 6 }} className="rh-skeleton" />
+          <div style={{ width: 110, height: 14, background: 'rgba(255, 255, 255, 0.08)', borderRadius: 4 }} className="rh-skeleton" />
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
-          <div style={{ width: 50, height: 12, background: 'var(--rh-surface-2)', borderRadius: 4 }} className="rh-skeleton" />
-          <div style={{ width: 80, height: 2, background: 'var(--rh-border)' }} />
+          <div style={{ width: 50, height: 12, background: 'rgba(255, 255, 255, 0.08)', borderRadius: 4 }} className="rh-skeleton" />
+          <div style={{ width: 80, height: 2, background: 'rgba(255, 255, 255, 0.14)' }} />
         </div>
         <div style={{ textAlign: 'right' }}>
-          <div style={{ width: 60, height: 22, background: 'var(--rh-surface-2)', borderRadius: 4, marginBottom: 6, marginLeft: 'auto' }} className="rh-skeleton" />
-          <div style={{ width: 110, height: 14, background: 'var(--rh-surface-2)', borderRadius: 4, marginLeft: 'auto' }} className="rh-skeleton" />
+          <div style={{ width: 60, height: 22, background: 'rgba(255, 255, 255, 0.08)', borderRadius: 4, marginBottom: 6, marginLeft: 'auto' }} className="rh-skeleton" />
+          <div style={{ width: 110, height: 14, background: 'rgba(255, 255, 255, 0.08)', borderRadius: 4, marginLeft: 'auto' }} className="rh-skeleton" />
         </div>
       </div>
 
       <div style={{ borderTop: '1px solid var(--rh-border)', paddingTop: '0.75rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div style={{ width: 90, height: 14, background: 'var(--rh-surface-2)', borderRadius: 4 }} className="rh-skeleton" />
-        <div style={{ width: 110, height: 36, background: 'var(--rh-primary-light)', borderRadius: 8 }} className="rh-skeleton" />
+        <div style={{ width: 90, height: 14, background: 'rgba(255, 255, 255, 0.08)', borderRadius: 4 }} className="rh-skeleton" />
+        <div style={{ width: 110, height: 36, background: 'rgba(255, 255, 255, 0.12)', borderRadius: 8 }} className="rh-skeleton" />
       </div>
 
       <style jsx>{`

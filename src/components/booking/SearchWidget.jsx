@@ -31,7 +31,7 @@ function formatDisplayDate(dateStr, lang = 'id') {
   }
 }
 
-function PassengerSeatIcon({ size = 22, color = '#475569', style = {} }) {
+function PassengerSeatIcon({ size = 22, color = 'currentColor', style = {}, className = 'rh-detail-icon' }) {
   return (
     <svg
       width={size}
@@ -42,6 +42,7 @@ function PassengerSeatIcon({ size = 22, color = '#475569', style = {} }) {
       strokeWidth="1.8"
       strokeLinecap="round"
       strokeLinejoin="round"
+      className={className}
       style={{ flexShrink: 0, ...style }}
       aria-hidden="true"
     >

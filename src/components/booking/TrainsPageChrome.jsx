@@ -1,6 +1,6 @@
 'use client'
 
-import { Search, Train } from 'lucide-react'
+import { useState, useEffect } from 'react'
 import Navbar from '@/components/layout/Navbar'
 import SearchWidget from '@/components/booking/SearchWidget'
 import TrainSceneryVector from '@/components/booking/TrainSceneryVector'
@@ -8,23 +8,48 @@ import { useLang } from '@/contexts/LangContext'
 
 export default function TrainsPageChrome({ empty, children }) {
   const { lang } = useLang()
+  const [isDay, setIsDay] = useState(true)
+
+  useEffect(() => {
+    // Auto: 06:00 to 17:59 is Day (Siang), 18:00 to 05:59 is Night (Malam)
+    const checkTime = () => {
+      const hr = new Date().getHours()
+      setIsDay(hr >= 6 && hr < 18)
+    }
+
+    checkTime()
+    const interval = setInterval(checkTime, 60000)
+    return () => clearInterval(interval)
+  }, [])
 
   return (
     <>
       {empty && <Navbar />}
       <main
+        className={isDay ? 'rh-theme-day' : 'rh-theme-night'}
         style={{
           position: 'relative',
           minHeight: '100vh',
-          padding: empty ? 'clamp(1.5rem, 4vw, 3rem) 0 clamp(3.5rem, 8vw, 6rem)' : '0.5rem 0 1.5rem',
-          background: empty
-            ? 'linear-gradient(180deg, #07162c 0%, #0d2857 26%, #12376e 54%, #1a4f94 82%, #1e5cb3 100%)'
-            : 'var(--rh-surface)',
+          padding: empty ? 'clamp(1.5rem, 4vw, 3rem) 0 clamp(3.5rem, 8vw, 6rem)' : '0.75rem 0 2.5rem',
+          background: isDay
+            ? 'linear-gradient(180deg, #38bdf8 0%, #60a5fa 26%, #93c5fd 54%, #bfdbfe 82%, #e0f2fe 100%)'
+            : 'linear-gradient(180deg, #07162c 0%, #0d2857 26%, #12376e 54%, #1a4f94 82%, #07162c 100%)',
+          transition: 'background 0.5s ease',
           overflow: 'hidden',
         }}
       >
-        {/* Background Vector Scenery & Express Train */}
-        {empty && <TrainSceneryVector />}
+        {/* Background Vector Scenery & Express Train (Day / Night dynamic) */}
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            pointerEvents: 'none',
+            zIndex: 0,
+            overflow: 'hidden',
+          }}
+        >
+          <TrainSceneryVector isDay={isDay} />
+        </div>
 
         <div
           className="rh-container"
@@ -39,15 +64,13 @@ export default function TrainsPageChrome({ empty, children }) {
         >
           {empty ? (
             <section
-              className="rh-search-page-card"
+              className="rh-search-page-card rh-search-glass-card"
               style={{
                 maxWidth: 620,
                 margin: 'clamp(0.5rem, 2.5vw, 1.75rem) auto',
-                background: '#ffffff',
-                borderRadius: 'clamp(20px, 4vw, 26px)',
-                boxShadow: '0 25px 60px -12px rgba(5, 17, 36, 0.45), 0 8px 24px -6px rgba(0, 0, 0, 0.15)',
-                border: '1px solid rgba(255, 255, 255, 0.9)',
+                borderRadius: 'clamp(22px, 4.5vw, 30px)',
                 overflow: 'hidden',
+                transition: 'all 0.3s ease',
               }}
             >
               <div
@@ -56,51 +79,11 @@ export default function TrainsPageChrome({ empty, children }) {
                   textAlign: 'center',
                 }}
               >
-                {/* Search Icon Badge */}
-                <div
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: 52,
-                    height: 52,
-                    borderRadius: '16px',
-                    background: 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)',
-                    border: '1px solid #bfdbfe',
-                    color: '#2563eb',
-                    margin: '0 auto 0.85rem',
-                    boxShadow: '0 4px 14px rgba(37, 99, 235, 0.12)',
-                  }}
-                >
-                  <Search size={26} strokeWidth={2.4} aria-hidden="true" />
-                </div>
-
-                {/* Official Pill */}
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '0.75rem' }}>
-                  <span
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '6px',
-                      padding: '4px 12px',
-                      borderRadius: '999px',
-                      background: 'rgba(37, 99, 235, 0.08)',
-                      color: '#1d4ed8',
-                      fontSize: '0.78rem',
-                      fontWeight: 600,
-                    }}
-                  >
-                    <Train size={13} strokeWidth={2.5} />
-                    {lang === 'en' ? 'Official Train Ticketing' : 'Pemesanan Resmi Tiket Kereta Api'}
-                  </span>
-                </div>
-
                 {/* Title */}
                 <h1
-                  className="rh-h3"
+                  className="rh-h3 rh-search-title"
                   style={{
                     margin: '0 0 0.4rem',
-                    color: '#0f172a',
                     fontSize: 'clamp(1.3rem, 4vw, 1.7rem)',
                     fontWeight: 800,
                     letterSpacing: '-0.025em',
@@ -111,8 +94,8 @@ export default function TrainsPageChrome({ empty, children }) {
 
                 {/* Subtitle */}
                 <p
+                  className="rh-search-subtitle"
                   style={{
-                    color: '#64748b',
                     margin: '0 0 1.5rem',
                     fontSize: 'clamp(0.85rem, 2.5vw, 0.92rem)',
                     lineHeight: 1.5,

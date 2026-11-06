@@ -186,23 +186,32 @@ html {
 .mobile-quick-access {
   display: grid;
   gap: 0.85rem;
-  padding: 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(8px);
+  padding: 1.15rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 8px 24px rgba(7, 21, 43, 0.12), inset 0 1px 1px rgba(255, 255, 255, 0.5);
   color: white;
 }
+.rh-theme-night .mobile-quick-access {
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(11, 23, 44, 0.55);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
 .mobile-quick-access small {
-  color: rgba(255, 255, 255, 0.75);
+  color: rgba(255, 255, 255, 0.9);
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.03em;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 .mobile-quick-access h2 {
   margin: 0.15rem 0 0;
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   font-weight: 800;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
 }
 .mobile-quick-access nav {
   display: grid;
@@ -5101,7 +5110,7 @@ input[type="checkbox"] {
    ============================================================ */
 .rh-bento-grid {
   display: grid;
-  grid-template-columns: 1.15fr 1.1fr 0.95fr;
+  grid-template-columns: 1.25fr 1.05fr 0.95fr;
   gap: 1.25rem;
   align-items: stretch;
 }
@@ -5121,18 +5130,20 @@ input[type="checkbox"] {
 }
 
 .rh-bento-card-app {
-  background: #f8fafc;
+  background: linear-gradient(155deg, #ffffff 0%, #f8fafc 100%);
   border: 1px solid #e2e8f0;
   display: flex;
-  padding: 1.75rem 1.5rem 1.25rem;
+  padding: 1.75rem 1.5rem 0;
   gap: 1.25rem;
+  min-height: 420px;
 }
 
 .rh-bento-app-content {
-  flex: 1.1;
+  flex: 1.15;
   display: flex;
   flex-direction: column;
   min-width: 0;
+  padding-bottom: 1.5rem;
 }
 
 .rh-bento-badge {
@@ -5146,22 +5157,22 @@ input[type="checkbox"] {
   font-size: 0.72rem;
   font-weight: 700;
   color: #334155;
-  margin-bottom: 0.85rem;
+  margin-bottom: 0.75rem;
   width: fit-content;
 }
 
 .rh-bento-title-dark {
-  margin: 0 0 0.65rem;
+  margin: 0 0 0.5rem;
   color: #0f172a;
-  font-size: 1.35rem;
+  font-size: clamp(1.2rem, 2.2vw, 1.4rem);
   font-weight: 800;
-  line-height: 1.25;
-  letter-spacing: -0.02em;
+  line-height: 1.28;
+  letter-spacing: -0.025em;
 }
 
 .rh-bento-desc-dark {
   margin: 0 0 1.25rem;
-  color: #475569;
+  color: #64748b;
   font-size: 0.82rem;
   line-height: 1.55;
 }
@@ -5177,11 +5188,12 @@ input[type="checkbox"] {
   color: #ffffff;
   border: none;
   border-radius: 12px;
-  font-size: 0.875rem;
+  font-size: 0.84rem;
   font-weight: 700;
   cursor: pointer;
-  margin-bottom: 1.25rem;
+  margin-bottom: 0.75rem;
   transition: background 0.2s ease, transform 0.15s ease;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.12);
 }
 
 .rh-bento-install-btn:hover {
@@ -5189,31 +5201,56 @@ input[type="checkbox"] {
   transform: translateY(-1px);
 }
 
-.rh-bento-qr-store-wrap {
+.rh-bento-qr-card {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
+  gap: 0.75rem;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 0.55rem 0.75rem;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+  transition: all 0.2s ease;
   margin-top: auto;
+}
+
+.rh-bento-qr-card:hover {
+  border-color: #3b82f6;
+  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.12);
+  transform: translateY(-1px);
 }
 
 .rh-bento-qr-box {
   background: #ffffff;
   border: 1px solid #cbd5e1;
-  border-radius: 10px;
-  padding: 6px;
+  border-radius: 8px;
+  padding: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.rh-bento-qr-info {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  cursor: pointer;
-  flex-shrink: 0;
-  transition: transform 0.2s ease, border-color 0.2s ease;
+  gap: 1px;
+  min-width: 0;
 }
 
-.rh-bento-qr-box:hover {
-  transform: scale(1.03);
-  border-color: var(--rh-primary);
+.rh-bento-qr-title {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.2;
 }
 
+.rh-bento-qr-desc {
+  font-size: 0.7rem;
+  color: #64748b;
+  line-height: 1.35;
+}
 
 /* ============================================================
    AUTHENTIC IPHONE 16 MOCKUP FRAME & DYNAMIC ISLAND
@@ -5225,15 +5262,16 @@ input[type="checkbox"] {
   align-items: flex-end;
   justify-content: center;
   position: relative;
+  height: 100%;
 }
 
 /* iPhone 16 Titanium Chassis Frame */
 .rh-iphone16-frame {
   width: 100%;
-  max-width: 216px;
+  max-width: 200px;
   background: #111827; /* Dark Titanium tone */
-  border-radius: 38px 38px 0 0;
-  padding: 8px 8px 0;
+  border-radius: 36px 36px 0 0;
+  padding: 7px 7px 0;
   position: relative;
   border: none;
   box-shadow: 
@@ -5495,7 +5533,7 @@ input[type="checkbox"] {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: 1.25rem;
+  padding: 1.75rem 1.5rem;
   background-color: #070d18;
   color: #ffffff;
 }
@@ -5516,19 +5554,17 @@ input[type="checkbox"] {
 .rh-bento-card-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(7, 13, 24, 0.15) 0%, rgba(7, 13, 24, 0.6) 40%, rgba(7, 13, 24, 0.95) 100%);
+  background: linear-gradient(180deg, rgba(7, 13, 24, 0) 0%, rgba(7, 13, 24, 0.25) 30%, rgba(7, 13, 24, 0.78) 65%, rgba(7, 13, 24, 0.96) 100%);
+  pointer-events: none;
 }
 
 .rh-bento-center-content {
   position: relative;
   z-index: 1;
-  background: rgba(7, 13, 24, 0.82);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border-radius: 16px;
-  padding: 1.5rem 1.35rem 1.25rem;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
 }
 
 .rh-bento-title-white {
@@ -5599,7 +5635,7 @@ input[type="checkbox"] {
 .rh-bento-card-passenger {
   flex: 1.35;
   min-height: 220px;
-  padding: 1rem;
+  padding: 1.5rem 1.35rem;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -5610,19 +5646,17 @@ input[type="checkbox"] {
 .rh-bento-card-overlay-dark {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(7, 13, 24, 0.15) 0%, rgba(7, 13, 24, 0.65) 45%, rgba(7, 13, 24, 0.95) 100%);
+  background: linear-gradient(180deg, rgba(7, 13, 24, 0) 0%, rgba(7, 13, 24, 0.28) 30%, rgba(7, 13, 24, 0.82) 65%, rgba(7, 13, 24, 0.97) 100%);
+  pointer-events: none;
 }
 
 .rh-bento-passenger-content {
   position: relative;
   z-index: 1;
-  background: rgba(7, 13, 24, 0.85);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border-radius: 14px;
-  padding: 1.25rem 1.15rem;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
 }
 
 .rh-pwa-modal-backdrop {
@@ -5689,4 +5723,489 @@ input[type="checkbox"] {
     min-height: 180px;
     padding: 1.25rem 1rem;
   }
+}
+
+
+/* ============================================================
+   iPhone iOS Frosted Glassmorphism for Search Page Card
+   ============================================================ */
+.rh-search-glass-card {
+  background: rgba(11, 23, 44, 0.65) !important;
+  backdrop-filter: blur(30px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(30px) saturate(190%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  box-shadow: 0 30px 70px -15px rgba(0, 0, 0, 0.6), inset 0 1px 1px 0 rgba(255, 255, 255, 0.35) !important;
+}
+
+@media (max-width: 640px) {
+  .rh-search-glass-card {
+    background: rgba(10, 20, 40, 0.72) !important;
+    backdrop-filter: blur(25px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(25px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+  }
+}
+
+.rh-search-glass-card .rh-detail-journey-heading {
+  color: #ffffff !important;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.rh-search-glass-card .rh-live-time-ticker {
+  background: rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  color: #ffffff !important;
+}
+
+.rh-search-glass-card .rh-live-time-ticker div,
+.rh-search-glass-card .rh-live-time-ticker span {
+  color: #ffffff !important;
+}
+
+.rh-search-glass-card .rh-live-time-ticker svg {
+  color: #38bdf8 !important;
+}
+
+/* Glassmorphic input boxes like iOS widgets */
+.rh-search-glass-card .rh-detail-box {
+  background: rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 4px 16px rgba(0, 0, 0, 0.15) !important;
+  transition: all 0.2s ease !important;
+}
+
+.rh-search-glass-card .rh-detail-box:hover {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border-color: rgba(255, 255, 255, 0.32) !important;
+}
+
+.rh-search-glass-card .rh-detail-row-btn:hover {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.rh-search-glass-card .rh-detail-icon {
+  color: #38bdf8 !important;
+}
+
+.rh-search-glass-card .rh-detail-label {
+  color: rgba(255, 255, 255, 0.72) !important;
+}
+
+.rh-search-glass-card .rh-detail-selected-text {
+  color: #ffffff !important;
+}
+
+.rh-search-glass-card .rh-detail-selected-text strong {
+  color: #ffffff !important;
+}
+
+.rh-search-glass-card .rh-detail-placeholder {
+  color: rgba(255, 255, 255, 0.55) !important;
+}
+
+.rh-search-glass-card .rh-detail-city-hint {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+
+.rh-search-glass-card .rh-detail-divider-line {
+  background: rgba(255, 255, 255, 0.16) !important;
+}
+
+/* iOS circular glass swap button */
+.rh-search-glass-card .rh-detail-swap-btn {
+  background: rgba(255, 255, 255, 0.22) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
+}
+
+.rh-search-glass-card .rh-detail-swap-btn:hover {
+  background: rgba(255, 255, 255, 0.32) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+  color: #38bdf8 !important;
+}
+
+.rh-search-glass-card .rh-detail-val-bold {
+  color: #ffffff !important;
+}
+
+.rh-search-glass-card .rh-detail-toggle-label {
+  color: rgba(255, 255, 255, 0.88) !important;
+}
+
+.rh-search-glass-card .rh-detail-toggle-switch {
+  background: rgba(255, 255, 255, 0.25) !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+}
+
+.rh-search-glass-card .rh-detail-toggle-switch.is-active {
+  background: #0284c7 !important;
+  border-color: #38bdf8 !important;
+}
+
+.rh-search-glass-card .rh-detail-toggle-thumb {
+  background: #ffffff !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35) !important;
+}
+
+.rh-search-glass-card .rh-detail-chevron {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* iOS vibrant action button */
+.rh-search-glass-card .rh-detail-submit-btn {
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  box-shadow: 0 10px 25px -4px rgba(234, 88, 12, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.35) !important;
+  font-weight: 800 !important;
+  border-radius: 16px !important;
+}
+
+
+/* ============================================================
+   iPhone iOS Light Frosted Glassmorphism (Day Mode)
+   ============================================================ */
+.rh-theme-day .rh-search-glass-card {
+  background: rgba(255, 255, 255, 0.72) !important;
+  backdrop-filter: blur(30px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(30px) saturate(190%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.9) !important;
+  box-shadow: 0 25px 60px -12px rgba(15, 23, 42, 0.22), 0 8px 24px -6px rgba(0, 0, 0, 0.08), inset 0 1px 1px 0 rgba(255, 255, 255, 1) !important;
+}
+
+@media (max-width: 640px) {
+  .rh-theme-day .rh-search-glass-card {
+    background: rgba(255, 255, 255, 0.82) !important;
+    backdrop-filter: blur(25px) saturate(190%) !important;
+    -webkit-backdrop-filter: blur(25px) saturate(190%) !important;
+    border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+    box-shadow: 0 18px 45px -8px rgba(15, 23, 42, 0.18), inset 0 1px 1px rgba(255, 255, 255, 1) !important;
+  }
+}
+
+.rh-theme-day .rh-search-glass-card .rh-search-title {
+  color: #0f172a !important;
+  text-shadow: none !important;
+}
+
+.rh-theme-day .rh-search-glass-card .rh-search-subtitle {
+  color: #475569 !important;
+}
+
+.rh-theme-day .rh-search-glass-card .rh-search-badge {
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%) !important;
+  border: 1px solid #bfdbfe !important;
+  color: #0284c7 !important;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.15) !important;
+}
+
+.rh-theme-day .rh-search-glass-card .rh-official-pill {
+  background: rgba(2, 132, 199, 0.08) !important;
+  border: 1px solid rgba(2, 132, 199, 0.22) !important;
+  color: #0369a1 !important;
+}
+
+.rh-theme-day .rh-search-glass-card .rh-detail-journey-heading {
+  color: #0f172a !important;
+  text-shadow: none !important;
+}
+
+.rh-theme-day .rh-search-glass-card .rh-live-time-ticker {
+  background: rgba(255, 255, 255, 0.65) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(226, 232, 240, 0.9) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+}
+
+.rh-theme-day .rh-search-glass-card .rh-live-time-ticker div,
+.rh-theme-day .rh-search-glass-card .rh-live-time-ticker span {
+  color: #1e293b !important;
+}
+
+.rh-theme-day .rh-search-glass-card .rh-live-time-ticker svg {
+  color: #0284c7 !important;
+}
+
+/* Glassmorphic input boxes in day mode */
+.rh-theme-day .rh-search-glass-card .rh-detail-box {
+  background: rgba(255, 255, 255, 0.72) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.9) !important;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+}
+
+.rh-theme-day .rh-search-glass-card .rh-detail-box:hover {
+  background: rgba(255, 255, 255, 0.88) !important;
+  border-color: #93c5fd !important;
+}
+
+.rh-theme-day .rh-search-glass-card .rh-detail-row-btn:hover {
+  background-color: rgba(240, 246, 255, 0.5) !important;
+}
+
+.rh-theme-day .rh-search-glass-card .rh-detail-icon {
+  color: #0284c7 !important;
+}
+
+.rh-theme-day .rh-search-glass-card .rh-detail-label {
+  color: #64748b !important;
+}
+
+.rh-theme-day .rh-search-glass-card .rh-detail-selected-text {
+  color: #0f172a !important;
+}
+
+.rh-theme-day .rh-search-glass-card .rh-detail-selected-text strong {
+  color: #0f172a !important;
+}
+
+.rh-theme-day .rh-search-glass-card .rh-detail-placeholder {
+  color: #94a3b8 !important;
+}
+
+.rh-theme-day .rh-search-glass-card .rh-detail-city-hint {
+  color: #64748b !important;
+}
+
+.rh-theme-day .rh-search-glass-card .rh-detail-divider-line {
+  background: #e2e8f0 !important;
+}
+
+.rh-theme-day .rh-search-glass-card .rh-detail-swap-btn {
+  background: #ffffff !important;
+  border: 1.5px solid #cbd5e1 !important;
+  color: #0284c7 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+.rh-theme-day .rh-search-glass-card .rh-detail-swap-btn:hover {
+  background: #eff6ff !important;
+  border-color: #38bdf8 !important;
+  color: #0284c7 !important;
+}
+
+.rh-theme-day .rh-search-glass-card .rh-detail-val-bold {
+  color: #0f172a !important;
+}
+
+.rh-theme-day .rh-search-glass-card .rh-detail-toggle-label {
+  color: #1e293b !important;
+}
+
+.rh-theme-day .rh-search-glass-card .rh-detail-toggle-switch {
+  background: #cbd5e1 !important;
+  border: 1px solid #cbd5e1 !important;
+}
+
+.rh-theme-day .rh-search-glass-card .rh-detail-toggle-switch.is-active {
+  background: #0284c7 !important;
+  border-color: #0284c7 !important;
+}
+
+.rh-theme-day .rh-search-glass-card .rh-detail-toggle-thumb {
+  background: #ffffff !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25) !important;
+}
+
+.rh-theme-day .rh-search-glass-card .rh-detail-chevron {
+  color: #64748b !important;
+}
+
+.rh-theme-day .rh-search-glass-card .rh-detail-submit-btn {
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  box-shadow: 0 10px 25px -4px rgba(234, 88, 12, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
+  font-weight: 800 !important;
+}
+
+/* Day Mode Search Results */
+.rh-theme-day .rh-trains-results header {
+  background: rgba(255, 255, 255, 0.78) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.9) !important;
+  color: #0f172a !important;
+  box-shadow: 0 8px 32px rgba(15, 23, 42, 0.12) !important;
+}
+
+.rh-theme-day .rh-trains-results header h1 {
+  color: #0f172a !important;
+}
+
+.rh-theme-day .rh-trains-results header p {
+  color: #475569 !important;
+}
+
+.rh-theme-day .rh-trains-results header button.rh-btn-ghost {
+  color: #0f172a !important;
+  background: rgba(15, 23, 42, 0.08) !important;
+}
+
+.rh-theme-day .rh-trains-results header button.rh-btn-sm {
+  background: rgba(2, 132, 199, 0.1) !important;
+  border: 1px solid rgba(2, 132, 199, 0.25) !important;
+  color: #0284c7 !important;
+}
+
+.rh-theme-day .rh-trains-results section[aria-label="Pilih tanggal keberangkatan"] {
+  background: rgba(255, 255, 255, 0.75) !important;
+  border: 1px solid rgba(255, 255, 255, 0.9) !important;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08) !important;
+}
+
+.rh-theme-day .rh-trains-results aside[aria-label="Filter dan urutkan jadwal"] {
+  background: rgba(255, 255, 255, 0.75) !important;
+  border: 1px solid rgba(255, 255, 255, 0.9) !important;
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.08) !important;
+}
+
+.rh-theme-day .rh-trains-results aside[aria-label="Filter dan urutkan jadwal"] button {
+  color: #0f172a !important;
+}
+
+.rh-theme-day .rh-trains-results article.rh-card {
+  background: rgba(255, 255, 255, 0.85) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  box-shadow: 0 8px 30px rgba(15, 23, 42, 0.1) !important;
+}
+
+.rh-theme-day .rh-trains-results article.rh-card h2 {
+  color: #0f172a !important;
+}
+
+.rh-theme-day .rh-trains-results article.rh-card .rh-subclass-text {
+  color: #64748b !important;
+}
+
+
+/* ============================================================
+   Direct Classes for Day & Night iPhone Frosted Glassmorphism
+   ============================================================ */
+.rh-search-glass-day {
+  background: rgba(255, 255, 255, 0.75) !important;
+  backdrop-filter: blur(30px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(30px) saturate(190%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.9) !important;
+  box-shadow: 0 25px 60px -12px rgba(15, 23, 42, 0.22), 0 8px 24px -6px rgba(0, 0, 0, 0.08), inset 0 1px 1px 0 rgba(255, 255, 255, 1) !important;
+}
+
+.rh-search-glass-day .rh-detail-journey-heading {
+  color: #0f172a !important;
+  text-shadow: none !important;
+}
+
+.rh-search-glass-day .rh-live-time-ticker {
+  background: rgba(255, 255, 255, 0.65) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(226, 232, 240, 0.9) !important;
+  color: #1e293b !important;
+}
+
+.rh-search-glass-day .rh-live-time-ticker div,
+.rh-search-glass-day .rh-live-time-ticker span {
+  color: #1e293b !important;
+}
+
+.rh-search-glass-day .rh-live-time-ticker svg {
+  color: #0284c7 !important;
+}
+
+.rh-search-glass-day .rh-detail-box {
+  background: rgba(255, 255, 255, 0.72) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.9) !important;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+}
+
+.rh-search-glass-day .rh-detail-box:hover {
+  background: rgba(255, 255, 255, 0.88) !important;
+  border-color: #93c5fd !important;
+}
+
+.rh-search-glass-day .rh-detail-icon {
+  color: #0284c7 !important;
+}
+
+.rh-search-glass-day .rh-detail-label {
+  color: #64748b !important;
+}
+
+.rh-search-glass-day .rh-detail-selected-text {
+  color: #0f172a !important;
+}
+
+.rh-search-glass-day .rh-detail-placeholder {
+  color: #94a3b8 !important;
+}
+
+.rh-search-glass-day .rh-detail-val-bold {
+  color: #0f172a !important;
+}
+
+.rh-search-glass-day .rh-detail-swap-btn {
+  background: #ffffff !important;
+  border: 1.5px solid #cbd5e1 !important;
+  color: #0284c7 !important;
+}
+
+/* Night class */
+.rh-search-glass-night {
+  background: rgba(11, 23, 44, 0.65) !important;
+  backdrop-filter: blur(30px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(30px) saturate(190%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  box-shadow: 0 30px 70px -15px rgba(0, 0, 0, 0.6), inset 0 1px 1px 0 rgba(255, 255, 255, 0.35) !important;
+}
+
+.rh-search-glass-night .rh-detail-journey-heading {
+  color: #ffffff !important;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.rh-search-glass-night .rh-live-time-ticker {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  color: #ffffff !important;
+}
+
+.rh-search-glass-night .rh-live-time-ticker div,
+.rh-search-glass-night .rh-live-time-ticker span {
+  color: #ffffff !important;
+}
+
+.rh-search-glass-night .rh-detail-box {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 4px 16px rgba(0, 0, 0, 0.15) !important;
+}
+
+.rh-search-glass-night .rh-detail-icon {
+  color: #38bdf8 !important;
+}
+
+.rh-search-glass-night .rh-detail-label {
+  color: rgba(255, 255, 255, 0.72) !important;
+}
+
+.rh-search-glass-night .rh-detail-selected-text {
+  color: #ffffff !important;
+}
+
+.rh-search-glass-night .rh-detail-placeholder {
+  color: rgba(255, 255, 255, 0.55) !important;
+}
+
+.rh-search-glass-night .rh-detail-val-bold {
+  color: #ffffff !important;
 }
