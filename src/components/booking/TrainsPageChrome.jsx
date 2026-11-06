@@ -11,7 +11,8 @@ export default function TrainsPageChrome({ empty, children }) {
   const [isDay, setIsDay] = useState(true)
 
   useEffect(() => {
-    // Auto: 06:00 to 17:59 is Day (Siang), 18:00 to 05:59 is Night (Malam)
+    // Sistem siang/malam HANYA aktif saat halaman input awal (belum klik cari tiket)
+    if (!empty) return
     const checkTime = () => {
       const hr = new Date().getHours()
       setIsDay(hr >= 6 && hr < 18)
@@ -20,36 +21,40 @@ export default function TrainsPageChrome({ empty, children }) {
     checkTime()
     const interval = setInterval(checkTime, 60000)
     return () => clearInterval(interval)
-  }, [])
+  }, [empty])
 
   return (
     <>
       {empty && <Navbar />}
       <main
-        className={isDay ? 'rh-theme-day' : 'rh-theme-night'}
+        className={empty ? (isDay ? 'rh-theme-day' : 'rh-theme-night') : ''}
         style={{
           position: 'relative',
           minHeight: '100vh',
-          padding: empty ? 'clamp(1.5rem, 4vw, 3rem) 0 clamp(3.5rem, 8vw, 6rem)' : '0.75rem 0 2.5rem',
-          background: isDay
-            ? 'linear-gradient(180deg, #38bdf8 0%, #60a5fa 26%, #93c5fd 54%, #bfdbfe 82%, #e0f2fe 100%)'
-            : 'linear-gradient(180deg, #07162c 0%, #0d2857 26%, #12376e 54%, #1a4f94 82%, #07162c 100%)',
+          padding: empty ? 'clamp(1.5rem, 4vw, 3rem) 0 clamp(3.5rem, 8vw, 6rem)' : '0.5rem 0 2rem',
+          background: empty
+            ? (isDay
+                ? 'linear-gradient(180deg, #38bdf8 0%, #60a5fa 26%, #93c5fd 54%, #bfdbfe 82%, #e0f2fe 100%)'
+                : 'linear-gradient(180deg, #07162c 0%, #0d2857 26%, #12376e 54%, #1a4f94 82%, #07162c 100%)')
+            : 'var(--rh-surface)',
           transition: 'background 0.5s ease',
-          overflow: 'hidden',
+          overflow: empty ? 'hidden' : 'visible',
         }}
       >
-        {/* Background Vector Scenery & Express Train (Day / Night dynamic) */}
-        <div
-          style={{
-            position: 'fixed',
-            inset: 0,
-            pointerEvents: 'none',
-            zIndex: 0,
-            overflow: 'hidden',
-          }}
-        >
-          <TrainSceneryVector isDay={isDay} />
-        </div>
+        {/* Background Vector Scenery & Express Train: HANYA jika belum pencet cari tiket */}
+        {empty && (
+          <div
+            style={{
+              position: 'fixed',
+              inset: 0,
+              pointerEvents: 'none',
+              zIndex: 0,
+              overflow: 'hidden',
+            }}
+          >
+            <TrainSceneryVector isDay={isDay} />
+          </div>
+        )}
 
         <div
           className="rh-container"
