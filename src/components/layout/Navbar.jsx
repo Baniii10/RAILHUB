@@ -60,6 +60,25 @@ export default function Navbar() {
   const [notifications, setNotifications] = useState([])
   const [unreadCount, setUnreadCount] = useState(0)
   const [activeJourney, setActiveJourney] = useState(null)
+  const [optimisticTabHref, setOptimisticTabHref] = useState(null)
+  const [animatingTabHref, setAnimatingTabHref] = useState(null)
+
+  useEffect(() => {
+    setOptimisticTabHref(null)
+  }, [pathname, searchParams])
+
+  const handleBottomTabPress = (href) => {
+    if (typeof window !== 'undefined' && 'vibrate' in navigator) {
+      try {
+        navigator.vibrate(15)
+      } catch (err) {}
+    }
+    setOptimisticTabHref(href)
+    setAnimatingTabHref(href)
+    setTimeout(() => {
+      setAnimatingTabHref(null)
+    }, 450)
+  }
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 10)
@@ -556,52 +575,41 @@ export default function Navbar() {
       {/* Mobile Bottom App Navigation Bar */}
       {!isBookingFlow && <nav
         aria-label="Navigasi bawah mobile"
-        className="rh-show-mobile-only"
-        style={{
-          position: 'fixed',
-          bottom: 0,
-          left: 0,
-          right: 0,
-          zIndex: 90,
-          background: 'rgba(255, 255, 255, 0.96)',
-          backdropFilter: 'blur(12px)',
-          borderTop: '1px solid var(--rh-border)',
-          padding: '0.35rem 0.5rem calc(0.35rem + env(safe-area-inset-bottom, 0px))',
-          boxShadow: '0 -4px 20px rgba(15, 23, 42, 0.06)',
-        }}
+        className="rh-show-mobile-only rh-mobile-bottom-dock"
       >
-        <div style={{ display: 'grid', gridTemplateColumns: `repeat(${mobileBottomItems.length}, 1fr)`, gap: '0.25rem' }}>
+        <div
+          className="rh-mobile-bottom-dock-inner"
+          style={{
+            gridTemplateColumns: `repeat(${mobileBottomItems.length}, 1fr)`,
+          }}
+        >
           {mobileBottomItems.map(({ href, label, icon: Icon }) => {
             const [baseHref, query = ''] = href.split('?')
             const expectedTab = new URLSearchParams(query).get('tab')
             const currentTab = searchParams.get('tab')
             const isPassengerJourney = expectedTab === 'overview'
               && (!currentTab || ['overview', 'tickets', 'services'].includes(currentTab))
-            const active = pathname === baseHref
+            const currentMatch = pathname === baseHref
               && (expectedTab ? currentTab === expectedTab || isPassengerJourney : !currentTab || !baseHref.startsWith('/dashboard/'))
+            const active = optimisticTabHref ? optimisticTabHref === href : currentMatch
+            const isPopping = animatingTabHref === href
+
             return (
               <Link
                 key={href}
                 href={href}
                 aria-current={active ? 'page' : undefined}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '0.2rem',
-                  padding: '0.35rem 0.25rem',
-                  borderRadius: 10,
-                  textDecoration: 'none',
-                  fontSize: '0.68rem',
-                  fontWeight: active ? 700 : 600,
-                  color: active ? 'var(--rh-primary)' : 'var(--rh-text-2)',
-                }}
+                onClick={() => handleBottomTabPress(href)}
+                className={`rh-dock-tab-btn ${active ? 'is-active' : ''} ${isPopping ? 'is-popping' : ''}`}
               >
-                <Icon size={18} aria-hidden="true" />
-                <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '100%' }}>
+                <div className="rh-dock-pill">
+                  <Icon size={20} className="rh-dock-icon" aria-hidden="true" />
+                  <span className="rh-dock-ripple" aria-hidden="true" />
+                </div>
+                <span className="rh-dock-label">
                   {label}
                 </span>
+                <span className="rh-dock-indicator" aria-hidden="true" />
               </Link>
             )
           })}
