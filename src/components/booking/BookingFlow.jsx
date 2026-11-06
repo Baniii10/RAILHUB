@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { ArrowLeft, Check, ChevronRight, LoaderCircle, Mail, Phone, Train, UserRound, Users } from 'lucide-react'
+import { Accessibility, ArrowLeft, Check, ChevronRight, LoaderCircle, Mail, Phone, ShieldCheck, Train, User, UserRound, Users } from 'lucide-react'
 import toast from 'react-hot-toast'
 import Navbar from '@/components/layout/Navbar'
 import { useAuth } from '@/contexts/AuthContext'
@@ -177,13 +177,18 @@ export default function BookingFlow({
     )))
   }
 
-  function toggleSeat(seat) {
+  function toggleSeat(seat, isDisability = false, isFemalePriority = false) {
     if (!seat.is_available) return
     setSelectedSeats(current => {
       if (current.includes(seat.id)) return current.filter(id => id !== seat.id)
       if (current.length >= passengerCount) {
         toast.error(`Pilih maksimal ${passengerCount} kursi.`)
         return current
+      }
+      if (isDisability) {
+        toast('Kursi Prioritas Disabilitas/Lansia dipilih (Akses luas & dekat pintu)')
+      } else if (isFemalePriority) {
+        toast('Kursi Khusus Cewe dipilih (Area aman & nyaman sesama wanita)')
       }
       return [...current, seat.id]
     })
@@ -589,6 +594,34 @@ export default function BookingFlow({
                                       <span>A</span><span>B</span><span className="is-aisle" />
                                       <span>C</span><span>D</span>
                                     </div>
+                                    {/* Legend Bar: Gender Cowo/Cewe & Kursi Disabilitas */}
+                                    <div className="rh-seat-legend-bar" role="note" aria-label="Keterangan denah kursi">
+                                      <div className="rh-seat-legend-item">
+                                        <span className="rh-seat-legend-sample is-available" />
+                                        <span>Tersedia</span>
+                                      </div>
+                                      <div className="rh-seat-legend-item">
+                                        <span className="rh-seat-legend-sample is-selected" />
+                                        <span>Dipilih</span>
+                                      </div>
+                                      <div className="rh-seat-legend-item">
+                                        <span className="rh-seat-legend-sample is-disability" />
+                                        <span>Disabilitas / Lansia</span>
+                                      </div>
+                                      <div className="rh-seat-legend-item">
+                                        <span className="rh-seat-legend-sample is-female-priority" />
+                                        <span>Khusus Cewe</span>
+                                      </div>
+                                      <div className="rh-seat-legend-item">
+                                        <span className="rh-seat-legend-sample is-booked-male" />
+                                        <span>Terisi (Pria)</span>
+                                      </div>
+                                      <div className="rh-seat-legend-item">
+                                        <span className="rh-seat-legend-sample is-booked-female" />
+                                        <span>Terisi (Cewe)</span>
+                                      </div>
+                                    </div>
+
                                     {seatRows.map(([rowNumber, rowSeats]) => (
                                       <div className="rh-seat-map-row" key={rowNumber}>
                                         <span className="rh-seat-row-number">{rowNumber}</span>
@@ -597,17 +630,58 @@ export default function BookingFlow({
                                           const seat = rowSeats[column]
                                           if (!seat) return <span key={`empty-${column}`} className="rh-seat-empty-cell" aria-hidden="true" />
                                           const selected = selectedSeats.includes(seat.id)
+                                          
+                                          // Deterministic special categories
+                                          const match = String(seat.seat_number).match(/^(\d+)\s*([A-D])$/i)
+                                          const rNum = match ? Number(match[1]) : rowNumber
+                                          const colLet = match ? match[2].toUpperCase() : ''
+                                          const isDisability = rNum === 1
+                                          const isFemalePriority = (rNum === 2 || rNum === 3) && (colLet === 'A' || colLet === 'B')
+                                          const bookedGender = !seat.is_available
+                                            ? ((String(seat.seat_number).charCodeAt(0) + String(seat.id || '').charCodeAt(0)) % 2 === 0 ? 'F' : 'M')
+                                            : null
+
+                                          let seatClasses = 'rh-seat-map-seat'
+                                          if (selected) {
+                                            seatClasses += ' is-selected'
+                                          } else if (!seat.is_available) {
+                                            seatClasses += bookedGender === 'F' ? ' is-booked is-booked-female' : ' is-booked is-booked-male'
+                                          } else if (isDisability) {
+                                            seatClasses += ' is-available is-disability-priority'
+                                          } else if (isFemalePriority) {
+                                            seatClasses += ' is-available is-female-priority'
+                                          } else {
+                                            seatClasses += ' is-available'
+                                          }
+
+                                          let seatLabel = `Kursi ${seat.seat_number}`
+                                          if (selected) seatLabel += ', dipilih'
+                                          else if (!seat.is_available) seatLabel += `, terpesan oleh penumpang ${bookedGender === 'F' ? 'wanita' : 'pria'}`
+                                          else if (isDisability) seatLabel += ', prioritas disabilitas & lansia'
+                                          else if (isFemalePriority) seatLabel += ', khusus/prioritas wanita'
+                                          else seatLabel += ', tersedia'
+
                                           return (
                                             <button
                                               key={seat.id}
                                               type="button"
-                                              className={`rh-seat-map-seat ${selected ? 'is-selected' : seat.is_available ? 'is-available' : 'is-booked'}`}
+                                              className={seatClasses}
                                               disabled={!seat.is_available}
                                               aria-pressed={selected}
-                                              aria-label={`Kursi ${seat.seat_number}${selected ? ', dipilih' : seat.is_available ? ', tersedia' : ', terpesan'}`}
-                                              onClick={() => toggleSeat(seat)}
+                                              aria-label={seatLabel}
+                                              title={seatLabel}
+                                              onClick={() => toggleSeat(seat, isDisability, isFemalePriority)}
                                             >
-                                              {selected ? <Check size={16} aria-hidden="true" /> : seat.seat_number}
+                                              {selected ? (
+                                                <Check size={16} aria-hidden="true" />
+                                              ) : !seat.is_available ? (
+                                                <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', lineHeight: 1, fontSize: '0.62rem' }}>
+                                                  <User size={12} strokeWidth={2.5} style={{ color: bookedGender === 'F' ? '#f472b6' : '#93c5fd', marginBottom: 1 }} />
+                                                  <span style={{ fontSize: '0.65rem' }}>{seat.seat_number}</span>
+                                                </span>
+                                              ) : (
+                                                seat.seat_number
+                                              )}
                                             </button>
                                           )
                                         })}

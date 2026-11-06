@@ -60,7 +60,7 @@ export default function TrainsPageChrome({ empty, children }) {
         >
           {empty ? (
             <section
-              className="rh-search-page-card"
+              className={`rh-search-page-card ${!isDay ? "rh-night-theme" : ""}`}
               style={{
                 maxWidth: 620,
                 margin: 'clamp(0.5rem, 2.5vw, 1.75rem) auto',
@@ -116,7 +116,7 @@ export default function TrainsPageChrome({ empty, children }) {
 
                 {/* Search Form */}
                 <div style={{ textAlign: 'left' }}>
-                  <SearchWidget />
+                  <SearchWidget isNight={!isDay} />
                 </div>
               </div>
             </section>

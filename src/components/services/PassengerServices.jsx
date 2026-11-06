@@ -16,6 +16,8 @@ import {
   BriLogo,
 } from '@/components/payment/PaymentLogos'
 import { formatIDR } from '@/lib/utils/formatters'
+import TrainWifiHub from '@/components/journey/TrainWifiHub'
+import OnboardCulinaryShowcase from '@/components/food/OnboardCulinaryShowcase'
 
 const REPORT_CATEGORIES = [
   ['assistance', 'Permintaan bantuan'],
@@ -264,8 +266,19 @@ export default function PassengerServices({ userId, bookingId: initialBookingId,
   }
 
   return (
-    <section id="journey-services" style={{ display: 'grid', gap: '1.25rem', marginTop: '2rem', scrollMarginTop: 96 }}>
-      <h2 className="rh-h3">Layanan tiket</h2>
+    <section id="journey-services" style={{ display: 'grid', gap: '1.5rem', marginTop: '2rem', scrollMarginTop: 96 }}>
+      {/* ── CABIN WI-FI ACCESS HUB ── */}
+      <TrainWifiHub trainName="KA Argo Bromo Anggrek" />
+
+      {/* ── ONBOARD CULINARY SHOWCASE WITH APPETIZING PHOTOS ── */}
+      <OnboardCulinaryShowcase
+        compact={true}
+        onOrderSelected={() => {
+          setFoodMenuOpen(true);
+        }}
+      />
+
+      <h2 className="rh-h3" style={{ margin: '1rem 0 0' }}>Pemesanan Makanan Langsung ke Kursi</h2>
       {error && <div role="alert" className="rh-card" style={{ padding: '1rem', color: 'var(--rh-danger)' }}>{error}</div>}
       {statusError && <div role="alert" className="rh-card" style={{ padding: '1rem', color: 'var(--rh-danger)' }}>{statusError}</div>}
       {loading && <div aria-live="polite" className="rh-card" style={{ padding: '1rem' }}>Memuat menu dan laporan…</div>}

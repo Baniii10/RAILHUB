@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { CheckCircle2, Clock3, MapPin, QrCode, Radio, Train, Utensils } from 'lucide-react'
 import { formatTime } from '@/lib/utils/formatters'
+import LiveJourneyAnimatedHUD from './LiveJourneyAnimatedHUD'
 
 function parseRoute(name = '') {
   const [origin, destination] = name.replace(/\s*\(simulasi\)\s*/i, '').split(/\s+[—–-]\s+/)
@@ -18,14 +19,18 @@ function buildStops(booking) {
     id: stop.id || `${stop.stop_order}-${stop.stations?.code}`,
     name: stop.stations?.name || 'Stasiun',
     code: stop.stations?.code || '',
+    arr: formatTime(new Date(departure.getTime() + (stop.offset_minutes || 0) * 60000).toISOString()),
+    dep: formatTime(new Date(departure.getTime() + ((stop.offset_minutes || 0) + 5) * 60000).toISOString()),
     time: formatTime(new Date(departure.getTime() + (stop.offset_minutes || 0) * 60000).toISOString()),
     progress: all.length === 1 ? 100 : Math.round(index * 100 / (all.length - 1)),
   }))
 
   const [origin, destination] = parseRoute(schedule?.routes?.name)
   return [
-    { id: 'origin', name: origin, time: formatTime(schedule?.departure_time), progress: 0 },
-    { id: 'destination', name: destination, time: formatTime(schedule?.arrival_time), progress: 100 },
+    { id: 'origin', name: origin, code: 'GMR', arr: formatTime(schedule?.departure_time), dep: formatTime(schedule?.departure_time), time: formatTime(schedule?.departure_time), progress: 0 },
+    { id: 'transit-1', name: 'Stasiun Cirebon', code: 'CN', arr: '10:45', dep: '10:52', time: '10:45', progress: 40 },
+    { id: 'transit-2', name: 'Stasiun Purwokerto', code: 'PWT', arr: '12:30', dep: '12:36', time: '12:30', progress: 70 },
+    { id: 'destination', name: destination, code: 'YK', arr: formatTime(schedule?.arrival_time), dep: formatTime(schedule?.arrival_time), time: formatTime(schedule?.arrival_time), progress: 100 },
   ]
 }
 
@@ -50,42 +55,47 @@ export default function LiveJourneyMapTracker({ booking, ticket, countdown, jour
       ? `${countdown.hours || 0}j ${countdown.minutes || 0}m ${countdown.seconds || 0}d`
       : countdown || nextStop?.time || 'Sesuai jadwal'
 
-  return <section className="rh-card journey-tracker" aria-labelledby="journey-tracker-title">
-    <div className="journey-tracker-media">
-      <video autoPlay muted loop playsInline preload="metadata" aria-label="Animasi kereta RAILHUB sedang berjalan">
-        <source src="/videos/train-journey.mp4" type="video/mp4" />
-      </video>
-      <div className="journey-tracker-media-copy">
-        <span><Radio size={14} /> Live perjalanan</span>
-        <h2 id="journey-tracker-title">{booking.schedules?.trains?.name || 'Kereta'}</h2>
-        <p>{booking.schedules?.routes?.name || 'Rute belum tersedia'}</p>
-      </div>
-    </div>
+  return (
+    <div style={{ display: 'grid', gap: '1.25rem' }}>
+      {/* ── UPGRADED LIVE JOURNEY ANIMATED HUD WITH REALTIME SPEEDOMETER & WIFI ── */}
+      <LiveJourneyAnimatedHUD
+        trainName={booking.schedules?.trains?.name || 'KA Argo Bromo Anggrek'}
+        routeTitle={booking.schedules?.routes?.name || 'Gambir (GMR) — Yogyakarta (YK)'}
+        stops={stops}
+      />
 
-    <div className="journey-tracker-body">
-      <div className="journey-tracker-summary">
-        <div><small>Posisi perjalanan</small><strong>{Math.round(progress)}%</strong></div>
-        <div><small>Berikutnya</small><strong>{nextStop?.name}</strong></div>
-        <div><small>Estimasi</small><strong>{countdownLabel}</strong></div>
+      {/* ── PASSENGER QUICK ACTIONS & SEAT DETAILS ── */}
+      <div className="rh-card" style={{ padding: '1.25rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '1rem' }}>
+          <div>
+            <strong style={{ fontSize: '0.95rem', color: 'var(--rh-navy)' }}>Layanan Cepat Penumpang</strong>
+            <p style={{ margin: '0.15rem 0 0', color: 'var(--rh-text-2)', fontSize: '0.8rem' }}>
+              Akses cepat kuliner kereta, boarding pass, dan detail tiket selama di perjalanan.
+            </p>
+          </div>
+          {ticket && (
+            <div style={{ padding: '0.35rem 0.85rem', background: '#eff6ff', borderRadius: 10, border: '1px solid #bfdbfe' }}>
+              <span style={{ fontSize: '0.82rem', color: 'var(--rh-primary)', fontWeight: 700 }}>
+                Kursi {ticket.seats?.seat_number || '-'} · Gerbong {ticket.seats?.carriages?.carriage_number || '-'}
+              </span>
+            </div>
+          )}
+        </div>
+
+        <div className="journey-actions" style={{ margin: 0 }}>
+          <button type="button" className="rh-btn rh-btn-primary" onClick={() => onSelectTab?.('services')}>
+            <Utensils size={16} /> Pesan Makanan Hangat
+          </button>
+          <button type="button" className="rh-btn rh-btn-ghost" onClick={() => onSelectTab?.('tickets')}>
+            <QrCode size={16} /> E-Boarding Pass
+          </button>
+          {booking?.id && (
+            <Link href={`/booking/payment/${booking.id}`} className="rh-btn rh-btn-ghost">
+              <Train size={16} /> Detail Pesanan
+            </Link>
+          )}
+        </div>
       </div>
-      <div className="journey-progress" role="progressbar" aria-label="Progres perjalanan" aria-valuenow={Math.round(progress)} aria-valuemin="0" aria-valuemax="100"><span style={{ width: `${progress}%` }} /></div>
-      <ol className="journey-stops" aria-label="Semua pemberhentian">
-        {stops.map(stop => {
-          const passed = progress >= stop.progress
-          const current = nextStop?.id === stop.id
-          return <li key={stop.id} className={passed ? 'is-passed' : current ? 'is-current' : ''}>
-            <span className="journey-stop-marker">{passed ? <CheckCircle2 size={18} /> : <MapPin size={18} />}</span>
-            <div><strong>{stop.name}</strong>{stop.code && <small>{stop.code}</small>}</div>
-            <time><Clock3 size={14} /> {stop.time || '-'} WIB</time>
-          </li>
-        })}
-      </ol>
-      <div className="journey-actions">
-        <button type="button" className="rh-btn rh-btn-primary" onClick={() => onSelectTab?.('services')}><Utensils size={16} /> Pesan makanan</button>
-        <button type="button" className="rh-btn rh-btn-ghost" onClick={() => onSelectTab?.('tickets')}><QrCode size={16} /> Tiket digital</button>
-        {booking?.id && <Link href={`/booking/payment/${booking.id}`} className="rh-btn rh-btn-ghost"><Train size={16} /> Detail perjalanan</Link>}
-      </div>
-      {ticket && <p className="journey-seat">Kursi <strong>{ticket.seats?.seat_number || '-'}</strong> · Gerbong <strong>{ticket.seats?.carriages?.carriage_number || '-'}</strong></p>}
     </div>
-  </section>
+  )
 }

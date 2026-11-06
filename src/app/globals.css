@@ -5689,7 +5689,7 @@ input[type="checkbox"] {
    ============================================================ */
 .rh-class-showcase-slider {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
   gap: 1.25rem;
 }
 
@@ -5700,21 +5700,22 @@ input[type="checkbox"] {
   overflow: hidden;
   background: #ffffff;
   border: 1px solid var(--rh-border);
-  border-radius: 18px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s ease, border-color 0.25s ease;
 }
 
 .rh-class-showcase-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12);
-  border-color: rgba(26, 66, 138, 0.25);
+  transform: translateY(-5px);
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.14);
+  border-color: rgba(26, 66, 138, 0.3);
 }
 
+/* Photo-First Hero Banner */
 .rh-class-card-hero {
   position: relative;
   width: 100%;
-  height: 200px;
+  height: 245px;
   background: #0f172a;
   overflow: hidden;
 }
@@ -5724,11 +5725,11 @@ input[type="checkbox"] {
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: transform 0.4s ease;
+  transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .rh-class-showcase-card:hover .rh-class-card-img {
-  transform: scale(1.04);
+  transform: scale(1.06);
 }
 
 .rh-class-card-img-fallback {
@@ -5756,7 +5757,7 @@ input[type="checkbox"] {
 .rh-class-card-gradient {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.35) 0%, transparent 45%, rgba(15, 23, 42, 0.9) 100%);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.05) 40%, rgba(10, 20, 38, 0.92) 100%);
   pointer-events: none;
 }
 
@@ -5764,13 +5765,14 @@ input[type="checkbox"] {
   position: absolute;
   top: 12px;
   left: 12px;
-  padding: 0.3rem 0.75rem;
+  padding: 0.28rem 0.7rem;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.94);
   backdrop-filter: blur(8px);
-  font-size: 0.75rem;
+  -webkit-backdrop-filter: blur(8px);
+  font-size: 0.72rem;
   font-weight: 800;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   letter-spacing: 0.02em;
   z-index: 2;
 }
@@ -5779,20 +5781,22 @@ input[type="checkbox"] {
   position: absolute;
   top: 12px;
   right: 12px;
-  padding: 0.32rem 0.75rem;
+  padding: 0.28rem 0.7rem;
   border-radius: 8px;
-  background: rgba(15, 23, 42, 0.88);
+  background: rgba(10, 25, 48, 0.85);
   backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   color: #ffffff;
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   font-weight: 800;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
   z-index: 2;
 }
 
 .rh-class-hero-overlay-title {
   position: absolute;
-  bottom: 12px;
+  bottom: 14px;
   left: 14px;
   right: 14px;
   z-index: 2;
@@ -5801,25 +5805,17 @@ input[type="checkbox"] {
 .rh-class-title-text {
   margin: 0;
   color: #ffffff;
-  font-size: 1.25rem;
+  font-size: 1.3rem;
   font-weight: 800;
   letter-spacing: -0.02em;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
 }
 
 .rh-class-card-body {
-  padding: 1.15rem;
+  padding: 1rem 1.15rem 1.15rem;
   display: flex;
   flex-direction: column;
   flex: 1;
-}
-
-.rh-class-desktop-desc {
-  margin: 0 0 0.85rem;
-  color: var(--rh-text-2);
-  font-size: 0.875rem;
-  line-height: 1.55;
-  flex: 0 0 auto;
 }
 
 .rh-class-chips-row {
@@ -5834,51 +5830,20 @@ input[type="checkbox"] {
   align-items: center;
   background: #f1f5f9;
   color: #334155;
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   font-weight: 650;
-  padding: 3px 8px;
-  border-radius: 6px;
-  border: 1px solid rgba(203, 213, 225, 0.6);
+  padding: 3.5px 9px;
+  border-radius: 7px;
+  border: 1px solid rgba(203, 213, 225, 0.7);
   white-space: nowrap;
-}
-
-.rh-class-desktop-features {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 1.25rem;
-  display: grid;
-  gap: 0.5rem;
-  flex: 1;
-}
-
-.rh-class-feature-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.5rem;
-  font-size: 0.82rem;
-  color: #334155;
-  line-height: 1.45;
-}
-
-.rh-class-check-circle {
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: rgba(5, 150, 105, 0.12);
-  color: #059669;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  margin-top: 1px;
 }
 
 .rh-class-action-btn {
   width: 100%;
   justify-content: center;
-  font-size: 0.875rem;
+  font-size: 0.88rem;
   padding: 0.65rem 1rem;
-  border-radius: 10px;
+  border-radius: 12px;
   text-decoration: none;
   gap: 0.35rem;
   font-weight: 700;
@@ -5890,7 +5855,7 @@ input[type="checkbox"] {
   justify-content: center;
   align-items: center;
   gap: 0.45rem;
-  margin-top: 0.85rem;
+  margin-top: 1rem;
 }
 
 .rh-class-dot {
@@ -5910,7 +5875,7 @@ input[type="checkbox"] {
 }
 
 /* ============================================================
-   MOBILE RESPONSIVE OVERRIDES (Photo-First Minimalism)
+   MOBILE RESPONSIVE (Photo-First Minimalism)
    ============================================================ */
 @media (max-width: 768px) {
   .rh-class-showcase-slider {
@@ -5933,22 +5898,15 @@ input[type="checkbox"] {
     flex: 0 0 min(84vw, 320px);
     max-width: 320px;
     scroll-snap-align: center;
-    border-radius: 16px;
+    border-radius: 18px;
   }
 
-  /* Photo is the primary hero on mobile */
   .rh-class-card-hero {
-    height: 220px;
-  }
-
-  /* Minimalist body on mobile: hide long description & 4 bullets */
-  .rh-class-desktop-desc,
-  .rh-class-desktop-features {
-    display: none !important;
+    height: 230px;
   }
 
   .rh-class-card-body {
-    padding: 0.75rem 0.85rem 0.85rem;
+    padding: 0.85rem;
   }
 
   .rh-class-chips-row {
@@ -5957,13 +5915,594 @@ input[type="checkbox"] {
   }
 
   .rh-class-chip {
-    font-size: 0.6875rem;
-    padding: 2.5px 7px;
+    font-size: 0.7rem;
+    padding: 3px 8px;
   }
 
   .rh-class-action-btn {
-    padding: 0.55rem 0.85rem;
-    font-size: 0.82rem;
-    border-radius: 9px;
+    padding: 0.6rem 0.85rem;
+    font-size: 0.84rem;
+    border-radius: 10px;
   }
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   NIGHT / DARK THEME OVERRIDES FOR SEARCH WIDGET & COLUMNS
+   ═══════════════════════════════════════════════════════════════ */
+
+/* 1. Heading - No longer camouflaged / dark slate on dark bg! */
+.rh-detail-journey-container.is-night .rh-detail-journey-heading,
+.rh-hero-night .rh-detail-journey-heading,
+.rh-search-card.rh-night-theme .rh-detail-journey-heading,
+.rh-search-page-card.rh-night-theme .rh-detail-journey-heading {
+  color: #ffffff !important;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.45);
+}
+
+/* 2. Elevated Dark Columns / Boxes */
+.rh-detail-journey-container.is-night .rh-detail-box,
+.rh-hero-night .rh-detail-box,
+.rh-search-card.rh-night-theme .rh-detail-box,
+.rh-search-page-card.rh-night-theme .rh-detail-box {
+  background: rgba(13, 27, 54, 0.82);
+  border: 1.5px solid rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.rh-detail-journey-container.is-night .rh-detail-box:hover,
+.rh-hero-night .rh-detail-box:hover,
+.rh-search-card.rh-night-theme .rh-detail-box:hover,
+.rh-search-page-card.rh-night-theme .rh-detail-box:hover {
+  border-color: rgba(96, 165, 250, 0.45);
+  box-shadow: 0 6px 24px -2px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 0 0 1px rgba(96, 165, 250, 0.2);
+}
+
+/* 3. Row button & hover inside stations */
+.rh-detail-journey-container.is-night .rh-detail-row-btn:hover,
+.rh-hero-night .rh-detail-row-btn:hover,
+.rh-search-card.rh-night-theme .rh-detail-row-btn:hover,
+.rh-search-page-card.rh-night-theme .rh-detail-row-btn:hover {
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+/* 4. Icons */
+.rh-detail-journey-container.is-night .rh-detail-icon,
+.rh-hero-night .rh-detail-icon,
+.rh-search-card.rh-night-theme .rh-detail-icon,
+.rh-search-page-card.rh-night-theme .rh-detail-icon {
+  color: #93c5fd;
+}
+
+/* 5. Typography */
+.rh-detail-journey-container.is-night .rh-detail-label,
+.rh-hero-night .rh-detail-label,
+.rh-search-card.rh-night-theme .rh-detail-label,
+.rh-search-page-card.rh-night-theme .rh-detail-label {
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.rh-detail-journey-container.is-night .rh-detail-selected-text,
+.rh-hero-night .rh-detail-selected-text,
+.rh-search-card.rh-night-theme .rh-detail-selected-text,
+.rh-search-page-card.rh-night-theme .rh-detail-selected-text {
+  color: #ffffff;
+}
+
+.rh-detail-journey-container.is-night .rh-detail-val-bold,
+.rh-hero-night .rh-detail-val-bold,
+.rh-search-card.rh-night-theme .rh-detail-val-bold,
+.rh-search-page-card.rh-night-theme .rh-detail-val-bold {
+  color: #ffffff;
+}
+
+.rh-detail-journey-container.is-night .rh-detail-placeholder,
+.rh-hero-night .rh-detail-placeholder,
+.rh-search-card.rh-night-theme .rh-detail-placeholder,
+.rh-search-page-card.rh-night-theme .rh-detail-placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.rh-detail-journey-container.is-night .rh-detail-city-hint,
+.rh-hero-night .rh-detail-city-hint,
+.rh-search-card.rh-night-theme .rh-detail-city-hint,
+.rh-search-page-card.rh-night-theme .rh-detail-city-hint {
+  color: #cbd5e1;
+}
+
+/* 6. Divider & Swap Button */
+.rh-detail-journey-container.is-night .rh-detail-divider-line,
+.rh-hero-night .rh-detail-divider-line,
+.rh-search-card.rh-night-theme .rh-detail-divider-line,
+.rh-search-page-card.rh-night-theme .rh-detail-divider-line {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.rh-detail-journey-container.is-night .rh-detail-swap-btn,
+.rh-hero-night .rh-detail-swap-btn,
+.rh-search-card.rh-night-theme .rh-detail-swap-btn,
+.rh-search-page-card.rh-night-theme .rh-detail-swap-btn {
+  background: #183158;
+  border: 1.5px solid rgba(147, 197, 253, 0.35);
+  color: #60a5fa;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.rh-detail-journey-container.is-night .rh-detail-swap-btn:hover,
+.rh-hero-night .rh-detail-swap-btn:hover,
+.rh-search-card.rh-night-theme .rh-detail-swap-btn:hover,
+.rh-search-page-card.rh-night-theme .rh-detail-swap-btn:hover {
+  background: #2563eb;
+  border-color: #93c5fd;
+  color: #ffffff;
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.5);
+}
+
+/* 7. Round Trip Toggle */
+.rh-detail-journey-container.is-night .rh-detail-toggle-label,
+.rh-hero-night .rh-detail-toggle-label,
+.rh-search-card.rh-night-theme .rh-detail-toggle-label,
+.rh-search-page-card.rh-night-theme .rh-detail-toggle-label {
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.rh-detail-journey-container.is-night .rh-detail-toggle-switch,
+.rh-hero-night .rh-detail-toggle-switch,
+.rh-search-card.rh-night-theme .rh-detail-toggle-switch,
+.rh-search-page-card.rh-night-theme .rh-detail-toggle-switch {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.rh-detail-journey-container.is-night .rh-detail-toggle-switch .rh-detail-toggle-thumb,
+.rh-hero-night .rh-detail-toggle-switch .rh-detail-toggle-thumb,
+.rh-search-card.rh-night-theme .rh-detail-toggle-switch .rh-detail-toggle-thumb,
+.rh-search-page-card.rh-night-theme .rh-detail-toggle-switch .rh-detail-toggle-thumb {
+  background: #cbd5e1;
+}
+
+.rh-detail-journey-container.is-night .rh-detail-toggle-switch.is-active,
+.rh-hero-night .rh-detail-toggle-switch.is-active,
+.rh-search-card.rh-night-theme .rh-detail-toggle-switch.is-active,
+.rh-search-page-card.rh-night-theme .rh-detail-toggle-switch.is-active {
+  background: #2563eb;
+  box-shadow: 0 0 12px rgba(37, 99, 235, 0.45);
+}
+
+.rh-detail-journey-container.is-night .rh-detail-toggle-switch.is-active .rh-detail-toggle-thumb,
+.rh-hero-night .rh-detail-toggle-switch.is-active .rh-detail-toggle-thumb,
+.rh-search-card.rh-night-theme .rh-detail-toggle-switch.is-active .rh-detail-toggle-thumb,
+.rh-search-page-card.rh-night-theme .rh-detail-toggle-switch.is-active .rh-detail-toggle-thumb {
+  background: #ffffff;
+}
+
+/* 8. Return date row */
+.rh-detail-journey-container.is-night .rh-detail-return-row,
+.rh-hero-night .rh-detail-return-row,
+.rh-search-card.rh-night-theme .rh-detail-return-row,
+.rh-search-page-card.rh-night-theme .rh-detail-return-row {
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* 9. Chevron in Passenger */
+.rh-detail-journey-container.is-night .rh-detail-chevron,
+.rh-hero-night .rh-detail-chevron,
+.rh-search-card.rh-night-theme .rh-detail-chevron,
+.rh-search-page-card.rh-night-theme .rh-detail-chevron {
+  color: #60a5fa;
+}
+
+/* 10. Passenger Popover */
+.rh-detail-journey-container.is-night .rh-passenger-popover,
+.rh-hero-night .rh-passenger-popover,
+.rh-search-card.rh-night-theme .rh-passenger-popover,
+.rh-search-page-card.rh-night-theme .rh-passenger-popover {
+  background: #0d1e38;
+  border: 1.5px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65);
+}
+
+.rh-detail-journey-container.is-night .rh-passenger-popover-header,
+.rh-hero-night .rh-passenger-popover-header,
+.rh-search-card.rh-night-theme .rh-passenger-popover-header,
+.rh-search-page-card.rh-night-theme .rh-passenger-popover-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+.rh-detail-journey-container.is-night .rh-passenger-close-btn,
+.rh-hero-night .rh-passenger-close-btn,
+.rh-search-card.rh-night-theme .rh-passenger-close-btn,
+.rh-search-page-card.rh-night-theme .rh-passenger-close-btn {
+  color: #94a3b8;
+}
+
+.rh-detail-journey-container.is-night .rh-passenger-close-btn:hover,
+.rh-hero-night .rh-passenger-close-btn:hover,
+.rh-search-card.rh-night-theme .rh-passenger-close-btn:hover,
+.rh-search-page-card.rh-night-theme .rh-passenger-close-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+.rh-detail-journey-container.is-night .rh-passenger-type-title,
+.rh-hero-night .rh-passenger-type-title,
+.rh-search-card.rh-night-theme .rh-passenger-type-title,
+.rh-search-page-card.rh-night-theme .rh-passenger-type-title {
+  color: #ffffff;
+}
+
+.rh-detail-journey-container.is-night .rh-passenger-type-desc,
+.rh-hero-night .rh-passenger-type-desc,
+.rh-search-card.rh-night-theme .rh-passenger-type-desc,
+.rh-search-page-card.rh-night-theme .rh-passenger-type-desc {
+  color: #94a3b8;
+}
+
+.rh-detail-journey-container.is-night .rh-stepper-btn,
+.rh-hero-night .rh-stepper-btn,
+.rh-search-card.rh-night-theme .rh-stepper-btn,
+.rh-search-page-card.rh-night-theme .rh-stepper-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  color: #60a5fa;
+}
+
+.rh-detail-journey-container.is-night .rh-stepper-btn:not(:disabled):hover,
+.rh-hero-night .rh-stepper-btn:not(:disabled):hover,
+.rh-search-card.rh-night-theme .rh-stepper-btn:not(:disabled):hover,
+.rh-search-page-card.rh-night-theme .rh-stepper-btn:not(:disabled):hover {
+  background: rgba(37, 99, 235, 0.35);
+  border-color: #60a5fa;
+  color: #ffffff;
+}
+
+.rh-detail-journey-container.is-night .rh-stepper-btn:disabled,
+.rh-hero-night .rh-stepper-btn:disabled,
+.rh-search-card.rh-night-theme .rh-stepper-btn:disabled,
+.rh-search-page-card.rh-night-theme .rh-stepper-btn:disabled {
+  border-color: rgba(255, 255, 255, 0.08);
+  color: #64748b;
+  opacity: 0.35;
+}
+
+.rh-detail-journey-container.is-night .rh-stepper-count,
+.rh-hero-night .rh-stepper-count,
+.rh-search-card.rh-night-theme .rh-stepper-count,
+.rh-search-page-card.rh-night-theme .rh-stepper-count {
+  color: #ffffff;
+}
+
+.rh-detail-journey-container.is-night .rh-passenger-done-btn,
+.rh-hero-night .rh-passenger-done-btn,
+.rh-search-card.rh-night-theme .rh-passenger-done-btn,
+.rh-search-page-card.rh-night-theme .rh-passenger-done-btn {
+  background: #2563eb;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.45);
+}
+
+.rh-detail-journey-container.is-night .rh-passenger-done-btn:hover,
+.rh-hero-night .rh-passenger-done-btn:hover,
+.rh-search-card.rh-night-theme .rh-passenger-done-btn:hover,
+.rh-search-page-card.rh-night-theme .rh-passenger-done-btn:hover {
+  background: #1d4ed8;
+}
+
+/* 11. Submit Button: Cari Kereta */
+.rh-detail-journey-container.is-night .rh-detail-submit-btn,
+.rh-hero-night .rh-detail-submit-btn,
+.rh-search-card.rh-night-theme .rh-detail-submit-btn,
+.rh-search-page-card.rh-night-theme .rh-detail-submit-btn {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  box-shadow: 0 4px 18px rgba(37, 99, 235, 0.45);
+}
+
+.rh-detail-journey-container.is-night .rh-detail-submit-btn:hover,
+.rh-hero-night .rh-detail-submit-btn:hover,
+.rh-search-card.rh-night-theme .rh-detail-submit-btn:hover,
+.rh-search-page-card.rh-night-theme .rh-detail-submit-btn:hover {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  box-shadow: 0 6px 22px rgba(37, 99, 235, 0.58);
+}
+
+/* 12. Station Modal in Night Mode */
+.rh-station-modal-backdrop.is-night {
+  background: rgba(5, 12, 24, 0.75);
+  backdrop-filter: blur(8px);
+}
+
+.rh-station-modal-content.is-night {
+  background: #0d1e38;
+  border: 1.5px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.65);
+}
+
+@media (max-width: 640px) {
+  .rh-station-modal-backdrop.is-night {
+    background: #0a172c;
+  }
+  .rh-station-modal-content.is-night {
+    background: #0a172c;
+  }
+  .rh-station-modal-content.is-night .rh-station-modal-header,
+  .rh-station-modal-content.is-night .rh-station-modal-search,
+  .rh-station-modal-content.is-night .rh-station-popular-section {
+    background: #0a172c;
+  }
+}
+
+.rh-station-modal-content.is-night .rh-station-modal-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.rh-station-modal-content.is-night .rh-station-modal-title {
+  color: #ffffff;
+}
+
+.rh-station-modal-content.is-night .rh-station-modal-close {
+  background: rgba(255, 255, 255, 0.08);
+  color: #cbd5e1;
+}
+
+.rh-station-modal-content.is-night .rh-station-modal-close:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+}
+
+.rh-station-modal-content.is-night .rh-station-search-icon {
+  color: #94a3b8;
+}
+
+.rh-station-modal-content.is-night .rh-station-modal-input {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1.5px solid rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+}
+
+.rh-station-modal-content.is-night .rh-station-modal-input:focus {
+  border-color: #60a5fa;
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.25);
+}
+
+.rh-station-modal-content.is-night .rh-station-popular-section {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.rh-station-modal-content.is-night .rh-station-popular-label {
+  color: #94a3b8;
+}
+
+.rh-station-modal-content.is-night .rh-station-pill {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #e2e8f0;
+}
+
+.rh-station-modal-content.is-night .rh-station-pill:hover {
+  background: rgba(37, 99, 235, 0.3);
+  border-color: #60a5fa;
+  color: #ffffff;
+}
+
+.rh-station-modal-content.is-night .rh-station-pill.is-selected {
+  background: #2563eb;
+  border-color: #60a5fa;
+  color: #ffffff;
+}
+
+.rh-station-modal-content.is-night .rh-station-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.rh-station-modal-content.is-night .rh-station-item.is-selected {
+  background: rgba(37, 99, 235, 0.22);
+}
+
+.rh-station-modal-content.is-night .rh-station-item-code {
+  background: rgba(255, 255, 255, 0.08);
+  color: #93c5fd;
+}
+
+.rh-station-modal-content.is-night .rh-station-item.is-selected .rh-station-item-code {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.rh-station-modal-content.is-night .rh-station-item-name {
+  color: #ffffff;
+}
+
+.rh-station-modal-content.is-night .rh-station-item-sub {
+  color: #94a3b8;
+}
+
+.rh-station-modal-content.is-night .rh-station-item-check {
+  color: #60a5fa;
+}
+
+.rh-station-modal-content.is-night .rh-station-empty-state {
+  color: #cbd5e1;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   GENDER (COWO/CEWE), SEAT ACCESSIBILITY, CULINARY & JOURNEY HUD
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── SEAT MAP LEGEND BAR ── */
+.rh-seat-legend-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem 1rem;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  color: var(--rh-text);
+}
+
+.rh-seat-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+}
+
+.rh-seat-legend-sample {
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.rh-seat-legend-sample.is-available {
+  border: 1.5px solid var(--rh-primary);
+  background: #ffffff;
+}
+
+.rh-seat-legend-sample.is-selected {
+  background: var(--rh-accent);
+  border: 1.5px solid var(--rh-accent-dark);
+}
+
+.rh-seat-legend-sample.is-disability {
+  background: #f0f9ff;
+  border: 1.5px solid #0284c7;
+}
+
+.rh-seat-legend-sample.is-female-priority {
+  background: #fdf2f8;
+  border: 1.5px dashed #ec4899;
+}
+
+.rh-seat-legend-sample.is-booked-male {
+  background: #f0f9ff;
+  border: 1.5px solid #bae6fd;
+}
+
+.rh-seat-legend-sample.is-booked-female {
+  background: #fdf2f8;
+  border: 1.5px solid #fbcfe8;
+}
+
+/* Enhanced Seat Styles */
+.rh-seat-map-seat.is-disability-priority {
+  border: 1.5px solid #0284c7 !important;
+  background: #f0f9ff !important;
+  color: #0369a1 !important;
+  position: relative;
+}
+
+.rh-seat-map-seat.is-disability-priority::after {
+  content: '♿';
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  font-size: 8px;
+  background: #0284c7;
+  color: #ffffff;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+.rh-seat-map-seat.is-female-priority {
+  border: 1.5px dashed #ec4899 !important;
+  background: #fdf2f8 !important;
+  color: #be185d !important;
+  position: relative;
+}
+
+.rh-seat-map-seat.is-female-priority::after {
+  content: '♀';
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  font-size: 10px;
+  background: #ec4899;
+  color: #ffffff;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  font-weight: 900;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+.rh-seat-map-seat.is-booked-male {
+  border-color: #bae6fd !important;
+  background: #f0f9ff !important;
+  color: #0284c7 !important;
+  cursor: not-allowed !important;
+  opacity: 0.92;
+}
+
+.rh-seat-map-seat.is-booked-female {
+  border-color: #fbcfe8 !important;
+  background: #fdf2f8 !important;
+  color: #db2777 !important;
+  cursor: not-allowed !important;
+  opacity: 0.92;
+}
+
+/* ── CULINARY CARDS HOVER ── */
+.rh-culinary-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12) !important;
+}
+
+.rh-culinary-card:hover .rh-food-img {
+  transform: scale(1.05);
+}
+
+/* ── HUD TRAIN ANIMATIONS ── */
+@keyframes rhScrollMountains {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes rhScrollHills {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes rhScrollPoles {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes rhScrollTies {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-18px); }
+}
+
+@keyframes rhTrainChug {
+  0% { transform: translateX(-50%) translateY(0px); }
+  100% { transform: translateX(-50%) translateY(-1.5px); }
+}
+
+@keyframes bounceShort {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+.animate-bounce-short {
+  animation: bounceShort 2s ease-in-out infinite;
 }

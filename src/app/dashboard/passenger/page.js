@@ -308,33 +308,16 @@ function PassengerDashboardContent() {
     <>
       <Navbar />
       <main className="passenger-dashboard" style={{ background: 'var(--rh-surface)', minHeight: '100vh', paddingBottom: '6rem' }}>
-        {/* ── TOP HEADER / GREETING BAR ── */}
-        <section className={`passenger-header-banner rh-hide-on-mobile-tracking ${activeTab === 'account' ? 'passenger-account-hide' : ''}`} style={{
+        {/* ── DESKTOP DASHBOARD NAVIGATION BAR ── */}
+        <section className={`passenger-header-banner rh-hide-mobile rh-hide-on-mobile-tracking ${activeTab === 'account' ? 'passenger-account-hide' : ''}`} style={{
           background: 'var(--rh-primary)',
           color: 'white',
-          padding: '2.5rem 0 2rem',
+          padding: '1rem 0',
           borderBottom: '1px solid rgba(255,255,255,0.1)',
         }}>
           <div className="rh-container">
-            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '1.25rem' }}>
-              <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.4rem' }}>
-                  <span className="rh-badge" style={{ background: 'rgba(255,255,255,0.14)', color: 'var(--rh-accent)' }}>
-                    <Train size={13} aria-hidden="true" /> Ruang Perjalanan
-                  </span>
-                </div>
-                <h1 className="rh-h2" style={{ color: 'white', margin: 0 }}>
-                  Halo, {profile?.full_name || 'Penumpang RailHub'}
-                </h1>
-                <p style={{ margin: '0.35rem 0 0', color: 'rgba(255,255,255,0.82)', fontSize: '0.92rem' }}>
-                  Tiket, status perjalanan, dan layanan kereta dalam satu tempat.
-                </p>
-              </div>
-
-            </div>
-
             {/* ── DESKTOP DASHBOARD NAVIGATION ── */}
-            <nav className="passenger-tabs-nav" aria-label="Menu Dashboard Penumpang">
+            <nav className="passenger-tabs-nav" style={{ marginTop: 0 }} aria-label="Menu Dashboard Penumpang">
               {TABS.map(tab => {
                 const TabIcon = tab.icon
                 const isActive = activeTab === tab.id

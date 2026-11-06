@@ -56,7 +56,7 @@ function PassengerSeatIcon({ size = 22, color = '#475569', style = {} }) {
 const POPULAR_CODES = ['PSE', 'GMR', 'BD', 'YK', 'SGU', 'SMT', 'ML']
 
 
-function LiveClockMinimal({ lang = 'id' }) {
+function LiveClockMinimal({ lang = 'id', isNight = false }) {
   const [mounted, setMounted] = useState(false)
   const [now, setNow] = useState(null)
 
@@ -74,12 +74,12 @@ function LiveClockMinimal({ lang = 'id' }) {
   if (!mounted || !now) {
     return (
       <div
-        className="rh-live-clock-skeleton"
+        className={`rh-live-clock-skeleton ${isNight ? 'is-night' : ''}`}
         style={{
           height: 32,
           marginBottom: '0.65rem',
           borderRadius: 8,
-          background: 'rgba(241, 245, 249, 0.6)',
+          background: isNight ? 'rgba(255, 255, 255, 0.08)' : 'rgba(241, 245, 249, 0.6)',
         }}
         aria-hidden="true"
       />
@@ -101,7 +101,7 @@ function LiveClockMinimal({ lang = 'id' }) {
 
   return (
     <div
-      className="rh-live-time-ticker"
+      className={`rh-live-time-ticker ${isNight ? 'is-night' : ''}`}
       style={{
         display: 'flex',
         alignItems: 'center',
@@ -111,20 +111,23 @@ function LiveClockMinimal({ lang = 'id' }) {
         padding: '0.4rem 0.8rem',
         marginBottom: '0.75rem',
         borderRadius: 10,
-        background: '#f8fafc',
-        border: '1px solid #e2e8f0',
+        background: isNight ? 'rgba(15, 30, 58, 0.72)' : '#f8fafc',
+        border: isNight ? '1px solid rgba(255, 255, 255, 0.15)' : '1px solid #e2e8f0',
+        backdropFilter: isNight ? 'blur(10px)' : 'none',
+        WebkitBackdropFilter: isNight ? 'blur(10px)' : 'none',
         fontSize: '0.78rem',
         lineHeight: 1.3,
+        transition: 'all 0.3s ease',
       }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', color: '#334155', fontWeight: 600 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', color: isNight ? 'rgba(255, 255, 255, 0.95)' : '#334155', fontWeight: 600 }}>
         <span
           style={{
             width: 7,
             height: 7,
             borderRadius: '50%',
             background: '#10b981',
-            boxShadow: '0 0 0 2.5px rgba(16, 185, 129, 0.25)',
+            boxShadow: isNight ? '0 0 8px rgba(16, 185, 129, 0.7), 0 0 0 2px rgba(16, 185, 129, 0.3)' : '0 0 0 2.5px rgba(16, 185, 129, 0.25)',
             display: 'inline-block',
             flexShrink: 0,
           }}
@@ -142,10 +145,10 @@ function LiveClockMinimal({ lang = 'id' }) {
           gap: '0.35rem',
           fontFamily: 'var(--font-mono, monospace)',
           fontWeight: 700,
-          color: '#1A428A',
+          color: isNight ? '#60a5fa' : '#1A428A',
         }}
       >
-        <Clock size={13} style={{ color: '#1A428A' }} />
+        <Clock size={13} style={{ color: isNight ? '#60a5fa' : '#1A428A' }} />
         <span>{timeFormatted} WIB</span>
       </div>
     </div>
@@ -159,9 +162,24 @@ export default function SearchWidget({
   initialDate = '',
   initialPax = 1,
   onSearch,
+  isNight: isNightProp,
 }) {
   const { lang, t } = useLang()
   const router = useRouter()
+
+  const [isNightAuto, setIsNightAuto] = useState(false)
+
+  useEffect(() => {
+    const checkNight = () => {
+      const hr = new Date().getHours()
+      setIsNightAuto(hr < 6 || hr >= 18)
+    }
+    checkNight()
+    const timer = setInterval(checkNight, 60000)
+    return () => clearInterval(timer)
+  }, [])
+
+  const isNight = isNightProp !== undefined ? isNightProp : isNightAuto
 
   const [stations, setStations] = useState(STATIONS_CATALOG)
   const [stationsLoading, setStationsLoading] = useState(false)
@@ -398,10 +416,10 @@ export default function SearchWidget({
   })
 
   return (
-    <div className="rh-detail-journey-container">
+    <div className={`rh-detail-journey-container ${isNight ? "is-night" : ""}`}>
       {!compact && (
         <>
-          <LiveClockMinimal lang={lang} />
+          <LiveClockMinimal lang={lang} isNight={isNight} />
           <h2 className="rh-detail-journey-heading">
             {lang === 'en' ? 'Journey Details' : 'Detail Perjalanan'}
           </h2>
@@ -543,9 +561,9 @@ export default function SearchWidget({
                 style={{ flex: 1, position: 'relative', cursor: 'pointer' }}
                 onClick={() => openDatePicker(returnDateInputRef)}
               >
-                <Calendar size={20} style={{ color: 'var(--rh-primary)' }} />
+                <Calendar size={20} style={{ color: isNight ? '#60a5fa' : 'var(--rh-primary)' }} />
                 <div className="rh-detail-text-col">
-                  <span className="rh-detail-label" style={{ color: 'var(--rh-primary)', fontWeight: 600 }}>
+                  <span className="rh-detail-label" style={{ color: isNight ? '#93c5fd' : 'var(--rh-primary)', fontWeight: 600 }}>
                     {lang === 'en' ? 'Return Date' : 'Tanggal Pulang'}
                   </span>
                   <span className="rh-detail-val-bold">
@@ -578,7 +596,7 @@ export default function SearchWidget({
             aria-label={lang === 'en' ? 'Select passengers' : 'Pilih jumlah penumpang'}
           >
             <div className="rh-detail-passenger-left">
-              <PassengerSeatIcon size={22} color="#475569" />
+              <PassengerSeatIcon size={22} color={isNight ? "#93c5fd" : "#475569"} />
               <div className="rh-detail-text-col">
                 <span className="rh-detail-label">
                   {lang === 'en' ? 'Passengers' : 'Penumpang'}
@@ -708,9 +726,9 @@ export default function SearchWidget({
 
       {/* ── STATION PICKER MODAL (FULL SCREEN SHEET VIA PORTAL) ── */}
       {mounted && activePicker && createPortal(
-        <div className="rh-station-modal-backdrop" onClick={() => setActivePicker(null)}>
+        <div className={`rh-station-modal-backdrop ${isNight ? "is-night" : ""}`} onClick={() => setActivePicker(null)}>
           <div
-            className="rh-station-modal-content"
+            className={`rh-station-modal-content ${isNight ? "is-night" : ""}`}
             onClick={e => e.stopPropagation()}
             role="dialog"
             aria-modal="true"

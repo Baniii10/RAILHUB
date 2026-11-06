@@ -13,6 +13,7 @@ import PromoBannerCarousel from '@/components/home/PromoBannerCarousel'
 import PopularTicketRoutes from '@/components/home/PopularTicketRoutes'
 import TravelClassShowcase from '@/components/home/TravelClassShowcase'
 import PwaGalleryBento from '@/components/home/PwaGalleryBento'
+import FeedbackSection from '@/components/home/FeedbackSection'
 import { useLang } from '@/contexts/LangContext'
 import { useAuth } from '@/contexts/AuthContext'
 import { ChevronRight } from 'lucide-react'
@@ -81,7 +82,7 @@ export default function HomePage() {
             {/* Elevated Search Widget Card - SHAPE BIASA (Solid White Card, NO Glassmorphism) */}
             <div className="animate-slide-right">
               <div
-                className="rh-search-card"
+                className={`rh-search-card ${!isDay ? "rh-night-theme" : ""}`}
                 style={{
                   background: isDay ? 'rgba(255, 255, 255, 0.78)' : 'rgba(10, 25, 48, 0.76)',
                   backdropFilter: 'blur(20px) saturate(180%)',
@@ -94,7 +95,7 @@ export default function HomePage() {
                   overflow: 'hidden',
                 }}
               >
-                <SearchWidget />
+                <SearchWidget isNight={!isDay} />
               </div>
             </div>
           </div>
@@ -128,35 +129,8 @@ export default function HomePage() {
         </>
       )}
 
-      {/* Compact closing section */}
-      <section className="home-bottom-cta" style={{ background: 'var(--rh-primary)', padding: '2.5rem 0 calc(5.5rem + env(safe-area-inset-bottom, 0px))', color: 'white' }}>
-        <div className="rh-container" style={{ textAlign: 'center', maxWidth: 580 }}>
-          <h2 className="rh-h3" style={{ color: 'white', marginBottom: '0.5rem', fontSize: '1.35rem' }}>
-            {lang === 'en' ? 'Ready for Your Next Journey?' : 'Siap Memulai Perjalanan Anda?'}
-          </h2>
-          <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: '0.9rem', margin: '0 0 1.25rem', lineHeight: 1.5 }}>
-            {lang === 'en' ? 'Book tickets, keep your QR boarding pass, and view journey status in one place.' : 'Pesan tiket, simpan e-boarding pass QR, dan pantau status perjalanan dari satu tempat.'}
-          </p>
-          <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Link href="/trains" className="rh-btn rh-btn-accent rh-btn-sm" style={{ padding: '0.55rem 1.25rem', fontSize: '0.85rem' }}>
-              {lang === 'en' ? 'Find Tickets' : 'Cari Tiket Sekarang'} <ChevronRight size={16} />
-            </Link>
-            <Link
-              href="/about"
-              className="rh-btn rh-btn-sm"
-              style={{
-                background: 'rgba(255,255,255,0.12)',
-                color: 'white',
-                border: '1px solid rgba(255,255,255,0.25)',
-                padding: '0.55rem 1.25rem',
-                fontSize: '0.85rem',
-              }}
-            >
-              {lang === 'en' ? 'About & Privacy' : 'Tentang & Privasi'}
-            </Link>
-          </div>
-        </div>
-      </section>
+      {/* Suara & Masukan Penumpang: Kritik & Saran */}
+      <FeedbackSection />
     </div>
   )
 }

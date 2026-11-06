@@ -7,7 +7,6 @@ import {
   Train,
   Sparkles,
   Briefcase,
-  Check,
   ChevronRight,
 } from 'lucide-react'
 import { useLang } from '@/contexts/LangContext'
@@ -194,14 +193,13 @@ export default function TravelClassShowcase() {
             const Icon = cls.icon
             const features = lang === 'en' ? cls.featuresEn : cls.features
             const chips = lang === 'en' ? cls.quickChipsEn : cls.quickChips
-            const badgeLabel = lang === 'en' ? cls.badgeEn : cls.badge
-
+            
             return (
               <article
                 key={cls.id}
                 className="rh-card rh-class-showcase-card"
               >
-                {/* Hero Photo Banner - FOTO UTAMA LEBIH MENONJOL DI MOBILE */}
+                {/* Hero Photo Banner - FOTO LEBIH TINGGI & MENONJOL (PHOTO-FIRST) */}
                 <div className="rh-class-card-hero">
                   {!hasError ? (
                     <img
@@ -222,9 +220,9 @@ export default function TravelClassShowcase() {
                   {/* Gradient Overlay for Contrast */}
                   <div className="rh-class-card-gradient" />
 
-                  
 
-                  {/* Title overlay directly on photo for Mobile Hero Effect */}
+
+                  {/* Title overlay directly on photo */}
                   <div className="rh-class-hero-overlay-title">
                     <h3 className="rh-class-title-text">
                       {cls.title}
@@ -232,14 +230,9 @@ export default function TravelClassShowcase() {
                   </div>
                 </div>
 
-                {/* Card Content Body */}
+                {/* Card Content Body - MINIMALIS FOTO-FIRST (Tanpa Dinding Teks) */}
                 <div className="rh-class-card-body">
-                  {/* Desktop Description (Hidden on mobile) */}
-                  <p className="rh-class-desktop-desc">
-                    {lang === 'en' ? cls.descriptionEn : cls.description}
-                  </p>
-
-                  {/* Mobile Quick Chips (Concise highlights instead of wall of text) */}
+                  {/* Quick Chips Highlight */}
                   <div className="rh-class-chips-row">
                     {chips.map((chip, cIdx) => (
                       <span key={cIdx} className="rh-class-chip">
@@ -248,24 +241,12 @@ export default function TravelClassShowcase() {
                     ))}
                   </div>
 
-                  {/* Desktop 4 Feature Bullets (Hidden on mobile) */}
-                  <ul className="rh-class-desktop-features">
-                    {features.map((feat, fIdx) => (
-                      <li key={fIdx} className="rh-class-feature-item">
-                        <span className="rh-class-check-circle">
-                          <Check size={12} strokeWidth={3} />
-                        </span>
-                        <span>{feat}</span>
-                      </li>
-                    ))}
-                  </ul>
-
                   {/* Action Button */}
                   <Link
                     href={`/trains?class=${encodeURIComponent(cls.id)}`}
                     className="rh-btn rh-btn-primary rh-class-action-btn"
                   >
-                    <span>{lang === 'en' ? `Book ${cls.title}` : `Pilih Tiket ${cls.title}`}</span>
+                    <span>{lang === 'en' ? `Pilih ${cls.title}` : `Pilih ${cls.title}`}</span>
                     <ChevronRight size={15} />
                   </Link>
                 </div>
