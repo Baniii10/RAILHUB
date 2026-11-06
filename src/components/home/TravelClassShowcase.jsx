@@ -222,15 +222,7 @@ export default function TravelClassShowcase() {
                   {/* Gradient Overlay for Contrast */}
                   <div className="rh-class-card-gradient" />
 
-                  {/* Top Badge */}
-                  <div className="rh-class-badge" style={{ color: cls.badgeColor }}>
-                    {badgeLabel}
-                  </div>
-
-                  {/* Price Tag */}
-                  <div className="rh-class-price-tag">
-                    {lang === 'en' ? cls.priceEn : cls.price}
-                  </div>
+                  
 
                   {/* Title overlay directly on photo for Mobile Hero Effect */}
                   <div className="rh-class-hero-overlay-title">
