@@ -9,6 +9,7 @@ import { createClient } from '@/lib/supabase/client'
 import { useLang } from '@/contexts/LangContext'
 import toast from 'react-hot-toast'
 import MobileTrainIllustration from '@/components/auth/MobileTrainIllustration'
+import { FullScreenAuthLoadingOverlay } from '@/components/ui/RailLoader'
 
 function GoogleIcon({ size = 19 }) {
   return (
@@ -141,7 +142,15 @@ export default function RegisterPage() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', minHeight: '100dvh', display: 'flex', flexDirection: 'column', background: '#ffffff' }}>
+    <div style={{ minHeight: '100vh', minHeight: '100dvh', display: 'flex', flexDirection: 'column', background: '#ffffff', position: 'relative' }}>
+      {/* Fullscreen Interactive Blocking Overlay when registering */}
+      {(loading || googleLoading) && (
+        <FullScreenAuthLoadingOverlay
+          title="Mendaftarkan Akun…"
+          subtitle="Mohon tunggu sejenak, data Anda sedang disimpan dan diverifikasi ke sistem RAILHUB."
+        />
+      )}
+
       {/* Standard RAILHUB Navbar with Brand & Language Toggle */}
       <Navbar />
 

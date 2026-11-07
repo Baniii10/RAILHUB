@@ -58,16 +58,17 @@ export default function FoodOrdersPage() {
       <Navbar />
       <main style={{ minHeight: '100vh', padding: '2rem 0 5rem', background: 'var(--rh-surface)' }}>
         <div className="rh-container">
-          <div style={{ marginBottom: '1.25rem' }}>
-            <a href={dashboardHref} className="rh-btn rh-btn-ghost rh-btn-sm"><ArrowLeft size={15} />Kembali ke dashboard</a>
-          </div>
           <section className="rh-card">
             <div className="rh-card-header">
-              <span className="rh-badge rh-badge-primary">Layanan penumpang</span>
-              <h1 className="rh-h2" style={{ marginTop: '0.6rem' }}><Utensils size={23} style={{ verticalAlign: 'middle', marginRight: 8 }} />Pesanan makanan</h1>
-              <p style={{ color: 'var(--rh-text-2)', marginTop: '0.35rem' }}>
-                {isAdmin ? 'Tinjau dan kelola pesanan makanan penumpang.' : 'Pesanan hanya ditampilkan untuk perjalanan yang ditugaskan kepada Anda.'}
-              </p>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+                <a href={dashboardHref} className="rh-back-btn" aria-label="Kembali ke dashboard" title="Kembali ke dashboard">
+                  <ArrowLeft size={18} />
+                </a>
+                <div>
+                  <span className="rh-badge rh-badge-primary">Layanan penumpang</span>
+                  <h1 className="rh-h2" style={{ margin: '0.2rem 0 0' }}><Utensils size={22} style={{ verticalAlign: 'middle', marginRight: 8 }} />Pesanan makanan</h1>
+                </div>
+              </div>
             </div>
             <div className="rh-card-body">
               {error && <div role="alert" className="rh-card" style={{ padding: '1rem', color: 'var(--rh-danger)', marginBottom: '1rem' }}>{error}</div>}

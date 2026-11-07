@@ -25,6 +25,7 @@ import {
   Users,
   Utensils,
   XCircle,
+  Trash2,
 } from 'lucide-react'
 import toast from 'react-hot-toast'
 import OperationalDashboardShell from '@/components/layout/OperationalDashboardShell'
@@ -156,6 +157,31 @@ function StaffDashboardContent() {
   const [orderFilter, setOrderFilter] = useState('all')
   const [reportFilter, setReportFilter] = useState('all')
   const [reportNoteInputs, setReportNoteInputs] = useState({})
+
+  // Staff notifications
+  const [staffNotifs, setStaffNotifs] = useState(() => [
+    {
+      id: 'sn-1',
+      title: 'Briefing Operasional Keselamatan Perjalanan KA',
+      desc: 'Pastikan seluruh pintu bordes gerbong terkunci sempurna sebelum kereta bergerak. Periksa alat pemadam api ringan (APAR) dan kotak P3K di kereta restorasi.',
+      time: 'Hari Ini · 06.00 WIB',
+      level: 'Penting',
+    },
+    {
+      id: 'sn-2',
+      title: 'Protokol Validasi Tiket Digital QR Code',
+      desc: 'Setiap penumpang wajib menunjukkan e-boarding pass asli dari aplikasi RailHub dengan nama sesuai KTP. Tiket fisik atau screenshot tidak valid bila kode QR telah kedaluwarsa.',
+      time: 'Hari Ini · 05.30 WIB',
+      level: 'SOP',
+    },
+    {
+      id: 'sn-3',
+      title: 'Pemberitahuan Cuaca & Kondisi Jalur',
+      desc: 'Jalur lintas utara Cirebon - Semarang dilaporkan lancar dengan kecepatan normal. Perhatikan jarak aman saat mendekati sinyal masuk stasiun.',
+      time: 'Hari Ini · 05.00 WIB',
+      level: 'Informasi',
+    },
+  ])
 
   function selectTab(tab) {
     router.push(`/dashboard/staff?tab=${tab}`, { scroll: false })
@@ -1130,43 +1156,74 @@ function StaffDashboardContent() {
           {/* ── TAB 8: NOTIFICATIONS ────────────────────────────────────────── */}
           {activeTab === 'notifications' && (
             <section className="rh-card" style={{ padding: '1.5rem' }}>
-              <div style={{ marginBottom: '1.25rem' }}>
-                <h2 className="rh-h3" style={{ margin: 0 }}>Pemberitahuan Tugas & Protokol Dinas</h2>
-                <p style={{ margin: '0.2rem 0 0', color: 'var(--rh-text-2)', fontSize: '0.88rem' }}>
-                  Instruksi operasional, pengumuman keselamatan PT KAI / RailHub, dan log perubahan status dinas.
-                </p>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '1.25rem' }}>
+                <div>
+                  <h2 className="rh-h3" style={{ margin: 0 }}>Pemberitahuan Tugas & Protokol Dinas</h2>
+                  <p style={{ margin: '0.2rem 0 0', color: 'var(--rh-text-2)', fontSize: '0.88rem' }}>
+                    Instruksi operasional, pengumuman keselamatan PT KAI / RailHub, dan log perubahan status dinas.
+                  </p>
+                </div>
+                {staffNotifs.length > 0 && (
+                  <button
+                    type="button"
+                    className="rh-btn rh-btn-ghost rh-btn-sm"
+                    style={{ color: 'var(--rh-danger)' }}
+                    onClick={() => {
+                      setStaffNotifs([])
+                      toast.success('Semua pemberitahuan telah dibersihkan.')
+                    }}
+                  >
+                    <Trash2 size={14} /> Hapus Semua
+                  </button>
+                )}
               </div>
 
               <div style={{ display: 'grid', gap: '0.9rem' }}>
-                {[
-                  {
-                    title: 'Briefing Operasional Keselamatan Perjalanan KA',
-                    desc: 'Pastikan seluruh pintu bordes gerbong terkunci sempurna sebelum kereta bergerak. Periksa alat pemadam api ringan (APAR) dan kotak P3K di kereta restorasi.',
-                    time: 'Hari Ini · 06.00 WIB',
-                    level: 'Penting',
-                  },
-                  {
-                    title: 'Protokol Validasi Tiket Digital QR Code',
-                    desc: 'Setiap penumpang wajib menunjukkan e-boarding pass asli dari aplikasi RailHub dengan nama sesuai KTP. Tiket fisik atau screenshot tidak valid bila kode QR telah kedaluwarsa.',
-                    time: 'Hari Ini · 05.30 WIB',
-                    level: 'SOP',
-                  },
-                  {
-                    title: 'Pemberitahuan Cuaca & Kondisi Jalur',
-                    desc: 'Jalur lintas utara Cirebon - Semarang dilaporkan lancar dengan kecepatan normal. Perhatikan jarak aman saat mendekati sinyal masuk stasiun.',
-                    time: 'Hari Ini · 05.00 WIB',
-                    level: 'Informasi',
-                  },
-                ].map((notif, idx) => (
-                  <article key={idx} style={{ padding: '1rem', borderRadius: 12, border: '1px solid var(--rh-border)', background: 'var(--rh-surface)' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
-                      <strong style={{ fontSize: '0.95rem' }}>{notif.title}</strong>
-                      <span className="rh-badge rh-badge-primary">{notif.level}</span>
-                    </div>
-                    <p style={{ margin: 0, fontSize: '0.88rem', color: 'var(--rh-text-2)' }}>{notif.desc}</p>
-                    <small style={{ display: 'block', marginTop: '0.4rem', color: 'var(--rh-text-3)', fontSize: '0.75rem' }}>{notif.time}</small>
-                  </article>
-                ))}
+                {staffNotifs.length === 0 ? (
+                  <div style={{ textAlign: 'center', padding: '2.5rem 1rem', color: 'var(--rh-text-2)' }}>
+                    <Bell size={32} style={{ opacity: 0.3, margin: '0 auto 0.5rem', display: 'block' }} />
+                    <strong style={{ display: 'block', fontSize: '0.95rem' }}>Belum ada pemberitahuan baru</strong>
+                    <small>Seluruh instruksi atau pengumuman tugas telah dibersihkan.</small>
+                  </div>
+                ) : (
+                  staffNotifs.map(notif => (
+                    <article key={notif.id} style={{ position: 'relative', padding: '1rem', borderRadius: 12, border: '1px solid var(--rh-border)', background: 'var(--rh-surface)' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                          <strong style={{ fontSize: '0.95rem' }}>{notif.title}</strong>
+                          <span className="rh-badge rh-badge-primary">{notif.level}</span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setStaffNotifs(prev => prev.filter(n => n.id !== notif.id))
+                            toast.success('Pemberitahuan berhasil dihapus.')
+                          }}
+                          title="Hapus pemberitahuan"
+                          aria-label="Hapus pemberitahuan"
+                          style={{
+                            background: 'transparent',
+                            border: 'none',
+                            color: 'var(--rh-text-3)',
+                            cursor: 'pointer',
+                            padding: '4px',
+                            borderRadius: '6px',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            transition: 'color 0.15s ease',
+                          }}
+                          onMouseEnter={e => { e.currentTarget.style.color = 'var(--rh-danger)' }}
+                          onMouseLeave={e => { e.currentTarget.style.color = 'var(--rh-text-3)' }}
+                        >
+                          <Trash2 size={15} />
+                        </button>
+                      </div>
+                      <p style={{ margin: 0, fontSize: '0.88rem', color: 'var(--rh-text-2)' }}>{notif.desc}</p>
+                      <small style={{ display: 'block', marginTop: '0.4rem', color: 'var(--rh-text-3)', fontSize: '0.75rem' }}>{notif.time}</small>
+                    </article>
+                  ))
+                )}
               </div>
             </section>
           )}

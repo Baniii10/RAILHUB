@@ -20,6 +20,7 @@ import LiveRoleClock from '@/components/ui/LiveRoleClock'
 import { useAuth } from '@/contexts/AuthContext'
 import { useLang } from '@/contexts/LangContext'
 import toast from 'react-hot-toast'
+import { DashboardShellSkeleton } from '@/components/ui/RailLoader'
 
 export default function OperationalDashboardShell({
   role = 'admin', // 'admin' | 'staff' | 'conductor' | 'gate'
@@ -611,7 +612,11 @@ export default function OperationalDashboardShell({
             overflowX: 'hidden',
           }}
         >
-          {children}
+          {loading ? (
+            <DashboardShellSkeleton role={role} />
+          ) : (
+            children
+          )}
         </main>
       </div>
     </div>

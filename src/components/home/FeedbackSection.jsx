@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import toast from 'react-hot-toast'
 import {
   MessageSquare,
@@ -235,6 +236,44 @@ export default function FeedbackSection() {
             </div>
           </form>
         )}
+
+        {/* Brand Logo Real Watermark di Mobile */}
+        <div
+          className="rh-show-mobile-only"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginTop: '1.25rem',
+            paddingBottom: '0.25rem',
+          }}
+        >
+          <div
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              background: 'rgba(255, 255, 255, 0.94)',
+              padding: '5px 14px',
+              borderRadius: '9999px',
+              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
+            }}
+          >
+            <Image
+              src="/images/Fix logo railhub.png"
+              alt="RAILHUB"
+              width={120}
+              height={32}
+              unoptimized
+              style={{
+                height: '18px',
+                width: 'auto',
+                objectFit: 'contain',
+                display: 'block',
+              }}
+            />
+          </div>
+        </div>
       </div>
     </section>
   )

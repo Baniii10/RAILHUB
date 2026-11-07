@@ -232,16 +232,16 @@ export default function AdminJourneysPage() {
       <Navbar />
       <main style={{ minHeight: '100vh', padding: '2rem 0 5rem', background: 'var(--rh-surface)' }}>
         <div className="rh-container">
-
-          <div style={{ marginBottom: '1.25rem' }}>
-            <a href="/dashboard/admin" className="rh-btn rh-btn-ghost rh-btn-sm"><ArrowLeft size={15} />Kembali ke ringkasan admin</a>
-          </div>
           <section className="rh-card">
             <div className="rh-card-header" style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
-              <div>
-                <span className="rh-badge rh-badge-primary">Operasional</span>
-                <h1 className="rh-h2" style={{ marginTop: '0.6rem' }}><CalendarDays size={23} style={{ verticalAlign: 'middle', marginRight: 8 }} />Perjalanan mendatang</h1>
-                <p style={{ color: 'var(--rh-text-2)', marginTop: '0.35rem' }}>Cari jadwal, pantau petugas, dan perbarui status perjalanan dari halaman ini.</p>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+                <a href="/dashboard/admin" className="rh-back-btn" aria-label="Kembali ke ringkasan admin" title="Kembali ke ringkasan admin">
+                  <ArrowLeft size={18} />
+                </a>
+                <div>
+                  <span className="rh-badge rh-badge-primary">Operasional</span>
+                  <h1 className="rh-h2" style={{ margin: '0.2rem 0 0' }}><CalendarDays size={22} style={{ verticalAlign: 'middle', marginRight: 8 }} />Perjalanan mendatang</h1>
+                </div>
               </div>
               <button type="button" className="rh-btn rh-btn-ghost" onClick={() => loadSchedules(true)} disabled={loading}>
                 <RefreshCw size={16} /> Muat ulang

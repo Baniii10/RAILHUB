@@ -65,34 +65,66 @@ export default function LiveJourneyMapTracker({ booking, ticket, countdown, jour
       />
 
       {/* ── PASSENGER QUICK ACTIONS & SEAT DETAILS ── */}
-      <div className="rh-card" style={{ padding: '1.25rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '1rem' }}>
-          <div>
-            <strong style={{ fontSize: '0.95rem', color: 'var(--rh-navy)' }}>Layanan Cepat Penumpang</strong>
-            <p style={{ margin: '0.15rem 0 0', color: 'var(--rh-text-2)', fontSize: '0.8rem' }}>
-              Akses cepat kuliner kereta, boarding pass, dan detail tiket selama di perjalanan.
-            </p>
-          </div>
+      <div className="rh-card" style={{ padding: '1rem 1.25rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.85rem' }}>
+          <strong style={{ fontSize: '0.92rem', color: 'var(--rh-navy)' }}>Layanan Cepat Penumpang</strong>
           {ticket && (
-            <div style={{ padding: '0.35rem 0.85rem', background: '#eff6ff', borderRadius: 10, border: '1px solid #bfdbfe' }}>
-              <span style={{ fontSize: '0.82rem', color: 'var(--rh-primary)', fontWeight: 700 }}>
+            <div style={{ padding: '0.25rem 0.65rem', background: '#eff6ff', borderRadius: 8, border: '1px solid #bfdbfe' }}>
+              <span style={{ fontSize: '0.78rem', color: 'var(--rh-primary)', fontWeight: 700 }}>
                 Kursi {ticket.seats?.seat_number || '-'} · Gerbong {ticket.seats?.carriages?.carriage_number || '-'}
               </span>
             </div>
           )}
         </div>
 
-        <div className="journey-actions" style={{ margin: 0 }}>
-          <button type="button" className="rh-btn rh-btn-primary" onClick={() => onSelectTab?.('services')}>
-            <Utensils size={16} /> Pesan Makanan Hangat
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.65rem' }}>
+          <button
+            type="button"
+            className="rh-action-tile"
+            onClick={() => onSelectTab?.('services')}
+            title="Pesan Makanan"
+          >
+            <div className="rh-action-tile-icon" style={{ background: 'rgba(26, 66, 138, 0.08)', color: 'var(--rh-primary)' }}>
+              <Utensils size={20} />
+            </div>
+            <span className="rh-action-tile-label">Pesan Makanan</span>
           </button>
-          <button type="button" className="rh-btn rh-btn-ghost" onClick={() => onSelectTab?.('tickets')}>
-            <QrCode size={16} /> E-Boarding Pass
+
+          <button
+            type="button"
+            className="rh-action-tile"
+            onClick={() => onSelectTab?.('tickets')}
+            title="E-Boarding Pass"
+          >
+            <div className="rh-action-tile-icon" style={{ background: 'rgba(5, 150, 105, 0.08)', color: 'var(--rh-success)' }}>
+              <QrCode size={20} />
+            </div>
+            <span className="rh-action-tile-label">E-Boarding Pass</span>
           </button>
-          {booking?.id && (
-            <Link href={`/booking/payment/${booking.id}`} className="rh-btn rh-btn-ghost">
-              <Train size={16} /> Detail Pesanan
+
+          {booking?.id ? (
+            <Link
+              href={`/booking/payment/${booking.id}`}
+              className="rh-action-tile"
+              title="Detail Pesanan"
+            >
+              <div className="rh-action-tile-icon" style={{ background: 'rgba(234, 88, 12, 0.08)', color: 'var(--rh-orange)' }}>
+                <Train size={20} />
+              </div>
+              <span className="rh-action-tile-label">Detail Pesanan</span>
             </Link>
+          ) : (
+            <button
+              type="button"
+              className="rh-action-tile"
+              onClick={() => onSelectTab?.('tickets')}
+              title="Detail Pesanan"
+            >
+              <div className="rh-action-tile-icon" style={{ background: 'rgba(234, 88, 12, 0.08)', color: 'var(--rh-orange)' }}>
+                <Train size={20} />
+              </div>
+              <span className="rh-action-tile-label">Detail Pesanan</span>
+            </button>
           )}
         </div>
       </div>

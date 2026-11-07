@@ -11,6 +11,7 @@ import { useLang } from '@/contexts/LangContext'
 import toast from 'react-hot-toast'
 import NightTrainBumperPlayer from '@/components/auth/NightTrainBumperPlayer'
 import { getDashboardForProfile, getOperationalRole, isSafeNextPath, normalizeProfile } from '@/lib/auth/roles'
+import { FullScreenAuthLoadingOverlay } from '@/components/ui/RailLoader'
 
 function GoogleIcon({ size = 19 }) {
   return (
@@ -103,6 +104,7 @@ export default function LoginPage() {
   const [password,      setPassword]      = useState('')
   const [showPw,        setShowPw]        = useState(false)
   const [loading,       setLoading]       = useState(false)
+  const [loadingRole,   setLoadingRole]   = useState('')
   const [googleLoading, setGoogleLoading] = useState(false)
   const [error,         setError]         = useState(() => '')
 
@@ -149,6 +151,7 @@ export default function LoginPage() {
   async function signInWithCredentials(loginEmail, loginPassword, successMessage) {
     setError('')
     setLoading(true)
+    setLoadingRole('Memverifikasi akun Anda...')
 
     const { data, error: authError } = await supabase.auth.signInWithPassword({
       email: loginEmail,
@@ -167,8 +170,11 @@ export default function LoginPage() {
         setError(authError.message || t.auth.loginError)
       }
       setLoading(false)
+      setLoadingRole('')
       return
     }
+
+    setLoadingRole('Menyiapkan dashboard akun...')
 
     let profileResult = await supabase
       .from('profiles')
@@ -181,12 +187,10 @@ export default function LoginPage() {
     const profile = normalizeProfile(rawProfile, data.user.email)
 
     toast.success(successMessage)
-    setLoading(false)
 
     const requestedNext = new URLSearchParams(window.location.search).get('next')
     const destination = isSafeNextPath(requestedNext, role) ? requestedNext : getDashboardForProfile(profile, data.user.email)
     router.replace(destination)
-    router.refresh()
   }
 
   async function handleQuickLogin(account) {
@@ -194,6 +198,7 @@ export default function LoginPage() {
     setPassword(account.password)
     setError('')
     setLoading(true)
+    setLoadingRole(`Masuk sebagai ${account.title}...`)
 
     const { data, error: authError } = await supabase.auth.signInWithPassword({
       email: account.email,
@@ -205,6 +210,7 @@ export default function LoginPage() {
       const isNotFound = authError.code === 'invalid_credentials' || msg.includes('invalid') || msg.includes('not found')
 
       if (isNotFound) {
+        setLoadingRole(`Mendaftarkan akun demo ${account.title}...`)
         const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
           email: account.email,
           password: account.password,
@@ -218,18 +224,19 @@ export default function LoginPage() {
 
         if (!signUpError && (signUpData?.session || signUpData?.user)) {
           toast.success(`Login berhasil sebagai ${account.title}!`)
-          setLoading(false)
           const destination = account.role === 'admin' ? '/dashboard/admin' : account.role === 'passenger' ? '/dashboard/passenger' : '/dashboard/staff'
           router.replace(destination)
-          router.refresh()
           return
         }
       }
 
       setError(authError.message || t.auth.loginError)
       setLoading(false)
+      setLoadingRole('')
       return
     }
+
+    setLoadingRole(`Memuat profil ${account.title}...`)
 
     let profileResult = await supabase
       .from('profiles')
@@ -242,12 +249,10 @@ export default function LoginPage() {
     const profile = normalizeProfile(rawProfile, data.user.email)
 
     toast.success(`Login berhasil sebagai ${account.title}!`)
-    setLoading(false)
 
     const requestedNext = new URLSearchParams(window.location.search).get('next')
     const destination = isSafeNextPath(requestedNext, role) ? requestedNext : getDashboardForProfile(profile, data.user.email)
     router.replace(destination)
-    router.refresh()
   }
 
   async function handleSubmit(e) {
@@ -256,7 +261,15 @@ export default function LoginPage() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', minHeight: '100dvh', display: 'flex', flexDirection: 'column', background: '#ffffff' }}>
+    <div style={{ minHeight: '100vh', minHeight: '100dvh', display: 'flex', flexDirection: 'column', background: '#ffffff', position: 'relative' }}>
+      {/* Fullscreen Interactive Blocking Overlay when authenticating */}
+      {(loading || googleLoading) && (
+        <FullScreenAuthLoadingOverlay
+          title={loadingRole || 'Menghubungkan ke Akun…'}
+          subtitle="Mohon tunggu sejenak, sesi Anda sedang diverifikasi ke server RAILHUB."
+        />
+      )}
+
       {/* Standard RAILHUB Navbar with Brand & Language Toggle */}
       <Navbar />
 

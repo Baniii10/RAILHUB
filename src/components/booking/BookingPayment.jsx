@@ -380,12 +380,14 @@ export default function BookingPayment({ bookingId }) {
       <Navbar />
       <main style={{ minHeight: '100vh', padding: '2.5rem 0 5rem', background: 'var(--rh-surface)' }}>
         <div className="rh-container" style={{ maxWidth: 860 }}>
-          <Link href="/dashboard/passenger" className="rh-btn rh-btn-ghost rh-btn-sm" style={{ marginBottom: '1.5rem' }}>
-            <ArrowLeft size={16} /> Dashboard penumpang
-          </Link>
-          <h1 className="rh-h2" style={{ marginBottom: '1.25rem' }}>
-            {booking?.status === 'paid' ? 'Detail tiket' : 'Pembayaran dan tiket'}
-          </h1>
+          <div className="rh-page-header-back">
+            <Link href="/dashboard/passenger" className="rh-back-btn" aria-label="Kembali ke dashboard" title="Kembali ke dashboard">
+              <ArrowLeft size={18} />
+            </Link>
+            <h1 className="rh-h2">
+              {booking?.status === 'paid' ? 'Detail tiket' : 'Pembayaran dan tiket'}
+            </h1>
+          </div>
 
           {error && <div role="alert" className="rh-card" style={{ padding: '1.25rem', color: 'var(--rh-danger)' }}>{error}</div>}
           {!booking && !error && <div aria-live="polite" className="rh-card" style={{ padding: '1.5rem' }}>Memuat booking…</div>}
@@ -409,14 +411,12 @@ export default function BookingPayment({ bookingId }) {
               {booking.status === 'pending' && payment?.status === 'pending' && !bookingExpired && (
                 <section className="rh-ticket-detail-section">
                   <div className="rh-card-body">
-                    <h2 className="rh-h4">Pilih metode pembayaran</h2>
-                    <p style={{ color: 'var(--rh-text-2)', margin: '0.5rem 0 1rem' }}>
-                      Pilih metode pembayaran untuk simulasi demo. Tidak ada pembayaran atau transfer uang sungguhan.
-                    </p>
-                    <p style={{ color: 'var(--rh-warning)', fontSize: '0.9rem', marginBottom: '1rem' }}>
-                      <Clock3 size={15} style={{ verticalAlign: 'middle', marginRight: 5 }} />
-                      Batas pembayaran: {new Date(booking.expires_at).toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' })}
-                    </p>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '1rem' }}>
+                      <h2 className="rh-h4" style={{ margin: 0 }}>Metode Pembayaran</h2>
+                      <span style={{ color: 'var(--rh-warning)', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: 4 }}>
+                        <Clock3 size={14} /> Batas: {new Date(booking.expires_at).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })} WIB
+                      </span>
+                    </div>
                     <div className="passenger-food-payment-methods" role="radiogroup" aria-label="Metode pembayaran tiket">
                       {/* 1. QRIS (Authentic Logo) */}
                       <button
@@ -604,19 +604,21 @@ export default function BookingPayment({ bookingId }) {
                 <>
                   <section className="rh-ticket-detail-section">
                     <div className="rh-card-body">
-                      <h2 className="rh-h4" style={{ color: 'var(--rh-success)' }}>
-                        <CheckCircle2 size={20} style={{ verticalAlign: 'middle', marginRight: 6 }} />
-                        Pembayaran dikonfirmasi
-                      </h2>
-                      <p style={{ color: 'var(--rh-text-2)', marginTop: '0.4rem' }}>Pembayaran simulasi berhasil dan tiket telah diterbitkan.</p>
-                      <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.55rem', marginTop: '0.5rem', padding: '0.35rem 0.75rem', borderRadius: 8, background: 'rgba(5, 150, 105, 0.08)', border: '1px solid rgba(5, 150, 105, 0.2)' }}>
-                        <small style={{ color: 'var(--rh-success)', fontWeight: 700 }}>Metode Terbayar:</small>
-                        {payment?.method === 'qr_payment' ? <QrisLogo height={18} /> : payment?.method === 'e_wallet' ? <GopayLogo height={18} /> : <BcaLogo height={18} />}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.4rem' }}>
+                        <h2 className="rh-h4" style={{ color: 'var(--rh-success)', margin: 0, display: 'flex', alignItems: 'center', gap: 6 }}>
+                          <CheckCircle2 size={18} />
+                          Pembayaran Berhasil
+                        </h2>
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', padding: '0.2rem 0.55rem', borderRadius: 6, background: 'rgba(5, 150, 105, 0.08)', border: '1px solid rgba(5, 150, 105, 0.2)' }}>
+                          <small style={{ color: 'var(--rh-success)', fontWeight: 700, fontSize: '0.72rem' }}>
+                            {payment?.method === 'qr_payment' ? 'QRIS' : payment?.method === 'e_wallet' ? 'E-Wallet' : 'Virtual Account'}
+                          </small>
+                        </span>
                       </div>
                       {booking.schedules?.departure_time && (
-                        <p style={{ display: 'flex', alignItems: 'center', gap: '.45rem', color: 'var(--rh-text-2)', marginTop: '.75rem' }}>
-                          <CalendarDays size={16} />
-                          {formatDate(booking.schedules.departure_time)} · {formatTime(booking.schedules.departure_time)}
+                        <p style={{ display: 'flex', alignItems: 'center', gap: '.45rem', color: 'var(--rh-text-2)', margin: '0.35rem 0', fontSize: '0.88rem' }}>
+                          <CalendarDays size={15} />
+                          {formatDate(booking.schedules.departure_time)} · {formatTime(booking.schedules.departure_time)} WIB
                         </p>
                       )}
                       {(() => {
@@ -628,16 +630,16 @@ export default function BookingPayment({ bookingId }) {
                         const trainStr = [trainName, trainNum ? `(${trainNum})` : ''].filter(Boolean).join(' ')
 
                         return (
-                          <p style={{ display: 'flex', alignItems: 'center', gap: '.5rem', color: 'var(--rh-charcoal)', fontWeight: 600, marginTop: '.4rem' }}>
-                            <MapPin size={16} style={{ color: 'var(--rh-primary)', flexShrink: 0 }} />
+                          <p style={{ display: 'flex', alignItems: 'center', gap: '.45rem', color: 'var(--rh-charcoal)', fontWeight: 600, margin: '0.35rem 0 0.85rem', fontSize: '0.9rem' }}>
+                            <MapPin size={15} style={{ color: 'var(--rh-primary)', flexShrink: 0 }} />
                             <span>{routeStr}</span>
                             {trainStr && <span style={{ color: 'var(--rh-text-2)', fontWeight: 500 }}>· {trainStr}</span>}
                           </p>
                         )
                       })()}
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.65rem', marginTop: '1rem' }}>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.5rem', marginTop: '0.5rem' }}>
                         <button
-                          className="rh-btn rh-btn-ghost"
+                          className="rh-btn rh-btn-ghost rh-btn-sm"
                           type="button"
                           onClick={toggleReschedule}
                           disabled={!canManagePaidTicket}
@@ -646,7 +648,7 @@ export default function BookingPayment({ bookingId }) {
                           Reschedule
                         </button>
                         <button
-                          className="rh-btn rh-btn-ghost"
+                          className="rh-btn rh-btn-ghost rh-btn-sm"
                           type="button"
                           onClick={cancelPaidBooking}
                           disabled={!canManagePaidTicket || processing}
@@ -654,21 +656,6 @@ export default function BookingPayment({ bookingId }) {
                           Batalkan tiket
                         </button>
                       </div>
-                      {!canOpenBoardingPass && departureTime > now && (
-                        <p style={{ color: 'var(--rh-text-2)', fontSize: '.875rem', marginTop: '.65rem' }}>
-                          E-boarding pass dapat dibuka mulai 2 jam sebelum keberangkatan.
-                        </p>
-                      )}
-                      {departureTime <= now && (
-                        <p style={{ color: 'var(--rh-text-2)', fontSize: '.875rem', marginTop: '.65rem' }}>
-                          Keberangkatan telah dimulai; e-boarding pass tidak lagi tersedia.
-                        </p>
-                      )}
-                      {!canManagePaidTicket && departureTime > 0 && (
-                        <p style={{ color: 'var(--rh-text-2)', fontSize: '.875rem', marginTop: '.45rem' }}>
-                          Reschedule dan pembatalan tiket tersedia sampai maksimal 2 jam sebelum waktu keberangkatan.
-                        </p>
-                      )}
                     </div>
                   </section>
                   <JourneyStatusTimeline scheduleId={booking.schedule_id} />
@@ -763,11 +750,10 @@ export default function BookingPayment({ bookingId }) {
                                 )}
                               </div>
                             </div>
-                            <div style={{ display: 'grid', gap: '.25rem', color: 'var(--rh-text-2)', fontSize: '.9rem' }}>
-                              <span>Selisih tarif yang ditambahkan: <strong>{formatIDR(rescheduleFareDifference)}</strong></span>
-                              <span>Biaya reschedule 20%: <strong>{formatIDR(rescheduleFee)}</strong></span>
-                              <span>Total tambahan simulasi: <strong>{formatIDR(rescheduleFareDifference + rescheduleFee)}</strong></span>
-                              <small>Jadwal yang lebih murah tidak mendapat pengembalian selisih. Tidak ada uang sungguhan yang diproses.</small>
+                            <div style={{ display: 'grid', gap: '.25rem', color: 'var(--rh-text-2)', fontSize: '.88rem' }}>
+                              <span>Selisih: <strong>{formatIDR(rescheduleFareDifference)}</strong></span>
+                              <span>Biaya admin: <strong>{formatIDR(rescheduleFee)}</strong></span>
+                              <span>Total: <strong>{formatIDR(rescheduleFareDifference + rescheduleFee)}</strong></span>
                             </div>
                             <button
                               className="rh-btn rh-btn-primary"
@@ -799,13 +785,18 @@ export default function BookingPayment({ bookingId }) {
                     {tickets.map(ticket => (
                       selectedTicketNumber === ticket.ticket_number && canOpenBoardingPass ? (
                         <div key={ticket.ticket_number} className="rh-selected-ticket">
-                          <button
-                            className="rh-btn rh-btn-ghost rh-btn-sm"
-                            type="button"
-                            onClick={() => setSelectedTicketNumber(null)}
-                          >
-                            <ArrowLeft size={15} /> Tutup e-ticket
-                          </button>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.75rem' }}>
+                            <button
+                              className="rh-back-btn"
+                              type="button"
+                              onClick={() => setSelectedTicketNumber(null)}
+                              aria-label="Tutup e-ticket"
+                              title="Tutup e-ticket"
+                            >
+                              <ArrowLeft size={16} />
+                            </button>
+                            <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--rh-charcoal)' }}>Tutup E-Ticket</span>
+                          </div>
                           <EBoardingPass
                             booking={booking}
                             ticket={ticket}
@@ -816,7 +807,7 @@ export default function BookingPayment({ bookingId }) {
                       ) : (
                         <article key={ticket.ticket_number} className="rh-ticket-row">
                           <div><small>Nomor tiket</small><strong className="rh-mono">{ticket.ticket_number}</strong></div>
-                          <div><small>Penumpang</small><strong>{ticket.passengers?.full_name || 'Penumpang simulasi'}</strong></div>
+                          <div><small>Penumpang</small><strong>{ticket.passengers?.full_name || 'Penumpang'}</strong></div>
                           <div><small>Kursi</small><strong>{ticket.seats?.seat_number || '-'}</strong></div>
                           <button
                             className="rh-btn rh-btn-primary rh-btn-sm"

@@ -22,6 +22,7 @@ import {
   Clock3,
   MapPin,
   ChevronRight,
+  Trash2,
 } from 'lucide-react'
 import { useLang } from '@/contexts/LangContext'
 import { useAuth } from '@/contexts/AuthContext'
@@ -145,9 +146,17 @@ export default function Navbar() {
         })
       }
 
+      let dismissed = []
+      if (typeof window !== 'undefined') {
+        try {
+          dismissed = JSON.parse(localStorage.getItem('rh_dismissed_notifs') || '[]')
+        } catch {}
+      }
+      const filteredItems = items.filter(it => !dismissed.includes(it.id))
+
       if (active) {
-        setNotifications(items)
-        setUnreadCount(items.length)
+        setNotifications(filteredItems)
+        setUnreadCount(filteredItems.length)
       }
     }
     loadNotifications()
@@ -321,33 +330,112 @@ export default function Navbar() {
                     className="rh-card animate-scale-in"
                     style={{
                       position: 'absolute', top: 'calc(100% + 8px)', right: 0,
-                      width: 'min(320px, calc(100vw - 1.5rem))', zIndex: 'var(--z-dropdown)', padding: '0.75rem',
+                      width: 'min(330px, calc(100vw - 1.5rem))', zIndex: 'var(--z-dropdown)', padding: '0.75rem',
+                      boxShadow: '0 8px 30px rgba(15, 23, 42, 0.16)',
                     }}
                   >
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '0.5rem', marginBottom: '0.5rem', borderBottom: '1px solid var(--rh-border)' }}>
-                      <strong style={{ fontSize: '0.875rem' }}>{t.dashboard.notifications}</strong>
-                      <span className="rh-badge rh-badge-primary" style={{ fontSize: '0.68rem' }}>{notifications.length} info</span>
-                    </div>
-                    <div style={{ display: 'grid', gap: '0.5rem', maxHeight: 280, overflowY: 'auto' }}>
-                      {notifications.map(item => (
-                        <Link
-                          key={item.id}
-                          href={item.href}
-                          onClick={() => setNotifOpen(false)}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                        <strong style={{ fontSize: '0.875rem' }}>{t.dashboard.notifications}</strong>
+                        {notifications.length > 0 && (
+                          <span className="rh-badge rh-badge-primary" style={{ fontSize: '0.68rem', padding: '1px 6px' }}>{notifications.length}</span>
+                        )}
+                      </div>
+                      {notifications.length > 0 && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const allIds = notifications.map(n => n.id)
+                            setNotifications([])
+                            setUnreadCount(0)
+                            try {
+                              const saved = JSON.parse(localStorage.getItem('rh_dismissed_notifs') || '[]')
+                              localStorage.setItem('rh_dismissed_notifs', JSON.stringify([...new Set([...saved, ...allIds])]))
+                            } catch {}
+                            toast.success('Semua notifikasi dibersihkan.')
+                          }}
                           style={{
-                            display: 'block', padding: '0.6rem 0.75rem', borderRadius: 10,
-                            background: 'var(--rh-surface)', textDecoration: 'none', color: 'var(--rh-text)',
+                            background: 'none', border: 'none', color: 'var(--rh-danger)',
+                            fontSize: '0.72rem', fontWeight: 600, cursor: 'pointer', padding: '2px 4px',
                           }}
                         >
-                          <div style={{ display: 'flex', justifyContent: 'space-between', gap: '0.5rem', fontSize: '0.8rem', fontWeight: 700 }}>
-                            <span>{item.title}</span>
+                          Hapus Semua
+                        </button>
+                      )}
+                    </div>
+                    <div style={{ display: 'grid', gap: '0.45rem', maxHeight: 290, overflowY: 'auto' }}>
+                      {notifications.length === 0 ? (
+                        <div style={{ textAlign: 'center', padding: '1.5rem 0.5rem', color: 'var(--rh-text-2)', fontSize: '0.8rem' }}>
+                          <Bell size={22} style={{ opacity: 0.35, marginBottom: '0.35rem', display: 'block', margin: '0 auto 0.35rem' }} />
+                          Tidak ada notifikasi
+                        </div>
+                      ) : (
+                        notifications.map(item => (
+                          <div
+                            key={item.id}
+                            style={{
+                              position: 'relative',
+                              padding: '0.6rem 0.75rem',
+                              borderRadius: 10,
+                              background: 'var(--rh-surface)',
+                              border: '1px solid var(--rh-border)',
+                              display: 'flex',
+                              justifyContent: 'space-between',
+                              alignItems: 'flex-start',
+                              gap: '0.5rem',
+                            }}
+                          >
+                            <Link
+                              href={item.href}
+                              onClick={() => setNotifOpen(false)}
+                              style={{
+                                flex: 1, minWidth: 0, textDecoration: 'none', color: 'var(--rh-text)',
+                              }}
+                            >
+                              <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--rh-charcoal)', lineHeight: 1.3 }}>
+                                {item.title}
+                              </div>
+                              <p style={{ margin: '0.2rem 0 0', fontSize: '0.75rem', color: 'var(--rh-text-2)', lineHeight: 1.3 }}>{item.desc}</p>
+                              <small style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: '0.7rem', color: 'var(--rh-primary)', marginTop: 4 }}>
+                                <Clock3 size={11} /> {item.time}
+                              </small>
+                            </Link>
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                setNotifications(prev => prev.filter(n => n.id !== item.id))
+                                setUnreadCount(prev => Math.max(0, prev - 1))
+                                try {
+                                  const saved = JSON.parse(localStorage.getItem('rh_dismissed_notifs') || '[]')
+                                  localStorage.setItem('rh_dismissed_notifs', JSON.stringify([...new Set([...saved, item.id])]))
+                                } catch {}
+                                toast.success('Notifikasi dihapus.')
+                              }}
+                              title="Hapus notifikasi"
+                              aria-label="Hapus notifikasi"
+                              style={{
+                                background: 'transparent',
+                                border: 'none',
+                                color: 'var(--rh-text-3)',
+                                cursor: 'pointer',
+                                padding: '4px',
+                                borderRadius: '6px',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                flexShrink: 0,
+                                marginTop: -2,
+                                transition: 'color 0.15s ease',
+                              }}
+                              onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--rh-danger)' }}
+                              onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--rh-text-3)' }}
+                            >
+                              <Trash2 size={13} />
+                            </button>
                           </div>
-                          <p style={{ margin: '0.2rem 0 0', fontSize: '0.76rem', color: 'var(--rh-text-2)' }}>{item.desc}</p>
-                          <small style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: '0.7rem', color: 'var(--rh-primary)', marginTop: 4 }}>
-                            <Clock3 size={11} /> {item.time}
-                          </small>
-                        </Link>
-                      ))}
+                        ))
+                      )}
                     </div>
                   </div>
                 )}
@@ -553,24 +641,12 @@ export default function Navbar() {
         </Link>
       )}
 
-      {/* Mobile Bottom App Navigation Bar */}
+      {/* Mobile Bottom App Navigation Bar (Animated Pill Capsule) */}
       {!isBookingFlow && <nav
         aria-label="Navigasi bawah mobile"
-        className="rh-show-mobile-only"
-        style={{
-          position: 'fixed',
-          bottom: 0,
-          left: 0,
-          right: 0,
-          zIndex: 90,
-          background: 'rgba(255, 255, 255, 0.96)',
-          backdropFilter: 'blur(12px)',
-          borderTop: '1px solid var(--rh-border)',
-          padding: '0.35rem 0.5rem calc(0.35rem + env(safe-area-inset-bottom, 0px))',
-          boxShadow: '0 -4px 20px rgba(15, 23, 42, 0.06)',
-        }}
+        className="rh-show-mobile-only rh-mobile-bottom-nav"
       >
-        <div style={{ display: 'grid', gridTemplateColumns: `repeat(${mobileBottomItems.length}, 1fr)`, gap: '0.25rem' }}>
+        <div className="rh-mobile-bottom-nav-inner">
           {mobileBottomItems.map(({ href, label, icon: Icon }) => {
             const [baseHref, query = ''] = href.split('?')
             const expectedTab = new URLSearchParams(query).get('tab')
@@ -584,22 +660,11 @@ export default function Navbar() {
                 key={href}
                 href={href}
                 aria-current={active ? 'page' : undefined}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '0.2rem',
-                  padding: '0.35rem 0.25rem',
-                  borderRadius: 10,
-                  textDecoration: 'none',
-                  fontSize: '0.68rem',
-                  fontWeight: active ? 700 : 600,
-                  color: active ? 'var(--rh-primary)' : 'var(--rh-text-2)',
-                }}
+                className={`rh-mobile-bottom-nav-item ${active ? 'is-active' : ''}`}
+                title={label}
               >
-                <Icon size={18} aria-hidden="true" />
-                <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '100%' }}>
+                <Icon size={20} className="rh-nav-icon" aria-hidden="true" />
+                <span className="rh-nav-label">
                   {label}
                 </span>
               </Link>

@@ -22,15 +22,15 @@ export default function TrainWifiHub({ trainName = 'RailHub Express' }) {
 
   return (
     <div style={{
-      background: 'linear-gradient(135deg, #0b192e 0%, #0f2b54 100%)',
+      background: 'linear-gradient(135deg, #0f244a 0%, #1a428a 100%)',
       borderRadius: '16px',
       padding: '0.75rem 1rem',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
       gap: '0.75rem',
-      border: '1px solid rgba(255, 255, 255, 0.12)',
-      boxShadow: '0 4px 16px rgba(5, 17, 36, 0.25)',
+      border: '1px solid rgba(255, 255, 255, 0.16)',
+      boxShadow: '0 4px 16px rgba(15, 36, 74, 0.35)',
       color: '#ffffff',
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', minWidth: 0 }}>
@@ -38,11 +38,11 @@ export default function TrainWifiHub({ trainName = 'RailHub Express' }) {
           width: 34,
           height: 34,
           borderRadius: 10,
-          background: 'rgba(56, 189, 248, 0.18)',
-          border: '1px solid rgba(56, 189, 248, 0.35)',
+          background: 'rgba(255, 255, 255, 0.12)',
+          border: '1px solid rgba(255, 255, 255, 0.22)',
           display: 'grid',
           placeItems: 'center',
-          color: '#38bdf8',
+          color: '#ffffff',
           flexShrink: 0,
         }}>
           <Wifi size={17} />
@@ -50,7 +50,7 @@ export default function TrainWifiHub({ trainName = 'RailHub Express' }) {
         <div style={{ minWidth: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
             <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#ffffff' }}>Wi-Fi Kabin:</span>
-            <code style={{ fontSize: '0.78rem', color: '#38bdf8', background: 'rgba(255,255,255,0.08)', padding: '1px 6px', borderRadius: 4, fontFamily: 'var(--font-mono, monospace)' }}>
+            <code style={{ fontSize: '0.78rem', color: '#ffffff', background: 'rgba(255, 255, 255, 0.14)', padding: '1px 6px', borderRadius: 4, fontFamily: 'var(--font-mono, monospace)', fontWeight: 600 }}>
               {wifiSsid}
             </code>
           </div>
@@ -67,7 +67,7 @@ export default function TrainWifiHub({ trainName = 'RailHub Express' }) {
         type="button"
         onClick={handleCopyPassword}
         style={{
-          background: copied ? '#10b981' : '#2563eb',
+          background: copied ? '#059669' : '#f58220',
           color: '#ffffff',
           border: 'none',
           padding: '0.4rem 0.8rem',
@@ -80,6 +80,7 @@ export default function TrainWifiHub({ trainName = 'RailHub Express' }) {
           cursor: 'pointer',
           flexShrink: 0,
           transition: 'all 0.15s ease',
+          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.18)',
         }}
         title="Salin password ke clipboard"
       >

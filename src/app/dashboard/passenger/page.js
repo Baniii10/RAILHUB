@@ -48,6 +48,7 @@ import LiveJourneyMapTracker from '@/components/journey/LiveJourneyMapTracker'
 import { useAuth } from '@/contexts/AuthContext'
 import { createClient } from '@/lib/supabase/client'
 import { formatDate, formatIDR, formatTime } from '@/lib/utils/formatters'
+import { PassengerTrackingSkeleton, DashboardShellSkeleton } from '@/components/ui/RailLoader'
 
 const TABS = [
   { id: 'overview', label: 'Perjalanan', icon: Compass },
@@ -354,83 +355,31 @@ function PassengerDashboardContent() {
             </div>
           )}
 
-          {/* ════════════════════════════════════════════════
-              TAB 1: OVERVIEW (PELACAKAN PERJALANAN AKTIF)
-              ════════════════════════════════════════════════ */}
-          {activeTab === 'overview' && (
-            <div style={{ display: 'grid', gap: '1.75rem' }}>
-              {/* Interactive Transit Progress Map & Draggable Bottom Sheet */}
-              <LiveJourneyMapTracker
-                booking={activePaidBooking}
-                ticket={activeTicket}
-                countdown={countdown}
-                journeyProgress={journeyProgress}
-                recentBookings={bookings}
-                onSelectTab={selectTab}
-              />
-
-              {/* Recent Bookings Overview Table (Desktop Only - on mobile it is inside the draggable sheet) */}
-              <section className="rh-card rh-desktop-only-bookings">
-                <div className="rh-card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div>
-                    <h3 className="rh-h4" style={{ margin: 0 }}>Riwayat Booking Terbaru</h3>
-                    <p style={{ margin: '0.2rem 0 0', color: 'var(--rh-text-2)', fontSize: '0.85rem' }}>Daftar pemesanan tiket Anda di RAILHUB</p>
-                  </div>
-                  <button type="button" onClick={() => selectTab('tickets')} className="rh-btn rh-btn-ghost rh-btn-sm">
-                    Lihat Semua Tiket <ArrowRight size={14} />
-                  </button>
-                </div>
-                <div className="rh-card-body">
-                  {bookings.length === 0 ? (
-                    <div style={{ textAlign: 'center', padding: '2rem 1rem', color: 'var(--rh-text-2)' }}>
-                      <Train size={32} style={{ marginBottom: 8, color: 'var(--rh-primary)' }} />
-                      <p>Belum ada tiket atau perjalanan yang dipesan.</p>
-                      <button type="button" onClick={() => router.push('/trains')} className="rh-btn rh-btn-primary rh-btn-sm" style={{ marginTop: '0.5rem' }}>
-                        Cari & Pesan Tiket
-                      </button>
-                    </div>
-                  ) : (
-                    <div style={{ display: 'grid', gap: '0.85rem' }}>
-                      {bookings.slice(0, 3).map(booking => (
-                        <div key={booking.id} style={{
-                          display: 'flex',
-                          flexWrap: 'wrap',
-                          justifyContent: 'space-between',
-                          alignItems: 'center',
-                          gap: '1rem',
-                          padding: '1rem',
-                          borderRadius: 12,
-                          background: 'var(--rh-surface)',
-                          border: '1px solid var(--rh-border)',
-                        }}>
-                          <div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
-                              <span className="rh-mono" style={{ fontWeight: 800 }}>{booking.booking_code}</span>
-                              <span className={`rh-ticket-badge ${booking.status === 'paid' ? 'status-waiting' : booking.status === 'pending' ? 'status-pending' : 'status-expired'}`}>
-                                {booking.status === 'paid' ? 'Terbayar' : booking.status === 'pending' ? 'Menunggu Pembayaran' : 'Hangus'}
-                              </span>
-                            </div>
-                            <strong style={{ display: 'block', fontSize: '1rem', marginTop: 4 }}>
-                              {booking.schedules?.trains?.name || 'Kereta Antarkota'} · {booking.schedules?.routes?.name || 'Rute'}
-                            </strong>
-                            <small style={{ color: 'var(--rh-text-2)' }}>
-                              {booking.schedules?.departure_time ? `${formatDate(booking.schedules.departure_time)} · ${formatTime(booking.schedules.departure_time)}` : ''}
-                            </small>
-                          </div>
-                          <div style={{ textAlign: 'right' }}>
-                            <strong style={{ fontSize: '1.05rem', color: 'var(--rh-primary)', display: 'block' }}>{formatIDR(booking.total_amount)}</strong>
-                            <Link href={`/booking/payment/${booking.id}`} className="rh-btn rh-btn-ghost rh-btn-sm" style={{ marginTop: 4 }}>
-                              {booking.status === 'paid' ? 'Buka E-Ticket' : 'Bayar Sekarang'}
-                            </Link>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </section>
+          {loading ? (
+            <div style={{ padding: '1rem 0' }}>
+              {activeTab === 'overview' ? (
+                <PassengerTrackingSkeleton />
+              ) : (
+                <DashboardShellSkeleton role="passenger" />
+              )}
             </div>
-          )}
+          ) : (
+            <>
+              {/* ════════════════════════════════════════════════
+                  TAB 1: OVERVIEW (PELACAKAN PERJALANAN AKTIF)
+                  ════════════════════════════════════════════════ */}
+              {activeTab === 'overview' && (
+                <div style={{ display: 'grid', gap: '1.75rem' }}>
+                  {/* Interactive Transit Progress Map & Live HUD (Focus Tracking Only) */}
+                  <LiveJourneyMapTracker
+                    booking={activePaidBooking}
+                    ticket={activeTicket}
+                    countdown={countdown}
+                    journeyProgress={journeyProgress}
+                    onSelectTab={selectTab}
+                  />
+                </div>
+              )}
 
           {/* ════════════════════════════════════════════════
               TAB 2: MY TICKETS (TIKET SAYA & QR CODE)
@@ -609,7 +558,7 @@ function PassengerDashboardContent() {
                             )}
 
                             {canReschedule && (
-                              <Link href={`/booking/payment/${booking.id}`} className="rh-btn rh-btn-ghost rh-btn-sm" style={{ border: '1px solid var(--rh-border)' }}>
+                              <Link href={`/booking/payment/${booking.id}`} className="rh-btn rh-btn-sm" style={{ border: '1px solid rgba(255, 255, 255, 0.25)', background: 'rgba(255, 255, 255, 0.08)', color: '#ffffff', borderRadius: 8 }}>
                                 Reschedule / Batal
                               </Link>
                             )}
@@ -617,7 +566,8 @@ function PassengerDashboardContent() {
                             <button
                               type="button"
                               onClick={() => selectTab('overview')}
-                              className="rh-btn rh-btn-ghost rh-btn-sm"
+                              className="rh-btn rh-btn-sm"
+                              style={{ border: '1px solid rgba(255, 255, 255, 0.25)', background: 'rgba(255, 255, 255, 0.12)', color: '#ffffff', borderRadius: 8 }}
                             >
                               Tracking Kereta
                             </button>
@@ -669,7 +619,12 @@ function PassengerDashboardContent() {
 
           {activeTab === 'account' && (
             <div className="passenger-profile-page">
-              <button type="button" className="passenger-profile-back" onClick={() => selectTab('overview')}><ArrowLeft size={18} /> Kembali ke perjalanan</button>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.85rem' }}>
+                <button type="button" className="rh-back-btn" onClick={() => selectTab('overview')} aria-label="Kembali ke perjalanan" title="Kembali ke perjalanan">
+                  <ArrowLeft size={18} />
+                </button>
+                <span style={{ fontSize: '0.88rem', fontWeight: 600, color: 'var(--rh-charcoal)' }}>Kembali</span>
+              </div>
               <section className="passenger-profile-hero">
                 <div className="passenger-profile-sky" aria-hidden="true"><Train size={88} /></div>
                 <div className="passenger-profile-card">
@@ -701,6 +656,8 @@ function PassengerDashboardContent() {
                 <button type="button" onClick={() => selectTab('tickets')}><span><Users size={20} /> Daftar penumpang</span><ChevronRight size={21} /></button>
               </nav>
             </div>
+          )}
+            </>
           )}
         </div>
       </main>

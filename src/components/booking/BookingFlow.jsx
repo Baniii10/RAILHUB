@@ -178,7 +178,10 @@ export default function BookingFlow({
   }
 
   function toggleSeat(seat, isDisability = false, isFemalePriority = false) {
-    if (!seat.is_available) return
+    if (!seat.is_available) {
+      toast.error(`Kursi ${seat.seat_number} sudah terisi oleh penumpang lain.`)
+      return
+    }
     setSelectedSeats(current => {
       if (current.includes(seat.id)) return current.filter(id => id !== seat.id)
       if (current.length >= passengerCount) {
@@ -188,7 +191,7 @@ export default function BookingFlow({
       if (isDisability) {
         toast('Kursi Prioritas Disabilitas/Lansia dipilih (Akses luas & dekat pintu)')
       } else if (isFemalePriority) {
-        toast('Kursi Khusus Cewe dipilih (Area aman & nyaman sesama wanita)')
+        toast('Kursi Prioritas Perempuan dipilih (Area aman & nyaman sesama perempuan)')
       }
       return [...current, seat.id]
     })
@@ -268,9 +271,6 @@ export default function BookingFlow({
       <Navbar />
       <main style={{ minHeight: '100vh', padding: '2.5rem 0 5rem', background: 'var(--rh-surface)' }}>
         <div className="rh-container rh-booking-page">
-          <Link href={returnTo} className="rh-btn rh-btn-ghost rh-btn-sm rh-booking-back">
-            <ArrowLeft size={16} /> Kembali ke jadwal
-          </Link>
           {returnScheduleId && (
             <div style={{ marginBottom: '1.25rem', padding: '0.85rem 1.25rem', borderRadius: 12, background: 'rgba(26, 66, 138, 0.06)', border: '1.5px solid var(--rh-primary)' }}>
               <span className="rh-badge rh-badge-primary" style={{ fontWeight: 800, marginBottom: 4 }}>Perjalanan Pulang-Pergi (PP) · Bagian 1</span>
@@ -285,10 +285,14 @@ export default function BookingFlow({
               <small style={{ color: 'var(--rh-text-2)' }}>Tiket pergi telah tersimpan. Konfirmasikan kursi tiket pulang untuk menyelesaikan seluruh reservasi Anda.</small>
             </div>
           )}
-          <header className="rh-booking-page-heading">
-            <span className="rh-label">Pemesanan perjalanan</span>
-            <h1 className="rh-h2">Lengkapi data perjalanan</h1>
-            <p>Isi data penumpang sebelum memilih kursi yang tersedia.</p>
+          <header className="rh-booking-page-heading" style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', marginBottom: '1.25rem' }}>
+            <Link href={returnTo} className="rh-back-btn" aria-label="Kembali ke jadwal" title="Kembali ke jadwal">
+              <ArrowLeft size={18} />
+            </Link>
+            <div>
+              <span className="rh-label">Pemesanan perjalanan</span>
+              <h1 className="rh-h2" style={{ margin: '0.2rem 0 0' }}>Lengkapi data perjalanan</h1>
+            </div>
           </header>
 
           {loadError && (
@@ -594,7 +598,7 @@ export default function BookingFlow({
                                       <span>A</span><span>B</span><span className="is-aisle" />
                                       <span>C</span><span>D</span>
                                     </div>
-                                    {/* Legend Bar: Gender Cowo/Cewe & Kursi Disabilitas */}
+                                    {/* Legend Bar: Status Kursi & Prioritas */}
                                     <div className="rh-seat-legend-bar" role="note" aria-label="Keterangan denah kursi">
                                       <div className="rh-seat-legend-item">
                                         <span className="rh-seat-legend-sample is-available" />
@@ -610,7 +614,7 @@ export default function BookingFlow({
                                       </div>
                                       <div className="rh-seat-legend-item">
                                         <span className="rh-seat-legend-sample is-female-priority" />
-                                        <span>Khusus Cewe</span>
+                                        <span>Prioritas Perempuan</span>
                                       </div>
                                       <div className="rh-seat-legend-item">
                                         <span className="rh-seat-legend-sample is-booked-male" />
@@ -618,7 +622,7 @@ export default function BookingFlow({
                                       </div>
                                       <div className="rh-seat-legend-item">
                                         <span className="rh-seat-legend-sample is-booked-female" />
-                                        <span>Terisi (Cewe)</span>
+                                        <span>Terisi (Perempuan)</span>
                                       </div>
                                     </div>
 
@@ -656,9 +660,9 @@ export default function BookingFlow({
 
                                           let seatLabel = `Kursi ${seat.seat_number}`
                                           if (selected) seatLabel += ', dipilih'
-                                          else if (!seat.is_available) seatLabel += `, terpesan oleh penumpang ${bookedGender === 'F' ? 'wanita' : 'pria'}`
+                                          else if (!seat.is_available) seatLabel += `, terpesan oleh penumpang ${bookedGender === 'F' ? 'perempuan' : 'pria'}`
                                           else if (isDisability) seatLabel += ', prioritas disabilitas & lansia'
-                                          else if (isFemalePriority) seatLabel += ', khusus/prioritas wanita'
+                                          else if (isFemalePriority) seatLabel += ', prioritas perempuan'
                                           else seatLabel += ', tersedia'
 
                                           return (
@@ -667,16 +671,26 @@ export default function BookingFlow({
                                               type="button"
                                               className={seatClasses}
                                               disabled={!seat.is_available}
+                                              aria-disabled={!seat.is_available}
+                                              tabIndex={!seat.is_available ? -1 : 0}
                                               aria-pressed={selected}
                                               aria-label={seatLabel}
                                               title={seatLabel}
-                                              onClick={() => toggleSeat(seat, isDisability, isFemalePriority)}
+                                              onClick={event => {
+                                                if (!seat.is_available) {
+                                                  event.preventDefault()
+                                                  event.stopPropagation()
+                                                  toast.error(`Kursi ${seat.seat_number} sudah terisi oleh penumpang lain.`)
+                                                  return
+                                                }
+                                                toggleSeat(seat, isDisability, isFemalePriority)
+                                              }}
                                             >
                                               {selected ? (
                                                 <Check size={16} aria-hidden="true" />
                                               ) : !seat.is_available ? (
-                                                <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', lineHeight: 1, fontSize: '0.62rem' }}>
-                                                  <User size={12} strokeWidth={2.5} style={{ color: bookedGender === 'F' ? '#f472b6' : '#93c5fd', marginBottom: 1 }} />
+                                                <span style={{ pointerEvents: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', lineHeight: 1, fontSize: '0.62rem' }}>
+                                                  <User size={12} strokeWidth={2.5} style={{ color: bookedGender === 'F' ? '#ec4899' : '#0284c7', marginBottom: 1 }} />
                                                   <span style={{ fontSize: '0.65rem' }}>{seat.seat_number}</span>
                                                 </span>
                                               ) : (
