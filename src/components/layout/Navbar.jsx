@@ -225,7 +225,7 @@ export default function Navbar() {
           ? [
             { href: '/', label: t.nav.home, icon: Home },
             { href: '/trains', label: lang === 'en' ? 'Schedule' : 'Jadwal', icon: Train },
-            { href: '/dashboard/passenger?tab=overview', label: lang === 'en' ? 'Journey' : 'Perjalanan', icon: Ticket },
+            { href: '/dashboard/passenger?tab=overview', label: lang === 'en' ? 'Tickets' : 'Tiket', icon: Ticket },
             { href: '/dashboard/passenger?tab=account', label: lang === 'en' ? 'Account' : 'Akun', icon: User },
           ]
           : [
@@ -233,6 +233,17 @@ export default function Navbar() {
             { href: '/trains', label: lang === 'en' ? 'Schedule' : 'Jadwal', icon: Train },
             { href: '/auth/login', label: lang === 'en' ? 'Account' : 'Akun', icon: User },
           ]
+
+  const currentTab = searchParams.get('tab')
+  const activeStates = mobileBottomItems.map(({ href }) => {
+    const [baseHref, query = ''] = href.split('?')
+    const expectedTab = new URLSearchParams(query).get('tab')
+    const isPassengerJourney = expectedTab === 'overview'
+      && (!currentTab || ['overview', 'tickets', 'services'].includes(currentTab))
+    return pathname === baseHref
+      && (expectedTab ? currentTab === expectedTab || isPassengerJourney : !currentTab || !baseHref.startsWith('/dashboard/'))
+  })
+  const activeIndex = activeStates.findIndex(Boolean)
 
   const isBookingFlow = pathname.startsWith('/booking/')
   const journeyRoute = activeJourney?.schedules?.routes?.name || 'Perjalanan aktif'
@@ -641,37 +652,49 @@ export default function Navbar() {
         </Link>
       )}
 
-      {/* Mobile Bottom App Navigation Bar (Animated Pill Capsule) */}
-      {!isBookingFlow && <nav
-        aria-label="Navigasi bawah mobile"
-        className="rh-show-mobile-only rh-mobile-bottom-nav"
-      >
-        <div className="rh-mobile-bottom-nav-inner">
-          {mobileBottomItems.map(({ href, label, icon: Icon }) => {
-            const [baseHref, query = ''] = href.split('?')
-            const expectedTab = new URLSearchParams(query).get('tab')
-            const currentTab = searchParams.get('tab')
-            const isPassengerJourney = expectedTab === 'overview'
-              && (!currentTab || ['overview', 'tickets', 'services'].includes(currentTab))
-            const active = pathname === baseHref
-              && (expectedTab ? currentTab === expectedTab || isPassengerJourney : !currentTab || !baseHref.startsWith('/dashboard/'))
-            return (
-              <Link
-                key={href}
-                href={href}
-                aria-current={active ? 'page' : undefined}
-                className={`rh-mobile-bottom-nav-item ${active ? 'is-active' : ''}`}
-                title={label}
-              >
-                <Icon size={20} className="rh-nav-icon" aria-hidden="true" />
-                <span className="rh-nav-label">
-                  {label}
-                </span>
-              </Link>
-            )
-          })}
-        </div>
-      </nav>}
+      {/* Mobile Bottom App Navigation Bar (Ultra-Symmetrical Animated Sliding Pill) */}
+      {!isBookingFlow && (
+        <nav
+          aria-label="Navigasi bawah mobile"
+          className="rh-show-mobile-only rh-mobile-bottom-nav"
+        >
+          <div
+            className="rh-mobile-bottom-nav-inner"
+            style={{
+              '--nav-item-count': mobileBottomItems.length,
+              '--active-index': activeIndex >= 0 ? activeIndex : 0,
+            }}
+          >
+            {/* Symmetrical Sliding Capsule Background */}
+            <div
+              className="rh-mobile-bottom-nav-slider"
+              style={{ opacity: activeIndex >= 0 ? 1 : 0 }}
+              aria-hidden="true"
+            >
+              <div className="rh-mobile-bottom-nav-pill" />
+            </div>
+
+            {/* Nav Items (Symmetric Grid Columns) */}
+            {mobileBottomItems.map(({ href, label, icon: Icon }, idx) => {
+              const active = activeStates[idx]
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  aria-current={active ? 'page' : undefined}
+                  className={`rh-mobile-bottom-nav-item ${active ? 'is-active' : ''}`}
+                  title={label}
+                >
+                  <Icon size={19} className="rh-nav-icon" aria-hidden="true" />
+                  <span className="rh-nav-label">
+                    {label}
+                  </span>
+                </Link>
+              )
+            })}
+          </div>
+        </nav>
+      )}
     </>
   )
 }
