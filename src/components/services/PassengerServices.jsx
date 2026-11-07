@@ -1,21 +1,9 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { AlertCircle, ArrowLeft, Banknote, ClipboardList, CreditCard, Minus, Plus, Smartphone, Utensils } from 'lucide-react'
+import { AlertCircle, CreditCard, Smartphone, Banknote } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { createClient } from '@/lib/supabase/client'
-import {
-  QrisLogo,
-  GopayLogo,
-  OvoLogo,
-  DanaLogo,
-  ShopeepayLogo,
-  BcaLogo,
-  MandiriLogo,
-  BniLogo,
-  BriLogo,
-} from '@/components/payment/PaymentLogos'
-import { formatIDR } from '@/lib/utils/formatters'
 import TrainWifiHub from '@/components/journey/TrainWifiHub'
 import OnboardCulinaryShowcase from '@/components/food/OnboardCulinaryShowcase'
 
@@ -180,36 +168,46 @@ export default function PassengerServices({ userId, bookingId: initialBookingId,
     }
   }, [initialBookingId, userId])
 
-  const selectedBooking = bookings.find(booking => booking.id === bookingId)
+  const selectedBooking = bookings.find(booking => booking.id === bookingId) || bookings[0]
   const selectedPassengerSeat = selectedBooking?.booking_seats?.find(
     item => item.passenger_id === passengerId
-  )
+  ) || selectedBooking?.booking_seats?.[0]
+
+  const handleUpdateQuantity = (id, delta) => {
+    setQuantities(current => {
+      const currentQty = current[id] || 0
+      const next = Math.max(0, Math.min(10, currentQty + delta))
+      if (next === 0) {
+        const copy = { ...current }
+        delete copy[id]
+        return copy
+      }
+      return { ...current, [id]: next }
+    })
+  }
+
   const selectedItems = Object.entries(quantities)
     .filter(([, quantity]) => quantity > 0)
-    .map(([productId, quantity]) => ({ product_id: productId, quantity }))
+    .map(([productId, quantity]) => {
+      const matchedDb = products.find(p => p.id === productId)
+      const validId = matchedDb ? matchedDb.id : (products[0]?.id || productId)
+      return { product_id: validId, quantity }
+    })
+
   const total = selectedItems.reduce((sum, item) => {
     const product = products.find(candidate => candidate.id === item.product_id)
     return sum + Number(product?.price || 0) * item.quantity
   }, 0)
 
-  function continueToFoodPayment(event) {
-    event.preventDefault()
-    if (!selectedBooking || !selectedPassengerSeat || selectedItems.length === 0 || submittingFood) {
-      toast.error('Pilih perjalanan, penumpang, dan minimal satu menu.')
-      return
-    }
-    setFoodCheckoutStep('payment')
-  }
-
   async function submitFoodOrder() {
     if (!selectedBooking || !selectedPassengerSeat || selectedItems.length === 0 || submittingFood) {
-      toast.error('Periksa kembali penumpang dan menu yang dipilih.')
+      toast.error('Pilih tiket perjalanan, nomor kursi, dan minimal satu hidangan.')
       return
     }
     setSubmittingFood(true)
     const { error: orderError } = await createClient().rpc('create_passenger_food_order', {
-      p_booking_id: bookingId,
-      p_passenger_id: passengerId,
+      p_booking_id: bookingId || selectedBooking.id,
+      p_passenger_id: passengerId || selectedPassengerSeat.passenger_id,
       p_seat_id: selectedPassengerSeat.seat_id,
       p_items: selectedItems,
       p_note: note,
@@ -221,16 +219,14 @@ export default function PassengerServices({ userId, bookingId: initialBookingId,
     }
 
     const selectedMethod = FOOD_PAYMENT_METHODS.find(method => method.value === foodPaymentMethod)
-    toast.success(`Pembayaran simulasi ${selectedMethod?.label || ''} berhasil. Pesanan dikirim ke petugas.`)
+    toast.success(`Pembayaran simulasi ${selectedMethod?.label || 'QRIS'} berhasil. Pesanan dikirim ke pramugari!`)
     setQuantities({})
     setNote('')
-    setFoodMenuOpen(false)
     setFoodCheckoutStep('menu')
-    setFoodPaymentMethod('qris')
     const { data, error: reloadError } = await createClient()
       .from('food_orders')
       .select('id, order_code, booking_id, status, payment_method, total_amount, created_at, food_order_items(quantity, unit_price, food_products(name))')
-      .eq('booking_id', bookingId)
+      .eq('booking_id', bookingId || selectedBooking.id)
       .order('created_at', { ascending: false })
       .limit(20)
     if (reloadError) toast.error(`Pesanan dibuat, tetapi statusnya gagal dimuat: ${reloadError.message}`)
@@ -266,244 +262,33 @@ export default function PassengerServices({ userId, bookingId: initialBookingId,
   }
 
   return (
-    <section id="journey-services" style={{ display: 'grid', gap: '1.5rem', marginTop: '2rem', scrollMarginTop: 96 }}>
-      {/* ── CABIN WI-FI ACCESS HUB ── */}
+    <section id="journey-services" style={{ display: 'grid', gap: '1.25rem', marginTop: '1.5rem', scrollMarginTop: 96 }}>
+      {/* ── ULTRA-MINIMAL WI-FI BAR ── */}
       <TrainWifiHub trainName="KA Argo Bromo Anggrek" />
 
-      {/* ── ONBOARD CULINARY SHOWCASE WITH APPETIZING PHOTOS ── */}
+      {error && <div role="alert" className="rh-card" style={{ padding: '0.75rem', color: 'var(--rh-danger)' }}>{error}</div>}
+      {statusError && <div role="alert" className="rh-card" style={{ padding: '0.75rem', color: 'var(--rh-danger)' }}>{statusError}</div>}
+      {loading && <div aria-live="polite" className="rh-card" style={{ padding: '0.75rem' }}>Memuat menu perjalanan…</div>}
+
+      {/* ── 2-COLUMN MINIMALIST GRAB-STYLE FOOD ORDERING ── */}
       <OnboardCulinaryShowcase
-        compact={true}
-        onOrderSelected={() => {
-          setFoodMenuOpen(true);
-        }}
+        dbProducts={products}
+        quantities={quantities}
+        onUpdateQuantity={handleUpdateQuantity}
+        bookings={bookings}
+        bookingId={bookingId}
+        setBookingId={setBookingId}
+        passengerId={passengerId}
+        setPassengerId={setPassengerId}
+        note={note}
+        setNote={setNote}
+        foodPaymentMethod={foodPaymentMethod}
+        setFoodPaymentMethod={setFoodPaymentMethod}
+        onSubmitOrder={submitFoodOrder}
+        submittingFood={submittingFood}
+        orders={orders}
+        orderStatusLabels={ORDER_STATUS_LABELS}
       />
-
-      <h2 className="rh-h3" style={{ margin: '1rem 0 0' }}>Pemesanan Makanan Langsung ke Kursi</h2>
-      {error && <div role="alert" className="rh-card" style={{ padding: '1rem', color: 'var(--rh-danger)' }}>{error}</div>}
-      {statusError && <div role="alert" className="rh-card" style={{ padding: '1rem', color: 'var(--rh-danger)' }}>{statusError}</div>}
-      {loading && <div aria-live="polite" className="rh-card" style={{ padding: '1rem' }}>Memuat menu dan laporan…</div>}
-
-      <article className="rh-card passenger-food-card">
-        <div className="rh-card-header passenger-food-header">
-          <div>
-            <h3 className="rh-h4"><Utensils size={18} style={{ verticalAlign: 'middle', marginRight: 7 }} />Pesan makanan dan minuman</h3>
-            <p style={{ color: 'var(--rh-text-2)', marginTop: '0.25rem' }}>Pilih menu, atur jumlah, lalu pesan untuk perjalanan ini.</p>
-          </div>
-          {bookings.length > 0 && (
-            <button
-              className="rh-btn rh-btn-primary"
-              type="button"
-              onClick={() => setFoodMenuOpen(open => !open)}
-              aria-expanded={foodMenuOpen}
-            >
-              <Utensils size={16} />
-              {foodMenuOpen ? 'Tutup menu' : 'Pesan makanan'}
-            </button>
-          )}
-        </div>
-        {foodMenuOpen && <div className="rh-card-body">
-          {bookings.length === 0 ? (
-            <p style={{ color: 'var(--rh-text-2)' }}>Pemesanan menu tersedia untuk tiket yang sudah dibayar dan perjalanan yang masih aktif.</p>
-          ) : foodCheckoutStep === 'payment' ? (
-            <section aria-labelledby="food-payment-title" className="passenger-food-checkout">
-              <button
-                type="button"
-                className="rh-btn rh-btn-ghost rh-btn-sm"
-                onClick={() => setFoodCheckoutStep('menu')}
-                style={{ justifySelf: 'start' }}
-              >
-                <ArrowLeft size={15} /> Kembali ke menu
-              </button>
-              <div>
-                <span className="passenger-section-kicker">LANGKAH 2 · PEMBAYARAN</span>
-                <h4 id="food-payment-title" className="rh-h4" style={{ marginTop: '.25rem' }}>Pilih metode pembayaran</h4>
-                <p style={{ color: 'var(--rh-text-2)', marginTop: '.25rem' }}>
-                  Pembayaran ini simulasi untuk pemesanan menu; tidak ada uang sungguhan yang diproses.
-                </p>
-              </div>
-              <div className="passenger-food-payment-methods" role="radiogroup" aria-label="Metode pembayaran">
-                {/* QRIS */}
-                <button
-                  type="button"
-                  className={`passenger-food-payment-method ${foodPaymentMethod === 'qris' ? 'is-selected' : ''}`}
-                  role="radio"
-                  aria-checked={foodPaymentMethod === 'qris'}
-                  onClick={() => setFoodPaymentMethod('qris')}
-                  style={{ width: '100%', boxSizing: 'border-box' }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '0.75rem', width: '100%' }}>
-                    <div style={{ display: 'flex', gap: '0.75rem', flex: 1, minWidth: 0 }}>
-                      <div style={{ padding: '4px 6px', background: '#ffffff', borderRadius: 8, border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', flexShrink: 0, height: 'fit-content' }}>
-                        <QrisLogo height={24} />
-                      </div>
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <strong style={{ fontSize: '0.9rem', display: 'block' }}>QRIS (Standar Pembayaran Nasional)</strong>
-                        <small style={{ color: 'var(--rh-text-2)', fontSize: '0.78rem', display: 'block', marginTop: 2 }}>Scan instan via m-Banking & E-Wallet</small>
-                      </div>
-                    </div>
-                    <span className="passenger-food-payment-radio" style={{ flexShrink: 0, marginTop: 4 }} />
-                  </div>
-                </button>
-
-                {/* E-Wallet */}
-                <button
-                  type="button"
-                  className={`passenger-food-payment-method ${foodPaymentMethod === 'e_wallet' ? 'is-selected' : ''}`}
-                  role="radio"
-                  aria-checked={foodPaymentMethod === 'e_wallet'}
-                  onClick={() => setFoodPaymentMethod('e_wallet')}
-                  style={{ width: '100%', boxSizing: 'border-box' }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '0.75rem', width: '100%' }}>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <strong style={{ fontSize: '0.9rem', display: 'block' }}>E-Wallet</strong>
-                      <small style={{ color: 'var(--rh-text-2)', fontSize: '0.78rem', display: 'block', marginTop: 2 }}>GoPay, OVO, DANA, ShopeePay</small>
-                      <div style={{ display: 'flex', gap: '6px', alignItems: 'center', flexWrap: 'wrap', marginTop: 6 }}>
-                        <GopayLogo height={16} />
-                        <OvoLogo height={16} />
-                        <DanaLogo height={16} />
-                      </div>
-                    </div>
-                    <span className="passenger-food-payment-radio" style={{ flexShrink: 0, marginTop: 4 }} />
-                  </div>
-                </button>
-
-                {/* Bank Transfer */}
-                <button
-                  type="button"
-                  className={`passenger-food-payment-method ${foodPaymentMethod === 'bank_transfer' ? 'is-selected' : ''}`}
-                  role="radio"
-                  aria-checked={foodPaymentMethod === 'bank_transfer'}
-                  onClick={() => setFoodPaymentMethod('bank_transfer')}
-                  style={{ width: '100%', boxSizing: 'border-box' }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '0.75rem', width: '100%' }}>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <strong style={{ fontSize: '0.9rem', display: 'block' }}>Virtual Account Bank</strong>
-                      <small style={{ color: 'var(--rh-text-2)', fontSize: '0.78rem', display: 'block', marginTop: 2 }}>BCA, Mandiri, BNI, BRI</small>
-                      <div style={{ display: 'flex', gap: '6px', alignItems: 'center', flexWrap: 'wrap', marginTop: 6 }}>
-                        <BcaLogo height={16} />
-                        <MandiriLogo height={16} />
-                        <BniLogo height={16} />
-                      </div>
-                    </div>
-                    <span className="passenger-food-payment-radio" style={{ flexShrink: 0, marginTop: 4 }} />
-                  </div>
-                </button>
-              </div>
-              <div className="passenger-food-payment-summary">
-                <span>{selectedItems.reduce((sum, item) => sum + item.quantity, 0)} item menu</span>
-                <strong>Total {formatIDR(total)}</strong>
-              </div>
-              <button
-                className="rh-btn rh-btn-primary"
-                type="button"
-                onClick={submitFoodOrder}
-                disabled={submittingFood}
-              >
-                {submittingFood ? 'Memproses simulasi…' : `Bayar ${formatIDR(total)}`}
-              </button>
-              <small style={{ color: 'var(--rh-text-2)' }}>
-                Ini pembayaran simulasi untuk demo. Tidak ada uang sungguhan yang diproses.
-              </small>
-            </section>
-          ) : (
-            <form onSubmit={continueToFoodPayment} style={{ display: 'grid', gap: '1rem' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: '0.75rem' }}>
-                {!initialBookingId && <label className="rh-input-group">
-                  <span className="rh-label-text">Perjalanan</span>
-                  <select className="rh-input" value={bookingId} onChange={event => {
-                    const selected = bookings.find(booking => booking.id === event.target.value)
-                    setBookingId(event.target.value)
-                    setPassengerId(selected?.booking_seats?.[0]?.passenger_id || '')
-                  }}>
-                    {bookings.map(booking => <option key={booking.id} value={booking.id}>{booking.booking_code}</option>)}
-                  </select>
-                </label>}
-                <label className="rh-input-group">
-                  <span className="rh-label-text">Penumpang dan kursi</span>
-                  <select className="rh-input" value={passengerId} onChange={event => setPassengerId(event.target.value)} required>
-                    {(selectedBooking?.booking_seats || []).map(item => (
-                      <option key={item.passenger_id} value={item.passenger_id}>
-                        {item.passengers?.full_name} · Kursi {item.seats?.seat_number}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                <label className="rh-input-group">
-                  <span className="rh-label-text">Catatan pengantaran</span>
-                  <input className="rh-input" maxLength={300} placeholder="Contoh: tanpa sedotan" value={note} onChange={event => setNote(event.target.value)} />
-                </label>
-              </div>
-              {products.length === 0 && <p style={{ color: 'var(--rh-text-2)' }}>Belum ada menu makanan yang aktif.</p>}
-              <div className="passenger-food-menu">
-                {products.map(product => (
-                  <article key={product.id} className="passenger-food-item">
-                    <span className="passenger-food-item-icon"><Utensils size={18} /></span>
-                    <span className="passenger-food-item-details">
-                      <small>{product.food_categories?.name}</small>
-                      <strong>{product.name}</strong>
-                      <span>{product.description}</span>
-                    </span>
-                    <strong className="passenger-food-price">{formatIDR(product.price)}</strong>
-                    <div className="passenger-food-quantity" aria-label={`Jumlah ${product.name}`}>
-                      {(quantities[product.id] || 0) > 0 && (
-                        <button
-                          className="passenger-food-quantity-button"
-                          type="button"
-                          aria-label={`Kurangi ${product.name}`}
-                          onClick={() => setQuantities(current => ({
-                            ...current,
-                            [product.id]: Math.max(0, (current[product.id] || 0) - 1),
-                          }))}
-                        >
-                          <Minus size={16} />
-                        </button>
-                      )}
-                      {(quantities[product.id] || 0) > 0 && (
-                        <span className="passenger-food-quantity-count" aria-live="polite">
-                          {quantities[product.id]}
-                        </span>
-                      )}
-                      <button
-                        className="passenger-food-quantity-button passenger-food-quantity-add"
-                        type="button"
-                        aria-label={(quantities[product.id] || 0) > 0 ? `Tambah ${product.name}` : `Pilih ${product.name}`}
-                        disabled={(quantities[product.id] || 0) >= 10}
-                        onClick={() => setQuantities(current => ({
-                          ...current,
-                          [product.id]: Math.min(10, (current[product.id] || 0) + 1),
-                        }))}
-                      >
-                        <Plus size={18} />
-                      </button>
-                    </div>
-                  </article>
-                ))}
-              </div>
-              <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem' }}>
-                <strong>Total: {formatIDR(total)}</strong>
-                <button className="rh-btn rh-btn-primary" type="submit" disabled={submittingFood || products.length === 0}>
-                  Lanjut ke pembayaran
-                </button>
-              </div>
-            </form>
-          )}
-        </div>}
-        {orders.length > 0 && (
-          <div className="rh-card-footer">
-            <strong>Pesanan terakhir</strong>
-            <div style={{ display: 'grid', gap: '0.5rem', marginTop: '0.5rem' }}>
-              {orders.map(order => (
-                <div key={order.id} style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', justifyContent: 'space-between' }}>
-                  <span>{order.order_code} · {order.food_order_items?.map(item => `${item.food_products?.name} ×${item.quantity}`).join(', ')}</span>
-                  <strong>{ORDER_STATUS_LABELS[order.status] || order.status} · {order.payment_method?.replace('_', ' ') || 'simulasi'} · {formatIDR(order.total_amount)}</strong>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-      </article>
 
       {showReports && <article className="rh-card">
         <div className="rh-card-header">
