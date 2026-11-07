@@ -307,7 +307,7 @@ function PassengerDashboardContent() {
   return (
     <>
       <Navbar />
-      <main className="passenger-dashboard" style={{ background: 'var(--rh-surface)', minHeight: '100vh', paddingBottom: '6rem' }}>
+      <main className={`passenger-dashboard ${activeTab === 'overview' ? 'is-tracking-tab' : ''}`} style={{ background: 'var(--rh-surface)', minHeight: '100vh', paddingBottom: '6rem' }}>
         {/* ── DESKTOP DASHBOARD NAVIGATION BAR ── */}
         <section className={`passenger-header-banner rh-hide-mobile rh-hide-on-mobile-tracking ${activeTab === 'account' ? 'passenger-account-hide' : ''}`} style={{
           background: 'var(--rh-primary)',
@@ -404,10 +404,10 @@ function PassengerDashboardContent() {
                           border: '1px solid var(--rh-border)',
                         }}>
                           <div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
                               <span className="rh-mono" style={{ fontWeight: 800 }}>{booking.booking_code}</span>
-                              <span className={`rh-badge ${booking.status === 'paid' ? 'rh-badge-success' : booking.status === 'pending' ? 'rh-badge-warning' : 'rh-badge-muted'}`}>
-                                {booking.status === 'paid' ? 'Terbayar' : booking.status === 'pending' ? 'Menunggu Pembayaran' : booking.status}
+                              <span className={`rh-ticket-badge ${booking.status === 'paid' ? 'status-waiting' : booking.status === 'pending' ? 'status-pending' : 'status-expired'}`}>
+                                {booking.status === 'paid' ? 'Terbayar' : booking.status === 'pending' ? 'Menunggu Pembayaran' : 'Hangus'}
                               </span>
                             </div>
                             <strong style={{ display: 'block', fontSize: '1rem', marginTop: 4 }}>
@@ -420,7 +420,7 @@ function PassengerDashboardContent() {
                           <div style={{ textAlign: 'right' }}>
                             <strong style={{ fontSize: '1.05rem', color: 'var(--rh-primary)', display: 'block' }}>{formatIDR(booking.total_amount)}</strong>
                             <Link href={`/booking/payment/${booking.id}`} className="rh-btn rh-btn-ghost rh-btn-sm" style={{ marginTop: 4 }}>
-                              {booking.status === 'paid' ? 'Buka E-Ticket' : 'Bayar Sekarang'} <ChevronRight size={14} />
+                              {booking.status === 'paid' ? 'Buka E-Ticket' : 'Bayar Sekarang'}
                             </Link>
                           </div>
                         </div>
@@ -464,162 +464,164 @@ function PassengerDashboardContent() {
                     const isPaid = booking.status === 'paid'
                     const relatedTickets = ticketDetails.filter(t => t.booking_id === booking.id)
                     const depTime = new Date(booking.schedules?.departure_time || 0).getTime()
-                    const isPast = depTime > 0 && currentTime >= depTime
-                    const canBoard = isPaid && !isPast && currentTime >= (depTime - 2 * 60 * 60 * 1000)
-                    const canReschedule = isPaid && !isPast && depTime > (currentTime + 2 * 60 * 60 * 1000)
+                    const arrTime = new Date(booking.schedules?.arrival_time || 0).getTime()
+                    const tripEndTime = arrTime > depTime ? arrTime : (depTime > 0 ? depTime + 4 * 60 * 60 * 1000 : 0)
+
+                    const isExpired = booking.status === 'cancelled' || booking.status === 'expired' || (booking.status === 'pending' && booking.expires_at && new Date(booking.expires_at).getTime() < currentTime)
+                    const isCompleted = isPaid && currentTime >= tripEndTime
+                    const isDeparted = isPaid && !isCompleted && currentTime >= depTime
+                    const canBoard = isPaid && !isCompleted && !isDeparted && currentTime >= (depTime - 2 * 60 * 60 * 1000)
+                    const canReschedule = isPaid && !isDeparted && !isCompleted && depTime > (currentTime + 2 * 60 * 60 * 1000)
+
+                    let statusType = 'waiting'
+                    let statusBadgeClass = 'status-waiting'
+                    let statusLabel = 'Belum Jalan'
+
+                    if (isExpired) {
+                      statusType = 'expired'
+                      statusBadgeClass = 'status-expired'
+                      statusLabel = 'Hangus'
+                    } else if (booking.status === 'pending') {
+                      statusType = 'pending'
+                      statusBadgeClass = 'status-pending'
+                      statusLabel = 'Menunggu Pembayaran'
+                    } else if (isCompleted) {
+                      statusType = 'completed'
+                      statusBadgeClass = 'status-completed'
+                      statusLabel = 'Selesai'
+                    } else if (isDeparted) {
+                      statusType = 'ready'
+                      statusBadgeClass = 'status-ready'
+                      statusLabel = 'Dalam Perjalanan'
+                    } else if (canBoard) {
+                      statusType = 'ready'
+                      statusBadgeClass = 'status-ready'
+                      statusLabel = 'Siap Boarding'
+                    } else {
+                      statusType = 'waiting'
+                      statusBadgeClass = 'status-waiting'
+                      statusLabel = 'Belum Jalan'
+                    }
+
+                    const routeName = booking.schedules?.routes?.name || 'Rute Kereta'
+                    const trainName = booking.schedules?.trains?.name || 'Kereta Antarkota'
+                    const trainNumber = booking.schedules?.trains?.train_number || ''
 
                     return (
-                      <article key={booking.id} className="rh-card" style={{ overflow: 'hidden' }}>
-                        <div style={{
-                          background: 'var(--rh-primary)',
-                          color: 'white',
-                          padding: '1.25rem',
-                          display: 'flex',
-                          flexWrap: 'wrap',
-                          justifyContent: 'space-between',
-                          alignItems: 'center',
-                          gap: '1rem',
-                        }}>
+                      <article key={booking.id} className={`rh-ticket-voucher is-${statusType}`}>
+                        {/* Notches for authentic ticket perforation shape */}
+                        <div className="rh-ticket-notch-left" aria-hidden="true" />
+                        <div className="rh-ticket-notch-right" aria-hidden="true" />
+
+                        {/* Ticket Stub Top Header */}
+                        <div className="rh-ticket-stub-top">
                           <div>
-                            <span style={{ fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.06em', color: 'rgba(255,255,255,0.75)' }}>
-                              Kode Booking
-                            </span>
-                            <strong className="rh-mono" style={{ display: 'block', fontSize: '1.25rem', color: 'white' }}>
-                              {booking.booking_code}
+                            <span className="rh-ticket-label">TIKET PERJALANAN KERETA</span>
+                            <strong className="rh-ticket-train-title">
+                              {trainName} {trainNumber ? `(${trainNumber})` : ''}
                             </strong>
+                            <span className="rh-ticket-route-text">{routeName}</span>
                           </div>
 
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                            <span className={`rh-badge ${isPaid ? 'rh-badge-success' : booking.status === 'pending' ? 'rh-badge-warning' : 'rh-badge-muted'}`}>
-                              {isPaid ? 'Tiket Terbit (Aktif)' : booking.status === 'pending' ? 'Menunggu Pembayaran' : booking.status}
+                          <div style={{ textAlign: 'right' }}>
+                            <span className={`rh-ticket-badge ${statusBadgeClass}`}>
+                              {statusLabel}
                             </span>
-                            <span style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--rh-accent)' }}>
+                            <strong className="rh-ticket-fare">
                               {formatIDR(booking.total_amount)}
-                            </span>
+                            </strong>
                           </div>
                         </div>
 
-                        <div className="rh-card-body" style={{ display: 'grid', gap: '1.25rem' }}>
-                          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', gap: '1rem', alignItems: 'center' }}>
-                            <div>
-                              <strong style={{ fontSize: '1.15rem' }}>{booking.schedules?.trains?.name || 'KA Antarkota'}</strong>
-                              <span style={{ display: 'block', color: 'var(--rh-text-2)', fontSize: '0.875rem' }}>
-                                {booking.schedules?.trains?.train_number || 'KA'} · {booking.schedules?.routes?.name || 'Rute'}
-                              </span>
-                              <small style={{ color: 'var(--rh-text-3)', display: 'block', marginTop: 4 }}>
-                                Keberangkatan: {booking.schedules?.departure_time ? `${formatDate(booking.schedules.departure_time)} · ${formatTime(booking.schedules.departure_time)} WIB` : '-'}
-                              </small>
-                            </div>
+                        {/* Dashed Perforation Line */}
+                        <div className="rh-ticket-perforation" aria-hidden="true" />
 
-                            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
-                              {isPaid ? (
-                                <>
-                                  {canReschedule ? (
-                                    <Link href={`/booking/payment/${booking.id}`} className="rh-btn rh-btn-ghost rh-btn-sm" style={{ border: '1px solid var(--rh-border)' }}>
-                                      <RefreshCw size={14} /> Reschedule / Batal
-                                    </Link>
-                                  ) : (
-                                    <span className="rh-badge rh-badge-muted" style={{ fontSize: '0.75rem', padding: '0.35rem 0.65rem' }}>
-                                      Reschedule Ditutup (&le; 2 Jam)
-                                    </span>
-                                  )}
-                                  {canBoard && (
-                                    <button
-                                      type="button"
-                                      onClick={() => setSelectedTicketForQR({ ...relatedTickets[0], qrImage: qrCodes[relatedTickets[0]?.ticket_number], booking })}
-                                      className="rh-btn rh-btn-primary rh-btn-sm"
-                                    >
-                                      <Ticket size={14} /> Buka E-Boarding Pass
-                                    </button>
-                                  )}
-                                </>
-                              ) : (
-                                <Link href={`/booking/payment/${booking.id}`} className="rh-btn rh-btn-primary rh-btn-sm">
-                                  Lanjutkan Bayar
-                                </Link>
-                              )}
-                              <button
-                                type="button"
-                                onClick={() => selectTab('overview')}
-                                className="rh-btn rh-btn-ghost rh-btn-sm"
-                              >
-                                <Radio size={14} /> Tracking Kereta
-                              </button>
-                            </div>
-                          </div>
-
-                          {/* Individual Passenger Digital Tickets */}
-                          {relatedTickets.length > 0 && (
-                            <div style={{ borderTop: '1px dashed var(--rh-border)', paddingTop: '1rem' }}>
-                              <strong style={{ fontSize: '0.9rem', display: 'block', marginBottom: '0.75rem' }}>
-                                Tiket Digital Penumpang ({relatedTickets.length} orang):
-                              </strong>
-                              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 250px), 1fr))', gap: '0.85rem' }}>
-                                {relatedTickets.map((t, idx) => {
-                                  const qrImage = qrCodes[t.ticket_number]
-                                  return (
-                                    <div key={t.id || t.ticket_number} style={{
-                                      padding: '1rem',
-                                      borderRadius: 14,
-                                      border: '1.5px solid var(--rh-border)',
-                                      background: 'var(--rh-surface)',
-                                      display: 'flex',
-                                      gap: '0.85rem',
-                                      alignItems: 'center',
-                                    }}>
-                                      {/* QR Code thumbnail - Hanya tampil jika sudah memasuki 2 jam sebelum keberangkatan */}
-                                      {canBoard && qrImage ? (
-                                        <div
-                                          onClick={() => setSelectedTicketForQR({ ...t, qrImage, booking })}
-                                          style={{ cursor: 'pointer', flexShrink: 0, textAlign: 'center' }}
-                                          title="Klik untuk memperbesar E-Boarding Pass"
-                                        >
-                                          <Image src={qrImage} alt="QR Tiket" width={72} height={72} style={{ borderRadius: 8, border: '1px solid #CBD5E1' }} unoptimized />
-                                          <small style={{ fontSize: '0.65rem', color: 'var(--rh-primary)', display: 'block', marginTop: 2, fontWeight: 700 }}>Perbesar QR</small>
-                                        </div>
-                                      ) : isPast ? (
-                                        <div style={{ width: 72, height: 72, background: '#f1f5f9', borderRadius: 8, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: 4, flexShrink: 0 }}>
-                                          <Check size={20} color="var(--rh-text-3)" />
-                                          <span style={{ fontSize: '0.6rem', color: 'var(--rh-text-3)', marginTop: 2, fontWeight: 700 }}>Selesai</span>
-                                        </div>
-                                      ) : (
-                                        <div style={{ width: 72, height: 72, background: '#f8fafc', borderRadius: 8, border: '1px dashed #cbd5e1', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: 4, flexShrink: 0 }}>
-                                          <Clock size={20} color="#94a3b8" />
-                                          <span style={{ fontSize: '0.62rem', color: '#64748b', marginTop: 2, fontWeight: 700, lineHeight: 1.1 }}>Aktif H-2 Jam</span>
-                                        </div>
-                                      )}
-
-                                      <div style={{ minWidth: 0, flex: 1 }}>
-                                        <span className="rh-mono" style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--rh-text-3)' }}>
-                                          {t.ticket_number}
-                                        </span>
-                                        <strong style={{ display: 'block', fontSize: '0.95rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                                          {t.passengers?.full_name || `Penumpang ${idx + 1}`}
-                                        </strong>
-                                        <div style={{ display: 'flex', gap: '0.5rem', marginTop: 4 }}>
-                                          <span className="rh-badge rh-badge-primary" style={{ fontSize: '0.7rem' }}>
-                                            Gerbong {t.seats?.carriages?.carriage_number || '1'}
-                                          </span>
-                                          <span className="rh-badge rh-badge-primary" style={{ fontSize: '0.7rem' }}>
-                                            Kursi {t.seats?.seat_number || '-'}
-                                          </span>
-                                        </div>
-                                        <small style={{ display: 'block', color: t.is_validated ? 'var(--rh-success)' : canBoard ? 'var(--rh-primary)' : 'var(--rh-text-2)', fontSize: '0.72rem', marginTop: 4 }}>
-                                          {t.is_validated
-                                            ? '✓ Sudah Divalidasi Petugas'
-                                            : canBoard
-                                              ? '● Boarding Dibuka (Tunjukkan QR ke petugas)'
-                                              : isPast
-                                                ? 'Perjalanan telah selesai'
-                                                : 'E-boarding pass aktif 2 jam sebelum berangkat'}
-                                        </small>
-                                      </div>
-                                    </div>
-                                  )
-                                })}
+                        {/* Ticket Body: Passenger details & Seat info (Minimalist, Zero Icons) */}
+                        <div className="rh-ticket-body">
+                          {relatedTickets.length > 0 ? (
+                            relatedTickets.map((t, idx) => (
+                              <div key={t.id || t.ticket_number} className="rh-ticket-passenger-row">
+                                <div style={{ minWidth: 0, flex: 1 }}>
+                                  <span className="rh-ticket-label">PENUMPANG {idx + 1}</span>
+                                  <strong className="rh-ticket-passenger-name">
+                                    {t.passengers?.full_name || `Penumpang ${idx + 1}`}
+                                  </strong>
+                                  <span className="rh-ticket-code">
+                                    {t.ticket_number}
+                                  </span>
+                                </div>
+                                <div className="rh-ticket-seat-box">
+                                  <span className="rh-ticket-label">TEMPAT DUDUK</span>
+                                  <strong className="rh-ticket-seat-value">
+                                    Gerbong {t.seats?.carriages?.carriage_number || '1'} · Kursi {t.seats?.seat_number || '-'}
+                                  </strong>
+                                  <span className="rh-ticket-class-name">
+                                    {t.seats?.carriages?.carriage_class || 'Eksekutif'}
+                                  </span>
+                                </div>
+                              </div>
+                            ))
+                          ) : (
+                            <div className="rh-ticket-passenger-row">
+                              <div>
+                                <span className="rh-ticket-label">PENUMPANG</span>
+                                <strong className="rh-ticket-passenger-name">1 Orang</strong>
                               </div>
                             </div>
                           )}
+
+                          {/* Departure Date & Booking Code */}
+                          <div className="rh-ticket-meta-row">
+                            <div>
+                              <span className="rh-ticket-label">JADWAL KEBERANGKATAN</span>
+                              <span className="rh-ticket-meta-value">
+                                {booking.schedules?.departure_time
+                                  ? `${formatDate(booking.schedules.departure_time)} · ${formatTime(booking.schedules.departure_time)} WIB`
+                                  : '-'}
+                              </span>
+                            </div>
+                            <div>
+                              <span className="rh-ticket-label">KODE BOOKING</span>
+                              <span className="rh-ticket-code-booking">{booking.booking_code}</span>
+                            </div>
+                          </div>
+
+                          {/* Minimalist Action Buttons (NO ICONS, clean text buttons) */}
+                          <div className="rh-ticket-actions">
+                            {isPaid && canBoard && relatedTickets[0] && (
+                              <button
+                                type="button"
+                                onClick={() => setSelectedTicketForQR({
+                                  ...relatedTickets[0],
+                                  qrImage: qrCodes[relatedTickets[0]?.ticket_number],
+                                  booking
+                                })}
+                                className="rh-btn rh-btn-primary rh-btn-sm"
+                              >
+                                Buka E-Boarding Pass
+                              </button>
+                            )}
+
+                            {booking.status === 'pending' && !isExpired && (
+                              <Link href={`/booking/payment/${booking.id}`} className="rh-btn rh-btn-primary rh-btn-sm">
+                                Lanjutkan Bayar
+                              </Link>
+                            )}
+
+                            {canReschedule && (
+                              <Link href={`/booking/payment/${booking.id}`} className="rh-btn rh-btn-ghost rh-btn-sm" style={{ border: '1px solid var(--rh-border)' }}>
+                                Reschedule / Batal
+                              </Link>
+                            )}
+
+                            <button
+                              type="button"
+                              onClick={() => selectTab('overview')}
+                              className="rh-btn rh-btn-ghost rh-btn-sm"
+                            >
+                              Tracking Kereta
+                            </button>
+                          </div>
                         </div>
                       </article>
                     )

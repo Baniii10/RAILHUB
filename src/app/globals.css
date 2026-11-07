@@ -2158,36 +2158,263 @@ input[type="checkbox"]:focus-visible {
 }
 
 @media (max-width: 768px) {
-  /* When tracking on mobile, make page true full screen edge-to-edge all the way to bottom */
+  /* When tracking on mobile, make train animation edge-to-edge full width without clipping */
   .passenger-dashboard.is-tracking-tab {
-    padding: 0 !important;
-    margin: 0 !important;
-    background: #0b1329 !important;
-    min-height: 100dvh !important;
-    height: 100dvh !important;
-    overflow: hidden !important;
-  }
-  .passenger-dashboard.is-tracking-tab .rh-hide-on-mobile-tracking {
-    display: none !important;
+    padding-bottom: 6rem !important;
   }
   .passenger-dashboard.is-tracking-tab .passenger-main-container {
-    padding: 0 !important;
-    max-width: 100vw !important;
-    width: 100vw !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
     margin: 0 !important;
   }
-  .passenger-dashboard.is-tracking-tab .rh-live-tracker-viewport {
-    height: 100vh !important;
-    height: 100dvh !important;
-    min-height: 100dvh !important;
-    max-height: none !important;
+  .rh-live-tracker-wrapper {
+    width: 100% !important;
+    max-width: 100vw !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  .rh-live-tracker-wrapper > .rh-live-journey-hud,
+  .rh-live-journey-hud {
     border-radius: 0 !important;
-    border: none !important;
-    width: 100vw !important;
+    border-left: none !important;
+    border-right: none !important;
+    width: 100% !important;
+    max-width: 100vw !important;
   }
-  .passenger-dashboard.is-tracking-tab .rh-desktop-only-bookings {
-    display: none !important;
+  .rh-live-tracker-wrapper > *:not(.rh-live-journey-hud) {
+    margin-left: 1rem !important;
+    margin-right: 1rem !important;
   }
+}
+
+/* ── AUTHENTIC MINIMALIST TICKET SHAPE ── */
+.rh-ticket-voucher {
+  position: relative;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+.rh-ticket-voucher.is-expired {
+  background: #fafafa;
+  border-color: #fca5a5;
+  opacity: 0.88;
+}
+
+.rh-ticket-voucher.is-waiting {
+  border-color: #cbd5e1;
+}
+
+.rh-ticket-voucher.is-ready {
+  border-color: #93c5fd;
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.08);
+}
+
+.rh-ticket-voucher.is-completed {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+}
+
+/* Semi-circular punch notches on left and right */
+.rh-ticket-notch-left,
+.rh-ticket-notch-right {
+  position: absolute;
+  top: 76px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--rh-surface, #f8fafc);
+  z-index: 5;
+  border: 1px solid #cbd5e1;
+  pointer-events: none;
+}
+
+.rh-ticket-notch-left {
+  left: -10px;
+  box-shadow: inset -2px 0 3px rgba(0, 0, 0, 0.05);
+}
+
+.rh-ticket-notch-right {
+  right: -10px;
+  box-shadow: inset 2px 0 3px rgba(0, 0, 0, 0.05);
+}
+
+.rh-ticket-stub-top {
+  padding: 1.15rem 1.25rem 0.9rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.rh-ticket-perforation {
+  width: 100%;
+  height: 0;
+  border-top: 2px dashed #cbd5e1;
+  margin: 0;
+  position: relative;
+}
+
+.rh-ticket-body {
+  padding: 1rem 1.25rem 1.25rem;
+  display: grid;
+  gap: 0.85rem;
+}
+
+.rh-ticket-label {
+  display: block;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  font-weight: 700;
+  color: #64748b;
+  margin-bottom: 2px;
+}
+
+.rh-ticket-train-title {
+  display: block;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--rh-navy, #0f172a);
+  line-height: 1.2;
+}
+
+.rh-ticket-route-text {
+  display: block;
+  font-size: 0.82rem;
+  color: #475569;
+  margin-top: 2px;
+}
+
+.rh-ticket-fare {
+  display: block;
+  font-size: 1.1rem;
+  font-weight: 900;
+  color: var(--rh-primary, #1a428a);
+  margin-top: 3px;
+}
+
+.rh-ticket-passenger-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 0.75rem;
+  background: #f8fafc;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+}
+
+.rh-ticket-passenger-name {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.rh-ticket-code {
+  display: block;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.72rem;
+  color: #64748b;
+  word-break: break-all;
+  margin-top: 2px;
+}
+
+.rh-ticket-seat-box {
+  text-align: right;
+}
+
+.rh-ticket-seat-value {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--rh-primary, #1a428a);
+}
+
+.rh-ticket-class-name {
+  display: block;
+  font-size: 0.72rem;
+  color: #64748b;
+}
+
+.rh-ticket-meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  font-size: 0.78rem;
+}
+
+.rh-ticket-meta-value {
+  color: #1e293b;
+  font-weight: 600;
+}
+
+.rh-ticket-code-booking {
+  font-family: var(--font-mono, monospace);
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.rh-ticket-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 0.25rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #f1f5f9;
+}
+
+/* Minimal Status Badges - Text Only, No Icons */
+.rh-ticket-badge {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.rh-ticket-badge.status-waiting {
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+}
+
+.rh-ticket-badge.status-ready {
+  background: #ecfdf5;
+  color: #047857;
+  border: 1px solid #a7f3d0;
+}
+
+.rh-ticket-badge.status-expired {
+  background: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+}
+
+.rh-ticket-badge.status-completed {
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+}
+
+.rh-ticket-badge.status-pending {
+  background: #fffbeb;
+  color: #b45309;
+  border: 1px solid #fde68a;
 }
 
 .rh-tracker-bottom-sheet,

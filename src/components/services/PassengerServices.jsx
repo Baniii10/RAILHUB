@@ -329,16 +329,20 @@ export default function PassengerServices({ userId, bookingId: initialBookingId,
                   role="radio"
                   aria-checked={foodPaymentMethod === 'qris'}
                   onClick={() => setFoodPaymentMethod('qris')}
-                  style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}
+                  style={{ width: '100%', boxSizing: 'border-box' }}
                 >
-                  <div style={{ padding: '4px 6px', background: '#ffffff', borderRadius: 8, border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', flexShrink: 0 }}>
-                    <QrisLogo height={24} />
+                  <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '0.75rem', width: '100%' }}>
+                    <div style={{ display: 'flex', gap: '0.75rem', flex: 1, minWidth: 0 }}>
+                      <div style={{ padding: '4px 6px', background: '#ffffff', borderRadius: 8, border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', flexShrink: 0, height: 'fit-content' }}>
+                        <QrisLogo height={24} />
+                      </div>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <strong style={{ fontSize: '0.9rem', display: 'block' }}>QRIS (Standar Pembayaran Nasional)</strong>
+                        <small style={{ color: 'var(--rh-text-2)', fontSize: '0.78rem', display: 'block', marginTop: 2 }}>Scan instan via m-Banking & E-Wallet</small>
+                      </div>
+                    </div>
+                    <span className="passenger-food-payment-radio" style={{ flexShrink: 0, marginTop: 4 }} />
                   </div>
-                  <span style={{ flex: 1, display: 'grid', gap: '0.2rem' }}>
-                    <strong style={{ fontSize: '0.9rem' }}>QRIS (Standar Pembayaran Nasional)</strong>
-                    <small style={{ color: 'var(--rh-text-2)', fontSize: '0.78rem' }}>Scan instan via m-Banking & E-Wallet</small>
-                  </span>
-                  <span className="passenger-food-payment-radio" />
                 </button>
 
                 {/* E-Wallet */}
@@ -348,18 +352,20 @@ export default function PassengerServices({ userId, bookingId: initialBookingId,
                   role="radio"
                   aria-checked={foodPaymentMethod === 'e_wallet'}
                   onClick={() => setFoodPaymentMethod('e_wallet')}
-                  style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}
+                  style={{ width: '100%', boxSizing: 'border-box' }}
                 >
-                  <div style={{ display: 'flex', gap: '3px', alignItems: 'center', flexWrap: 'wrap', flexShrink: 0 }}>
-                    <GopayLogo height={16} />
-                    <OvoLogo height={16} />
-                    <DanaLogo height={16} />
+                  <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '0.75rem', width: '100%' }}>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <strong style={{ fontSize: '0.9rem', display: 'block' }}>E-Wallet</strong>
+                      <small style={{ color: 'var(--rh-text-2)', fontSize: '0.78rem', display: 'block', marginTop: 2 }}>GoPay, OVO, DANA, ShopeePay</small>
+                      <div style={{ display: 'flex', gap: '6px', alignItems: 'center', flexWrap: 'wrap', marginTop: 6 }}>
+                        <GopayLogo height={16} />
+                        <OvoLogo height={16} />
+                        <DanaLogo height={16} />
+                      </div>
+                    </div>
+                    <span className="passenger-food-payment-radio" style={{ flexShrink: 0, marginTop: 4 }} />
                   </div>
-                  <span style={{ flex: 1, display: 'grid', gap: '0.2rem' }}>
-                    <strong style={{ fontSize: '0.9rem' }}>E-Wallet</strong>
-                    <small style={{ color: 'var(--rh-text-2)', fontSize: '0.78rem' }}>GoPay, OVO, DANA, ShopeePay</small>
-                  </span>
-                  <span className="passenger-food-payment-radio" />
                 </button>
 
                 {/* Bank Transfer */}
@@ -369,18 +375,20 @@ export default function PassengerServices({ userId, bookingId: initialBookingId,
                   role="radio"
                   aria-checked={foodPaymentMethod === 'bank_transfer'}
                   onClick={() => setFoodPaymentMethod('bank_transfer')}
-                  style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}
+                  style={{ width: '100%', boxSizing: 'border-box' }}
                 >
-                  <div style={{ display: 'flex', gap: '3px', alignItems: 'center', flexWrap: 'wrap', flexShrink: 0 }}>
-                    <BcaLogo height={16} />
-                    <MandiriLogo height={16} />
-                    <BniLogo height={16} />
+                  <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '0.75rem', width: '100%' }}>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <strong style={{ fontSize: '0.9rem', display: 'block' }}>Virtual Account Bank</strong>
+                      <small style={{ color: 'var(--rh-text-2)', fontSize: '0.78rem', display: 'block', marginTop: 2 }}>BCA, Mandiri, BNI, BRI</small>
+                      <div style={{ display: 'flex', gap: '6px', alignItems: 'center', flexWrap: 'wrap', marginTop: 6 }}>
+                        <BcaLogo height={16} />
+                        <MandiriLogo height={16} />
+                        <BniLogo height={16} />
+                      </div>
+                    </div>
+                    <span className="passenger-food-payment-radio" style={{ flexShrink: 0, marginTop: 4 }} />
                   </div>
-                  <span style={{ flex: 1, display: 'grid', gap: '0.2rem' }}>
-                    <strong style={{ fontSize: '0.9rem' }}>Virtual Account Bank</strong>
-                    <small style={{ color: 'var(--rh-text-2)', fontSize: '0.78rem' }}>BCA, Mandiri, BNI, BRI</small>
-                  </span>
-                  <span className="passenger-food-payment-radio" />
                 </button>
               </div>
               <div className="passenger-food-payment-summary">

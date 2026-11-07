@@ -56,7 +56,7 @@ export default function LiveJourneyMapTracker({ booking, ticket, countdown, jour
       : countdown || nextStop?.time || 'Sesuai jadwal'
 
   return (
-    <div style={{ display: 'grid', gap: '1.25rem' }}>
+    <div className="rh-live-tracker-wrapper" style={{ display: 'grid', gap: '1.25rem' }}>
       {/* ── UPGRADED LIVE JOURNEY ANIMATED HUD WITH REALTIME SPEEDOMETER & WIFI ── */}
       <LiveJourneyAnimatedHUD
         trainName={booking.schedules?.trains?.name || 'KA Argo Bromo Anggrek'}

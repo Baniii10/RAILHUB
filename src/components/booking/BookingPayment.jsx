@@ -426,21 +426,25 @@ export default function BookingPayment({ bookingId }) {
                         aria-checked={selectedPaymentMethod === 'qr_payment'}
                         onClick={() => setSelectedPaymentMethod('qr_payment')}
                         disabled={processing}
-                        style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}
+                        style={{ width: '100%', boxSizing: 'border-box' }}
                       >
-                        <div style={{ padding: '4px 6px', background: '#ffffff', borderRadius: 8, border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', flexShrink: 0 }}>
-                          <QrisLogo height={26} />
+                        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '0.75rem', width: '100%' }}>
+                          <div style={{ display: 'flex', gap: '0.75rem', flex: 1, minWidth: 0 }}>
+                            <div style={{ padding: '4px 6px', background: '#ffffff', borderRadius: 8, border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', flexShrink: 0, height: 'fit-content' }}>
+                              <QrisLogo height={24} />
+                            </div>
+                            <div style={{ flex: 1, minWidth: 0 }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap' }}>
+                                <strong style={{ fontSize: '0.92rem' }}>QRIS</strong>
+                                <span style={{ fontSize: '0.68rem', fontWeight: 700, padding: '1px 6px', borderRadius: 4, background: '#fee2e2', color: '#b91c1c' }}>Semua Bank & E-Wallet</span>
+                              </div>
+                              <small style={{ color: 'var(--rh-text-2)', fontSize: '0.78rem', display: 'block', marginTop: 2, wordBreak: 'break-word' }}>
+                                BCA Mobile, Livin&apos; Mandiri, BRImo, BNI, GoPay, OVO, DANA, ShopeePay
+                              </small>
+                            </div>
+                          </div>
+                          <span className="passenger-food-payment-radio" style={{ flexShrink: 0, marginTop: 4 }} />
                         </div>
-                        <span style={{ flex: 1, display: 'grid', gap: '0.2rem' }}>
-                          <strong style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', fontSize: '0.92rem' }}>
-                            QRIS (Standar Pembayaran Nasional)
-                            <span style={{ fontSize: '0.68rem', fontWeight: 700, padding: '1px 6px', borderRadius: 4, background: '#fee2e2', color: '#b91c1c' }}>Semua Bank & E-Wallet</span>
-                          </strong>
-                          <small style={{ color: 'var(--rh-text-2)', fontSize: '0.78rem' }}>
-                            BCA Mobile, Livin&apos; Mandiri, BRImo, BNI, GoPay, OVO, DANA, ShopeePay
-                          </small>
-                        </span>
-                        <span className="passenger-food-payment-radio" />
                       </button>
 
                       {/* 2. E-WALLET (Authentic Logos: GoPay, OVO, DANA, ShopeePay) */}
@@ -450,27 +454,27 @@ export default function BookingPayment({ bookingId }) {
                         role="radio"
                         aria-checked={selectedPaymentMethod === 'e_wallet'}
                         tabIndex={0}
-                        style={{ display: 'flex', flexDirection: 'column', alignItems: 'stretch', cursor: 'pointer' }}
+                        style={{ display: 'flex', flexDirection: 'column', alignItems: 'stretch', cursor: 'pointer', width: '100%', boxSizing: 'border-box' }}
                       >
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', width: '100%' }}>
-                          <div style={{ display: 'flex', gap: '4px', alignItems: 'center', flexWrap: 'wrap', flexShrink: 0 }}>
-                            <GopayLogo height={18} />
-                            <OvoLogo height={18} />
-                            <DanaLogo height={18} />
-                            <ShopeepayLogo height={18} />
+                        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '0.75rem', width: '100%' }}>
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <strong style={{ fontSize: '0.92rem', display: 'block' }}>Dompet Digital (E-Wallet)</strong>
+                            <small style={{ color: 'var(--rh-text-2)', fontSize: '0.78rem', display: 'block', marginTop: 2 }}>Pilih GoPay, OVO, DANA, atau ShopeePay</small>
+                            <div style={{ display: 'flex', gap: '6px', alignItems: 'center', flexWrap: 'wrap', marginTop: 8 }}>
+                              <GopayLogo height={16} />
+                              <OvoLogo height={16} />
+                              <DanaLogo height={16} />
+                              <ShopeepayLogo height={16} />
+                            </div>
                           </div>
-                          <span style={{ flex: 1, display: 'grid', gap: '0.2rem' }}>
-                            <strong style={{ fontSize: '0.92rem' }}>Dompet Digital (E-Wallet)</strong>
-                            <small style={{ color: 'var(--rh-text-2)', fontSize: '0.78rem' }}>Pilih GoPay, OVO, DANA, atau ShopeePay</small>
-                          </span>
-                          <span className="passenger-food-payment-radio" />
+                          <span className="passenger-food-payment-radio" style={{ flexShrink: 0, marginTop: 4 }} />
                         </div>
 
                         {selectedPaymentMethod === 'e_wallet' && (
                           <div
                             style={{
                               display: 'grid',
-                              gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
+                              gridTemplateColumns: 'repeat(auto-fit, minmax(65px, 1fr))',
                               gap: '0.5rem',
                               marginTop: '0.75rem',
                               paddingTop: '0.75rem',
@@ -494,11 +498,12 @@ export default function BookingPayment({ bookingId }) {
                                   flexDirection: 'column',
                                   alignItems: 'center',
                                   gap: 4,
-                                  padding: '0.5rem 0.35rem',
+                                  padding: '0.5rem 0.25rem',
+                                  minWidth: 0,
                                 }}
                               >
-                                <Logo height={20} />
-                                <span style={{ fontSize: '0.72rem', fontWeight: 600, color: selectedWallet === id ? 'var(--rh-primary)' : 'var(--rh-text-2)' }}>{label}</span>
+                                <Logo height={18} />
+                                <span style={{ fontSize: '0.7rem', fontWeight: 600, color: selectedWallet === id ? 'var(--rh-primary)' : 'var(--rh-text-2)', whiteSpace: 'nowrap' }}>{label}</span>
                               </button>
                             ))}
                           </div>
@@ -512,27 +517,27 @@ export default function BookingPayment({ bookingId }) {
                         role="radio"
                         aria-checked={selectedPaymentMethod === 'bank_transfer'}
                         tabIndex={0}
-                        style={{ display: 'flex', flexDirection: 'column', alignItems: 'stretch', cursor: 'pointer' }}
+                        style={{ display: 'flex', flexDirection: 'column', alignItems: 'stretch', cursor: 'pointer', width: '100%', boxSizing: 'border-box' }}
                       >
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', width: '100%' }}>
-                          <div style={{ display: 'flex', gap: '4px', alignItems: 'center', flexWrap: 'wrap', flexShrink: 0 }}>
-                            <BcaLogo height={18} />
-                            <MandiriLogo height={18} />
-                            <BniLogo height={18} />
-                            <BriLogo height={18} />
+                        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '0.75rem', width: '100%' }}>
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <strong style={{ fontSize: '0.92rem', display: 'block' }}>Virtual Account Bank</strong>
+                            <small style={{ color: 'var(--rh-text-2)', fontSize: '0.78rem', display: 'block', marginTop: 2 }}>Konfirmasi otomatis 24 jam</small>
+                            <div style={{ display: 'flex', gap: '6px', alignItems: 'center', flexWrap: 'wrap', marginTop: 8 }}>
+                              <BcaLogo height={16} />
+                              <MandiriLogo height={16} />
+                              <BniLogo height={16} />
+                              <BriLogo height={16} />
+                            </div>
                           </div>
-                          <span style={{ flex: 1, display: 'grid', gap: '0.2rem' }}>
-                            <strong style={{ fontSize: '0.92rem' }}>Virtual Account Bank</strong>
-                            <small style={{ color: 'var(--rh-text-2)', fontSize: '0.78rem' }}>Konfirmasi otomatis 24 jam</small>
-                          </span>
-                          <span className="passenger-food-payment-radio" />
+                          <span className="passenger-food-payment-radio" style={{ flexShrink: 0, marginTop: 4 }} />
                         </div>
 
                         {selectedPaymentMethod === 'bank_transfer' && (
                           <div
                             style={{
                               display: 'grid',
-                              gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
+                              gridTemplateColumns: 'repeat(auto-fit, minmax(65px, 1fr))',
                               gap: '0.5rem',
                               marginTop: '0.75rem',
                               paddingTop: '0.75rem',
@@ -556,11 +561,12 @@ export default function BookingPayment({ bookingId }) {
                                   flexDirection: 'column',
                                   alignItems: 'center',
                                   gap: 4,
-                                  padding: '0.5rem 0.35rem',
+                                  padding: '0.5rem 0.25rem',
+                                  minWidth: 0,
                                 }}
                               >
-                                <Logo height={20} />
-                                <span style={{ fontSize: '0.72rem', fontWeight: 600, color: selectedBank === id ? 'var(--rh-primary)' : 'var(--rh-text-2)' }}>{label}</span>
+                                <Logo height={18} />
+                                <span style={{ fontSize: '0.7rem', fontWeight: 600, color: selectedBank === id ? 'var(--rh-primary)' : 'var(--rh-text-2)', whiteSpace: 'nowrap' }}>{label}</span>
                               </button>
                             ))}
                           </div>
@@ -637,7 +643,7 @@ export default function BookingPayment({ bookingId }) {
                           disabled={!canManagePaidTicket}
                           aria-expanded={rescheduleOpen}
                         >
-                          <RefreshCw size={16} /> Reschedule
+                          Reschedule
                         </button>
                         <button
                           className="rh-btn rh-btn-ghost"
@@ -819,7 +825,7 @@ export default function BookingPayment({ bookingId }) {
                             disabled={!canOpenBoardingPass}
                             aria-expanded={selectedTicketNumber === ticket.ticket_number}
                           >
-                            <Ticket size={15} /> Buka e-ticket
+                            Buka E-Ticket
                           </button>
                         </article>
                       )
