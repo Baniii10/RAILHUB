@@ -183,8 +183,8 @@ export default function Navbar() {
   const dashboardNavLinks = dashboardRole === 'admin'
     ? [
       { href: '/dashboard/admin', label: 'Ringkasan' },
-      { href: '/dashboard/admin/journeys', label: 'Perjalanan mendatang' },
-      { href: '/dashboard/admin/staff', label: 'Pengelolaan petugas' },
+      { href: '/dashboard/admin?tab=journeys', label: 'Perjalanan mendatang' },
+      { href: '/dashboard/admin?tab=staff', label: 'Pengelolaan petugas' },
     ]
     : dashboardRole === 'gate'
       ? [
@@ -205,8 +205,8 @@ export default function Navbar() {
   const mobileBottomItems = dashboardRole === 'admin'
     ? [
       { href: '/dashboard/admin', label: lang === 'en' ? 'Summary' : 'Ringkasan', icon: LayoutDashboard },
-      { href: '/dashboard/admin/journeys', label: lang === 'en' ? 'Schedule' : 'Jadwal', icon: Train },
-      { href: '/dashboard/admin/staff', label: lang === 'en' ? 'Staff' : 'Petugas', icon: User },
+      { href: '/dashboard/admin?tab=journeys', label: lang === 'en' ? 'Schedule' : 'Jadwal', icon: Train },
+      { href: '/dashboard/admin?tab=staff', label: lang === 'en' ? 'Staff' : 'Petugas', icon: User },
       { href: '/dashboard/orders', label: lang === 'en' ? 'Services' : 'Layanan', icon: Utensils },
     ]
     : dashboardRole === 'gate'
