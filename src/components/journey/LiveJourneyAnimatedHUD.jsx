@@ -384,8 +384,8 @@ export default function LiveJourneyAnimatedHUD({
           </div>
         </div>
 
-        {/* Transit Station Platform (Appears when Kereta Berhenti) */}
-        {!isRunning && (
+        {/* Transit Station Platform (Appears when Kereta Sedang Transit Berhenti di Perjalanan) */}
+        {!isRunning && isDeparted && !isCompleted && (
           <div style={{
             position: 'absolute',
             bottom: 22,
@@ -565,69 +565,71 @@ export default function LiveJourneyAnimatedHUD({
           }} />
         </div>
 
-        {/* ── COUNTDOWN OVERLAY WHEN TRAIN HAS NOT DEPARTED YET ── */}
+        {/* ── COUNTDOWN OVERLAY WHEN TRAIN HAS NOT DEPARTED YET (MINIMALIST PILL) ── */}
         {!isDeparted && (
           <div style={{
             position: 'absolute',
-            bottom: 22,
+            bottom: 24,
             left: '50%',
             transform: 'translateX(-50%)',
             zIndex: 10,
-            background: isDay ? 'rgba(15, 23, 42, 0.88)' : 'rgba(2, 6, 23, 0.94)',
-            backdropFilter: 'blur(8px)',
-            WebkitBackdropFilter: 'blur(8px)',
+            background: isDay ? 'rgba(15, 23, 42, 0.82)' : 'rgba(2, 6, 23, 0.88)',
+            backdropFilter: 'blur(10px)',
+            WebkitBackdropFilter: 'blur(10px)',
             color: '#ffffff',
-            padding: '0.5rem 1.15rem',
+            padding: '0.35rem 0.95rem',
             borderRadius: '999px',
-            border: '1px solid rgba(255, 255, 255, 0.22)',
-            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.35)',
+            border: '1px solid rgba(255, 255, 255, 0.18)',
+            boxShadow: '0 6px 18px rgba(0, 0, 0, 0.25)',
             display: 'flex',
             alignItems: 'center',
-            gap: '0.65rem',
+            gap: '0.45rem',
             whiteSpace: 'nowrap',
+            pointerEvents: 'none',
           }}>
             <span style={{
-              width: 8,
-              height: 8,
+              width: 6,
+              height: 6,
               borderRadius: '50%',
               background: '#f59e0b',
-              boxShadow: '0 0 10px #f59e0b',
+              boxShadow: '0 0 8px #f59e0b',
               display: 'inline-block',
             }} className="animate-pulse" />
-            <span style={{ fontSize: '0.78rem', fontWeight: 600, color: 'rgba(255, 255, 255, 0.92)' }}>
-              Kereta Standby di Peron · Berangkat:
+            <span style={{ fontSize: '0.72rem', fontWeight: 600, color: 'rgba(255, 255, 255, 0.85)' }}>
+              Standby Peron ·
             </span>
-            <strong style={{ fontSize: '0.92rem', fontFamily: 'var(--font-mono, monospace)', color: '#fbbf24', letterSpacing: '0.04em' }}>
+            <strong style={{ fontSize: '0.8rem', fontFamily: 'var(--font-mono, monospace)', color: '#fbbf24', letterSpacing: '0.03em' }}>
               {countdown && typeof countdown === 'object' && countdown.hours != null
                 ? `${String(countdown.hours).padStart(2, '0')}j ${String(countdown.minutes || 0).padStart(2, '0')}m ${String(countdown.seconds || 0).padStart(2, '0')}d`
-                : (typeof countdown === 'string' ? countdown : 'Sesuai Jadwal')}
+                : (typeof countdown === 'string' ? countdown : 'Standby')}
             </strong>
           </div>
         )}
 
-        {/* ── ARRIVAL BADGE WHEN TRIP IS COMPLETED ── */}
+        {/* ── ARRIVAL BADGE WHEN TRIP IS COMPLETED (MINIMALIST PILL) ── */}
         {isCompleted && (
           <div style={{
             position: 'absolute',
-            bottom: 22,
+            bottom: 24,
             left: '50%',
             transform: 'translateX(-50%)',
             zIndex: 10,
-            background: 'rgba(5, 150, 105, 0.92)',
-            backdropFilter: 'blur(8px)',
-            WebkitBackdropFilter: 'blur(8px)',
+            background: 'rgba(5, 150, 105, 0.85)',
+            backdropFilter: 'blur(10px)',
+            WebkitBackdropFilter: 'blur(10px)',
             color: '#ffffff',
-            padding: '0.5rem 1.15rem',
+            padding: '0.35rem 0.95rem',
             borderRadius: '999px',
             border: '1px solid rgba(255, 255, 255, 0.25)',
-            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.35)',
+            boxShadow: '0 6px 18px rgba(0, 0, 0, 0.25)',
             display: 'flex',
             alignItems: 'center',
-            gap: '0.5rem',
+            gap: '0.45rem',
             whiteSpace: 'nowrap',
+            pointerEvents: 'none',
           }}>
-            <span style={{ fontSize: '0.82rem', fontWeight: 700 }}>
-              🏁 Perjalanan Selesai · Kereta Telah Tiba di Tujuan
+            <span style={{ fontSize: '0.74rem', fontWeight: 700 }}>
+              🏁 Tiba di Tujuan
             </span>
           </div>
         )}
