@@ -49,19 +49,31 @@ export default function LiveJourneyMapTracker({ booking, ticket, countdown, jour
   const progress = Math.min(100, Math.max(0, journeyProgress))
   const stops = buildStops(booking)
   const nextStop = stops.find(stop => stop.progress > progress) || stops.at(-1)
-  const countdownLabel = countdown?.isDeparted
-    ? 'Kereta sudah berangkat'
+
+  const depTime = booking?.schedules?.departure_time ? new Date(booking.schedules.departure_time).getTime() : 0
+  const arrTime = booking?.schedules?.arrival_time ? new Date(booking.schedules.arrival_time).getTime() : 0
+  const now = Date.now()
+  const isDeparted = Boolean(countdown?.isDeparted || (depTime > 0 && now >= depTime))
+  const isCompleted = Boolean(arrTime > 0 && now >= arrTime)
+
+  const countdownLabel = isDeparted
+    ? (isCompleted ? 'Perjalanan Selesai' : 'Sedang dalam perjalanan')
     : countdown && typeof countdown === 'object'
       ? `${countdown.hours || 0}j ${countdown.minutes || 0}m ${countdown.seconds || 0}d`
       : countdown || nextStop?.time || 'Sesuai jadwal'
 
   return (
     <div className="rh-live-tracker-wrapper" style={{ display: 'grid', gap: '1.25rem' }}>
-      {/* ── UPGRADED LIVE JOURNEY ANIMATED HUD WITH REALTIME SPEEDOMETER & WIFI ── */}
+      {/* ── UPGRADED LIVE JOURNEY ANIMATED HUD WITH REALTIME SPEEDOMETER & COUNTDOWN ── */}
       <LiveJourneyAnimatedHUD
         trainName={booking.schedules?.trains?.name || 'KA Argo Bromo Anggrek'}
         routeTitle={booking.schedules?.routes?.name || 'Gambir (GMR) — Yogyakarta (YK)'}
         stops={stops}
+        countdown={countdown}
+        isDeparted={isDeparted}
+        isCompleted={isCompleted}
+        departureTime={booking.schedules?.departure_time}
+        arrivalTime={booking.schedules?.arrival_time}
       />
 
       {/* ── PASSENGER QUICK ACTIONS & SEAT DETAILS ── */}

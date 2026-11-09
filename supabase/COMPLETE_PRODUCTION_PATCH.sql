@@ -394,4 +394,25 @@ GRANT EXECUTE ON FUNCTION public.cancel_own_paid_booking(UUID) TO authenticated;
 
 GRANT EXECUTE ON FUNCTION public.admin_set_staff_role(UUID, TEXT, UUID) TO authenticated;
 
+-- ----------------------------------------------------------------------------
+-- 8. FUNCTION: reset_all_bookings (Opsional: Bersihkan Seluruh Tiket)
+-- ----------------------------------------------------------------------------
+CREATE OR REPLACE FUNCTION public.reset_all_bookings()
+RETURNS VOID
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
+BEGIN
+    DELETE FROM public.tickets;
+    DELETE FROM public.booking_seats;
+    DELETE FROM public.food_orders;
+    DELETE FROM public.payments;
+    DELETE FROM public.bookings;
+END;
+$$;
+
+GRANT EXECUTE ON FUNCTION public.reset_all_bookings() TO authenticated, anon;
+
 COMMIT;
+

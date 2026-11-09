@@ -185,3 +185,14 @@ npx supabase db push
 3. Pencarian jadwal kereta di HP tidak menampilkan `TypeError: Failed to fetch` karena telah ditangani oleh fallback server `/api/schedules/search`.
 4. Login `gate.gambir@railhub.id` masuk ke `/dashboard/staff` dan scanner validasi bekerja sesuai stasiun penugasan.
 
+---
+
+## 9. RESET SELURUH TIKET & BOOKING (OPSIONAL / BERSIH TOTAL)
+
+Jika Anda ingin mengosongkan seluruh tiket yang pernah dibeli akun manapun dan mengembalikan status kursi ke awal (*clean slate*):
+
+1. Buka [Supabase Dashboard - SQL Editor](https://supabase.com/dashboard/project/youqixjjsdhgmkzdjjck/sql/new).
+2. Salin isi file [`supabase/RESET_ALL_BOOKINGS.sql`](file:///c:/Projects/RAILHUB-1/supabase/RESET_ALL_BOOKINGS.sql).
+3. Tempel ke editor dan klik **Run**.
+4. Seluruh tabel `tickets`, `booking_seats`, `food_orders`, `payments`, dan `bookings` langsung dikosongkan seketika.
+

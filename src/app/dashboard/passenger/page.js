@@ -563,14 +563,16 @@ function PassengerDashboardContent() {
                               </Link>
                             )}
 
-                            <button
-                              type="button"
-                              onClick={() => selectTab('overview')}
-                              className="rh-btn rh-btn-sm"
-                              style={{ border: '1px solid rgba(255, 255, 255, 0.25)', background: 'rgba(255, 255, 255, 0.12)', color: '#ffffff', borderRadius: 8 }}
-                            >
-                              Tracking Kereta
-                            </button>
+                            {!isCompleted && !isExpired && isPaid && (
+                              <button
+                                type="button"
+                                onClick={() => selectTab('overview')}
+                                className="rh-btn rh-btn-sm"
+                                style={{ border: '1px solid rgba(255, 255, 255, 0.25)', background: 'rgba(255, 255, 255, 0.12)', color: '#ffffff', borderRadius: 8 }}
+                              >
+                                Tracking Kereta
+                              </button>
+                            )}
                           </div>
                         </div>
                       </article>

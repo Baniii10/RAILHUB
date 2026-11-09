@@ -108,28 +108,44 @@ export function generateSchedulesForDateRoute({
   // Determine departure time slots
   let slots = []
   if (isToday) {
-    // For today: departures MUST be in the future (at least 20 mins from now)
-    const currentTotalMin = currentWibHour * 60 + currentWibMin + 20
-    const remainingSlots = DEFAULT_WIB_SLOTS.filter(s => (s.hour * 60 + s.minute) > currentTotalMin)
+    // For today: departures MUST be in the future (at least 25 mins from now)
+    const currentTotalMin = currentWibHour * 60 + currentWibMin + 25
+    const remainingSlots = DEFAULT_WIB_SLOTS
+      .map(s => {
+        // Randomize minute slightly (+/- 7 min) for dynamic real-time feel
+        const randJitter = (Math.floor(Math.sin(s.hour * 13) * 7))
+        const m = Math.max(0, Math.min(55, s.minute + randJitter))
+        return { hour: s.hour, minute: m }
+      })
+      .filter(s => (s.hour * 60 + s.minute) > currentTotalMin)
 
     if (remainingSlots.length >= 3) {
       slots = remainingSlots.slice(0, targetCount)
     } else {
       // If late at night, dynamically synthesize upcoming departures in remaining minutes/hours tonight
-      let nextStartMin = Math.max(currentTotalMin, currentWibHour * 60 + currentWibMin + 20)
+      let nextStartMin = Math.max(currentTotalMin, currentWibHour * 60 + currentWibMin + 25)
       const dynamicSlots = []
-      while (nextStartMin <= 23 * 60 + 55 && dynamicSlots.length < 5) {
+      while (nextStartMin <= 23 * 60 + 50 && dynamicSlots.length < 5) {
         const h = Math.floor(nextStartMin / 60)
         const m = nextStartMin % 60
         dynamicSlots.push({ hour: h, minute: m })
-        nextStartMin += 35 + Math.floor(Math.random() * 20)
+        nextStartMin += 35 + Math.floor(Math.random() * 25)
       }
-      slots = dynamicSlots.length > 0 ? dynamicSlots : [{ hour: 23, minute: 50 }]
+      slots = dynamicSlots.length > 0 ? dynamicSlots : [{ hour: 23, minute: 55 }]
     }
   } else {
-    // Pick targetCount slots distributed across morning, afternoon, evening, night
+    // Pick slots distributed across morning, afternoon, evening, night with slight realistic random variations
     const step = Math.max(1, Math.floor(DEFAULT_WIB_SLOTS.length / targetCount))
-    slots = DEFAULT_WIB_SLOTS.filter((_, idx) => idx % step === 0).slice(0, targetCount)
+    slots = DEFAULT_WIB_SLOTS
+      .filter((_, idx) => idx % step === 0)
+      .slice(0, targetCount)
+      .map((s, idx) => {
+        // Deterministic pseudo-random jitter based on dateStr so it's consistent for that date but varies across days
+        const hashSeed = dateStr.split('-').reduce((acc, v) => acc + Number(v), 0) + idx * 11
+        const randMin = (hashSeed % 13) - 6 // -6 to +6 min jitter
+        const m = Math.max(0, Math.min(55, s.minute + randMin))
+        return { hour: s.hour, minute: m }
+      })
   }
 
   const generatedSchedules = []

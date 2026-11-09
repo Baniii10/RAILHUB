@@ -13,16 +13,22 @@ export default function LiveJourneyAnimatedHUD({
   trainName = 'KA Argo Bromo Anggrek',
   routeTitle = 'Gambir (GMR) — Yogyakarta (YK)',
   stops = DEFAULT_STOPS,
+  countdown = null,
+  isDeparted = false,
+  isCompleted = false,
+  departureTime = null,
+  arrivalTime = null,
 }) {
-  const [isRunning, setIsRunning] = useState(true)
+  const isRunning = Boolean(isDeparted && !isCompleted)
   const [isDay, setIsDay] = useState(true)
-  const [speed, setSpeed] = useState(101)
-  const [currentStationIdx, setCurrentStationIdx] = useState(1) // Stopped at or approaching Cirebon
+  const [speed, setSpeed] = useState(isRunning ? 101 : 0)
+  const [currentStationIdx, setCurrentStationIdx] = useState(isDeparted ? 1 : 0)
 
-  // Speed fluctuation physics
+  // Speed fluctuation physics: only runs when train has departed and not yet completed
   useEffect(() => {
     let interval = null
     if (isRunning) {
+      setSpeed(101)
       interval = setInterval(() => {
         // Natural speed jitter around 98 - 108 km/h
         const jitter = Math.floor(Math.random() * 7) - 3
@@ -558,6 +564,73 @@ export default function LiveJourneyAnimatedHUD({
             animation: isRunning ? 'rhScrollTies 0.28s linear infinite' : 'none',
           }} />
         </div>
+
+        {/* ── COUNTDOWN OVERLAY WHEN TRAIN HAS NOT DEPARTED YET ── */}
+        {!isDeparted && (
+          <div style={{
+            position: 'absolute',
+            bottom: 22,
+            left: '50%',
+            transform: 'translateX(-50%)',
+            zIndex: 10,
+            background: isDay ? 'rgba(15, 23, 42, 0.88)' : 'rgba(2, 6, 23, 0.94)',
+            backdropFilter: 'blur(8px)',
+            WebkitBackdropFilter: 'blur(8px)',
+            color: '#ffffff',
+            padding: '0.5rem 1.15rem',
+            borderRadius: '999px',
+            border: '1px solid rgba(255, 255, 255, 0.22)',
+            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.35)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.65rem',
+            whiteSpace: 'nowrap',
+          }}>
+            <span style={{
+              width: 8,
+              height: 8,
+              borderRadius: '50%',
+              background: '#f59e0b',
+              boxShadow: '0 0 10px #f59e0b',
+              display: 'inline-block',
+            }} className="animate-pulse" />
+            <span style={{ fontSize: '0.78rem', fontWeight: 600, color: 'rgba(255, 255, 255, 0.92)' }}>
+              Kereta Standby di Peron · Berangkat:
+            </span>
+            <strong style={{ fontSize: '0.92rem', fontFamily: 'var(--font-mono, monospace)', color: '#fbbf24', letterSpacing: '0.04em' }}>
+              {countdown && typeof countdown === 'object' && countdown.hours != null
+                ? `${String(countdown.hours).padStart(2, '0')}j ${String(countdown.minutes || 0).padStart(2, '0')}m ${String(countdown.seconds || 0).padStart(2, '0')}d`
+                : (typeof countdown === 'string' ? countdown : 'Sesuai Jadwal')}
+            </strong>
+          </div>
+        )}
+
+        {/* ── ARRIVAL BADGE WHEN TRIP IS COMPLETED ── */}
+        {isCompleted && (
+          <div style={{
+            position: 'absolute',
+            bottom: 22,
+            left: '50%',
+            transform: 'translateX(-50%)',
+            zIndex: 10,
+            background: 'rgba(5, 150, 105, 0.92)',
+            backdropFilter: 'blur(8px)',
+            WebkitBackdropFilter: 'blur(8px)',
+            color: '#ffffff',
+            padding: '0.5rem 1.15rem',
+            borderRadius: '999px',
+            border: '1px solid rgba(255, 255, 255, 0.25)',
+            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.35)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            whiteSpace: 'nowrap',
+          }}>
+            <span style={{ fontSize: '0.82rem', fontWeight: 700 }}>
+              🏁 Perjalanan Selesai · Kereta Telah Tiba di Tujuan
+            </span>
+          </div>
+        )}
       </div>
 
       {/* ── MINIMALIST TELEMETRY & SPEEDOMETER STRIP (Dikecilin & Minimalis) ── */}
@@ -577,7 +650,7 @@ export default function LiveJourneyAnimatedHUD({
             fontSize: '1.25rem',
             fontWeight: 900,
             fontFamily: 'var(--font-mono, monospace)',
-            color: isRunning ? (isDay ? '#1e3a8a' : '#60a5fa') : '#f59e0b',
+            color: isRunning ? (isDay ? '#1e3a8a' : '#60a5fa') : (isCompleted ? '#059669' : '#f59e0b'),
             lineHeight: 1,
           }}>
             {speed}
@@ -591,30 +664,69 @@ export default function LiveJourneyAnimatedHUD({
             padding: '2px 7px',
             borderRadius: 6,
             marginLeft: '0.35rem',
-            background: isRunning ? 'rgba(16, 185, 129, 0.12)' : 'rgba(245, 158, 11, 0.12)',
-            color: isRunning ? '#059669' : '#d97706',
+            background: isRunning ? 'rgba(16, 185, 129, 0.12)' : (isCompleted ? 'rgba(5, 150, 105, 0.12)' : 'rgba(245, 158, 11, 0.12)'),
+            color: isRunning ? '#059669' : (isCompleted ? '#059669' : '#d97706'),
           }}>
-            {isRunning ? '● Laju Stabil' : '⏸ Berhenti'}
+            {isRunning ? '● Sedang Melaju di Jalur' : (isCompleted ? '🏁 Tiba di Tujuan' : '⏸ Standby di Peron')}
           </span>
         </div>
 
-        {/* Next Station Info */}
+        {/* Station Status Info */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', fontSize: '0.75rem' }}>
-          <span style={{ color: isDay ? '#64748b' : '#94a3b8' }}>Berikutnya:</span>
-          <strong style={{ color: isDay ? '#0f172a' : '#ffffff' }}>
-            {nextStop.name} ({nextStop.code || ''})
-          </strong>
-          <span style={{
-            padding: '2px 6px',
-            borderRadius: 5,
-            background: 'rgba(37, 99, 235, 0.12)',
-            color: isDay ? '#1d4ed8' : '#93c5fd',
-            fontFamily: 'var(--font-mono, monospace)',
-            fontWeight: 700,
-            fontSize: '0.7rem'
-          }}>
-            {nextStop.arr || nextStop.time} WIB
-          </span>
+          {!isDeparted ? (
+            <>
+              <span style={{ color: isDay ? '#64748b' : '#94a3b8' }}>Stasiun Asal:</span>
+              <strong style={{ color: isDay ? '#0f172a' : '#ffffff' }}>
+                {stops[0]?.name} ({stops[0]?.code || ''})
+              </strong>
+              <span style={{
+                padding: '2px 6px',
+                borderRadius: 5,
+                background: 'rgba(245, 158, 11, 0.12)',
+                color: '#d97706',
+                fontFamily: 'var(--font-mono, monospace)',
+                fontWeight: 700,
+                fontSize: '0.7rem'
+              }}>
+                Berangkat {stops[0]?.dep || stops[0]?.time} WIB
+              </span>
+            </>
+          ) : isCompleted ? (
+            <>
+              <span style={{ color: isDay ? '#64748b' : '#94a3b8' }}>Stasiun Akhir:</span>
+              <strong style={{ color: isDay ? '#0f172a' : '#ffffff' }}>
+                {stops[stops.length - 1]?.name} ({stops[stops.length - 1]?.code || ''})
+              </strong>
+              <span style={{
+                padding: '2px 6px',
+                borderRadius: 5,
+                background: 'rgba(5, 150, 105, 0.12)',
+                color: '#059669',
+                fontWeight: 700,
+                fontSize: '0.7rem'
+              }}>
+                Selesai
+              </span>
+            </>
+          ) : (
+            <>
+              <span style={{ color: isDay ? '#64748b' : '#94a3b8' }}>Berikutnya:</span>
+              <strong style={{ color: isDay ? '#0f172a' : '#ffffff' }}>
+                {nextStop.name} ({nextStop.code || ''})
+              </strong>
+              <span style={{
+                padding: '2px 6px',
+                borderRadius: 5,
+                background: 'rgba(37, 99, 235, 0.12)',
+                color: isDay ? '#1d4ed8' : '#93c5fd',
+                fontFamily: 'var(--font-mono, monospace)',
+                fontWeight: 700,
+                fontSize: '0.7rem'
+              }}>
+                {nextStop.arr || nextStop.time} WIB
+              </span>
+            </>
+          )}
         </div>
       </div>
     </div>
