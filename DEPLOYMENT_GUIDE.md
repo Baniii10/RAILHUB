@@ -45,7 +45,11 @@ git commit -m "feat/fix: deskripsi perubahan kamu"
 ### Langkah 3: Push ke Production & Seluruh Remote Sekaligus
 Jalankan satu baris ini untuk deploy ke production dan sinkronkan semua remote:
 ```bash
+# Bash / Linux / Mac / Git Bash:
 git push bagas master:main && git push bagas master && git push origin master:main && git push origin master
+
+# PowerShell (Windows):
+git push bagas master:main; git push bagas master; git push origin master:main; git push origin master
 ```
 
 > **Penjelasan Perintah:**
