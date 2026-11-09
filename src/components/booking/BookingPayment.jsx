@@ -283,17 +283,22 @@ export default function BookingPayment({ bookingId }) {
       return
     }
 
-    const { data, error: fareError } = await createClient()
-      .from('bookings')
-      .select('ticket_fare_amount')
-      .eq('id', booking.id)
-      .single()
-    if (fareError) {
-      toast.error(`Data tarif tiket gagal dimuat: ${fareError.message}`)
-      return
+    try {
+      const { data, error: fareError } = await createClient()
+        .from('bookings')
+        .select('ticket_fare_amount')
+        .eq('id', booking.id)
+        .single()
+
+      if (!fareError && data?.ticket_fare_amount != null) {
+        setCurrentFareTotal(Number(data.ticket_fare_amount))
+      } else {
+        setCurrentFareTotal(Number(booking.total_amount) || 0)
+      }
+    } catch {
+      setCurrentFareTotal(Number(booking.total_amount) || 0)
     }
 
-    setCurrentFareTotal(Number(data.ticket_fare_amount) || Number(booking.total_amount))
     setRescheduleOpen(true)
   }
 
@@ -341,7 +346,11 @@ export default function BookingPayment({ bookingId }) {
     })
     setProcessing(false)
     if (rescheduleError) {
-      toast.error(`Reschedule gagal: ${rescheduleError.message}`)
+      if (rescheduleError.message?.includes('schema cache') || rescheduleError.code === 'PGRST202') {
+        toast.error('Fitur reschedule memerlukan pembaruan fungsi database Supabase. Silakan jalankan migrasi SQL di panduan deployment.')
+      } else {
+        toast.error(`Reschedule gagal: ${rescheduleError.message}`)
+      }
       return
     }
 
@@ -368,7 +377,11 @@ export default function BookingPayment({ bookingId }) {
     })
     setProcessing(false)
     if (cancelError) {
-      toast.error(`Pembatalan gagal: ${cancelError.message}`)
+      if (cancelError.message?.includes('schema cache') || cancelError.code === 'PGRST202') {
+        toast.error('Fungsi pembatalan tiket belum diaktifkan di database Supabase. Silakan jalankan migrasi database di panduan deployment.')
+      } else {
+        toast.error(`Pembatalan gagal: ${cancelError.message}`)
+      }
       return
     }
     toast.success(`Tiket dibatalkan. Pengembalian simulasi: ${formatIDR(data?.refund_amount || 0)}.`)

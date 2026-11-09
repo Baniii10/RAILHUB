@@ -77,11 +77,12 @@ Di menu **Project Settings ➔ Environment Variables**, pastikan variabel beriku
 
 ```env
 # --- SUPABASE CONFIGURATION (Wajib untuk database, jadwal & auth) ---
-NEXT_PUBLIC_SUPABASE_URL=https://[YOUR-PROJECT-ID].supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=[YOUR-SUPABASE-ANON-KEY]
+NEXT_PUBLIC_SUPABASE_URL=https://youqixjjsdhgmkzdjjck.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_SuiQ5-bcUKMUiqQWZpBT-Q_iYYLydQD
 
 # --- APP URL CONFIGURATION ---
 NEXT_PUBLIC_APP_URL=https://railhub-indonesia.vercel.app
+NEXT_PUBLIC_WHATSAPP_NUMBER=6281234567890
 ```
 
 ---
@@ -136,6 +137,14 @@ Flag `--prod` akan mem-build aplikasi dan langsung mengarahkan domain utama ke d
 - **Penyebab**: Variabel browser window/storage dipanggil saat Server-Side Rendering (SSR).
 - **Solusi**: Bungkus pemanggilan dengan `typeof window !== 'undefined'` atau letakkan di dalam hook `useEffect`.
 
+### Kasus E: "Jadwal tidak dapat dimuat: TypeError: Failed to fetch"
+- **Penyebab**: Koneksi browser HP langsung ke domain luar Supabase (`*.supabase.co`) terputus, timeout pada jaringan seluler 4G/3G, atau diblokir adblocker/DNS lokal.
+- **Solusi**: RAILHUB kini dilengkapi server API fallback di `/api/schedules/search` dan tombol *Coba Muat Ulang*. Jika terjadi kendala jaringan, aplikasi otomatis mencoba ulang melalui server Next.js Vercel tanpa memblokir pengguna.
+
+### Kasus F: "Pembatalan gagal: Could not find function cancel_own_paid_booking in schema cache" & "column bookings.ticket_fare_amount does not exist"
+- **Penyebab**: Migrasi database Supabase belum diterapkan pada project Supabase aktif.
+- **Solusi**: Jalankan skrip `supabase/COMPLETE_PRODUCTION_PATCH.sql` langsung di Supabase SQL Editor atau jalankan `npx supabase db push` (lihat Bagian 8 di bawah).
+
 ---
 
 ## 📋 7. INSTRUKSI PROMPT UNTUK AGENT LAIN
@@ -146,22 +155,29 @@ Jika kamu ingin memerintahkan agent AI lain untuk melakukan deployment RAILHUB, 
 
 ---
 
-## 8. MIGRASI DATABASE WAJIB
+## 8. MIGRASI DATABASE WAJIB (SUPABASE PRODUCTION)
 
-Perubahan role/stasiun tidak cukup hanya dengan deploy Vercel. Jalankan migrasi Supabase sebelum menguji login petugas:
+Deploy kode ke Vercel **wajib dibarengi dengan menerapkan skrip patch database** ke Supabase agar fitur reschedule, pembatalan tiket, hak akses staff gate/kondektur, dan tarif tiket berjalan normal.
 
+Project ID Supabase: **`youqixjjsdhgmkzdjjck`**
+
+### CARA 1: Langsung di Supabase Web Dashboard (Paling Cepat & Direkomendasikan)
+1. Buka [Supabase Dashboard - SQL Editor](https://supabase.com/dashboard/project/youqixjjsdhgmkzdjjck/sql/new).
+2. Buka file [`supabase/COMPLETE_PRODUCTION_PATCH.sql`](file:///c:/Projects/RAILHUB-1/supabase/COMPLETE_PRODUCTION_PATCH.sql) di editor proyek ini.
+3. Salin (*copy*) seluruh isinya, lalu tempel (*paste*) ke query editor Supabase.
+4. Klik tombol **Run** (atau `Ctrl+Enter`).
+5. Selesai! Seluruh fungsi pembatalan, reschedule, kolom tarif, serta perizinan otomatis terpasang secara idempotent.
+
+### CARA 2: Melalui Supabase CLI di Terminal
 ```bash
 npx supabase login
-npx supabase link --project-ref YOUR_PROJECT_REF
+npx supabase link --project-ref youqixjjsdhgmkzdjjck
 npx supabase db push
 ```
 
-Migrasi `20261104192451_role_station_access.sql` menambahkan role gerbang dan kondektur yang terpisah, relasi petugas gerbang ke stasiun, pembatasan scanner sesuai stasiun, serta konfigurasi akun demo yang aman.
-
-Verifikasi setelah migrasi:
-
-1. Login `gate.gambir@railhub.id` masuk ke `/dashboard/staff` dan hanya melihat menu gerbang.
-2. Scanner menolak tiket yang bukan berasal dari Stasiun Gambir.
-3. Kondektur hanya melihat perjalanan yang ditugaskan admin.
-4. Penumpang masuk ke `/dashboard/passenger`, bukan halaman role lain.
+### Verifikasi Setelah Patch Dijalankan:
+1. Klik **Reschedule** pada tiket di menu pemesanan penumpang: drawer tanggal dan kursi pengganti terbuka mulus tanpa error kolom `ticket_fare_amount`.
+2. Klik **Batalkan tiket**: modal konfirmasi pembatalan muncul dan dana simulasi terhitung tanpa error `schema cache`.
+3. Pencarian jadwal kereta di HP tidak menampilkan `TypeError: Failed to fetch` karena telah ditangani oleh fallback server `/api/schedules/search`.
+4. Login `gate.gambir@railhub.id` masuk ke `/dashboard/staff` dan scanner validasi bekerja sesuai stasiun penugasan.
 

@@ -109,27 +109,33 @@ export default function TrainSearchResults({ origin, destination, date, returnDa
 
       try {
         const supabase = createClient()
-        // 1. Attempt Supabase query
         const currentOrigin = activeLeg === 'inbound' ? destination : origin
         const currentDestination = activeLeg === 'inbound' ? origin : destination
         const currentDate = activeLeg === 'inbound' && returnDate ? returnDate : date
 
-        const { data: dbData, error: dbError } = await supabase.rpc('search_train_schedules', {
-          p_origin_code: currentOrigin,
-          p_destination_code: currentDestination,
-          p_departure_date: currentDate,
-          p_passengers: passengers,
-        })
+        let schedulesData = null
+        let fetchFailed = false
 
-        if (!active) return
-        if (dbError) throw dbError
+        // 1. Attempt Supabase direct RPC query
+        try {
+          const { data: dbData, error: dbError } = await supabase.rpc('search_train_schedules', {
+            p_origin_code: currentOrigin,
+            p_destination_code: currentDestination,
+            p_departure_date: currentDate,
+            p_passengers: passengers,
+          })
 
-        let schedulesData = dbData || []
+          if (dbError) throw dbError
+          schedulesData = dbData || []
+        } catch (rpcErr) {
+          console.warn('[TrainSearchResults] Direct Supabase RPC failed, attempting server API fallback:', rpcErr?.message || rpcErr)
+          fetchFailed = true
+        }
 
-        // If no schedules or fewer than 3 departures found, trigger automatic real-time rescheduling
-        if (schedulesData.length < 3) {
+        // 2. If direct query failed or returned fewer than 3 departures, fallback to server-side search/generator API
+        if (fetchFailed || !schedulesData || schedulesData.length < 3) {
           try {
-            const res = await fetch('/api/schedules/reschedule', {
+            const res = await fetch('/api/schedules/search', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
@@ -139,34 +145,47 @@ export default function TrainSearchResults({ origin, destination, date, returnDa
                 passengers,
               }),
             })
-            const json = await res.json()
-            if (json?.data && json.data.length > 0) {
-              schedulesData = json.data
+            if (res.ok) {
+              const json = await res.json()
+              if (json?.data && json.data.length > 0) {
+                schedulesData = json.data
+                fetchFailed = false
+              }
             }
-          } catch (rescheduleErr) {
-            console.warn('[TrainSearchResults] Auto-reschedule fallback notice:', rescheduleErr)
+          } catch (fallbackErr) {
+            console.warn('[TrainSearchResults] Server API fallback notice:', fallbackErr)
           }
         }
 
-        const results = schedulesData.map(row => ({
-            ...row,
-            subclass: 'CA',
-            class_label: `${row.carriage_class} (CA)`,
-            departure_time_label: formatTime(row.departure_time),
-            arrival_time_label: formatTime(row.arrival_time),
-            duration: formatDuration(row.departure_time, row.arrival_time),
-            is_next_day: new Date(row.arrival_time).getUTCDate() !== new Date(row.departure_time).getUTCDate(),
-            badges: row.price < 350000 ? ['termurah'] : ['rekomendasi'],
-          }))
+        if (!active) return
+
+        if (fetchFailed && (!schedulesData || schedulesData.length === 0)) {
+          throw new Error('Koneksi ke server jadwal terputus atau jaringan internet sedang lambat. Silakan periksa jaringan dan muat ulang.')
+        }
+
+        const results = (schedulesData || []).map(row => ({
+          ...row,
+          subclass: 'CA',
+          class_label: `${row.carriage_class} (CA)`,
+          departure_time_label: formatTime(row.departure_time),
+          arrival_time_label: formatTime(row.arrival_time),
+          duration: formatDuration(row.departure_time, row.arrival_time),
+          is_next_day: new Date(row.arrival_time).getUTCDate() !== new Date(row.departure_time).getUTCDate(),
+          badges: row.price < 350000 ? ['termurah'] : ['rekomendasi'],
+        }))
 
         setRows(results)
       } catch (err) {
         if (!active) return
         setRows([])
-        setError(`Jadwal tidak dapat dimuat: ${err.message || 'Terjadi kesalahan.'}`)
+        const msg = String(err?.message || '')
+        if (msg.includes('Failed to fetch') || msg.includes('NetworkError') || msg.includes('network')) {
+          setError('Koneksi internet bermasalah atau server tidak dapat dijangkau. Silakan muat ulang halaman.')
+        } else {
+          setError(msg || 'Jadwal tidak dapat dimuat saat ini. Silakan coba lagi.')
+        }
       } finally {
         if (active) {
-          // Subtle polish timeout for smooth animation
           setTimeout(() => setLoading(false), 300)
         }
       }
@@ -568,19 +587,31 @@ export default function TrainSearchResults({ origin, destination, date, returnDa
           ============================================================ */}
       {!loading && filteredAndSortedRows.length === 0 && (
         <div className="rh-card" style={{ padding: '3rem 1.5rem', textAlign: 'center', background: '#ffffff', borderRadius: 16 }}>
-          <Train size={36} style={{ color: 'var(--rh-primary)', margin: '0 auto 1rem', opacity: 0.7 }} />
-          <h2 className="rh-h3" style={{ margin: 0 }}>Tidak ada jadwal ditemukan</h2>
+          <Train size={36} style={{ color: error ? 'var(--rh-danger)' : 'var(--rh-primary)', margin: '0 auto 1rem', opacity: 0.8 }} />
+          <h2 className="rh-h3" style={{ margin: 0 }}>
+            {error ? 'Gagal Memuat Jadwal' : 'Tidak ada jadwal ditemukan'}
+          </h2>
           <p style={{ color: 'var(--rh-text-2)', margin: '0.5rem auto 1.5rem', maxWidth: 440, fontSize: '0.9rem' }}>
             {error || <>Tidak ada kereta yang sesuai dengan filter kelas <strong>{classFilter}</strong> untuk tanggal ini. Coba pilih kelas &quot;Semua&quot; atau tanggal keberangkatan lain.</>}
           </p>
           <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <button
-              type="button"
-              className="rh-btn rh-btn-primary"
-              onClick={() => { setClassFilter('Semua'); setTimeFilter('all') }}
-            >
-              Reset Semua Filter
-            </button>
+            {error ? (
+              <button
+                type="button"
+                className="rh-btn rh-btn-primary"
+                onClick={() => setReloadKey(k => k + 1)}
+              >
+                Coba Muat Ulang
+              </button>
+            ) : (
+              <button
+                type="button"
+                className="rh-btn rh-btn-primary"
+                onClick={() => { setClassFilter('Semua'); setTimeFilter('all') }}
+              >
+                Reset Semua Filter
+              </button>
+            )}
             <button
               type="button"
               className="rh-btn rh-btn-secondary"
