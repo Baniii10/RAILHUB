@@ -197,6 +197,15 @@ function AdminDashboardContent() {
   const [assignments, setAssignments] = useState([])
   const [staffUsers, setStaffUsers] = useState([])
 
+  // Dynamic Journeys & Staff Assignment Schedules
+  const [journeySchedules, setJourneySchedules] = useState([])
+  const [journeysLoading, setJourneysLoading] = useState(false)
+  const [assignableSchedules, setAssignableSchedules] = useState([])
+  const [realBookingsLookup, setRealBookingsLookup] = useState(new Set())
+  const [realStaffLookup, setRealStaffLookup] = useState(new Set())
+  const [bookingPaxCountLookup, setBookingPaxCountLookup] = useState(new Map())
+  const [assignmentsLookup, setAssignmentsLookup] = useState(new Map())
+
   // Journeys Filter States
   const [journeyStatusFilter, setJourneyStatusFilter] = useState('all') // 'all' | 'sedang_jalan' | 'belum_jalan' | 'sudah_jalan'
   const [journeyDateFrom, setJourneyDateFrom] = useState('')
@@ -318,6 +327,7 @@ function AdminDashboardContent() {
 
     try {
       const supabase = createClient()
+      const todayStr = jakartaDateInputValue()
 
       // Fetch base resources in parallel
       const [
@@ -325,7 +335,8 @@ function AdminDashboardContent() {
         stationsRes,
         trainsRes,
         routesRes,
-        schedulesRes,
+        todaySchedulesRes,
+        assignableRes,
         faresRes,
         bookingsRes,
         profilesRes,
@@ -338,14 +349,22 @@ function AdminDashboardContent() {
         supabase
           .from('schedules')
           .select('id, status, departure_time, arrival_time, note, trains(id, name, train_number, service_class), routes(id, name, distance_km)')
-          .order('departure_time', { ascending: false })
-          .limit(500),
+          .gte('departure_time', `${todayStr}T00:00:00+07:00`)
+          .lte('departure_time', `${todayStr}T23:59:59+07:00`)
+          .order('departure_time', { ascending: true }),
+        supabase
+          .from('schedules')
+          .select('id, status, departure_time, arrival_time, trains(name, train_number), routes(name)')
+          .gt('departure_time', new Date().toISOString())
+          .eq('status', 'scheduled')
+          .order('departure_time', { ascending: true })
+          .limit(100),
         supabase.from('fares').select('id, schedule_id, carriage_class, price, currency, schedules(routes(name))').order('price'),
         supabase
           .from('bookings')
-          .select('id, booking_code, user_id, total_amount, status, created_at, schedules(id, departure_time, trains(name, train_number), routes(name))')
+          .select('id, booking_code, user_id, schedule_id, total_amount, status, created_at, schedules(id, departure_time, trains(name, train_number), routes(name))')
           .order('created_at', { ascending: false })
-          .limit(200),
+          .limit(300),
         supabase.from('profiles').select('id, full_name, email, role, staff_type, station_id, phone_number, created_at').order('created_at', { ascending: false }),
         supabase
           .from('staff_assignments')
@@ -353,7 +372,7 @@ function AdminDashboardContent() {
           .order('created_at', { ascending: false }),
       ])
 
-      const failedResult = [stationsRes, trainsRes, routesRes, schedulesRes, faresRes, bookingsRes, profilesRes, assignmentsRes].find(
+      const failedResult = [stationsRes, trainsRes, routesRes, todaySchedulesRes, assignableRes, faresRes, bookingsRes, profilesRes, assignmentsRes].find(
         r => r.error
       )
       if (failedResult) throw failedResult.error
@@ -376,10 +395,12 @@ function AdminDashboardContent() {
       const scheduleBookingPaxCount = new Map()
 
       for (const b of mappedBookings) {
-        if (b.schedules?.id) {
-          const sId = b.schedules.id
-          scheduleBookingPaxCount.set(sId, (scheduleBookingPaxCount.get(sId) || 0) + 1)
-          if (b.isRealAccount) {
+        const sId = b.schedule_id || b.schedules?.id
+        if (sId) {
+          if (b.status !== 'cancelled' && b.status !== 'expired') {
+            scheduleBookingPaxCount.set(sId, (scheduleBookingPaxCount.get(sId) || 0) + 1)
+          }
+          if (b.isRealAccount && b.status !== 'cancelled' && b.status !== 'expired') {
             scheduleWithRealBookings.add(sId)
           }
         }
@@ -400,13 +421,18 @@ function AdminDashboardContent() {
         }
       }
 
-      // Categorize operational schedules
+      setRealBookingsLookup(scheduleWithRealBookings)
+      setRealStaffLookup(scheduleWithRealStaff)
+      setBookingPaxCountLookup(scheduleBookingPaxCount)
+      setAssignmentsLookup(scheduleAssignmentsMap)
+
+      // Categorize operational schedules for today
       const now = new Date()
       let sedangCount = 0
       let sudahCount = 0
       let belumCount = 0
 
-      const processedSchedules = (schedulesRes.data || []).map(sch => {
+      const processedTodaySchedules = (todaySchedulesRes.data || []).map(sch => {
         const category = getTripOperationalCategory(sch, now)
         if (category === 'sedang_jalan') sedangCount++
         else if (category === 'sudah_jalan') sudahCount++
@@ -431,7 +457,8 @@ function AdminDashboardContent() {
       setStations(stationsRes.data || [])
       setTrains(trainsRes.data || [])
       setRoutes(routesRes.data || [])
-      setSchedules(processedSchedules)
+      setSchedules(processedTodaySchedules)
+      setAssignableSchedules(assignableRes.data || [])
       setFares(faresRes.data || [])
       setBookings(mappedBookings)
       setUsersList(allProfiles)
@@ -445,17 +472,107 @@ function AdminDashboardContent() {
         trains: Number(statsRes.data?.trains || trainsRes.data?.length),
         stations: Number(statsRes.data?.stations || stationsRes.data?.length),
         revenue: Number(statsRes.data?.revenue || 0),
-        activeSchedules: Number(statsRes.data?.active_schedules || processedSchedules.length),
+        activeSchedules: Number(statsRes.data?.active_schedules || processedTodaySchedules.length),
         sedangJalan: sedangCount,
         sudahJalan: sudahCount,
         belumJalan: belumCount,
       })
+
+      // Refresh dynamic journeys
+      await loadJourneysInternal(
+        journeyDateFrom,
+        journeyDateTo,
+        scheduleBookingPaxCount,
+        scheduleAssignmentsMap,
+        scheduleWithRealBookings,
+        scheduleWithRealStaff
+      )
     } catch (err) {
       setError(`Gagal memuat data kontrol admin: ${err.message || 'Kesalahan sistem'}`)
     } finally {
       setLoading(false)
     }
-  }, [user, profile?.role])
+  }, [user, profile?.role, journeyDateFrom, journeyDateTo, loadJourneysInternal])
+
+  // Dynamic Journeys Loader for Selected Date Range
+  const loadJourneysInternal = useCallback(async (
+    fromDate,
+    toDate,
+    overridePax = null,
+    overrideAssign = null,
+    overrideRealB = null,
+    overrideRealS = null
+  ) => {
+    setJourneysLoading(true)
+    try {
+      const supabase = createClient()
+      let query = supabase
+        .from('schedules')
+        .select('id, status, departure_time, arrival_time, note, trains(id, name, train_number, service_class), routes(id, name, distance_km)')
+
+      const todayStr = jakartaDateInputValue()
+      const effectiveFrom = fromDate !== undefined ? fromDate : journeyDateFrom
+      const effectiveTo = toDate !== undefined ? toDate : journeyDateTo
+
+      if (effectiveFrom && effectiveTo) {
+        query = query
+          .gte('departure_time', `${effectiveFrom}T00:00:00+07:00`)
+          .lte('departure_time', `${effectiveTo}T23:59:59+07:00`)
+      } else if (effectiveFrom) {
+        query = query.gte('departure_time', `${effectiveFrom}T00:00:00+07:00`)
+      } else if (effectiveTo) {
+        query = query.lte('departure_time', `${effectiveTo}T23:59:59+07:00`)
+      } else {
+        query = query.gte('departure_time', `${todayStr}T00:00:00+07:00`)
+      }
+
+      const { data, error: qErr } = await query
+        .order('departure_time', { ascending: true })
+        .limit(1000)
+
+      if (qErr) throw qErr
+
+      const paxMap = overridePax || bookingPaxCountLookup
+      const assignMap = overrideAssign || assignmentsLookup
+      const realB = overrideRealB || realBookingsLookup
+      const realS = overrideRealS || realStaffLookup
+
+      const now = new Date()
+      const processed = (data || []).map(sch => {
+        const category = getTripOperationalCategory(sch, now)
+        const hasRealPassenger = realB.has(sch.id)
+        const hasRealStaff = realS.has(sch.id)
+        const hasRealAccount = hasRealPassenger || hasRealStaff
+
+        return {
+          ...sch,
+          tripCategory: category,
+          paxCount: paxMap.get(sch.id) || 0,
+          assignedStaff: assignMap.get(sch.id) || [],
+          hasRealPassenger,
+          hasRealStaff,
+          hasRealAccount,
+        }
+      })
+
+      setJourneySchedules(processed)
+    } catch (err) {
+      console.error('Error loading journeys:', err)
+      toast.error('Gagal memuat jadwal perjalanan KA.')
+    } finally {
+      setJourneysLoading(false)
+    }
+  }, [journeyDateFrom, journeyDateTo, bookingPaxCountLookup, assignmentsLookup, realBookingsLookup, realStaffLookup])
+
+  const loadJourneys = useCallback((fromDate, toDate) => {
+    return loadJourneysInternal(fromDate, toDate)
+  }, [loadJourneysInternal])
+
+  useEffect(() => {
+    if (user && profile?.role === 'admin') {
+      loadJourneys(journeyDateFrom, journeyDateTo)
+    }
+  }, [journeyDateFrom, journeyDateTo, loadJourneys, user, profile?.role])
 
   useEffect(() => {
     loadAdminData()
@@ -494,9 +611,9 @@ function AdminDashboardContent() {
   const filteredJourneys = useMemo(() => {
     const q = journeySearch.trim().toLowerCase()
     const fromTime = journeyDateFrom ? new Date(`${journeyDateFrom}T00:00:00+07:00`).getTime() : 0
-    const toTime = journeyDateTo ? new Date(`${journeyDateTo}T23:59:59+07:00`).getTime() : Infinity
+    const toTime = journeyDateTo ? new Date(`${journeyDateTo}T23:59:59.999+07:00`).getTime() : Infinity
 
-    return schedules.filter(sch => {
+    return journeySchedules.filter(sch => {
       // 1. Status Filter
       if (journeyStatusFilter !== 'all' && sch.tripCategory !== journeyStatusFilter) {
         return false
@@ -527,7 +644,7 @@ function AdminDashboardContent() {
 
       return true
     })
-  }, [schedules, journeyStatusFilter, journeyDateFrom, journeyDateTo, journeySearch, onlyRealAccountsFilter])
+  }, [journeySchedules, journeyStatusFilter, journeyDateFrom, journeyDateTo, journeySearch, onlyRealAccountsFilter])
 
   // Open Manifest Modal
   const openManifestModal = async (schedule) => {
@@ -1136,7 +1253,7 @@ function AdminDashboardContent() {
                 onClick={() => setJourneyStatusFilter('all')}
                 className={`rh-btn rh-btn-sm ${journeyStatusFilter === 'all' ? 'rh-btn-primary' : 'rh-btn-ghost'}`}
               >
-                Semua Perjalanan ({schedules.length})
+                Semua Perjalanan ({journeySchedules.length})
               </button>
 
               <button
@@ -1146,7 +1263,7 @@ function AdminDashboardContent() {
                 style={journeyStatusFilter === 'sedang_jalan' ? { background: '#10b981', borderColor: '#10b981' } : {}}
               >
                 <Activity size={14} style={{ marginRight: 4 }} />
-                Sedang Jalan ({schedules.filter(s => s.tripCategory === 'sedang_jalan').length})
+                Sedang Jalan ({journeySchedules.filter(s => s.tripCategory === 'sedang_jalan').length})
               </button>
 
               <button
@@ -1155,7 +1272,7 @@ function AdminDashboardContent() {
                 className={`rh-btn rh-btn-sm ${journeyStatusFilter === 'belum_jalan' ? 'rh-btn-primary' : 'rh-btn-ghost'}`}
               >
                 <Clock3 size={14} style={{ marginRight: 4 }} />
-                Belum Jalan ({schedules.filter(s => s.tripCategory === 'belum_jalan').length})
+                Belum Jalan ({journeySchedules.filter(s => s.tripCategory === 'belum_jalan').length})
               </button>
 
               <button
@@ -1164,7 +1281,7 @@ function AdminDashboardContent() {
                 className={`rh-btn rh-btn-sm ${journeyStatusFilter === 'sudah_jalan' ? 'rh-btn-primary' : 'rh-btn-ghost'}`}
               >
                 <CheckCircle2 size={14} style={{ marginRight: 4 }} />
-                Sudah Jalan ({schedules.filter(s => s.tripCategory === 'sudah_jalan').length})
+                Sudah Jalan ({journeySchedules.filter(s => s.tripCategory === 'sudah_jalan').length})
               </button>
 
               <label style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.82rem', cursor: 'pointer', background: onlyRealAccountsFilter ? '#ecfdf5' : '#f8fafc', padding: '0.35rem 0.75rem', borderRadius: 8, border: '1px solid ' + (onlyRealAccountsFilter ? '#6ee7b7' : 'var(--rh-border)') }}>
@@ -1312,7 +1429,14 @@ function AdminDashboardContent() {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredJourneys.length === 0 ? (
+                  {journeysLoading ? (
+                    <tr>
+                      <td colSpan={8} style={{ padding: '2.5rem', textAlign: 'center', color: 'var(--rh-text-2)' }}>
+                        <RefreshCw size={22} className="rh-spin" style={{ margin: '0 auto 0.5rem', display: 'block' }} />
+                        <p style={{ margin: 0, fontSize: '0.88rem' }}>Memuat jadwal perjalanan kereta api...</p>
+                      </td>
+                    </tr>
+                  ) : filteredJourneys.length === 0 ? (
                     <tr>
                       <td colSpan={8} style={{ padding: '2.5rem', textAlign: 'center', color: 'var(--rh-text-3)' }}>
                         Tidak ada jadwal perjalanan kereta api yang cocok dengan filter.
@@ -1384,9 +1508,13 @@ function AdminDashboardContent() {
                                   return (
                                     <div key={st.id} style={{ fontSize: '0.8rem' }}>
                                       <span>{st.profiles?.full_name || 'Petugas'}</span>
-                                      {isStaffReal && (
+                                      {isStaffReal ? (
                                         <span className="rh-badge-real-account" style={{ marginLeft: 4, fontSize: '0.68rem', padding: '0.1rem 0.4rem' }}>
                                           Staff Asli
+                                        </span>
+                                      ) : (
+                                        <span className="rh-badge-dummy-account" style={{ marginLeft: 4, fontSize: '0.68rem', padding: '0.1rem 0.4rem' }}>
+                                          Staff Dummy
                                         </span>
                                       )}
                                     </div>
@@ -1394,7 +1522,18 @@ function AdminDashboardContent() {
                                 })}
                               </div>
                             ) : (
-                              <small style={{ color: '#d97706', fontWeight: 600 }}>Belum Ada Petugas</small>
+                              <button
+                                type="button"
+                                className="rh-btn rh-btn-ghost rh-btn-xs"
+                                style={{ color: '#d97706', padding: '0.15rem 0.45rem', fontSize: '0.75rem', border: '1px dashed #f59e0b' }}
+                                title="Tugaskan petugas ke jadwal perjalanan ini"
+                                onClick={() => {
+                                  setSelectedScheduleId(sch.id)
+                                  setActiveTab('staff')
+                                }}
+                              >
+                                + Tugaskan
+                              </button>
                             )}
                           </td>
 
@@ -1654,11 +1793,18 @@ function AdminDashboardContent() {
                   <span className="rh-label-text">Pilih Jadwal Keberangkatan KA</span>
                   <select className="rh-input" value={selectedScheduleId} onChange={e => setSelectedScheduleId(e.target.value)} required>
                     <option value="">-- Pilih Jadwal Perjalanan --</option>
-                    {schedules.map(sch => (
-                      <option key={sch.id} value={sch.id}>
-                        {sch.trains?.name} · {sch.routes?.name} ({formatDate(sch.departure_time)} {formatTime(sch.departure_time)})
-                      </option>
-                    ))}
+                    {(() => {
+                      const list = [...assignableSchedules]
+                      if (selectedScheduleId && !list.some(s => s.id === selectedScheduleId)) {
+                        const found = journeySchedules.find(s => s.id === selectedScheduleId) || schedules.find(s => s.id === selectedScheduleId)
+                        if (found) list.unshift(found)
+                      }
+                      return list.map(sch => (
+                        <option key={sch.id} value={sch.id}>
+                          {sch.trains?.name} · {sch.routes?.name} ({formatDate(sch.departure_time)} {formatTime(sch.departure_time)})
+                        </option>
+                      ))
+                    })()}
                   </select>
                 </label>
 
@@ -2502,7 +2648,7 @@ function AdminDashboardContent() {
                         onChange={e => setNewStaffScheduleId(e.target.value)}
                       >
                         <option value="">-- Tanpa Penugasan Awal --</option>
-                        {schedules.slice(0, 50).map(sch => (
+                        {assignableSchedules.slice(0, 50).map(sch => (
                           <option key={sch.id} value={sch.id}>
                             {sch.trains?.name} · {sch.routes?.name} ({formatDate(sch.departure_time)})
                           </option>

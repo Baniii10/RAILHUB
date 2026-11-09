@@ -103,8 +103,18 @@ export async function GET(request) {
 
     const bookingList = bookedSeats || []
 
-    // 4. Collect user IDs to lookup booker accounts
-    const userIds = Array.from(new Set(bookingList.map(b => b.bookings?.user_id).filter(Boolean)))
+    // 4. Also fetch direct bookings for this schedule in case seats were released or not yet assigned
+    const { data: directBookings } = await adminClient
+      .from('bookings')
+      .select('id, booking_code, status, user_id, total_amount, created_at')
+      .eq('schedule_id', scheduleId)
+
+    // 5. Collect user IDs to lookup booker accounts
+    const allUserIds = [
+      ...bookingList.map(b => b.bookings?.user_id),
+      ...(directBookings || []).map(b => b.user_id),
+    ].filter(Boolean)
+    const userIds = Array.from(new Set(allUserIds))
     let userProfilesMap = new Map()
 
     if (userIds.length > 0) {
@@ -118,38 +128,76 @@ export async function GET(request) {
       }
     }
 
-    // 5. Structure passenger manifest items
+    // 6. Structure passenger manifest items
     let realAccountCount = 0
     let dummyAccountCount = 0
 
-    const manifest = bookingList.map((item, idx) => {
-      const booker = item.bookings?.user_id ? userProfilesMap.get(item.bookings.user_id) : null
-      const isReal = isRealUserAccount(booker?.email)
+    let manifest = []
 
-      if (isReal) {
-        realAccountCount += 1
-      } else {
-        dummyAccountCount += 1
-      }
+    if (bookingList.length > 0) {
+      manifest = bookingList.map((item, idx) => {
+        const booker = item.bookings?.user_id ? userProfilesMap.get(item.bookings.user_id) : null
+        const isReal = isRealUserAccount(booker?.email)
+        const bookingStatus = item.bookings?.status || 'paid'
+        const isActive = bookingStatus !== 'cancelled' && bookingStatus !== 'expired'
 
-      return {
-        index: idx + 1,
-        id: item.id,
-        bookingId: item.booking_id,
-        bookingCode: item.bookings?.booking_code || 'RH-ONLINE',
-        bookingStatus: item.bookings?.status || 'paid',
-        passengerName: item.passengers?.full_name || 'Penumpang Kereta',
-        idCardNumber: item.passengers?.id_card_number || '-',
-        seatNumber: item.seats?.seat_number || '-',
-        carriageNumber: item.seats?.carriages?.carriage_number || 1,
-        carriageClass: item.seats?.carriages?.carriage_class || 'Eksekutif',
-        bookerName: booker?.full_name || 'Akun Penumpang',
-        bookerEmail: booker?.email || '-',
-        bookerPhone: booker?.phone_number || '-',
-        isRealAccount: isReal,
-        createdAt: item.bookings?.created_at,
-      }
-    })
+        if (isActive) {
+          if (isReal) {
+            realAccountCount += 1
+          } else {
+            dummyAccountCount += 1
+          }
+        }
+
+        return {
+          index: idx + 1,
+          id: item.id,
+          bookingId: item.booking_id,
+          bookingCode: item.bookings?.booking_code || 'RH-ONLINE',
+          bookingStatus,
+          passengerName: item.passengers?.full_name || 'Penumpang Kereta',
+          idCardNumber: item.passengers?.id_card_number || '-',
+          seatNumber: item.seats?.seat_number || '-',
+          carriageNumber: item.seats?.carriages?.carriage_number || 1,
+          carriageClass: item.seats?.carriages?.carriage_class || 'Eksekutif',
+          bookerName: booker?.full_name || 'Akun Penumpang',
+          bookerEmail: booker?.email || '-',
+          bookerPhone: booker?.phone_number || '-',
+          isRealAccount: isReal,
+          createdAt: item.bookings?.created_at,
+        }
+      })
+    } else if (directBookings && directBookings.length > 0) {
+      // Fallback: Show direct bookings for this schedule
+      manifest = directBookings.map((b, idx) => {
+        const booker = b.user_id ? userProfilesMap.get(b.user_id) : null
+        const isReal = isRealUserAccount(booker?.email)
+        const isActive = b.status !== 'cancelled' && b.status !== 'expired'
+
+        if (isActive) {
+          if (isReal) realAccountCount += 1
+          else dummyAccountCount += 1
+        }
+
+        return {
+          index: idx + 1,
+          id: b.id,
+          bookingId: b.id,
+          bookingCode: b.booking_code || 'RH-ONLINE',
+          bookingStatus: b.status || 'paid',
+          passengerName: booker?.full_name || 'Penumpang Terdaftar',
+          idCardNumber: '-',
+          seatNumber: '-',
+          carriageNumber: 1,
+          carriageClass: 'Eksekutif',
+          bookerName: booker?.full_name || 'Akun Penumpang',
+          bookerEmail: booker?.email || '-',
+          bookerPhone: booker?.phone_number || '-',
+          isRealAccount: isReal,
+          createdAt: b.created_at,
+        }
+      })
+    }
 
     const hasRealPassenger = realAccountCount > 0
     const hasRealAccountInvolvement = hasRealPassenger || hasRealStaff

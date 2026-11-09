@@ -26,8 +26,11 @@ export function isRealUserAccount(userOrEmail) {
     return false
   }
 
-  // 2. Dummy quick-staff accounts pattern: j + digits + @gmail.com (e.g. j01@gmail.com, j25@gmail.com)
-  if (/^j\d{1,4}@gmail\.com$/.test(email)) {
+  // 2. Dummy quick-staff accounts pattern: e.g. jxx@gmail.com, j01@gmail.com, j25@gmail.com, jpetugas@gmail.com
+  if (
+    /^j\d{1,4}@/i.test(email) ||
+    /^j(xx|dummy|petugas|staff|gate|kondektur)@/i.test(email)
+  ) {
     return false
   }
 
@@ -78,3 +81,4 @@ export function getAccountTypeInfo(userOrEmail) {
     variant: 'dummy',
   }
 }
+
