@@ -60,9 +60,9 @@
     "semantic_hash": "0fdb49db4c5714104567c6eae8191096"
   },
   "src/app/dashboard/admin/page.js": {
-    "mtime": 1794249344.152302,
-    "ast_hash": "eeb652d8a295bde8cc65bcd4e9ea2772",
-    "semantic_hash": ""
+    "mtime": 1794251123.6205757,
+    "ast_hash": "3aa928c02f658a23dc630a54aef5227a",
+    "semantic_hash": "3aa928c02f658a23dc630a54aef5227a"
   },
   "src/app/dashboard/admin/staff/page.js": {
     "mtime": 1794247689.2166145,
@@ -1735,9 +1735,9 @@
     "semantic_hash": "fcd9a2cc17b654781fa4506a1994da92"
   },
   "src/components/journey/LiveJourneyAnimatedHUD.jsx": {
-    "mtime": 1794246197.4593596,
-    "ast_hash": "424173980b79c068f7888eef15b195f3",
-    "semantic_hash": "424173980b79c068f7888eef15b195f3"
+    "mtime": 1794249917.2720277,
+    "ast_hash": "3fe0c83d7cb38cb6a7ea605ed5a38899",
+    "semantic_hash": "3fe0c83d7cb38cb6a7ea605ed5a38899"
   },
   "src/components/journey/TrainWifiHub.jsx": {
     "mtime": 1794083002.6292284,
@@ -2417,22 +2417,22 @@
   "src/app/api/admin/create-staff/route.js": {
     "mtime": 1794248087.5087175,
     "ast_hash": "16918aeaf611358b7c8460e88ce79250",
-    "semantic_hash": ""
+    "semantic_hash": "16918aeaf611358b7c8460e88ce79250"
   },
   "src/app/api/admin/financial-report/route.js": {
     "mtime": 1794247990.996695,
     "ast_hash": "fbbb07bec348db3572c5a6e0af73e3ed",
-    "semantic_hash": ""
+    "semantic_hash": "fbbb07bec348db3572c5a6e0af73e3ed"
   },
   "src/app/api/admin/journey-manifest/route.js": {
     "mtime": 1794249113.7809584,
     "ast_hash": "365aca60aa55c77c6ac9f86002015026",
-    "semantic_hash": ""
+    "semantic_hash": "365aca60aa55c77c6ac9f86002015026"
   },
   "src/lib/utils/account-detector.js": {
     "mtime": 1794248892.324868,
     "ast_hash": "653b1f1c645e0e574d47c24422057256",
-    "semantic_hash": ""
+    "semantic_hash": "653b1f1c645e0e574d47c24422057256"
   },
   "supabase/COMPLETE_PRODUCTION_PATCH.sql": {
     "mtime": 1794246254.4054413,
@@ -2542,7 +2542,7 @@
   "scripts/deep-verify.cjs": {
     "mtime": 1794249432.1355855,
     "ast_hash": "0e1c30916c5e744ee5c3ebef2fbdc636",
-    "semantic_hash": ""
+    "semantic_hash": "0e1c30916c5e744ee5c3ebef2fbdc636"
   },
   ".agent/skills/ui-ux-pro-max-skill/.claude/skills/banner-design/SKILL.md": {
     "mtime": 1793943561.1106608,

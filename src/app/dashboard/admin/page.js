@@ -1,6 +1,6 @@
 'use client'
 
-import { Suspense, useCallback, useEffect, useMemo, useState } from 'react'
+import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import {
   Activity,
@@ -155,8 +155,9 @@ function AdminDashboardContent() {
   const { user, profile, loading: authLoading } = useAuth()
   const { confirm } = useConfirm()
 
+  const validTabs = useMemo(() => ['overview', 'journeys', 'staff', 'trains', 'routes', 'stations', 'passengers', 'finance'], [])
   const tabQuery = searchParams.get('tab')
-  const initialTab = tabQuery || 'overview'
+  const initialTab = (tabQuery && validTabs.includes(tabQuery)) ? tabQuery : 'overview'
 
   const [activeTab, setActiveTabState] = useState(initialTab)
   const [loading, setLoading] = useState(true)
@@ -170,10 +171,12 @@ function AdminDashboardContent() {
   }, [])
 
   useEffect(() => {
-    if (tabQuery && tabQuery !== activeTab) {
+    if (tabQuery && validTabs.includes(tabQuery) && tabQuery !== activeTab) {
       setActiveTabState(tabQuery)
+    } else if (!tabQuery && activeTab !== 'overview') {
+      setActiveTabState('overview')
     }
-  }, [tabQuery, activeTab])
+  }, [tabQuery, activeTab, validTabs])
 
   // Core Data States
   const [stats, setStats] = useState({
@@ -206,10 +209,17 @@ function AdminDashboardContent() {
   const [bookingPaxCountLookup, setBookingPaxCountLookup] = useState(new Map())
   const [assignmentsLookup, setAssignmentsLookup] = useState(new Map())
 
+  // Fast Lookup Refs to prevent re-creation cascading
+  const realBookingsRef = useRef(new Set())
+  const realStaffRef = useRef(new Set())
+  const bookingPaxRef = useRef(new Map())
+  const assignmentsRef = useRef(new Map())
+
   // Journeys Filter States
   const [journeyStatusFilter, setJourneyStatusFilter] = useState('all') // 'all' | 'sedang_jalan' | 'belum_jalan' | 'sudah_jalan'
-  const [journeyDateFrom, setJourneyDateFrom] = useState('')
-  const [journeyDateTo, setJourneyDateTo] = useState('')
+  const todayDefaultStr = useMemo(() => jakartaDateInputValue(), [])
+  const [journeyDateFrom, setJourneyDateFrom] = useState(todayDefaultStr)
+  const [journeyDateTo, setJourneyDateTo] = useState('2026-12-25')
   const [journeySearch, setJourneySearch] = useState('')
   const [onlyRealAccountsFilter, setOnlyRealAccountsFilter] = useState(false)
   const [selectedCarriageIdx, setSelectedCarriageIdx] = useState(1)
@@ -281,13 +291,6 @@ function AdminDashboardContent() {
   const [bookingStatusFilter, setBookingStatusFilter] = useState('all')
   const [userSearch, setUserSearch] = useState('')
 
-  // Initialize Dates: default to today until 25 December 2026
-  useEffect(() => {
-    const today = jakartaDateInputValue()
-    setJourneyDateFrom(today)
-    // Full operational range through 25 December 2026
-    setJourneyDateTo('2026-12-25')
-  }, [])
 
   // Auto-generate next suggested staff email (e.g. j01@gmail.com, j02@gmail.com)
   const suggestNextStaffEmail = useCallback(() => {
@@ -421,6 +424,11 @@ function AdminDashboardContent() {
         }
       }
 
+      bookingPaxRef.current = scheduleBookingPaxCount
+      assignmentsRef.current = scheduleAssignmentsMap
+      realBookingsRef.current = scheduleWithRealBookings
+      realStaffRef.current = scheduleWithRealStaff
+
       setRealBookingsLookup(scheduleWithRealBookings)
       setRealStaffLookup(scheduleWithRealStaff)
       setBookingPaxCountLookup(scheduleBookingPaxCount)
@@ -492,7 +500,7 @@ function AdminDashboardContent() {
     } finally {
       setLoading(false)
     }
-  }, [user, profile?.role, journeyDateFrom, journeyDateTo, loadJourneysInternal])
+  }, [user, profile?.role])
 
   // Dynamic Journeys Loader for Selected Date Range
   const loadJourneysInternal = useCallback(async (
@@ -511,8 +519,8 @@ function AdminDashboardContent() {
         .select('id, status, departure_time, arrival_time, note, trains(id, name, train_number, service_class), routes(id, name, distance_km)')
 
       const todayStr = jakartaDateInputValue()
-      const effectiveFrom = fromDate !== undefined ? fromDate : journeyDateFrom
-      const effectiveTo = toDate !== undefined ? toDate : journeyDateTo
+      const effectiveFrom = fromDate || journeyDateFrom || todayStr
+      const effectiveTo = toDate || journeyDateTo || '2026-12-25'
 
       if (effectiveFrom && effectiveTo) {
         query = query
@@ -532,10 +540,10 @@ function AdminDashboardContent() {
 
       if (qErr) throw qErr
 
-      const paxMap = overridePax || bookingPaxCountLookup
-      const assignMap = overrideAssign || assignmentsLookup
-      const realB = overrideRealB || realBookingsLookup
-      const realS = overrideRealS || realStaffLookup
+      const paxMap = overridePax || bookingPaxRef.current || bookingPaxCountLookup
+      const assignMap = overrideAssign || assignmentsRef.current || assignmentsLookup
+      const realB = overrideRealB || realBookingsRef.current || realBookingsLookup
+      const realS = overrideRealS || realStaffRef.current || realStaffLookup
 
       const now = new Date()
       const processed = (data || []).map(sch => {
@@ -568,11 +576,11 @@ function AdminDashboardContent() {
     return loadJourneysInternal(fromDate, toDate)
   }, [loadJourneysInternal])
 
-  useEffect(() => {
-    if (user && profile?.role === 'admin') {
-      loadJourneys(journeyDateFrom, journeyDateTo)
-    }
-  }, [journeyDateFrom, journeyDateTo, loadJourneys, user, profile?.role])
+  const applyJourneyDateRange = useCallback((fromDate, toDate) => {
+    setJourneyDateFrom(fromDate)
+    setJourneyDateTo(toDate)
+    loadJourneysInternal(fromDate, toDate)
+  }, [loadJourneysInternal])
 
   useEffect(() => {
     loadAdminData()
@@ -607,11 +615,9 @@ function AdminDashboardContent() {
     }
   }, [activeTab, loadFinancialData])
 
-  // Filtered Journeys
+  // Filtered Journeys (Server query already handles exact date boundary)
   const filteredJourneys = useMemo(() => {
     const q = journeySearch.trim().toLowerCase()
-    const fromTime = journeyDateFrom ? new Date(`${journeyDateFrom}T00:00:00+07:00`).getTime() : 0
-    const toTime = journeyDateTo ? new Date(`${journeyDateTo}T23:59:59.999+07:00`).getTime() : Infinity
 
     return journeySchedules.filter(sch => {
       // 1. Status Filter
@@ -619,13 +625,7 @@ function AdminDashboardContent() {
         return false
       }
 
-      // 2. Date Range
-      const depTime = new Date(sch.departure_time).getTime()
-      if (depTime < fromTime || depTime > toTime) {
-        return false
-      }
-
-      // 3. Search Query
+      // 2. Search Query
       if (q) {
         const matches = [
           sch.trains?.name,
@@ -637,14 +637,14 @@ function AdminDashboardContent() {
         if (!matches) return false
       }
 
-      // 4. Real Account Only Filter
+      // 3. Real Account Only Filter
       if (onlyRealAccountsFilter && !sch.hasRealAccount) {
         return false
       }
 
       return true
     })
-  }, [journeySchedules, journeyStatusFilter, journeyDateFrom, journeyDateTo, journeySearch, onlyRealAccountsFilter])
+  }, [journeySchedules, journeyStatusFilter, journeySearch, onlyRealAccountsFilter])
 
   // Open Manifest Modal
   const openManifestModal = async (schedule) => {
@@ -1238,7 +1238,7 @@ function AdminDashboardContent() {
                 <button
                   type="button"
                   className="rh-btn rh-btn-sm rh-btn-ghost"
-                  onClick={loadAdminData}
+                  onClick={() => loadJourneysInternal(journeyDateFrom, journeyDateTo)}
                   title="Segarkan data jadwal"
                 >
                   <RefreshCw size={14} /> Refresh
@@ -1298,88 +1298,100 @@ function AdminDashboardContent() {
 
             {/* Date Filters & Presets */}
             <div style={{ background: 'var(--rh-surface)', border: '1px solid var(--rh-border)', borderRadius: 10, padding: '0.85rem 1rem', marginBottom: '1.25rem' }}>
-              <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem' }}>
-                <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '0.5rem' }}>
-                  <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--rh-text-2)' }}>Pintasan Rentang:</span>
-                  <button
-                    type="button"
-                    className="rh-btn rh-btn-xs rh-btn-ghost"
-                    onClick={() => {
-                      const today = jakartaDateInputValue()
-                      setJourneyDateFrom(today)
-                      setJourneyDateTo(today)
-                    }}
-                  >
-                    Hari Ini
-                  </button>
-                  <button
-                    type="button"
-                    className="rh-btn rh-btn-xs rh-btn-ghost"
-                    onClick={() => {
-                      const today = jakartaDateInputValue()
-                      setJourneyDateFrom(today)
-                      setJourneyDateTo(addDateDays(today, 6))
-                    }}
-                  >
-                    7 Hari Ini
-                  </button>
-                  <button
-                    type="button"
-                    className="rh-btn rh-btn-xs rh-btn-ghost"
-                    onClick={() => {
-                      setJourneyDateFrom('2026-12-01')
-                      setJourneyDateTo('2026-12-31')
-                    }}
-                  >
-                    Desember 2026
-                  </button>
-                  <button
-                    type="button"
-                    className="rh-btn rh-btn-xs rh-btn-primary"
-                    style={{ background: '#b91c1c', borderColor: '#b91c1c' }}
-                    onClick={() => {
-                      setJourneyDateFrom('2026-12-25')
-                      setJourneyDateTo('2026-12-25')
-                    }}
-                  >
-                    🎄 25 Des 2026 (Natal &amp; Libur)
-                  </button>
-                  <button
-                    type="button"
-                    className="rh-btn rh-btn-xs rh-btn-secondary"
-                    onClick={() => {
-                      setJourneyDateFrom('2026-01-01')
-                      setJourneyDateTo('2026-12-31')
-                    }}
-                  >
-                    Sepanjang 2026 (Full)
-                  </button>
-                </div>
+              {(() => {
+                const todayStr = jakartaDateInputValue()
+                const isTodayActive = journeyDateFrom === todayStr && journeyDateTo === todayStr
+                const isWeekActive = journeyDateFrom === todayStr && journeyDateTo === addDateDays(todayStr, 6)
+                const isDecActive = journeyDateFrom === '2026-12-01' && journeyDateTo === '2026-12-31'
+                const isChristmasActive = journeyDateFrom === '2026-12-25' && journeyDateTo === '2026-12-25'
+                const isFull2026Active = journeyDateFrom === '2026-01-01' && journeyDateTo === '2026-12-31'
 
-                {/* Date Inputs */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: '0.8rem' }}>
-                    <span style={{ color: 'var(--rh-text-2)' }}>Dari:</span>
-                    <input
-                      type="date"
-                      className="rh-input"
-                      style={{ padding: '0.3rem 0.5rem', fontSize: '0.82rem', height: 32 }}
-                      value={journeyDateFrom}
-                      onChange={e => setJourneyDateFrom(e.target.value)}
-                    />
-                  </label>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: '0.8rem' }}>
-                    <span style={{ color: 'var(--rh-text-2)' }}>Sampai:</span>
-                    <input
-                      type="date"
-                      className="rh-input"
-                      style={{ padding: '0.3rem 0.5rem', fontSize: '0.82rem', height: 32 }}
-                      value={journeyDateTo}
-                      onChange={e => setJourneyDateTo(e.target.value)}
-                    />
-                  </label>
-                </div>
-              </div>
+                return (
+                  <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem' }}>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '0.5rem' }}>
+                      <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--rh-text-2)' }}>Pintasan Rentang:</span>
+                      <button
+                        type="button"
+                        className={`rh-btn rh-btn-xs ${isTodayActive ? 'rh-btn-primary' : 'rh-btn-ghost'}`}
+                        onClick={() => applyJourneyDateRange(todayStr, todayStr)}
+                      >
+                        Hari Ini
+                      </button>
+                      <button
+                        type="button"
+                        className={`rh-btn rh-btn-xs ${isWeekActive ? 'rh-btn-primary' : 'rh-btn-ghost'}`}
+                        onClick={() => applyJourneyDateRange(todayStr, addDateDays(todayStr, 6))}
+                      >
+                        7 Hari Ini
+                      </button>
+                      <button
+                        type="button"
+                        className={`rh-btn rh-btn-xs ${isDecActive ? 'rh-btn-primary' : 'rh-btn-ghost'}`}
+                        onClick={() => applyJourneyDateRange('2026-12-01', '2026-12-31')}
+                      >
+                        Desember 2026
+                      </button>
+                      <button
+                        type="button"
+                        className="rh-btn rh-btn-xs"
+                        style={{
+                          background: isChristmasActive ? '#b91c1c' : 'rgba(185, 28, 28, 0.1)',
+                          borderColor: '#b91c1c',
+                          color: isChristmasActive ? '#ffffff' : '#b91c1c',
+                          fontWeight: isChristmasActive ? 800 : 600,
+                          boxShadow: isChristmasActive ? '0 0 0 2px rgba(239, 68, 68, 0.35)' : 'none',
+                        }}
+                        onClick={() => applyJourneyDateRange('2026-12-25', '2026-12-25')}
+                      >
+                        🎄 25 Des 2026 (Natal &amp; Libur)
+                      </button>
+                      <button
+                        type="button"
+                        className={`rh-btn rh-btn-xs ${isFull2026Active ? 'rh-btn-primary' : 'rh-btn-secondary'}`}
+                        onClick={() => applyJourneyDateRange('2026-01-01', '2026-12-31')}
+                      >
+                        Sepanjang 2026 (Full)
+                      </button>
+                    </div>
+
+                    {/* Date Inputs */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+                      <label style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: '0.8rem' }}>
+                        <span style={{ color: 'var(--rh-text-2)' }}>Dari:</span>
+                        <input
+                          type="date"
+                          className="rh-input"
+                          style={{ padding: '0.3rem 0.5rem', fontSize: '0.82rem', height: 32 }}
+                          value={journeyDateFrom}
+                          onChange={e => {
+                            const val = e.target.value
+                            setJourneyDateFrom(val)
+                            if (val && journeyDateTo) {
+                              loadJourneysInternal(val, journeyDateTo)
+                            }
+                          }}
+                        />
+                      </label>
+                      <label style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: '0.8rem' }}>
+                        <span style={{ color: 'var(--rh-text-2)' }}>Sampai:</span>
+                        <input
+                          type="date"
+                          className="rh-input"
+                          style={{ padding: '0.3rem 0.5rem', fontSize: '0.82rem', height: 32 }}
+                          value={journeyDateTo}
+                          onChange={e => {
+                            const val = e.target.value
+                            setJourneyDateTo(val)
+                            if (journeyDateFrom && val) {
+                              loadJourneysInternal(journeyDateFrom, val)
+                            }
+                          }}
+                        />
+                      </label>
+                    </div>
+                  </div>
+                )
+              })()}
 
               {/* Search Bar */}
               <div style={{ marginTop: '0.75rem' }}>
