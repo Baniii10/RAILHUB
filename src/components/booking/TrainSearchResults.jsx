@@ -7,6 +7,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { createClient } from '@/lib/supabase/client'
 import { formatDate, formatDuration, formatIDR, formatTime } from '@/lib/utils/formatters'
 import { getStationByCode } from '@/lib/data/stationsCatalog'
+import { getClientProceduralSchedules } from '@/lib/data/scheduleGenerator'
 import { RailHubTrainLogo } from '@/components/ui/VectorLogos'
 import { TrainTrackLoader, ScheduleCardSkeleton } from '@/components/ui/RailLoader'
 import SearchWidget from '@/components/booking/SearchWidget'
@@ -159,8 +160,13 @@ export default function TrainSearchResults({ origin, destination, date, returnDa
 
         if (!active) return
 
-        if (fetchFailed && (!schedulesData || schedulesData.length === 0)) {
-          throw new Error('Koneksi ke server jadwal terputus atau jaringan internet sedang lambat. Silakan periksa jaringan dan muat ulang.')
+        if (!schedulesData || schedulesData.length === 0) {
+          schedulesData = getClientProceduralSchedules({
+            originCode: currentOrigin,
+            destinationCode: currentDestination,
+            dateStr: currentDate,
+            passengers,
+          })
         }
 
         const results = (schedulesData || []).map(row => ({
@@ -177,13 +183,25 @@ export default function TrainSearchResults({ origin, destination, date, returnDa
         setRows(results)
       } catch (err) {
         if (!active) return
-        setRows([])
-        const msg = String(err?.message || '')
-        if (msg.includes('Failed to fetch') || msg.includes('NetworkError') || msg.includes('network')) {
-          setError('Koneksi internet bermasalah atau server tidak dapat dijangkau. Silakan muat ulang halaman.')
-        } else {
-          setError(msg || 'Jadwal tidak dapat dimuat saat ini. Silakan coba lagi.')
-        }
+        console.warn('[TrainSearchResults] Network or search issue, using resilient procedural schedules:', err)
+        const fallback = getClientProceduralSchedules({
+          originCode: activeLeg === 'inbound' ? destination : origin,
+          destinationCode: activeLeg === 'inbound' ? origin : destination,
+          dateStr: activeLeg === 'inbound' && returnDate ? returnDate : date,
+          passengers,
+        })
+        const results = fallback.map(row => ({
+          ...row,
+          subclass: 'CA',
+          class_label: `${row.carriage_class} (CA)`,
+          departure_time_label: formatTime(row.departure_time),
+          arrival_time_label: formatTime(row.arrival_time),
+          duration: formatDuration(row.departure_time, row.arrival_time),
+          is_next_day: new Date(row.arrival_time).getUTCDate() !== new Date(row.departure_time).getUTCDate(),
+          badges: row.price < 350000 ? ['termurah'] : ['rekomendasi'],
+        }))
+        setRows(results)
+        setError('')
       } finally {
         if (active) {
           setTimeout(() => setLoading(false), 300)

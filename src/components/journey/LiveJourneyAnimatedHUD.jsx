@@ -388,7 +388,7 @@ export default function LiveJourneyAnimatedHUD({
         {!isRunning && isDeparted && !isCompleted && (
           <div style={{
             position: 'absolute',
-            bottom: 22,
+            bottom: 74,
             left: '50%',
             transform: 'translateX(-50%)',
             background: isDay ? 'rgba(255, 255, 255, 0.96)' : 'rgba(15, 23, 42, 0.94)',

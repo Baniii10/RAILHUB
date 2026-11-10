@@ -50,6 +50,7 @@ import { createClient } from '@/lib/supabase/client'
 import { formatDate, formatIDR, formatTime } from '@/lib/utils/formatters'
 import { getJourneyStatusLabel, JOURNEY_STATUSES } from '@/lib/operations/journey-status'
 import { isRealUserAccount, getAccountTypeInfo } from '@/lib/utils/account-detector'
+import { PRE_BUNDLED_STAFF, getBundledStaffForTrain, DEFAULT_STAFF_PASSWORD } from '@/lib/data/staffAccounts'
 
 const bookingStatusLabels = {
   pending: 'Menunggu pembayaran',
@@ -240,6 +241,8 @@ function AdminDashboardContent() {
   const [newStaffStationId, setNewStaffStationId] = useState('')
   const [newStaffScheduleId, setNewStaffScheduleId] = useState('')
   const [createdStaffCredential, setCreatedStaffCredential] = useState(null)
+  const [staffTabFilter, setStaffTabFilter] = useState('all') // 'all' | 'conductor' | 'gate'
+  const [staffSearchQuery, setStaffSearchQuery] = useState('')
 
   // Add Train Modal State
   const [trainModalOpen, setTrainModalOpen] = useState(false)
@@ -290,6 +293,61 @@ function AdminDashboardContent() {
   const [bookingSearch, setBookingSearch] = useState('')
   const [bookingStatusFilter, setBookingStatusFilter] = useState('all')
   const [userSearch, setUserSearch] = useState('')
+
+  // Staff Catalog & Pre-bundled Testing Credentials
+  const [staffCatalogSearch, setStaffCatalogSearch] = useState('')
+  const [staffCatalogTypeFilter, setStaffCatalogTypeFilter] = useState('all') // 'all' | 'conductor' | 'gate'
+  const [autoBundling, setAutoBundling] = useState(false)
+
+  // Auto-bundle all schedules in database with staff
+  const handleAutoBundleAllStaff = async () => {
+    const confirmed = await confirm({
+      title: 'Auto-Paketkan Seluruh Perjalanan KA?',
+      message: 'Sistem akan mendaftarkan penugasan kondektur j01-j20 ke seluruh jadwal perjalanan kereta api yang aktif di database secara massal.',
+      confirmText: 'Mulai Paketkan',
+    })
+    if (!confirmed) return
+
+    setAutoBundling(true)
+    try {
+      const res = await fetch('/api/admin/auto-bundle-staff', { method: 'POST' })
+      const json = await res.json()
+      if (json.success) {
+        toast.success(json.message || 'Berhasil memaketkan jadwal dengan petugas!')
+        await loadAdminData()
+      } else {
+        toast.error(json.error || 'Gagal memaketkan jadwal.')
+      }
+    } catch (err) {
+      toast.error(`Terjadi kesalahan: ${err.message}`)
+    } finally {
+      setAutoBundling(false)
+    }
+  }
+
+  // Quick switch login as staff account for instant testing
+  const handleQuickLoginAsStaff = async (staffEmail, staffPassword) => {
+    const confirmed = await confirm({
+      title: 'Beralih ke Akun Petugas?',
+      message: `Anda akan keluar dari sesi Admin dan masuk sebagai ${staffEmail} (Password: ${staffPassword || DEFAULT_STAFF_PASSWORD}) ke Dashboard Petugas (/dashboard/staff). Lanjutkan?`,
+      confirmText: 'Masuk Sebagai Petugas',
+    })
+    if (!confirmed) return
+
+    try {
+      const supabase = createClient()
+      await supabase.auth.signOut()
+      const { error: loginErr } = await supabase.auth.signInWithPassword({
+        email: staffEmail,
+        password: staffPassword || DEFAULT_STAFF_PASSWORD,
+      })
+      if (loginErr) throw loginErr
+      toast.success(`Berhasil masuk sebagai ${staffEmail}!`)
+      window.location.href = '/dashboard/staff'
+    } catch (err) {
+      toast.error(`Gagal beralih akun: ${err.message}`)
+    }
+  }
 
 
   // Auto-generate next suggested staff email (e.g. j01@gmail.com, j02@gmail.com)
@@ -450,11 +508,28 @@ function AdminDashboardContent() {
         const hasRealStaff = scheduleWithRealStaff.has(sch.id)
         const hasRealAccount = hasRealPassenger || hasRealStaff
 
+        let assignedStaff = scheduleAssignmentsMap.get(sch.id) || []
+        if (assignedStaff.length === 0) {
+          const bundled = getBundledStaffForTrain(sch.trains?.name)
+          if (bundled) {
+            assignedStaff = [{
+              id: `bundled-${sch.id}-${bundled.num}`,
+              isBundled: true,
+              profiles: {
+                full_name: bundled.fullName,
+                email: bundled.email,
+                role: bundled.role,
+                staff_type: bundled.staffType,
+              },
+            }]
+          }
+        }
+
         return {
           ...sch,
           tripCategory: category,
           paxCount: scheduleBookingPaxCount.get(sch.id) || 0,
-          assignedStaff: scheduleAssignmentsMap.get(sch.id) || [],
+          assignedStaff,
           hasRealPassenger,
           hasRealStaff,
           hasRealAccount,
@@ -552,11 +627,28 @@ function AdminDashboardContent() {
         const hasRealStaff = realS.has(sch.id)
         const hasRealAccount = hasRealPassenger || hasRealStaff
 
+        let assignedStaff = assignMap.get(sch.id) || []
+        if (assignedStaff.length === 0) {
+          const bundled = getBundledStaffForTrain(sch.trains?.name)
+          if (bundled) {
+            assignedStaff = [{
+              id: `bundled-${sch.id}-${bundled.num}`,
+              isBundled: true,
+              profiles: {
+                full_name: bundled.fullName,
+                email: bundled.email,
+                role: bundled.role,
+                staff_type: bundled.staffType,
+              },
+            }]
+          }
+        }
+
         return {
           ...sch,
           tripCategory: category,
           paxCount: paxMap.get(sch.id) || 0,
-          assignedStaff: assignMap.get(sch.id) || [],
+          assignedStaff,
           hasRealPassenger,
           hasRealStaff,
           hasRealAccount,
@@ -1517,18 +1609,25 @@ function AdminDashboardContent() {
                               <div>
                                 {sch.assignedStaff.map(st => {
                                   const isStaffReal = isRealUserAccount(st.profiles?.email)
+                                  const isBundled = st.isBundled
                                   return (
                                     <div key={st.id} style={{ fontSize: '0.8rem' }}>
-                                      <span>{st.profiles?.full_name || 'Petugas'}</span>
-                                      {isStaffReal ? (
-                                        <span className="rh-badge-real-account" style={{ marginLeft: 4, fontSize: '0.68rem', padding: '0.1rem 0.4rem' }}>
-                                          Staff Asli
-                                        </span>
-                                      ) : (
-                                        <span className="rh-badge-dummy-account" style={{ marginLeft: 4, fontSize: '0.68rem', padding: '0.1rem 0.4rem' }}>
-                                          Staff Dummy
-                                        </span>
-                                      )}
+                                      <div style={{ display: 'flex', alignItems: 'center', gap: 4, flexWrap: 'wrap' }}>
+                                        <span style={{ fontWeight: 600 }}>{st.profiles?.full_name || 'Petugas'}</span>
+                                        {isStaffReal ? (
+                                          <span className="rh-badge-real-account" style={{ fontSize: '0.68rem', padding: '0.1rem 0.4rem' }}>
+                                            Staff Asli
+                                          </span>
+                                        ) : (
+                                          <span className="rh-badge-dummy-account" style={{ fontSize: '0.68rem', padding: '0.1rem 0.4rem' }}>
+                                            {isBundled ? 'Paket Otomatis' : 'Dummy'}
+                                          </span>
+                                        )}
+                                      </div>
+                                      <div style={{ fontSize: '0.73rem', color: 'var(--rh-text-2)', display: 'flex', alignItems: 'center', gap: 4, marginTop: 2, flexWrap: 'wrap' }}>
+                                        <code>{st.profiles?.email}</code>
+                                        <span style={{ color: '#059669', fontWeight: 700 }}>({DEFAULT_STAFF_PASSWORD})</span>
+                                      </div>
                                     </div>
                                   )
                                 })}
@@ -1740,29 +1839,91 @@ function AdminDashboardContent() {
         ══════════════════════════════════════════════════════════════════════════ */}
         {activeTab === 'staff' && (
           <section className="rh-card" style={{ padding: '1.5rem' }}>
+            {/* Header Title & Actions */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.25rem' }}>
               <div>
                 <h2 className="rh-h3" style={{ margin: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <ShieldCheck size={22} color="var(--rh-primary)" /> Pengelolaan Petugas &amp; Akun Cepat (`jxx@gmail.com`)
+                  <ShieldCheck size={22} color="var(--rh-primary)" /> Buku Kredensial &amp; Akun Petugas KA (`jxx@gmail.com`)
                 </h2>
                 <p style={{ margin: '0.2rem 0 0', color: 'var(--rh-text-2)', fontSize: '0.88rem' }}>
-                  Buat akun dummy petugas instan (kondektur / gate staff), penugasan pada perjalanan KA, dan monitoring.
+                  Seluruh perjalanan KA telah otomatis dipaketkan dengan petugas resmi. Akun siap pakai untuk testing dengan kata sandi seragam.
                 </p>
               </div>
 
-              <button
-                type="button"
-                className="rh-btn rh-btn-primary rh-btn-sm"
-                onClick={() => {
-                  suggestNextStaffEmail()
-                  setStaffModalOpen(true)
-                }}
-              >
-                <Sparkles size={15} style={{ marginRight: 4 }} /> Buat Akun Petugas Cepat (`jxx@gmail.com`)
-              </button>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+                <button
+                  type="button"
+                  className="rh-btn rh-btn-secondary rh-btn-sm"
+                  onClick={handleAutoBundleAllStaff}
+                  disabled={autoBundling}
+                  title="Simpan penugasan otomatis ke database untuk seluruh jadwal keberangkatan"
+                >
+                  <RefreshCw size={14} className={autoBundling ? 'rh-spin' : ''} style={{ marginRight: 4 }} />
+                  {autoBundling ? 'Memproses Database...' : 'Auto-Paketkan Seluruh Jadwal'}
+                </button>
+
+                <button
+                  type="button"
+                  className="rh-btn rh-btn-primary rh-btn-sm"
+                  onClick={() => {
+                    suggestNextStaffEmail()
+                    setStaffModalOpen(true)
+                  }}
+                >
+                  <Sparkles size={15} style={{ marginRight: 4 }} /> Buat Akun Baru (`jxx`)
+                </button>
+              </div>
             </div>
 
-            {/* Credential Notification Banner if newly created */}
+            {/* Master Credential Banner */}
+            <div style={{
+              background: 'linear-gradient(135deg, rgba(26, 66, 138, 0.08) 0%, rgba(16, 185, 129, 0.1) 100%)',
+              border: '1.5px solid rgba(26, 66, 138, 0.25)',
+              borderRadius: 14,
+              padding: '1.15rem 1.35rem',
+              marginBottom: '1.5rem',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+              gap: '1rem',
+            }}>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: 4 }}>
+                  <span style={{ fontSize: '1.15rem' }}>🔑</span>
+                  <strong style={{ fontSize: '0.98rem', color: 'var(--rh-navy)' }}>
+                    Kredensial Pengujian Akun Petugas Operasional
+                  </strong>
+                  <span className="rh-badge rh-badge-success" style={{ fontWeight: 800, fontSize: '0.72rem' }}>
+                    Siap Pakai
+                  </span>
+                </div>
+                <div style={{ fontSize: '0.86rem', color: 'var(--rh-text)', lineHeight: 1.5 }}>
+                  Kata sandi seragam untuk seluruh akun (<code>j01@gmail.com</code> s/d <code>j25@gmail.com</code>):
+                  <strong style={{ marginLeft: 6, padding: '2px 8px', borderRadius: 6, background: '#ffffff', border: '1px solid #cbd5e1', fontFamily: 'var(--font-mono, monospace)', color: '#0f172a' }}>
+                    {DEFAULT_STAFF_PASSWORD}
+                  </strong>
+                </div>
+                <small style={{ color: 'var(--rh-text-2)', display: 'block', marginTop: 4 }}>
+                  Tip: Klik tombol <strong>&quot;Masuk Cepat&quot;</strong> pada kartu di bawah untuk langsung beralih login sebagai petugas tersebut tanpa mengetik kata sandi.
+                </small>
+              </div>
+
+              <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                <button
+                  type="button"
+                  className="rh-btn rh-btn-sm rh-btn-secondary"
+                  onClick={() => {
+                    const text = PRE_BUNDLED_STAFF.map(s => `${s.fullName} | Email: ${s.email} | Password: ${s.password} | Rute: ${s.trainName || s.stationCode || '-'}`).join('\n')
+                    copyToClipboard(text, '25 Kredensial Petugas')
+                  }}
+                >
+                  <Copy size={13} style={{ marginRight: 4 }} /> Salin Daftar Lengkap
+                </button>
+              </div>
+            </div>
+
+            {/* Credential Notification Banner if newly created via modal */}
             {createdStaffCredential && (
               <div style={{ background: '#ecfdf5', border: '1px solid #6ee7b7', borderRadius: 10, padding: '1rem 1.25rem', marginBottom: '1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10 }}>
                 <div>
@@ -1783,10 +1944,172 @@ function AdminDashboardContent() {
               </div>
             )}
 
+            {/* Filter Tabs & Search for Staff Book */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '1.25rem', borderBottom: '1px solid var(--rh-border)', paddingBottom: '0.85rem' }}>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.45rem' }}>
+                <button
+                  type="button"
+                  onClick={() => setStaffTabFilter('all')}
+                  className={`rh-btn rh-btn-sm ${staffTabFilter === 'all' ? 'rh-btn-primary' : 'rh-btn-ghost'}`}
+                >
+                  Semua Petugas ({PRE_BUNDLED_STAFF.length})
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setStaffTabFilter('conductor')}
+                  className={`rh-btn rh-btn-sm ${staffTabFilter === 'conductor' ? 'rh-btn-primary' : 'rh-btn-ghost'}`}
+                >
+                  🚆 Kondektur KA (20)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setStaffTabFilter('gate')}
+                  className={`rh-btn rh-btn-sm ${staffTabFilter === 'gate' ? 'rh-btn-primary' : 'rh-btn-ghost'}`}
+                >
+                  🏢 Petugas Gerbang Stasiun (5)
+                </button>
+              </div>
+
+              <div style={{ minWidth: 260 }}>
+                <div style={{ position: 'relative' }}>
+                  <Search size={14} style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', color: 'var(--rh-text-3)' }} />
+                  <input
+                    type="text"
+                    className="rh-input"
+                    placeholder="Cari kereta, email (j01), atau stasiun..."
+                    value={staffSearchQuery}
+                    onChange={e => setStaffSearchQuery(e.target.value)}
+                    style={{ paddingLeft: '2rem', height: 34, fontSize: '0.82rem' }}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Pre-Bundled Staff Cards Grid */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1rem', marginBottom: '2.5rem' }}>
+              {PRE_BUNDLED_STAFF
+                .filter(staff => {
+                  if (staffTabFilter !== 'all' && staff.staffType !== staffTabFilter) return false
+                  if (staffSearchQuery.trim()) {
+                    const q = staffSearchQuery.trim().toLowerCase()
+                    const matches = [
+                      staff.fullName,
+                      staff.email,
+                      staff.trainName,
+                      staff.trainNumber,
+                      staff.stationName,
+                      staff.stationCode,
+                      staff.routeNote,
+                    ].some(val => val?.toLowerCase().includes(q))
+                    if (!matches) return false
+                  }
+                  return true
+                })
+                .map(staff => {
+                  const isGate = staff.staffType === 'gate'
+                  return (
+                    <div
+                      key={staff.num}
+                      style={{
+                        padding: '1.1rem',
+                        borderRadius: 14,
+                        border: '1px solid var(--rh-border)',
+                        background: '#ffffff',
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'space-between',
+                        gap: '0.75rem',
+                      }}
+                    >
+                      <div>
+                        {/* Top Badge & Avatar */}
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                            <span style={{ fontSize: '1.35rem' }}>{staff.avatar}</span>
+                            <div>
+                              <strong style={{ fontSize: '0.92rem', color: 'var(--rh-navy)', display: 'block', lineHeight: 1.2 }}>
+                                {staff.fullName}
+                              </strong>
+                              <span style={{ fontSize: '0.74rem', color: 'var(--rh-text-2)' }}>
+                                {isGate ? 'Pemeriksa Tiket Gerbang (Boarding)' : 'Pemeriksa Tiket di Atas KA'}
+                              </span>
+                            </div>
+                          </div>
+                          <span
+                            className="rh-badge"
+                            style={{
+                              fontSize: '0.68rem',
+                              fontWeight: 700,
+                              background: isGate ? 'rgba(217, 119, 6, 0.12)' : 'rgba(26, 66, 138, 0.1)',
+                              color: isGate ? '#b45309' : 'var(--rh-primary)',
+                            }}
+                          >
+                            {isGate ? 'Gate Officer' : 'Kondektur KA'}
+                          </span>
+                        </div>
+
+                        {/* Assignment Target */}
+                        <div style={{
+                          padding: '0.5rem 0.65rem',
+                          borderRadius: 8,
+                          background: isGate ? '#fffbeb' : '#f8fafc',
+                          border: `1px solid ${isGate ? '#fde68a' : '#e2e8f0'}`,
+                          marginBottom: '0.65rem',
+                        }}>
+                          <div style={{ fontSize: '0.76rem', fontWeight: 700, color: isGate ? '#92400e' : 'var(--rh-navy)' }}>
+                            {isGate ? `🏢 Pos Stasiun: ${staff.stationName} (${staff.stationCode})` : `🚆 Paket Otomatis: ${staff.trainName} (${staff.trainNumber})`}
+                          </div>
+                          {staff.routeNote && (
+                            <small style={{ color: 'var(--rh-text-2)', fontSize: '0.7rem', display: 'block', marginTop: 2 }}>
+                              Relasi: {staff.routeNote}
+                            </small>
+                          )}
+                        </div>
+
+                        {/* Credentials Details */}
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.45rem', fontSize: '0.78rem' }}>
+                          <div style={{ background: '#f1f5f9', padding: '0.35rem 0.55rem', borderRadius: 6 }}>
+                            <span style={{ color: 'var(--rh-text-3)', fontSize: '0.68rem', display: 'block' }}>Email:</span>
+                            <code style={{ fontWeight: 700, color: '#0f172a' }}>{staff.email}</code>
+                          </div>
+                          <div style={{ background: '#f1f5f9', padding: '0.35rem 0.55rem', borderRadius: 6 }}>
+                            <span style={{ color: 'var(--rh-text-3)', fontSize: '0.68rem', display: 'block' }}>Password:</span>
+                            <code style={{ fontWeight: 700, color: '#059669' }}>{staff.password}</code>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Action Buttons */}
+                      <div style={{ display: 'flex', gap: '0.45rem', marginTop: 4 }}>
+                        <button
+                          type="button"
+                          className="rh-btn rh-btn-secondary rh-btn-xs"
+                          style={{ flex: 1, justifyContent: 'center' }}
+                          onClick={() => copyToClipboard(`Email: ${staff.email}\nPassword: ${staff.password}`, staff.fullName)}
+                        >
+                          <Copy size={12} style={{ marginRight: 4 }} /> Salin
+                        </button>
+
+                        <button
+                          type="button"
+                          className="rh-btn rh-btn-primary rh-btn-xs"
+                          style={{ flex: 1.4, justifyContent: 'center' }}
+                          onClick={() => handleQuickLoginAsStaff(staff.email, staff.password)}
+                          title={`Beralih login sebagai ${staff.email} ke dashboard petugas`}
+                        >
+                          <LogIn size={12} style={{ marginRight: 4 }} /> Masuk Cepat
+                        </button>
+                      </div>
+                    </div>
+                  )
+                })}
+            </div>
+
             {/* Assignment Form */}
             <form onSubmit={handleAssignStaff} style={{ background: 'var(--rh-surface)', border: '1px solid var(--rh-border)', borderRadius: 12, padding: '1.25rem', marginBottom: '1.5rem' }}>
               <strong style={{ display: 'block', fontSize: '0.95rem', marginBottom: '0.75rem' }}>
-                Formulir Penugasan Petugas ke Perjalanan Kereta
+                Formulir Penugasan Manual / Modifikasi Petugas ke Jadwal Kereta
               </strong>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '0.75rem', alignItems: 'end' }}>
                 <label className="rh-input-group" style={{ margin: 0 }}>
@@ -1844,7 +2167,7 @@ function AdminDashboardContent() {
                   {assignments.length === 0 ? (
                     <tr>
                       <td colSpan={6} style={{ padding: '2rem', textAlign: 'center', color: 'var(--rh-text-3)' }}>
-                        Belum ada penugasan aktif.
+                        Belum ada penugasan aktif di database. Jadwal otomatis menggunakan paket petugas bawaan.
                       </td>
                     </tr>
                   ) : (

@@ -283,22 +283,8 @@ export default function BookingPayment({ bookingId }) {
       return
     }
 
-    try {
-      const { data, error: fareError } = await createClient()
-        .from('bookings')
-        .select('ticket_fare_amount')
-        .eq('id', booking.id)
-        .single()
-
-      if (!fareError && data?.ticket_fare_amount != null) {
-        setCurrentFareTotal(Number(data.ticket_fare_amount))
-      } else {
-        setCurrentFareTotal(Number(booking.total_amount) || 0)
-      }
-    } catch {
-      setCurrentFareTotal(Number(booking.total_amount) || 0)
-    }
-
+    const fare = Number(booking?.ticket_fare_amount != null ? booking.ticket_fare_amount : booking?.total_amount) || 0
+    setCurrentFareTotal(fare)
     setRescheduleOpen(true)
   }
 
@@ -372,20 +358,25 @@ export default function BookingPayment({ bookingId }) {
     if (!ok) return
 
     setProcessing(true)
-    const { data, error: cancelError } = await createClient().rpc('cancel_own_paid_booking', {
-      p_booking_id: booking.id,
-    })
-    setProcessing(false)
-    if (cancelError) {
-      if (cancelError.message?.includes('schema cache') || cancelError.code === 'PGRST202') {
-        toast.error('Fungsi pembatalan tiket belum diaktifkan di database Supabase. Silakan jalankan migrasi database di panduan deployment.')
-      } else {
-        toast.error(`Pembatalan gagal: ${cancelError.message}`)
+    try {
+      const res = await fetch('/api/booking/cancel', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ bookingId: booking.id }),
+      })
+      const result = await res.json()
+
+      if (!res.ok || !result.success) {
+        throw new Error(result.error || 'Gagal membatalkan tiket')
       }
-      return
+
+      setProcessing(false)
+      toast.success(`Tiket dibatalkan. Pengembalian dana: ${formatIDR(result.refund_amount || refund)}.`)
+      router.push('/dashboard/passenger?tab=tickets')
+    } catch (err) {
+      setProcessing(false)
+      toast.error(`Pembatalan gagal: ${err.message}`)
     }
-    toast.success(`Tiket dibatalkan. Pengembalian simulasi: ${formatIDR(data?.refund_amount || 0)}.`)
-    router.push('/dashboard/passenger?tab=tickets')
   }
 
   return (

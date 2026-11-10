@@ -30,9 +30,9 @@
     "semantic_hash": "47842656158d1c2e2986d593155c94a9"
   },
   "src/app/auth/login/page.js": {
-    "mtime": 1794080935.9599397,
-    "ast_hash": "67c0ab4b72bcf9326cc44e89b77c37c0",
-    "semantic_hash": "67c0ab4b72bcf9326cc44e89b77c37c0"
+    "mtime": 1794327014.096209,
+    "ast_hash": "7279a892bd205709cd5a29b40b8e1686",
+    "semantic_hash": "7279a892bd205709cd5a29b40b8e1686"
   },
   "src/app/auth/register/page.js": {
     "mtime": 1794080952.3579733,
@@ -60,9 +60,9 @@
     "semantic_hash": "0fdb49db4c5714104567c6eae8191096"
   },
   "src/app/dashboard/admin/page.js": {
-    "mtime": 1794251123.6205757,
-    "ast_hash": "3aa928c02f658a23dc630a54aef5227a",
-    "semantic_hash": "3aa928c02f658a23dc630a54aef5227a"
+    "mtime": 1794328172.4749599,
+    "ast_hash": "e0ba341a5e9434fb81839ff2a0c29029",
+    "semantic_hash": "e0ba341a5e9434fb81839ff2a0c29029"
   },
   "src/app/dashboard/admin/staff/page.js": {
     "mtime": 1794247689.2166145,
@@ -85,9 +85,9 @@
     "semantic_hash": "bfc84cb73bcb2aec8322f1ad15573444"
   },
   "src/app/dashboard/staff/page.js": {
-    "mtime": 1794082865.346594,
-    "ast_hash": "0f19b14038cae92073773d0ea40f2d4a",
-    "semantic_hash": "0f19b14038cae92073773d0ea40f2d4a"
+    "mtime": 1794327079.6856132,
+    "ast_hash": "7f21a4dbfc7d8ef133bc721d1600726b",
+    "semantic_hash": "7f21a4dbfc7d8ef133bc721d1600726b"
   },
   "src/app/faq/page.js": {
     "mtime": 1793877479.4318717,
@@ -115,9 +115,9 @@
     "semantic_hash": "6e2d1698c4264d230dc9480fcc78fdb0"
   },
   "src/components/booking/BookingPayment.jsx": {
-    "mtime": 1794244490.6325858,
-    "ast_hash": "570fd1e2b901af703e97e388bbef6a6f",
-    "semantic_hash": "570fd1e2b901af703e97e388bbef6a6f"
+    "mtime": 1794328029.0816016,
+    "ast_hash": "a7ea37e2ae2f922d7413dc266ab873ff",
+    "semantic_hash": "a7ea37e2ae2f922d7413dc266ab873ff"
   },
   "src/components/booking/SearchWidget.jsx": {
     "mtime": 1793978977.0185332,
@@ -125,9 +125,9 @@
     "semantic_hash": "1920d4a2c748b4dc6373c322588cb5e5"
   },
   "src/components/booking/TrainSearchResults.jsx": {
-    "mtime": 1794244469.0637157,
-    "ast_hash": "956f4206e18fc85f36cbb3e687140643",
-    "semantic_hash": "956f4206e18fc85f36cbb3e687140643"
+    "mtime": 1794327972.284788,
+    "ast_hash": "fdb20cdf53d797c0a365c01726ddb014",
+    "semantic_hash": "fdb20cdf53d797c0a365c01726ddb014"
   },
   "src/components/home/MobilePortalHeader.jsx": {
     "mtime": 1793943565.134753,
@@ -1735,9 +1735,9 @@
     "semantic_hash": "fcd9a2cc17b654781fa4506a1994da92"
   },
   "src/components/journey/LiveJourneyAnimatedHUD.jsx": {
-    "mtime": 1794249917.2720277,
-    "ast_hash": "3fe0c83d7cb38cb6a7ea605ed5a38899",
-    "semantic_hash": "3fe0c83d7cb38cb6a7ea605ed5a38899"
+    "mtime": 1794328049.9357038,
+    "ast_hash": "beb7547f71bedbaf41ec56cd06dfea43",
+    "semantic_hash": "beb7547f71bedbaf41ec56cd06dfea43"
   },
   "src/components/journey/TrainWifiHub.jsx": {
     "mtime": 1794083002.6292284,
@@ -1775,9 +1775,9 @@
     "semantic_hash": "442c4c6e1f9028ab13127537d82cbbeb"
   },
   "src/lib/auth/roles.js": {
-    "mtime": 1793943565.226081,
-    "ast_hash": "3b5e3bebcd259624340c5f2cf5204b5d",
-    "semantic_hash": "3b5e3bebcd259624340c5f2cf5204b5d"
+    "mtime": 1794326996.5807474,
+    "ast_hash": "239f94e0e4b149625771b0dd4670375e",
+    "semantic_hash": "239f94e0e4b149625771b0dd4670375e"
   },
   "src/lib/data/rawFleetCatalog.js": {
     "mtime": 1793943565.2270813,
@@ -1785,9 +1785,9 @@
     "semantic_hash": "ef373d5131bf96aea39ce7e33267f197"
   },
   "src/lib/data/scheduleGenerator.js": {
-    "mtime": 1794246136.845895,
-    "ast_hash": "d06c5c8f15aab4fd6ca1b3e78b6f5bbe",
-    "semantic_hash": "d06c5c8f15aab4fd6ca1b3e78b6f5bbe"
+    "mtime": 1794327917.5965095,
+    "ast_hash": "892304f22ca97ae11630c7ee4c870769",
+    "semantic_hash": "892304f22ca97ae11630c7ee4c870769"
   },
   "src/remotion/NightTrainBumper.jsx": {
     "mtime": 1793943565.2646172,
@@ -3728,5 +3728,20 @@
     "mtime": 1793943564.7790928,
     "ast_hash": "b815d8ad5f54829383f8cf4ab382fc36",
     "semantic_hash": ""
+  },
+  "src/app/api/admin/auto-bundle-staff/route.js": {
+    "mtime": 1794327186.8108253,
+    "ast_hash": "60670a06f63d7e9406cf9ab4990b5887",
+    "semantic_hash": "60670a06f63d7e9406cf9ab4990b5887"
+  },
+  "src/app/api/booking/cancel/route.js": {
+    "mtime": 1794328010.0643077,
+    "ast_hash": "d374d9ece067d0e684e5250c90389a78",
+    "semantic_hash": "d374d9ece067d0e684e5250c90389a78"
+  },
+  "src/lib/data/staffAccounts.js": {
+    "mtime": 1794326981.2393405,
+    "ast_hash": "7782b230ca355daa35a78ebdb09fda71",
+    "semantic_hash": "7782b230ca355daa35a78ebdb09fda71"
   }
 }

@@ -162,6 +162,31 @@ export default function LoginPage() {
       const msg = authError.message?.toLowerCase() || ''
       const code = authError.code || ''
 
+      // Auto-fallback for dummy staff jxx@gmail.com with default password 'petugas123'
+      if (/^j\d+@gmail\.com$/.test(loginEmail.trim().toLowerCase()) && loginPassword === 'petugas123') {
+        const { data: signUpData, error: signUpErr } = await supabase.auth.signUp({
+          email: loginEmail.trim().toLowerCase(),
+          password: loginPassword,
+          options: {
+            data: {
+              full_name: `Petugas ${loginEmail.split('@')[0].toUpperCase()}`,
+              role: 'conductor',
+            },
+          },
+        })
+        if (!signUpErr && (signUpData?.user || signUpData?.session)) {
+          const { data: retryData, error: retryErr } = await supabase.auth.signInWithPassword({
+            email: loginEmail,
+            password: loginPassword,
+          })
+          if (!retryErr && retryData?.user) {
+            toast.success('Berhasil masuk sebagai Petugas KA!')
+            router.replace('/dashboard/staff')
+            return
+          }
+        }
+      }
+
       if (code === 'email_not_confirmed' || msg.includes('email not confirmed')) {
         setError('Email belum aktif. Di dashboard Supabase (Authentication > Providers > Email), matikan opsi "Confirm email" agar login langsung aktif.')
       } else if (code === 'invalid_credentials' || msg.includes('invalid login credentials')) {

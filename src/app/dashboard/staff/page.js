@@ -35,6 +35,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { createClient } from '@/lib/supabase/client'
 import { getJourneyStatusLabel, getNextJourneyStatuses, JOURNEY_STATUSES } from '@/lib/operations/journey-status'
 import { formatDate, formatIDR, formatTime } from '@/lib/utils/formatters'
+import { getBundledStaffByEmail } from '@/lib/data/staffAccounts'
 
 const STATUS_COLORS = {
   scheduled: ['var(--rh-info-light)', 'var(--rh-info)'],
@@ -218,13 +219,40 @@ function StaffDashboardContent() {
         return
       }
       // 1. Fetch staff assignments
-      const { data: assignments, error: assignmentError } = await supabase
+      const { data: dbAssignments, error: assignmentError } = await supabase
         .from('staff_assignments')
         .select('id, schedule_id, schedules(id, status, departure_time, arrival_time, trains(name, train_number), routes(name, distance_km))')
         .eq('staff_id', user.id)
         .order('created_at', { ascending: false })
 
       if (assignmentError) throw assignmentError
+
+      let assignments = dbAssignments || []
+
+      // If no explicit DB assignment, automatically fallback to pre-bundled train or station schedules!
+      if (assignments.length === 0) {
+        const bundled = getBundledStaffByEmail(user.email)
+        if (bundled) {
+          if (bundled.staffType === 'conductor' && bundled.trainName) {
+            const { data: trainSchedules } = await supabase
+              .from('schedules')
+              .select('id, status, departure_time, arrival_time, trains(name, train_number), routes(name, distance_km)')
+              .gte('departure_time', new Date(Date.now() - 6 * 3600 * 1000).toISOString())
+              .order('departure_time', { ascending: true })
+              .limit(50)
+
+            const matched = (trainSchedules || []).filter(s =>
+              s.trains?.name?.toLowerCase().includes(bundled.trainName.toLowerCase())
+            )
+            assignments = matched.map(s => ({
+              id: `bundled-${s.id}`,
+              schedule_id: s.id,
+              schedules: s,
+              isBundled: true,
+            }))
+          }
+        }
+      }
 
       const scheduleIds = (assignments || []).map(a => a.schedule_id)
 

@@ -414,5 +414,79 @@ $$;
 
 GRANT EXECUTE ON FUNCTION public.reset_all_bookings() TO authenticated, anon;
 
+-- ----------------------------------------------------------------------------
+-- 9. AUTO-BUNDLE STAFF TO ALL SCHEDULES BY TRAIN (j01 - j20)
+-- ----------------------------------------------------------------------------
+GRANT INSERT, UPDATE, DELETE ON public.staff_assignments TO authenticated;
+
+CREATE OR REPLACE FUNCTION public.admin_auto_bundle_all_staff_assignments()
+RETURNS jsonb
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
+DECLARE
+    v_admin_id UUID;
+    v_inserted INT := 0;
+BEGIN
+    SELECT id INTO v_admin_id FROM public.profiles WHERE role = 'admin' LIMIT 1;
+    IF v_admin_id IS NULL THEN
+        SELECT id INTO v_admin_id FROM auth.users LIMIT 1;
+    END IF;
+
+    -- Assign j01-j20 to all schedules according to train name ordering
+    WITH inserted_rows AS (
+        INSERT INTO public.staff_assignments (staff_id, schedule_id, assigned_by)
+        SELECT 
+            p.id AS staff_id,
+            s.id AS schedule_id,
+            v_admin_id AS assigned_by
+        FROM public.schedules s
+        JOIN public.trains t ON s.train_id = t.id
+        CROSS JOIN LATERAL (
+            SELECT p.id 
+            FROM public.profiles p
+            WHERE (
+                (t.name ILIKE '%Airlangga%' AND p.email = 'j01@gmail.com') OR
+                (t.name ILIKE '%Bromo%' AND p.email = 'j02@gmail.com') OR
+                (t.name ILIKE '%Dwipangga%' AND p.email = 'j03@gmail.com') OR
+                (t.name ILIKE '%Lawu%' AND p.email = 'j04@gmail.com') OR
+                (t.name ILIKE '%Parahyangan%' AND p.email = 'j05@gmail.com') OR
+                (t.name ILIKE '%Semeru%' AND p.email = 'j06@gmail.com') OR
+                (t.name ILIKE '%Wilis%' AND p.email = 'j07@gmail.com') OR
+                (t.name ILIKE '%Bima%' AND p.email = 'j08@gmail.com') OR
+                (t.name ILIKE '%Gaya Baru%' AND p.email = 'j09@gmail.com') OR
+                (t.name ILIKE '%Jayabaya%' AND p.email = 'j10@gmail.com') OR
+                (t.name ILIKE '%Jayakarta%' AND p.email = 'j11@gmail.com') OR
+                (t.name ILIKE '%Kertajaya%' AND p.email = 'j12@gmail.com') OR
+                (t.name ILIKE '%Lodaya%' AND p.email = 'j13@gmail.com') OR
+                (t.name ILIKE '%Malabar%' AND p.email = 'j14@gmail.com') OR
+                (t.name ILIKE '%Mutiara%' AND p.email = 'j15@gmail.com') OR
+                (t.name ILIKE '%Pasundan%' AND p.email = 'j16@gmail.com') OR
+                (t.name ILIKE '%Sancaka%' AND p.email = 'j17@gmail.com') OR
+                (t.name ILIKE '%Sembrani%' AND p.email = 'j18@gmail.com') OR
+                (t.name ILIKE '%Taksaka%' AND p.email = 'j19@gmail.com') OR
+                (t.name ILIKE '%Turangga%' AND p.email = 'j20@gmail.com')
+            )
+            LIMIT 1
+        ) p
+        ON CONFLICT (staff_id, schedule_id) DO NOTHING
+        RETURNING 1
+    )
+    SELECT count(*) INTO v_inserted FROM inserted_rows;
+
+    RETURN jsonb_build_object(
+        'success', true,
+        'inserted_assignments', v_inserted,
+        'message', 'Berhasil memaketkan jadwal kereta dengan petugas kondektur operasional.'
+    );
+END;
+$$;
+
+GRANT EXECUTE ON FUNCTION public.admin_auto_bundle_all_staff_assignments() TO authenticated, anon;
+
+-- Jalankan langsung saat patch dieksekusi
+SELECT public.admin_auto_bundle_all_staff_assignments();
+
 COMMIT;
 

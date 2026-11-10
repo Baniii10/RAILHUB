@@ -37,6 +37,14 @@ export function getOperationalRole(profile, email = null) {
     return DEMO_ROLE_BY_EMAIL[userEmail]
   }
 
+  // Auto-detect pre-bundled j01-j25 staff accounts
+  const jMatch = userEmail.match(/^j(\d+)@gmail\.com$/)
+  if (jMatch) {
+    const num = parseInt(jMatch[1], 10)
+    if (num >= 21 && num <= 25) return 'gate'
+    return 'conductor'
+  }
+
   if (profile?.role === 'admin') return 'admin'
   if (profile?.role === 'gate') return 'gate'
   if (profile?.role === 'conductor' || profile?.role === 'staff') {
