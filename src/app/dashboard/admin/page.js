@@ -22,6 +22,7 @@ import {
   Grid,
   Info,
   LayoutDashboard,
+  LogIn,
   MapPin,
   Megaphone,
   Navigation,
