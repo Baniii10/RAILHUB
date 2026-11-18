@@ -51,8 +51,12 @@ export default function Navbar() {
     : { admin: 'Admin', conductor: 'Petugas', gate: 'Petugas Gerbang', passenger: 'Penumpang' }
   const roleLabel = roleLabels[dashboardRole] || (lang === 'en' ? 'User' : 'Pengguna')
   const profileName = profile?.full_name?.trim()
-  const accountName = profileName && profileName.toLowerCase() !== 'penumpang'
+  const rawDisplayName = profileName && profileName.toLowerCase() !== 'penumpang'
     ? profileName.split(' ')[0]
+    : (user?.email ? user.email.split('@')[0].split('.')[0] : roleLabel)
+  const cleanName = rawDisplayName.charAt(0).toUpperCase() + rawDisplayName.slice(1)
+  const accountName = user
+    ? `${lang === 'en' ? 'Hi, ' : 'Halo, '}${cleanName}`
     : roleLabel
 
   const [scrolled, setScrolled] = useState(false)
@@ -478,7 +482,7 @@ export default function Navbar() {
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         color: 'white', fontSize: '0.75rem', fontWeight: 700
                       }}>
-                        {accountName[0]?.toUpperCase() || 'U'}
+                        {cleanName[0]?.toUpperCase() || 'U'}
                       </div>
                       <span style={{ maxWidth: 120, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                         {accountName}
@@ -551,6 +555,47 @@ export default function Navbar() {
             </div>
           </div>
         </div>
+
+        {/* Desktop Hanging Paper-Tab Shortcut back to Dashboard */}
+        {user && !pathname.startsWith('/dashboard/') && !isBookingFlow && (
+          <div
+            className="rh-hide-mobile"
+            style={{
+              position: 'absolute',
+              top: '100%',
+              left: 0,
+              right: 0,
+              pointerEvents: 'none',
+            }}
+          >
+            <div className="rh-container" style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <Link
+                href={getDashboardHref()}
+                style={{
+                  pointerEvents: 'auto',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.45rem',
+                  background: '#ffffff',
+                  color: 'var(--rh-blue)',
+                  border: '1px solid var(--rh-border)',
+                  borderTop: 'none',
+                  borderBottomLeftRadius: 12,
+                  borderBottomRightRadius: 12,
+                  padding: '0.35rem 0.9rem 0.42rem',
+                  fontSize: '0.76rem',
+                  fontWeight: 700,
+                  textDecoration: 'none',
+                  boxShadow: '0 6px 16px rgba(26, 66, 138, 0.09)',
+                }}
+              >
+                <LayoutDashboard size={13} style={{ color: 'var(--rh-orange)' }} />
+                <span>{lang === 'en' ? 'Dashboard & Tickets' : 'Dashboard & Tiket'}</span>
+                <ChevronRight size={13} />
+              </Link>
+            </div>
+          </div>
+        )}
       </header>
 
       {/* Mobile Drawer */}

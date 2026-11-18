@@ -192,13 +192,13 @@ export default function OnboardCulinaryShowcase({
         })}
       </div>
 
-      {/* ── 2-COLUMN GRAB-STYLE FOOD GRID ── */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
-        gap: '1rem 0.85rem',
-        paddingBottom: totalItems > 0 ? '5.5rem' : '1.5rem',
-      }}>
+      {/* ── RESPONSIVE COMPACT FOOD GRID (2 col mobile, 4 col tablet, 5 col desktop) ── */}
+      <div
+        className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5 sm:gap-4"
+        style={{
+          paddingBottom: totalItems > 0 ? '5.5rem' : '1.5rem',
+        }}
+      >
         {filteredItems.map(item => {
           const itemKey = item.dbId || item.id
           const qty = quantities[itemKey] || 0
@@ -213,12 +213,12 @@ export default function OnboardCulinaryShowcase({
                 gap: '0.45rem',
               }}
             >
-              {/* Food Image with Grab-style Action Button & Pill */}
+              {/* Compact 4:3 Food Image */}
               <div style={{
                 position: 'relative',
                 width: '100%',
-                aspectRatio: '1 / 1',
-                borderRadius: '16px',
+                aspectRatio: '4 / 3',
+                borderRadius: '12px',
                 overflow: 'hidden',
                 background: '#0f172a',
                 boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)',

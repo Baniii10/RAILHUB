@@ -226,7 +226,11 @@ function PassengerDashboardContent() {
     () => ticketDetails.find(ticket => ticket.booking_id === activePaidBooking?.id) || null,
     [activePaidBooking?.id, ticketDetails]
   )
-  const profileName = profile?.full_name || user?.user_metadata?.full_name || 'Penumpang RAILHUB'
+  const profileName = profile?.full_name?.trim() || user?.user_metadata?.full_name || 'Penumpang RAILHUB'
+  const rawFirstName = profileName && !profileName.toLowerCase().startsWith('penumpang')
+    ? profileName.split(' ')[0]
+    : (user?.email ? user.email.split('@')[0].split('.')[0] : 'Penumpang')
+  const greetingName = rawFirstName.charAt(0).toUpperCase() + rawFirstName.slice(1)
   const profileInitials = profileName.split(/\s+/).slice(0, 2).map(part => part[0]).join('').toUpperCase()
 
   // Calculate live countdown to departure
@@ -312,17 +316,22 @@ function PassengerDashboardContent() {
     <>
       <Navbar />
       <main className={`passenger-dashboard ${activeTab === 'overview' ? 'is-tracking-tab' : ''}`} style={{ background: 'var(--rh-surface)', minHeight: '100vh', paddingBottom: '6rem' }}>
-        {/* ── DESKTOP DASHBOARD NAVIGATION BAR ── */}
-        <section className={`passenger-header-banner rh-hide-mobile rh-hide-on-mobile-tracking ${activeTab === 'account' ? 'passenger-account-hide' : ''}`} style={{
-          background: 'var(--rh-primary)',
-          color: 'white',
-          padding: '1rem 0',
-          borderBottom: '1px solid rgba(255,255,255,0.1)',
-        }}>
-          <div className="rh-container">
-            {/* ── DESKTOP DASHBOARD NAVIGATION ── */}
-            <nav className="passenger-tabs-nav" style={{ marginTop: 0 }} aria-label="Menu Dashboard Penumpang">
-              {TABS.map(tab => {
+        {/* ── UNIFIED ROUNDED-BOTTOM DESKTOP DASHBOARD BAR ── */}
+        <section
+          className={`passenger-header-banner rh-hide-mobile rh-hide-on-mobile-tracking ${activeTab === 'account' ? 'passenger-account-hide' : ''}`}
+          style={{
+            background: '#ffffff',
+            borderBottom: '1px solid var(--rh-border)',
+            borderBottomLeftRadius: 28,
+            borderBottomRightRadius: 28,
+            boxShadow: '0 6px 22px rgba(26, 66, 138, 0.06)',
+            padding: '0.5rem 0 0',
+          }}
+        >
+          <div className="rh-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1.5rem' }}>
+            {/* Underline Tabs on Left (Perjalanan, Tiket, Layanan) */}
+            <nav className="passenger-tabs-nav" style={{ marginTop: 0, display: 'flex', alignItems: 'center', gap: '1.5rem' }} aria-label="Menu Dashboard Penumpang">
+              {TABS.filter(tab => tab.id !== 'account').map(tab => {
                 const TabIcon = tab.icon
                 const isActive = activeTab === tab.id
                 return (
@@ -330,23 +339,33 @@ function PassengerDashboardContent() {
                     key={tab.id}
                     type="button"
                     onClick={() => selectTab(tab.id)}
-                    className="rh-btn rh-btn-sm passenger-tab-btn"
+                    className="passenger-tab-btn"
                     style={{
-                      background: isActive ? 'white' : 'rgba(255,255,255,0.12)',
-                      color: isActive ? 'var(--rh-primary)' : 'white',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.45rem',
+                      background: 'transparent',
+                      color: isActive ? 'var(--rh-blue)' : 'var(--rh-text-3)',
                       fontWeight: isActive ? 800 : 600,
-                      borderRadius: 12,
-                      padding: '0.6rem 1rem',
-                      border: isActive ? 'none' : '1px solid rgba(255,255,255,0.18)',
-                      transition: 'background-color 0.2s, color 0.2s, border-color 0.2s',
+                      fontSize: '0.88rem',
+                      padding: '0.45rem 0.15rem 0.8rem',
+                      border: 'none',
+                      borderBottom: isActive ? '2px solid var(--rh-blue)' : '2px solid transparent',
+                      cursor: 'pointer',
+                      transition: 'color 0.2s, border-color 0.2s',
                     }}
                   >
-                    <TabIcon size={16} />
+                    <TabIcon size={15} />
                     <span>{tab.label}</span>
                   </button>
                 )
               })}
             </nav>
+
+            {/* Minimalist Trip Status on Right */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', paddingBottom: '0.7rem', fontSize: '0.8rem', color: activePaidBooking ? 'var(--rh-orange)' : 'var(--rh-text-3)', fontWeight: activePaidBooking ? 700 : 500 }}>
+              <span>{activePaidBooking ? '1 perjalanan aktif' : `${bookings.length} riwayat tiket`}</span>
+            </div>
           </div>
         </section>
 
