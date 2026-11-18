@@ -789,7 +789,8 @@ function buildCC206Body(group, baseY, glassMat, grillMat, headlightMat, headligh
   group.add(stripeBlue)
 
   // Cab Windows (Front & Back - Double Cab!)
-  [-bodyLength / 2, bodyLength / 2].forEach((xEnd, idx) => {
+  const cabEnds = [-bodyLength / 2, bodyLength / 2]
+  cabEnds.forEach((xEnd, idx) => {
     const dir = xEnd > 0 ? 1 : -1
 
     // Windshield 1 & 2
@@ -1032,7 +1033,8 @@ function buildCC300Body(group, baseY, glassMat, grillMat, headlightMat, headligh
   group.add(roof)
 
   // Double Cab Windows (Depan & Belakang)
-  ;[-bodyLength / 2, bodyLength / 2].forEach((xEnd, idx) => {
+  const cc300CabEnds = [-bodyLength / 2, bodyLength / 2]
+  cc300CabEnds.forEach((xEnd, idx) => {
     const dir = xEnd > 0 ? 1 : -1
 
     // Large Windshields
@@ -1066,7 +1068,8 @@ function buildCC300Body(group, baseY, glassMat, grillMat, headlightMat, headligh
   })
 
   // Top Exhaust Fan Grills
-  ;[-1.5, 0, 1.5].forEach((gx) => {
+  const fanPositions = [-1.5, 0, 1.5]
+  fanPositions.forEach((gx) => {
     const grillGeo = new THREE.CylinderGeometry(0.45, 0.45, 0.08, 16)
     const fanGrill = new THREE.Mesh(grillGeo, grillMat)
     fanGrill.position.set(gx, baseY + bodyHeight + 0.24, 0)
