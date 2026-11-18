@@ -137,7 +137,7 @@ export default function LiveJourneyMapTracker({ booking, ticket, countdown, jour
 
           {booking?.id ? (
             <Link
-              href={`/booking/payment/${booking.id}`}
+              href={`/booking/payment/${booking?.id}`}
               className="rh-action-tile"
               title="Detail Pesanan"
             >

@@ -282,6 +282,8 @@ function PassengerDashboardContent() {
   // Profile Save handler
   async function handleSaveProfile(e) {
     e.preventDefault()
+    const userId = user?.id
+    if (!userId) return
     setSavingProfile(true)
     const supabase = createClient()
     const { error: updateError } = await supabase
@@ -290,7 +292,7 @@ function PassengerDashboardContent() {
         full_name: fullNameInput.trim(),
         phone_number: phoneInput.trim(),
       })
-      .eq('id', user.id)
+      .eq('id', userId)
 
     setSavingProfile(false)
     if (updateError) {
