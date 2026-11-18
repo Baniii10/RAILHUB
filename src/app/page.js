@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import Navbar from '@/components/layout/Navbar'
 import SearchWidget from '@/components/booking/SearchWidget'
-import MobilePortalHeader from '@/components/home/MobilePortalHeader'
 import FeaturedServicesSlider from '@/components/home/FeaturedServicesSlider'
 import TrainBumperBanner from '@/components/home/TrainBumperBanner'
 import HomeHeroScenery from '@/components/home/HomeHeroScenery'
@@ -109,10 +108,6 @@ export default function HomePage() {
                 <SearchWidget isNight={!isDay} />
               </div>
             </div>
-          </div>
-
-          <div className="rh-show-mobile-only" style={{ marginTop: '1rem' }}>
-            <MobilePortalHeader />
           </div>
         </div>
       </section>

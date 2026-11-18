@@ -71,6 +71,11 @@ export default function FeaturedServicesSlider({ isDay = true }) {
   const [touchStartX, setTouchStartX] = useState(null)
 
   const desktopPages = [SERVICES.slice(0, 3), SERVICES.slice(2, 5)]
+  const mobilePages = [
+    SERVICES.slice(0, 2),
+    SERVICES.slice(2, 4),
+    [SERVICES[4], SERVICES[0]],
+  ]
 
   // Automatic sliding every 4.5s on both desktop and mobile (pauses on hover/touch)
   useEffect(() => {
@@ -79,10 +84,10 @@ export default function FeaturedServicesSlider({ isDay = true }) {
       setDesktopDir(1)
       setDesktopPage((p) => (p === 0 ? 1 : 0))
       setMobileDir(1)
-      setMobileIndex((i) => (i === SERVICES.length - 1 ? 0 : i + 1))
+      setMobileIndex((i) => (i === mobilePages.length - 1 ? 0 : i + 1))
     }, 4500)
     return () => clearInterval(timer)
-  }, [isPaused])
+  }, [isPaused, mobilePages.length])
 
   const goDesktopPage = (nextPage, dir) => {
     setDesktopDir(dir)
@@ -95,8 +100,7 @@ export default function FeaturedServicesSlider({ isDay = true }) {
   }
 
   const activeDesktopItems = desktopPages[desktopPage]
-  const activeMobileItem = SERVICES[mobileIndex]
-  const MobileVector = activeMobileItem.Vector
+  const activeMobileItems = mobilePages[mobileIndex]
 
   return (
     <section
@@ -203,7 +207,7 @@ export default function FeaturedServicesSlider({ isDay = true }) {
             </div>
           </div>
 
-          {/* Mobile View (Single centered character with auto-slide + finger swipe) */}
+          {/* Mobile View (2 items per page: 2 - 2 - 2 with auto-slide + finger swipe) */}
           <div
             className="md:hidden"
             onTouchStart={(e) => {
@@ -214,16 +218,16 @@ export default function FeaturedServicesSlider({ isDay = true }) {
               if (touchStartX !== null) {
                 const dx = e.changedTouches[0].clientX - touchStartX
                 if (dx < -40) {
-                  goMobileSlide(mobileIndex === SERVICES.length - 1 ? 0 : mobileIndex + 1, 1)
+                  goMobileSlide(mobileIndex === mobilePages.length - 1 ? 0 : mobileIndex + 1, 1)
                 } else if (dx > 40) {
-                  goMobileSlide(mobileIndex === 0 ? SERVICES.length - 1 : mobileIndex - 1, -1)
+                  goMobileSlide(mobileIndex === 0 ? mobilePages.length - 1 : mobileIndex - 1, -1)
                 }
               }
               setTouchStartX(null)
               setTimeout(() => setIsPaused(false), 1500)
             }}
           >
-            <div className="relative overflow-hidden px-10">
+            <div className="relative overflow-hidden px-7">
               <AnimatePresence mode="wait" custom={mobileDir}>
                 <motion.div
                   key={mobileIndex}
@@ -232,53 +236,61 @@ export default function FeaturedServicesSlider({ isDay = true }) {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: mobileDir > 0 ? -44 : 44 }}
                   transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                  className="flex flex-col items-center text-center"
+                  className="grid grid-cols-2 gap-3"
                 >
-                  <Link
-                    href={activeMobileItem.href}
-                    className="flex flex-col items-center text-center no-underline"
-                  >
-                    <MobileVector />
-                    <h3 className="text-base font-extrabold text-[var(--rh-blue)] mt-2.5 mb-1">
-                      {lang === 'en' ? activeMobileItem.titleEn : activeMobileItem.titleId}
-                    </h3>
-                    <p className="text-xs text-[var(--rh-text)] opacity-80 m-0 leading-relaxed max-w-[260px]">
-                      {lang === 'en' ? activeMobileItem.descEn : activeMobileItem.descId}
-                    </p>
-                  </Link>
+                  {activeMobileItems.map((item) => {
+                    const Vector = item.Vector
+                    return (
+                      <Link
+                        key={item.id}
+                        href={item.href}
+                        className="flex flex-col items-center text-center no-underline"
+                      >
+                        <div className="w-[120px] h-[108px] flex items-center justify-center [&>svg]:w-full [&>svg]:h-full">
+                          <Vector />
+                        </div>
+                        <h3 className="text-xs font-extrabold text-[var(--rh-blue)] mt-2 mb-0.5 leading-snug">
+                          {lang === 'en' ? item.titleEn : item.titleId}
+                        </h3>
+                        <p className="text-[11px] text-[var(--rh-text)] opacity-75 m-0 leading-snug line-clamp-2">
+                          {lang === 'en' ? item.descEn : item.descId}
+                        </p>
+                      </Link>
+                    )
+                  })}
                 </motion.div>
               </AnimatePresence>
 
               <button
                 type="button"
                 onClick={() =>
-                  goMobileSlide(mobileIndex === 0 ? SERVICES.length - 1 : mobileIndex - 1, -1)
+                  goMobileSlide(mobileIndex === 0 ? mobilePages.length - 1 : mobileIndex - 1, -1)
                 }
                 aria-label="Layanan sebelumnya"
-                className="absolute left-0 top-20 w-9 h-9 rounded-full bg-white border border-[var(--rh-border)] shadow-sm flex items-center justify-center text-[var(--rh-blue)] cursor-pointer"
+                className="absolute left-0 top-[38%] -translate-y-1/2 w-8 h-8 rounded-full bg-white border border-[var(--rh-border)] shadow-sm flex items-center justify-center text-[var(--rh-blue)] cursor-pointer"
               >
-                <ChevronLeft size={16} />
+                <ChevronLeft size={15} />
               </button>
               <button
                 type="button"
                 onClick={() =>
-                  goMobileSlide(mobileIndex === SERVICES.length - 1 ? 0 : mobileIndex + 1, 1)
+                  goMobileSlide(mobileIndex === mobilePages.length - 1 ? 0 : mobileIndex + 1, 1)
                 }
                 aria-label="Layanan berikutnya"
-                className="absolute right-0 top-20 w-9 h-9 rounded-full bg-white border border-[var(--rh-border)] shadow-sm flex items-center justify-center text-[var(--rh-blue)] cursor-pointer"
+                className="absolute right-0 top-[38%] -translate-y-1/2 w-8 h-8 rounded-full bg-white border border-[var(--rh-border)] shadow-sm flex items-center justify-center text-[var(--rh-blue)] cursor-pointer"
               >
-                <ChevronRight size={16} />
+                <ChevronRight size={15} />
               </button>
             </div>
 
-            {/* Mobile Dots */}
+            {/* Mobile Dots (3 pages) */}
             <div className="flex items-center justify-center gap-1.5 mt-5">
-              {SERVICES.map((s, idx) => (
+              {mobilePages.map((_, idx) => (
                 <button
-                  key={s.id}
+                  key={idx}
                   type="button"
                   onClick={() => goMobileSlide(idx, idx > mobileIndex ? 1 : -1)}
-                  aria-label={s.titleId}
+                  aria-label={`Halaman layanan mobile ${idx + 1}`}
                   className={`h-2 rounded-full border-0 cursor-pointer transition-all ${
                     mobileIndex === idx
                       ? 'w-5 bg-[var(--rh-orange)]'
