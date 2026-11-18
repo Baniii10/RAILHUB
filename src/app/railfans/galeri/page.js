@@ -2,10 +2,10 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import Navbar from '@/components/layout/Navbar'
-import { Download, ArrowLeft, Heart, X } from 'lucide-react'
+import PageHeader from '@/components/layout/PageHeader'
+import { Download, Heart, X } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import toast from 'react-hot-toast'
 
@@ -156,25 +156,12 @@ export default function RailfansGaleriPage() {
       <Navbar />
 
       <main className="flex-1 pb-16">
-        {/* Compact Dark Header */}
-        <section className="bg-[#0b1626] text-white border-b border-white/10" style={{ padding: '4.5rem 0 3rem' }}>
-          <div className="rh-container">
-            <Link
-              href="/railfans"
-              className="inline-flex items-center gap-1.5 text-xs font-semibold text-white/75 no-underline hover:text-white mb-4"
-            >
-              <ArrowLeft size={14} />
-              <span>Kembali ke Komunitas</span>
-            </Link>
-
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight m-0">
-              Galeri Foto Railfans
-            </h1>
-            <p className="text-sm text-white/75 m-0 mt-1.5 max-w-xl">
-              Arsip dokumentasi lokomotif CC 206, CC 201, CC 203, CC 300, dan perjalanan lintas Jawa.
-            </p>
-          </div>
-        </section>
+        <PageHeader
+          title="Galeri Foto Railfans"
+          subtitle="Arsip dokumentasi lokomotif dan perjalanan lintas Jawa."
+          backHref="/railfans"
+          backLabel="Kembali ke Komunitas"
+        />
 
         {/* Filter + Grid */}
         <div className="rh-container pt-6 sm:pt-8 space-y-6">

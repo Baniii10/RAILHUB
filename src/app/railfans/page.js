@@ -1,7 +1,7 @@
 'use client'
 
-import Link from 'next/link'
 import Navbar from '@/components/layout/Navbar'
+import PageHeader from '@/components/layout/PageHeader'
 import DiscordCommunityBanner from '@/components/railfans/DiscordCommunityBanner'
 import Locomotive3DViewer from '@/components/railfans/Locomotive3DViewer'
 import RailwayHistorySection from '@/components/railfans/RailwayHistorySection'
@@ -14,25 +14,11 @@ export default function RailfansPage() {
       <Navbar />
 
       <main className="flex-1 pb-16">
-        {/* Clean Editorial Header */}
-        <section className="bg-[#0b1626] text-white border-b border-white/10" style={{ padding: '4.5rem 0 3rem' }}>
-          <div className="rh-container">
-            <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs text-white/60 mb-3">
-              <Link href="/" style={{ color: 'rgba(255,255,255,0.75)' }} className="no-underline hover:text-white">
-                Beranda
-              </Link>
-              <span>/</span>
-              <span className="text-[var(--rh-orange)] font-semibold">Komunitas Railfans</span>
-            </nav>
-
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight m-0">
-              Komunitas Railfans RAILHUB
-            </h1>
-            <p className="text-sm sm:text-base text-white/75 m-0 mt-2 max-w-xl">
-              Sejarah perkeretaapian Indonesia, showroom 3D lokomotif, galeri spotting, dan komunitas Discord.
-            </p>
-          </div>
-        </section>
+        <PageHeader
+          title="Komunitas Railfans"
+          subtitle="Sejarah rel, showroom 3D lokomotif, dan galeri spotting."
+          breadcrumbLabel="Komunitas Railfans"
+        />
 
         {/* Unified Single-Page Flow */}
         <div className="rh-container pt-8 sm:pt-10 space-y-12">

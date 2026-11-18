@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import Navbar from '@/components/layout/Navbar'
+import PageHeader from '@/components/layout/PageHeader'
 import AboutNetworkBumperPlayer from '@/components/about/AboutNetworkBumperPlayer'
 import ScrollReveal from '@/components/ui/ScrollReveal'
 import { ArrowRight } from 'lucide-react'
@@ -56,25 +57,11 @@ export default function AboutPage() {
       <Navbar />
 
       <main className="flex-1 pb-20">
-        {/* Clean Editorial Header */}
-        <section className="bg-[#0b1626] text-white border-b border-white/10" style={{ padding: '4.5rem 0 3rem' }}>
-          <div className="rh-container">
-            <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs text-white/60 mb-3">
-              <Link href="/" style={{ color: 'rgba(255,255,255,0.75)' }} className="no-underline hover:text-white">
-                Beranda
-              </Link>
-              <span>/</span>
-              <span className="text-[var(--rh-orange)] font-semibold">Tentang RAILHUB</span>
-            </nav>
-
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight m-0 max-w-2xl">
-              Sistem Informasi & Reservasi Kereta Api Pulau Jawa
-            </h1>
-            <p className="text-sm sm:text-base text-white/75 m-0 mt-2 max-w-xl">
-              Menyatukan pemesanan kursi atomik, e-boarding QR, pelacakan perjalanan, dan layanan restorasi dalam satu platform.
-            </p>
-          </div>
-        </section>
+        <PageHeader
+          title="Tentang RAILHUB"
+          subtitle="Platform reservasi dan informasi perjalanan kereta api Pulau Jawa."
+          breadcrumbLabel="Tentang RAILHUB"
+        />
 
         <div className="rh-container pt-10 sm:pt-12 space-y-14">
           {/* 1. Mission + Single Remotion Bumper */}
