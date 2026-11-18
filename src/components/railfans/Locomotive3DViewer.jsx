@@ -615,12 +615,29 @@ function buildCouplerAndPilot(group, xPos, yPos, dir, pilotColor) {
 }
 
 function addSpotLight(group, x, y, z, targetX, lightsRef) {
-  const spot = new THREE.SpotLight(0xfff5d1, 3.6, 22, Math.PI / 6, 0.45, 1)
+  const spot = new THREE.SpotLight(0xfff4cc, 65, 34, Math.PI / 5.5, 0.55, 1.4)
   spot.position.set(x, y, z)
-  spot.target.position.set(targetX, 0.2, z)
+  spot.target.position.set(targetX, 0.35, z)
   group.add(spot)
   group.add(spot.target)
   lightsRef.current.push(spot)
+
+  // Visible volumetric forward beam locked to the front headlight (+X)
+  const beamLength = 10.5
+  const beamGeo = new THREE.ConeGeometry(1.75, beamLength, 24, 1, true)
+  beamGeo.translate(0, -beamLength / 2, 0)
+  const beamMat = new THREE.MeshBasicMaterial({
+    color: 0xfff3c4,
+    transparent: true,
+    opacity: 0.16,
+    depthWrite: false,
+    blending: THREE.AdditiveBlending,
+    side: THREE.DoubleSide,
+  })
+  const beam = new THREE.Mesh(beamGeo, beamMat)
+  beam.position.set(x, y, z)
+  beam.rotation.z = Math.PI / 2 - 0.12
+  group.add(beam)
 }
 
 /* ── 1. CC 206 (GE CM20EMP) — Double Cab ── */

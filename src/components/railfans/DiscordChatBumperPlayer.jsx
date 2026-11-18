@@ -31,9 +31,9 @@ export default function DiscordChatBumperPlayer() {
       {mounted ? (
         <Player
           component={DiscordChatBumper}
-          durationInFrames={300}
+          durationInFrames={540}
           compositionWidth={720}
-          compositionHeight={340}
+          compositionHeight={360}
           fps={30}
           style={{ width: '100%', height: '100%' }}
           controls={false}

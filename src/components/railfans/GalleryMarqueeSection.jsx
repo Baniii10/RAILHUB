@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -56,7 +56,67 @@ const MARQUEE_PHOTOS = [
 export default function GalleryMarqueeSection() {
   const router = useRouter()
   const { user } = useAuth()
+  const scrollRef = useRef(null)
+  const isPausedRef = useRef(false)
+  const dragStartXRef = useRef(0)
+  const dragScrollLeftRef = useRef(0)
+  const isDraggingRef = useRef(false)
+  const movedRef = useRef(false)
+
   const [activePhoto, setActivePhoto] = useState(null)
+
+  // Smooth auto-slide + seamless infinite loop while keeping native finger swipe & mouse drag
+  useEffect(() => {
+    const el = scrollRef.current
+    if (!el) return
+
+    const prefersReduced =
+      typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (prefersReduced) return
+
+    let animId
+    let lastTime = performance.now()
+
+    const step = (now) => {
+      const dt = Math.min(now - lastTime, 50)
+      lastTime = now
+
+      if (!isPausedRef.current && !isDraggingRef.current && el) {
+        const halfWidth = el.scrollWidth / 2
+        if (halfWidth > 0) {
+          el.scrollLeft += dt * 0.045
+          if (el.scrollLeft >= halfWidth) {
+            el.scrollLeft -= halfWidth
+          }
+        }
+      }
+      animId = requestAnimationFrame(step)
+    }
+
+    animId = requestAnimationFrame(step)
+    return () => cancelAnimationFrame(animId)
+  }, [])
+
+  const handlePointerDown = (e) => {
+    const el = scrollRef.current
+    if (!el) return
+    isDraggingRef.current = true
+    movedRef.current = false
+    dragStartXRef.current = e.pageX
+    dragScrollLeftRef.current = el.scrollLeft
+  }
+
+  const handlePointerMove = (e) => {
+    if (!isDraggingRef.current || !scrollRef.current) return
+    const dx = e.pageX - dragStartXRef.current
+    if (Math.abs(dx) > 8) movedRef.current = true
+    scrollRef.current.scrollLeft = dragScrollLeftRef.current - dx
+  }
+
+  const handlePointerUp = () => {
+    isDraggingRef.current = false
+  }
 
   const handleDownload = (photo, e) => {
     if (e) e.stopPropagation()
@@ -78,7 +138,6 @@ export default function GalleryMarqueeSection() {
     }
   }
 
-  // Duplicate list once for seamless right-sliding loop
   const trackItems = [...MARQUEE_PHOTOS, ...MARQUEE_PHOTOS]
 
   return (
@@ -89,7 +148,7 @@ export default function GalleryMarqueeSection() {
             Galeri Spotting Railfans
           </h2>
           <p className="text-xs sm:text-sm text-[var(--rh-text)] opacity-80 m-0 mt-0.5">
-            Klik foto untuk pratinjau penuh atau unduh arsip HD.
+            Geser atau klik foto untuk pratinjau penuh dan unduh arsip HD.
           </p>
         </div>
 
@@ -103,33 +162,50 @@ export default function GalleryMarqueeSection() {
         </Link>
       </div>
 
-      {/* Minimalist Right-Sliding Marquee */}
-      <div className="rh-marquee-wrapper overflow-hidden relative py-1">
-        <div className="rh-marquee-track-right flex gap-4 w-max">
-          {trackItems.map((photo, idx) => (
-            <button
-              key={`${photo.id}-${idx}`}
-              type="button"
-              onClick={() => setActivePhoto(photo)}
-              className="group text-left bg-transparent border-0 p-0 cursor-pointer w-[240px] sm:w-[290px] shrink-0"
-            >
-              <div className="relative w-full aspect-[16/10] rounded-lg overflow-hidden bg-[#0b1626]">
-                <Image
-                  src={photo.image}
-                  alt={photo.title}
-                  fill
-                  unoptimized
-                  sizes="290px"
-                  className="object-cover group-hover:scale-[1.03] transition-transform duration-300"
-                />
-              </div>
-              <div className="mt-2 flex items-baseline justify-between gap-2">
-                <span className="text-xs font-extrabold text-[var(--rh-orange)]">{photo.loco}</span>
-                <span className="text-[11px] text-[var(--rh-text-3)] truncate">{photo.location}</span>
-              </div>
-            </button>
-          ))}
-        </div>
+      {/* Auto-sliding + Finger-swipeable Horizontal Track */}
+      <div
+        ref={scrollRef}
+        onMouseEnter={() => { isPausedRef.current = true }}
+        onMouseLeave={() => {
+          isPausedRef.current = false
+          isDraggingRef.current = false
+        }}
+        onTouchStart={() => { isPausedRef.current = true }}
+        onTouchEnd={() => {
+          setTimeout(() => { isPausedRef.current = false }, 1200)
+        }}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerCancel={handlePointerUp}
+        className="flex gap-4 overflow-x-auto touch-pan-x select-none py-1 cursor-grab active:cursor-grabbing"
+        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+      >
+        {trackItems.map((photo, idx) => (
+          <button
+            key={`${photo.id}-${idx}`}
+            type="button"
+            onClick={() => {
+              if (!movedRef.current) setActivePhoto(photo)
+            }}
+            className="group text-left bg-transparent border-0 p-0 cursor-pointer w-[240px] sm:w-[290px] shrink-0"
+          >
+            <div className="relative w-full aspect-[16/10] rounded-lg overflow-hidden bg-[#0b1626] pointer-events-none">
+              <Image
+                src={photo.image}
+                alt={photo.title}
+                fill
+                unoptimized
+                sizes="290px"
+                className="object-cover group-hover:scale-[1.03] transition-transform duration-300"
+              />
+            </div>
+            <div className="mt-2 flex items-baseline justify-between gap-2">
+              <span className="text-xs font-extrabold text-[var(--rh-orange)]">{photo.loco}</span>
+              <span className="text-[11px] text-[var(--rh-text-3)] truncate">{photo.location}</span>
+            </div>
+          </button>
+        ))}
       </div>
 
       {/* Inline Lightbox Modal */}
@@ -179,29 +255,6 @@ export default function GalleryMarqueeSection() {
           </div>
         </div>
       )}
-
-      <style jsx>{`
-        @keyframes rhSlideRight {
-          0% {
-            transform: translateX(-50%);
-          }
-          100% {
-            transform: translateX(0%);
-          }
-        }
-        .rh-marquee-track-right {
-          animation: rhSlideRight 38s linear infinite;
-        }
-        .rh-marquee-wrapper:hover .rh-marquee-track-right,
-        .rh-marquee-wrapper:focus-within .rh-marquee-track-right {
-          animation-play-state: paused;
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .rh-marquee-track-right {
-            animation: none;
-          }
-        }
-      `}</style>
     </section>
   )
 }

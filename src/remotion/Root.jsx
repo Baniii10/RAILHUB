@@ -21,10 +21,10 @@ export function RemotionRoot() {
       <Composition
         id="DiscordChatBumper"
         component={DiscordChatBumper}
-        durationInFrames={300}
+        durationInFrames={540}
         fps={30}
         width={720}
-        height={340}
+        height={360}
         defaultProps={{}}
       />
       <Composition
