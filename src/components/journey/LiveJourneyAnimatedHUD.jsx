@@ -1,6 +1,13 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
+import dynamic from 'next/dynamic'
+import { LiveTrainScene } from '@/remotion/LiveTrainScene'
+
+const Player = dynamic(
+  () => import('@remotion/player').then((mod) => mod.Player),
+  { ssr: false }
+)
 
 const DEFAULT_STOPS = [
   { id: 'gmr', name: 'Stasiun Gambir', code: 'GMR', city: 'Jakarta', arr: '08:00', dep: '08:15', status: 'passed' },
@@ -20,9 +27,19 @@ export default function LiveJourneyAnimatedHUD({
   arrivalTime = null,
 }) {
   const isRunning = Boolean(isDeparted && !isCompleted)
+  const [mounted, setMounted] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
   const [isDay, setIsDay] = useState(true)
   const [speed, setSpeed] = useState(isRunning ? 101 : 0)
   const [currentStationIdx, setCurrentStationIdx] = useState(isDeparted ? 1 : 0)
+
+  useEffect(() => {
+    setMounted(true)
+    const checkMobile = () => setIsMobile(window.innerWidth <= 768)
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   // Speed fluctuation physics: only runs when train has departed and not yet completed
   useEffect(() => {
@@ -76,563 +93,223 @@ export default function LiveJourneyAnimatedHUD({
             flexShrink: 0,
           }} className="animate-pulse" />
           <div>
-            <strong style={{ fontSize: '0.92rem', letterSpacing: '-0.01em', color: isDay ? '#0f172a' : '#ffffff', display: 'block', lineHeight: 1.2 }}>
+            <strong style={{ fontSize: '1.05rem', letterSpacing: '-0.01em', color: isDay ? '#0f172a' : '#ffffff', display: 'block', lineHeight: 1.25 }}>
               {trainName}
             </strong>
-            <small style={{ color: isDay ? '#64748b' : '#94a3b8', fontSize: '0.74rem', display: 'block' }}>
+            <small style={{ color: isDay ? '#64748b' : '#94a3b8', fontSize: '0.84rem', display: 'block' }}>
               {routeTitle}
             </small>
           </div>
         </div>
 
-        {/* Ambient indicator & day/night switcher */}
-        <button
-          type="button"
-          onClick={() => setIsDay(d => !d)}
-          style={{
-            background: isDay ? 'rgba(37, 99, 235, 0.08)' : 'rgba(255, 255, 255, 0.08)',
-            border: isDay ? '1px solid rgba(37, 99, 235, 0.2)' : '1px solid rgba(255, 255, 255, 0.15)',
-            color: isDay ? '#1e40af' : '#93c5fd',
-            borderRadius: 8,
-            padding: '3px 9px',
-            fontSize: '0.72rem',
-            fontWeight: 700,
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 5,
-          }}
-          title={isDay ? 'Klik untuk suasana malam' : 'Klik untuk suasana siang'}
-        >
-          <span>{isDay ? 'Siang' : 'Malam'}</span>
-        </button>
+        {/* Right: Standby / Status Pill (tidak menutupi kereta) + Day/Night Switcher */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', flexWrap: 'wrap' }}>
+          {!isDeparted && (
+            <div style={{
+              background: isDay ? '#0f172a' : 'rgba(255, 255, 255, 0.1)',
+              color: '#ffffff',
+              padding: '0.25rem 0.7rem',
+              borderRadius: '999px',
+              border: '1px solid rgba(255, 255, 255, 0.16)',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              whiteSpace: 'nowrap',
+            }}>
+              <span style={{
+                width: 6,
+                height: 6,
+                borderRadius: '50%',
+                background: '#f59e0b',
+                boxShadow: '0 0 8px #f59e0b',
+                display: 'inline-block',
+              }} className="animate-pulse" />
+              <span style={{ fontSize: '0.7rem', fontWeight: 600, color: 'rgba(255, 255, 255, 0.85)' }}>
+                Standby Peron ·
+              </span>
+              <strong style={{ fontSize: '0.74rem', fontFamily: 'var(--font-mono, monospace)', color: '#fbbf24' }}>
+                {countdown && typeof countdown === 'object' && countdown.hours != null
+                  ? `${String(countdown.hours).padStart(2, '0')}j ${String(countdown.minutes || 0).padStart(2, '0')}m ${String(countdown.seconds || 0).padStart(2, '0')}d`
+                  : (typeof countdown === 'string' ? countdown : 'Standby')}
+              </strong>
+            </div>
+          )}
+
+          {isCompleted && (
+            <div style={{
+              background: 'rgba(5, 150, 105, 0.14)',
+              color: '#059669',
+              padding: '0.25rem 0.65rem',
+              borderRadius: '999px',
+              fontSize: '0.72rem',
+              fontWeight: 700,
+            }}>
+              Tiba di Tujuan
+            </div>
+          )}
+
+          <button
+            type="button"
+            onClick={() => setIsDay(d => !d)}
+            style={{
+              background: isDay ? 'rgba(37, 99, 235, 0.08)' : 'rgba(255, 255, 255, 0.08)',
+              border: isDay ? '1px solid rgba(37, 99, 235, 0.2)' : '1px solid rgba(255, 255, 255, 0.15)',
+              color: isDay ? '#1e40af' : '#93c5fd',
+              borderRadius: 8,
+              padding: '3px 9px',
+              fontSize: '0.72rem',
+              fontWeight: 700,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 5,
+            }}
+            title={isDay ? 'Klik untuk suasana malam' : 'Klik untuk suasana siang'}
+          >
+            <span>{isDay ? 'Siang' : 'Malam'}</span>
+          </button>
+        </div>
       </div>
 
-      {/* ── MAIN SCENERY & ANIMATED TRAIN CANVAS (VECTOR PARALLAX) ── */}
+      {/* ── CLEAN TRANSIT STOPS TIMELINE BAR (Di atas canvas, tidak menutupi atap stasiun) ── */}
       <div style={{
-        position: 'relative',
-        width: '100%',
-        height: '250px',
-        overflow: 'hidden',
-        background: isDay
-          ? 'linear-gradient(180deg, #38bdf8 0%, #7dd3fc 40%, #bae6fd 75%, #94a3b8 100%)'
-          : 'linear-gradient(180deg, #030712 0%, #0a1733 45%, #0f2c59 80%, #1e293b 100%)',
-        transition: 'background 0.5s ease',
+        padding: '0.6rem 1.15rem',
+        background: isDay ? '#ffffff' : '#0f172a',
+        borderBottom: isDay ? '1px solid #f1f5f9' : '1px solid rgba(255, 255, 255, 0.08)',
       }}>
-        {/* ── IN-CANVAS TRANSIT STOPS TIMELINE (Dashed connectors, hours, day/night) ── */}
         <div style={{
-          position: 'absolute',
-          top: 10,
-          left: 10,
-          right: 10,
-          zIndex: 15,
-          background: isDay ? 'rgba(255, 255, 255, 0.82)' : 'rgba(10, 23, 51, 0.85)',
-          backdropFilter: 'blur(10px)',
-          WebkitBackdropFilter: 'blur(10px)',
-          border: isDay ? '1px solid rgba(255, 255, 255, 0.7)' : '1px solid rgba(255, 255, 255, 0.15)',
-          borderRadius: 12,
-          padding: '0.45rem 0.65rem',
-          boxShadow: isDay ? '0 4px 16px rgba(0,0,0,0.06)' : '0 8px 24px rgba(0,0,0,0.4)',
-        }}>
-          <div style={{
-            position: 'relative',
-            display: 'flex',
-            alignItems: 'flex-start',
-            justifyContent: 'space-between',
-            gap: '0.2rem',
-          }}>
-            {/* Dashed connector line passing through behind the stops */}
-            <div style={{
-              position: 'absolute',
-              top: '8px',
-              left: '14px',
-              right: '14px',
-              height: 0,
-              borderTop: `2px dashed ${isDay ? 'rgba(71, 85, 105, 0.4)' : 'rgba(255, 255, 255, 0.35)'}`,
-              zIndex: 1,
-            }} />
-
-            {stops.map((stop, idx) => {
-              const isPassed = idx < currentStationIdx
-              const isCurrent = idx === currentStationIdx
-              const isUpcoming = idx > currentStationIdx
-              const timeStr = stop.arr || stop.dep || stop.time || '-'
-
-              return (
-                <div
-                  key={stop.id || idx}
-                  style={{
-                    position: 'relative',
-                    zIndex: 2,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    textAlign: 'center',
-                    minWidth: 0,
-                    flex: 1,
-                  }}
-                >
-                  {/* Station Node Indicator */}
-                  <div style={{
-                    width: isCurrent ? 16 : 12,
-                    height: isCurrent ? 16 : 12,
-                    borderRadius: '50%',
-                    background: isPassed
-                      ? (isDay ? '#059669' : '#10b981')
-                      : isCurrent
-                        ? (isDay ? '#2563eb' : '#38bdf8')
-                        : (isDay ? '#ffffff' : '#1e293b'),
-                    border: isPassed
-                      ? 'none'
-                      : isCurrent
-                        ? (isDay ? '2.5px solid #bfdbfe' : '2.5px solid rgba(56, 189, 248, 0.5)')
-                        : `1.5px solid ${isDay ? '#94a3b8' : 'rgba(255,255,255,0.4)'}`,
-                    boxShadow: isCurrent ? (isDay ? '0 0 10px #2563eb' : '0 0 12px #38bdf8') : 'none',
-                    display: 'grid',
-                    placeItems: 'center',
-                    transition: 'all 0.3s ease',
-                  }}>
-                    {isPassed && (
-                      <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#ffffff' }} />
-                    )}
-                    {isCurrent && (
-                      <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#ffffff' }} className="animate-ping" />
-                    )}
-                  </div>
-
-                  {/* Station Code / Name */}
-                  <span style={{
-                    marginTop: 3,
-                    fontSize: '0.68rem',
-                    fontWeight: isCurrent ? 800 : 700,
-                    color: isCurrent
-                      ? (isDay ? '#1d4ed8' : '#38bdf8')
-                      : isPassed
-                        ? (isDay ? '#047857' : '#34d399')
-                        : (isDay ? '#334155' : '#cbd5e1'),
-                    lineHeight: 1.1,
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    maxWidth: '100%',
-                  }}>
-                    {stop.code || stop.name?.split(' ')?.[1] || stop.name}
-                  </span>
-
-                  {/* Station Time ("ada jamnya") */}
-                  <span style={{
-                    fontSize: '0.62rem',
-                    fontFamily: 'var(--font-mono, monospace)',
-                    fontWeight: 700,
-                    color: isCurrent
-                      ? (isDay ? '#1e40af' : '#67e8f9')
-                      : (isDay ? '#64748b' : '#94a3b8'),
-                    marginTop: 1,
-                    lineHeight: 1,
-                  }}>
-                    {timeStr}
-                  </span>
-                </div>
-              )
-            })}
-          </div>
-        </div>
-
-        {/* Dynamic Celestial Body: Radiant Sun or Luminous Moon */}
-        {isDay ? (
-          <div
-            onClick={() => setIsDay(false)}
-            style={{
-              position: 'absolute',
-              top: 75,
-              right: 28,
-              width: 44,
-              height: 44,
-              borderRadius: '50%',
-              background: 'radial-gradient(circle, #fde047 30%, #f59e0b 80%)',
-              boxShadow: '0 0 30px #fde047, 0 0 60px rgba(253, 224, 71, 0.45)',
-              cursor: 'pointer',
-              zIndex: 3,
-            }}
-            title="Klik matahari untuk berganti ke mode malam"
-          />
-        ) : (
-          <div
-            onClick={() => setIsDay(true)}
-            style={{
-              position: 'absolute',
-              top: 75,
-              right: 32,
-              width: 38,
-              height: 38,
-              borderRadius: '50%',
-              background: '#ffffff',
-              boxShadow: '0 0 25px rgba(255, 255, 255, 0.8), 0 0 45px rgba(96, 165, 250, 0.4)',
-              cursor: 'pointer',
-              zIndex: 3,
-            }}
-            title="Klik bulan untuk berganti ke mode siang"
-          >
-            {/* Crescent mask */}
-            <div style={{
-              position: 'absolute',
-              top: -3,
-              left: -5,
-              width: 32,
-              height: 32,
-              borderRadius: '50%',
-              background: '#0a1733',
-            }} />
-          </div>
-        )}
-
-        {/* Night Stars */}
-        {!isDay && (
-          <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 2 }}>
-            {[
-              { x: 15, y: 80 }, { x: 45, y: 110 }, { x: 75, y: 78 }, { x: 110, y: 120 },
-              { x: 150, y: 85 }, { x: 195, y: 105 }, { x: 245, y: 75 }, { x: 295, y: 115 },
-              { x: 350, y: 80 }, { x: 410, y: 95 }, { x: 480, y: 75 }, { x: 550, y: 110 }
-            ].map((star, sIdx) => (
-              <span
-                key={sIdx}
-                className="animate-pulse"
-                style={{
-                  position: 'absolute',
-                  top: star.y,
-                  left: star.x,
-                  width: 2.2,
-                  height: 2.2,
-                  borderRadius: '50%',
-                  background: '#ffffff',
-                  opacity: 0.85,
-                  animationDelay: `${(sIdx % 4) * 0.4}s`,
-                }}
-              />
-            ))}
-          </div>
-        )}
-
-        {/* Distant Mountains (Parallax Layer 1) */}
-        <svg
-          viewBox="0 0 1000 120"
-          preserveAspectRatio="none"
-          style={{
-            position: 'absolute',
-            bottom: 55,
-            left: 0,
-            width: '200%',
-            height: '100px',
-            opacity: isDay ? 0.6 : 0.35,
-            animation: isRunning ? 'rhScrollMountains 18s linear infinite' : 'none',
-            zIndex: 2,
-          }}
-        >
-          <path
-            d="M0,120 L0,50 Q120,10 240,60 T480,40 Q620,5 760,65 T1000,50 L1000,120 Z"
-            fill={isDay ? '#0284c7' : '#091e42'}
-          />
-        </svg>
-
-        {/* Midground Rolling Green Hills (Parallax Layer 2) */}
-        <svg
-          viewBox="0 0 1000 100"
-          preserveAspectRatio="none"
-          style={{
-            position: 'absolute',
-            bottom: 35,
-            left: 0,
-            width: '200%',
-            height: '75px',
-            opacity: isDay ? 0.85 : 0.5,
-            animation: isRunning ? 'rhScrollHills 8s linear infinite' : 'none',
-            zIndex: 3,
-          }}
-        >
-          <path
-            d="M0,100 L0,45 Q150,15 300,55 T600,35 Q750,15 900,60 T1000,45 L1000,100 Z"
-            fill={isDay ? '#10b981' : '#06302b'}
-          />
-        </svg>
-
-        {/* Electrical Catenary Poles (Zooming by when running) */}
-        <div style={{
-          position: 'absolute',
-          bottom: 24,
-          left: 0,
-          right: 0,
-          height: 90,
-          pointerEvents: 'none',
-          overflow: 'hidden',
-          zIndex: 4,
-        }}>
-          <div
-            style={{
-              width: '200%',
-              height: '100%',
-              display: 'flex',
-              justifyContent: 'space-around',
-              animation: isRunning ? 'rhScrollPoles 2.5s linear infinite' : 'none',
-            }}
-          >
-            {[...Array(6)].map((_, i) => (
-              <div key={i} style={{ width: 3.5, height: '100%', background: isDay ? '#64748b' : '#334155', position: 'relative' }}>
-                <div style={{ position: 'absolute', top: 10, right: 0, width: 30, height: 2, background: isDay ? '#64748b' : '#475569' }} />
-                <div style={{ position: 'absolute', top: 20, left: -50, right: -50, height: 1, background: isDay ? 'rgba(100,116,139,0.4)' : 'rgba(148,163,184,0.3)' }} />
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Transit Station Platform (Appears when Kereta Sedang Transit Berhenti di Perjalanan) */}
-        {!isRunning && isDeparted && !isCompleted && (
-          <div style={{
-            position: 'absolute',
-            bottom: 74,
-            left: '50%',
-            transform: 'translateX(-50%)',
-            background: isDay ? 'rgba(255, 255, 255, 0.96)' : 'rgba(15, 23, 42, 0.94)',
-            backdropFilter: 'blur(8px)',
-            border: isDay ? '1.5px solid #2563eb' : '1.5px solid #38bdf8',
-            borderRadius: '10px',
-            padding: '0.35rem 1rem',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.6rem',
-            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.3)',
-            zIndex: 10,
-          }}>
-            <span style={{
-              width: 8,
-              height: 8,
-              borderRadius: '50%',
-              background: '#f59e0b',
-              boxShadow: '0 0 10px #f59e0b',
-            }} className="animate-pulse" />
-            <div style={{ textAlign: 'left' }}>
-              <strong style={{ fontSize: '0.8rem', color: isDay ? '#0f172a' : '#ffffff', display: 'block' }}>
-                Transit: {currentStop.name} ({currentStop.code})
-              </strong>
-              <small style={{ color: isDay ? '#64748b' : '#94a3b8', fontSize: '0.7rem' }}>
-                Kereta Berhenti · Pintu Terbuka · Selesai {currentStop.dep} WIB
-              </small>
-            </div>
-          </div>
-        )}
-
-        {/* ── THE TRAIN COMPOSITION (Locomotive + Passenger Carriages) ── */}
-        <div style={{
-          position: 'absolute',
-          bottom: 20,
-          left: '50%',
-          transform: 'translateX(-50%)',
+          position: 'relative',
           display: 'flex',
-          alignItems: 'flex-end',
-          gap: 3,
-          zIndex: 5,
-          animation: isRunning ? 'rhTrainChug 0.35s ease-in-out infinite alternate' : 'none',
+          alignItems: 'flex-start',
+          justifyContent: 'space-between',
+          gap: '0.25rem',
         }}>
-          {/* Passenger Carriage 2 */}
+          {/* Dashed connector line passing through behind the stops */}
           <div style={{
-            width: 105,
-            height: 36,
-            background: 'linear-gradient(180deg, #ffffff 0%, #e2e8f0 70%, #94a3b8 100%)',
-            borderRadius: '5px 5px 2px 2px',
-            position: 'relative',
-            border: '1px solid #475569',
-            boxShadow: '0 3px 8px rgba(0,0,0,0.3)',
-          }}>
-            <div style={{ position: 'absolute', top: 11, left: 0, right: 0, height: 4, background: '#ea580c' }} />
-            <div style={{ position: 'absolute', top: 15, left: 0, right: 0, height: 3, background: '#1e3a8a' }} />
-            <div style={{ position: 'absolute', top: 4, left: 8, right: 8, display: 'flex', justifyContent: 'space-between' }}>
-              {[...Array(5)].map((_, w) => (
-                <div key={w} style={{
-                  width: 13,
-                  height: 8,
-                  borderRadius: 2,
-                  background: !isDay ? '#fde047' : '#38bdf8',
-                  boxShadow: !isDay ? '0 0 8px rgba(253, 224, 71, 0.8)' : 'none',
-                }} />
-              ))}
-            </div>
-            <div style={{ position: 'absolute', bottom: -5, left: 14, width: 9, height: 9, borderRadius: '50%', background: '#1e293b', border: '2px solid #94a3b8' }} />
-            <div style={{ position: 'absolute', bottom: -5, right: 14, width: 9, height: 9, borderRadius: '50%', background: '#1e293b', border: '2px solid #94a3b8' }} />
-          </div>
-
-          {/* Passenger Carriage 1 */}
-          <div style={{
-            width: 105,
-            height: 36,
-            background: 'linear-gradient(180deg, #ffffff 0%, #e2e8f0 70%, #94a3b8 100%)',
-            borderRadius: '5px 5px 2px 2px',
-            position: 'relative',
-            border: '1px solid #475569',
-            boxShadow: '0 3px 8px rgba(0,0,0,0.3)',
-          }}>
-            <div style={{ position: 'absolute', top: 11, left: 0, right: 0, height: 4, background: '#ea580c' }} />
-            <div style={{ position: 'absolute', top: 15, left: 0, right: 0, height: 3, background: '#1e3a8a' }} />
-            <div style={{ position: 'absolute', top: 4, left: 8, right: 8, display: 'flex', justifyContent: 'space-between' }}>
-              {[...Array(5)].map((_, w) => (
-                <div key={w} style={{
-                  width: 13,
-                  height: 8,
-                  borderRadius: 2,
-                  background: !isDay ? '#fde047' : '#38bdf8',
-                  boxShadow: !isDay ? '0 0 8px rgba(253, 224, 71, 0.8)' : 'none',
-                }} />
-              ))}
-            </div>
-            <div style={{ position: 'absolute', bottom: -5, left: 14, width: 9, height: 9, borderRadius: '50%', background: '#1e293b', border: '2px solid #94a3b8' }} />
-            <div style={{ position: 'absolute', bottom: -5, right: 14, width: 9, height: 9, borderRadius: '50%', background: '#1e293b', border: '2px solid #94a3b8' }} />
-          </div>
-
-          {/* Locomotive (CC 206 Style Aerodynamic Cab) */}
-          <div style={{
-            width: 125,
-            height: 42,
-            background: 'linear-gradient(180deg, #f8fafc 0%, #e2e8f0 65%, #1e3a8a 100%)',
-            borderRadius: '2px 18px 2px 2px',
-            position: 'relative',
-            border: '1px solid #334155',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.35)',
-          }}>
-            {/* Aerodynamic windshield */}
-            <div style={{
-              position: 'absolute',
-              top: 5,
-              right: 12,
-              width: 20,
-              height: 13,
-              borderRadius: '2px 9px 2px 2px',
-              background: !isDay ? '#fde047' : '#0284c7',
-              boxShadow: !isDay ? '0 0 10px #fde047' : 'none',
-            }} />
-
-            {/* Locomotive Headlight */}
-            <div style={{
-              position: 'absolute',
-              bottom: 11,
-              right: -3,
-              width: 7,
-              height: 7,
-              borderRadius: '50%',
-              background: '#fef08a',
-              boxShadow: '0 0 12px #fef08a, 0 0 24px #facc15',
-            }} />
-
-            {/* Volumetric Forward Headlight Beam (Night Only) */}
-            {!isDay && isRunning && (
-              <div style={{
-                position: 'absolute',
-                bottom: -2,
-                left: 124,
-                width: 260,
-                height: 44,
-                background: 'linear-gradient(90deg, rgba(254, 240, 138, 0.55) 0%, rgba(250, 204, 21, 0.22) 40%, transparent 100%)',
-                clipPath: 'polygon(0% 40%, 100% 0%, 100% 100%, 0% 60%)',
-                pointerEvents: 'none',
-              }} />
-            )}
-
-            {/* Livery Stripes */}
-            <div style={{ position: 'absolute', top: 17, left: 0, right: 10, height: 4, background: '#ea580c' }} />
-            <div style={{ position: 'absolute', top: 21, left: 0, right: 6, height: 3.5, background: '#1e3a8a' }} />
-
-            {/* Locomotive Bogie & Wheels */}
-            <div style={{ position: 'absolute', bottom: -5, left: 16, width: 10, height: 10, borderRadius: '50%', background: '#0f172a', border: '2px solid #cbd5e1' }} />
-            <div style={{ position: 'absolute', bottom: -5, left: 32, width: 10, height: 10, borderRadius: '50%', background: '#0f172a', border: '2px solid #cbd5e1' }} />
-            <div style={{ position: 'absolute', bottom: -5, right: 16, width: 10, height: 10, borderRadius: '50%', background: '#0f172a', border: '2px solid #cbd5e1' }} />
-            <div style={{ position: 'absolute', bottom: -5, right: 32, width: 10, height: 10, borderRadius: '50%', background: '#0f172a', border: '2px solid #cbd5e1' }} />
-          </div>
-        </div>
-
-        {/* Continuous Steel Track & Gliding Ballast Ties */}
-        <div style={{
-          position: 'absolute',
-          bottom: 12,
-          left: 0,
-          right: 0,
-          height: 8,
-          background: isDay ? '#475569' : '#1e293b',
-          borderTop: '2px solid #94a3b8',
-          zIndex: 4,
-        }}>
-          <div style={{
-            width: '200%',
-            height: '100%',
-            backgroundImage: `repeating-linear-gradient(90deg, ${isDay ? '#334155' : '#0f172a'} 0px, ${isDay ? '#334155' : '#0f172a'} 4px, transparent 4px, transparent 18px)`,
-            animation: isRunning ? 'rhScrollTies 0.28s linear infinite' : 'none',
+            position: 'absolute',
+            top: '7px',
+            left: '16px',
+            right: '16px',
+            height: 0,
+            borderTop: `2px dashed ${isDay ? '#cbd5e1' : 'rgba(255, 255, 255, 0.25)'}`,
+            zIndex: 1,
           }} />
+
+          {stops.map((stop, idx) => {
+            const isPassed = idx < currentStationIdx
+            const isCurrent = idx === currentStationIdx
+            const timeStr = stop.arr || stop.dep || stop.time || '-'
+
+            return (
+              <div
+                key={stop.id || idx}
+                style={{
+                  position: 'relative',
+                  zIndex: 2,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  textAlign: 'center',
+                  minWidth: 0,
+                  flex: 1,
+                }}
+              >
+                <div style={{
+                  width: isCurrent ? 15 : 11,
+                  height: isCurrent ? 15 : 11,
+                  borderRadius: '50%',
+                  background: isPassed
+                    ? (isDay ? '#059669' : '#10b981')
+                    : isCurrent
+                      ? (isDay ? '#2563eb' : '#38bdf8')
+                      : (isDay ? '#ffffff' : '#1e293b'),
+                  border: isPassed
+                    ? 'none'
+                    : isCurrent
+                      ? (isDay ? '2.5px solid #bfdbfe' : '2.5px solid rgba(56, 189, 248, 0.5)')
+                      : `1.5px solid ${isDay ? '#94a3b8' : 'rgba(255,255,255,0.4)'}`,
+                  boxShadow: isCurrent ? (isDay ? '0 0 8px rgba(37,99,235,0.45)' : '0 0 10px #38bdf8') : 'none',
+                  display: 'grid',
+                  placeItems: 'center',
+                  marginTop: isCurrent ? 0 : 2,
+                }}>
+                  {isPassed && <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#ffffff' }} />}
+                  {isCurrent && <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#ffffff' }} />}
+                </div>
+
+                <span style={{
+                  marginTop: 4,
+                  fontSize: '0.8rem',
+                  fontWeight: isCurrent ? 800 : 700,
+                  color: isCurrent
+                    ? (isDay ? '#1d4ed8' : '#38bdf8')
+                    : isPassed
+                      ? (isDay ? '#047857' : '#34d399')
+                      : (isDay ? '#334155' : '#cbd5e1'),
+                  lineHeight: 1.15,
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  maxWidth: '100%',
+                }}>
+                  {stop.code || stop.name?.split(' ')?.[1] || stop.name}
+                </span>
+
+                <span style={{
+                  fontSize: '0.75rem',
+                  fontFamily: 'var(--font-mono, monospace)',
+                  fontWeight: 700,
+                  color: isCurrent
+                    ? (isDay ? '#1e40af' : '#67e8f9')
+                    : (isDay ? '#64748b' : '#94a3b8'),
+                  marginTop: 2,
+                  lineHeight: 1.1,
+                }}>
+                  {timeStr}
+                </span>
+              </div>
+            )
+          })}
         </div>
+      </div>
 
-        {/* ── COUNTDOWN OVERLAY WHEN TRAIN HAS NOT DEPARTED YET (MINIMALIST PILL) ── */}
-        {!isDeparted && (
-          <div style={{
-            position: 'absolute',
-            bottom: 24,
-            left: '50%',
-            transform: 'translateX(-50%)',
-            zIndex: 10,
-            background: isDay ? 'rgba(15, 23, 42, 0.82)' : 'rgba(2, 6, 23, 0.88)',
-            backdropFilter: 'blur(10px)',
-            WebkitBackdropFilter: 'blur(10px)',
-            color: '#ffffff',
-            padding: '0.35rem 0.95rem',
-            borderRadius: '999px',
-            border: '1px solid rgba(255, 255, 255, 0.18)',
-            boxShadow: '0 6px 18px rgba(0, 0, 0, 0.25)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.45rem',
-            whiteSpace: 'nowrap',
-            pointerEvents: 'none',
-          }}>
-            <span style={{
-              width: 6,
-              height: 6,
-              borderRadius: '50%',
-              background: '#f59e0b',
-              boxShadow: '0 0 8px #f59e0b',
-              display: 'inline-block',
-            }} className="animate-pulse" />
-            <span style={{ fontSize: '0.72rem', fontWeight: 600, color: 'rgba(255, 255, 255, 0.85)' }}>
-              Standby Peron ·
-            </span>
-            <strong style={{ fontSize: '0.8rem', fontFamily: 'var(--font-mono, monospace)', color: '#fbbf24', letterSpacing: '0.03em' }}>
-              {countdown && typeof countdown === 'object' && countdown.hours != null
-                ? `${String(countdown.hours).padStart(2, '0')}j ${String(countdown.minutes || 0).padStart(2, '0')}m ${String(countdown.seconds || 0).padStart(2, '0')}d`
-                : (typeof countdown === 'string' ? countdown : 'Standby')}
-            </strong>
-          </div>
-        )}
-
-        {/* ── ARRIVAL BADGE WHEN TRIP IS COMPLETED (MINIMALIST PILL) ── */}
-        {isCompleted && (
-          <div style={{
-            position: 'absolute',
-            bottom: 24,
-            left: '50%',
-            transform: 'translateX(-50%)',
-            zIndex: 10,
-            background: 'rgba(5, 150, 105, 0.85)',
-            backdropFilter: 'blur(10px)',
-            WebkitBackdropFilter: 'blur(10px)',
-            color: '#ffffff',
-            padding: '0.35rem 0.95rem',
-            borderRadius: '999px',
-            border: '1px solid rgba(255, 255, 255, 0.25)',
-            boxShadow: '0 6px 18px rgba(0, 0, 0, 0.25)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.45rem',
-            whiteSpace: 'nowrap',
-            pointerEvents: 'none',
-          }}>
-            <span style={{ fontSize: '0.74rem', fontWeight: 700 }}>
-              🏁 Tiba di Tujuan
-            </span>
-          </div>
-        )}
+      {/* ── MAIN SCENERY & ANIMATED TRAIN CANVAS (FULL-BLEED REMOTION) ── */}
+      <div
+        className="rh-live-hud-canvas"
+        style={{
+          position: 'relative',
+          width: '100%',
+          aspectRatio: isMobile ? '560 / 310' : '800 / 310',
+          overflow: 'hidden',
+          background: isDay ? '#38bdf8' : '#020617',
+          transition: 'background 0.5s ease',
+        }}
+      >
+        {/* REMOTION LIVE TRAIN & STATION PERON SCENE */}
+        <div style={{ position: 'absolute', inset: 0, zIndex: 1 }}>
+          {mounted && (
+            <Player
+              component={LiveTrainScene}
+              inputProps={{
+                isDay,
+                isRunning,
+                stationName: isCompleted ? (stops[stops.length - 1]?.name || 'Tujuan') : (currentStop?.name || stops[0]?.name || 'Gambir'),
+                stationCode: isCompleted ? (stops[stops.length - 1]?.code || '') : (currentStop?.code || stops[0]?.code || 'GMR'),
+              }}
+              durationInFrames={300}
+              compositionWidth={isMobile ? 560 : 800}
+              compositionHeight={310}
+              fps={30}
+              style={{ width: '100%', height: '100%', display: 'block' }}
+              controls={false}
+              autoPlay
+              loop
+              clickToPlay={false}
+              doubleClickToFullscreen={false}
+              spaceKeyToPlayOrPause={false}
+            />
+          )}
+        </div>
       </div>
 
       {/* ── MINIMALIST TELEMETRY & SPEEDOMETER STRIP (Dikecilin & Minimalis) ── */}
@@ -647,9 +324,9 @@ export default function LiveJourneyAnimatedHUD({
         borderTop: isDay ? '1px solid #e2e8f0' : '1px solid rgba(255, 255, 255, 0.08)',
       }}>
         {/* Minimal Speed Display */}
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.35rem' }}>
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.4rem' }}>
           <span style={{
-            fontSize: '1.25rem',
+            fontSize: '1.45rem',
             fontWeight: 900,
             fontFamily: 'var(--font-mono, monospace)',
             color: isRunning ? (isDay ? '#1e3a8a' : '#60a5fa') : (isCompleted ? '#059669' : '#f59e0b'),
@@ -657,13 +334,13 @@ export default function LiveJourneyAnimatedHUD({
           }}>
             {speed}
           </span>
-          <span style={{ fontSize: '0.72rem', fontWeight: 700, color: isDay ? '#64748b' : '#94a3b8' }}>
+          <span style={{ fontSize: '0.82rem', fontWeight: 700, color: isDay ? '#64748b' : '#94a3b8' }}>
             km/jam
           </span>
           <span style={{
-            fontSize: '0.68rem',
+            fontSize: '0.78rem',
             fontWeight: 700,
-            padding: '2px 7px',
+            padding: '3px 9px',
             borderRadius: 6,
             marginLeft: '0.35rem',
             background: isRunning ? 'rgba(16, 185, 129, 0.12)' : (isCompleted ? 'rgba(5, 150, 105, 0.12)' : 'rgba(245, 158, 11, 0.12)'),
@@ -674,7 +351,7 @@ export default function LiveJourneyAnimatedHUD({
         </div>
 
         {/* Station Status Info */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', fontSize: '0.75rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.84rem' }}>
           {!isDeparted ? (
             <>
               <span style={{ color: isDay ? '#64748b' : '#94a3b8' }}>Stasiun Asal:</span>

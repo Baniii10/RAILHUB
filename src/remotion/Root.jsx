@@ -5,6 +5,7 @@ import { Composition } from 'remotion'
 import { NightTrainBumper } from './NightTrainBumper'
 import { DiscordChatBumper } from './DiscordChatBumper'
 import { AboutNetworkBumper } from './AboutNetworkBumper'
+import { LiveTrainScene } from './LiveTrainScene'
 
 export function RemotionRoot() {
   return (
@@ -35,6 +36,15 @@ export function RemotionRoot() {
         width={700}
         height={300}
         defaultProps={{}}
+      />
+      <Composition
+        id="LiveTrainScene"
+        component={LiveTrainScene}
+        durationInFrames={300}
+        fps={30}
+        width={800}
+        height={310}
+        defaultProps={{ isDay: true, isRunning: false, stationName: 'Gambir', stationCode: 'GMR' }}
       />
     </>
   )

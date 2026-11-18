@@ -1,9 +1,10 @@
 'use client'
 
 import Link from 'next/link'
-import { CheckCircle2, Clock3, MapPin, QrCode, Radio, Train, Utensils } from 'lucide-react'
-import { formatTime } from '@/lib/utils/formatters'
+import { ArrowRight, Headphones, MapPin, Plug, QrCode, TicketCheck, Train, UtensilsCrossed, Wifi, Wind } from 'lucide-react'
+import { formatDate, formatTime } from '@/lib/utils/formatters'
 import LiveJourneyAnimatedHUD from './LiveJourneyAnimatedHUD'
+import JourneyPromoBanner from './JourneyPromoBanner'
 
 function parseRoute(name = '') {
   const [origin, destination] = name.replace(/\s*\(simulasi\)\s*/i, '').split(/\s+[—–-]\s+/)
@@ -34,7 +35,7 @@ function buildStops(booking) {
   ]
 }
 
-export default function LiveJourneyMapTracker({ booking, ticket, countdown, journeyProgress = 0, onSelectTab }) {
+export default function LiveJourneyMapTracker({ booking, ticket, countdown, journeyProgress = 0, onSelectTab, otherBookings = [] }) {
   if (!booking) {
     return <section className="rh-card journey-tracker" aria-labelledby="journey-empty-title">
       <div className="journey-tracker-body" style={{ textAlign: 'center', padding: '2.5rem 1.5rem' }}>
@@ -84,82 +85,213 @@ export default function LiveJourneyMapTracker({ booking, ticket, countdown, jour
       : countdown || nextStop?.time || 'Sesuai jadwal'
 
   return (
-    <div className="rh-live-tracker-wrapper" style={{ display: 'grid', gap: '1.25rem' }}>
-      {/* ── UPGRADED LIVE JOURNEY ANIMATED HUD WITH REALTIME SPEEDOMETER & COUNTDOWN ── */}
-      <LiveJourneyAnimatedHUD
-        trainName={booking.schedules?.trains?.name || 'KA Argo Bromo Anggrek'}
-        routeTitle={booking.schedules?.routes?.name || 'Gambir (GMR) — Yogyakarta (YK)'}
-        stops={stops}
-        countdown={countdown}
-        isDeparted={isDeparted}
-        isCompleted={isCompleted}
-        departureTime={booking.schedules?.departure_time}
-        arrivalTime={booking.schedules?.arrival_time}
-      />
+    <div className="rh-live-tracker-wrapper rh-live-tracker-split">
+      {/* ── LEFT: LIVE JOURNEY ANIMATED HUD (REMOTION STATION & TRAIN) ── */}
+      <div className="rh-live-tracker-hud-col">
+        <LiveJourneyAnimatedHUD
+          trainName={booking.schedules?.trains?.name || 'KA Argo Bromo Anggrek'}
+          routeTitle={booking.schedules?.routes?.name || 'Gambir (GMR) — Yogyakarta (YK)'}
+          stops={stops}
+          countdown={countdown}
+          isDeparted={isDeparted}
+          isCompleted={isCompleted}
+          departureTime={booking.schedules?.departure_time}
+          arrivalTime={booking.schedules?.arrival_time}
+        />
+      </div>
 
-      {/* ── PASSENGER QUICK ACTIONS & SEAT DETAILS ── */}
-      <div className="rh-card" style={{ padding: '1rem 1.25rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.85rem' }}>
-          <strong style={{ fontSize: '0.92rem', color: 'var(--rh-navy)' }}>Layanan Cepat Penumpang</strong>
+      {/* ── RIGHT: PASSENGER QUICK ACTIONS (2x2 GRID, 4 POLISHED TILES) ── */}
+      <div className="rh-card rh-live-tracker-actions-col" style={{ padding: '1.1rem 1.15rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.9rem' }}>
+          <strong style={{ fontSize: '0.95rem', color: 'var(--rh-navy)', fontWeight: 800 }}>Layanan Cepat</strong>
           {ticket && (
-            <div style={{ padding: '0.25rem 0.65rem', background: '#eff6ff', borderRadius: 8, border: '1px solid #bfdbfe' }}>
-              <span style={{ fontSize: '0.78rem', color: 'var(--rh-primary)', fontWeight: 700 }}>
-                Kursi {ticket.seats?.seat_number || '-'} · Gerbong {ticket.seats?.carriages?.carriage_number || '-'}
+            <div style={{ padding: '0.22rem 0.6rem', background: '#eff6ff', borderRadius: 999, border: '1px solid #bfdbfe' }}>
+              <span style={{ fontSize: '0.75rem', color: 'var(--rh-primary)', fontWeight: 700 }}>
+                Kursi {ticket.seats?.seat_number || '-'} · G{ticket.seats?.carriages?.carriage_number || '-'}
               </span>
             </div>
           )}
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.65rem' }}>
+        <div className="rh-quick-actions-grid-2x2">
           <button
             type="button"
-            className="rh-action-tile"
+            className="rh-action-tile-v2"
             onClick={() => onSelectTab?.('services')}
             title="Pesan Makanan"
           >
-            <div className="rh-action-tile-icon" style={{ background: 'rgba(26, 66, 138, 0.08)', color: 'var(--rh-primary)' }}>
-              <Utensils size={20} />
+            <div className="rh-action-tile-v2-icon is-amber">
+              <UtensilsCrossed size={20} strokeWidth={2.2} />
             </div>
-            <span className="rh-action-tile-label">Pesan Makanan</span>
+            <div className="rh-action-tile-v2-text">
+              <strong>Pesan Makanan</strong>
+              <span>Restorasi kereta</span>
+            </div>
           </button>
 
           <button
             type="button"
-            className="rh-action-tile"
+            className="rh-action-tile-v2"
             onClick={() => onSelectTab?.('tickets')}
             title="E-Boarding Pass"
           >
-            <div className="rh-action-tile-icon" style={{ background: 'rgba(5, 150, 105, 0.08)', color: 'var(--rh-success)' }}>
-              <QrCode size={20} />
+            <div className="rh-action-tile-v2-icon is-emerald">
+              <QrCode size={20} strokeWidth={2.2} />
             </div>
-            <span className="rh-action-tile-label">E-Boarding Pass</span>
+            <div className="rh-action-tile-v2-text">
+              <strong>E-Boarding Pass</strong>
+              <span>QR gate masuk</span>
+            </div>
           </button>
 
           {booking?.id ? (
             <Link
               href={`/booking/payment/${booking?.id}`}
-              className="rh-action-tile"
+              className="rh-action-tile-v2"
               title="Detail Pesanan"
             >
-              <div className="rh-action-tile-icon" style={{ background: 'rgba(234, 88, 12, 0.08)', color: 'var(--rh-orange)' }}>
-                <Train size={20} />
+              <div className="rh-action-tile-v2-icon is-blue">
+                <TicketCheck size={20} strokeWidth={2.2} />
               </div>
-              <span className="rh-action-tile-label">Detail Pesanan</span>
+              <div className="rh-action-tile-v2-text">
+                <strong>Detail Pesanan</strong>
+                <span>Info & kursi</span>
+              </div>
             </Link>
           ) : (
             <button
               type="button"
-              className="rh-action-tile"
+              className="rh-action-tile-v2"
               onClick={() => onSelectTab?.('tickets')}
               title="Detail Pesanan"
             >
-              <div className="rh-action-tile-icon" style={{ background: 'rgba(234, 88, 12, 0.08)', color: 'var(--rh-orange)' }}>
-                <Train size={20} />
+              <div className="rh-action-tile-v2-icon is-blue">
+                <TicketCheck size={20} strokeWidth={2.2} />
               </div>
-              <span className="rh-action-tile-label">Detail Pesanan</span>
+              <div className="rh-action-tile-v2-text">
+                <strong>Detail Pesanan</strong>
+                <span>Info & kursi</span>
+              </div>
             </button>
           )}
+
+          <button
+            type="button"
+            className="rh-action-tile-v2"
+            onClick={() => onSelectTab?.('reports')}
+            title="Bantuan & Laporan Perjalanan"
+          >
+            <div className="rh-action-tile-v2-icon is-violet">
+              <Headphones size={20} strokeWidth={2.2} />
+            </div>
+            <div className="rh-action-tile-v2-text">
+              <strong>Bantuan</strong>
+              <span>Laporan perjalanan</span>
+            </div>
+          </button>
         </div>
+      </div>
+
+      {/* ── MINIMALIST JOURNEY DETAILS (Tanpa box bertumpuk, hairline dividers) ── */}
+      <div className="rh-journey-minimal-details">
+        {/* 1. Info Peron & Boarding Strip */}
+        <div className="rh-journey-strip-row">
+          <div className="rh-journey-strip-items">
+            <span>
+              <small>Peron</small>
+              <strong>Peron {((ticket?.seats?.carriages?.carriage_number || 1) % 4) + 1}</strong>
+            </span>
+            <span>
+              <small>Kursi</small>
+              <strong>{ticket?.seats?.seat_number || '-'} · G{ticket?.seats?.carriages?.carriage_number || '-'}</strong>
+            </span>
+            <span>
+              <small>Booking</small>
+              <strong className="rh-mono">{booking.booking_code || booking.id?.slice(0, 8).toUpperCase()}</strong>
+            </span>
+            <span>
+              <small>E-Boarding</small>
+              <strong>{isDeparted || (depTime > 0 && depTime - now <= 2 * 3600000) ? 'Aktif' : 'Buka 2j sblm'}</strong>
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={() => onSelectTab?.('tickets')}
+            className="rh-journey-inline-link"
+          >
+            Buka QR <ArrowRight size={13} />
+          </button>
+        </div>
+
+        {/* 2. Rute Perhentian + 3. Fasilitas & Restorasi (2-col clean hairline) */}
+        <div className="rh-journey-minimal-cols">
+          {/* Vertical Station Stops */}
+          <div className="rh-journey-minimal-block">
+            <div className="rh-journey-block-title">
+              <MapPin size={14} /> Perhentian Rute
+            </div>
+            <ul className="rh-journey-stops-list">
+              {stops.map((stop, idx) => {
+                const isDone = isCompleted || (isDeparted && idx === 0)
+                const isActive = (!isDeparted && idx === 0) || (isDeparted && !isCompleted && idx === 1)
+                return (
+                  <li key={stop.id || idx} className={isActive ? 'is-active' : isDone ? 'is-done' : ''}>
+                    <span className="rh-stop-dot" aria-hidden="true" />
+                    <span className="rh-stop-name">{stop.name}</span>
+                    {stop.code && <span className="rh-stop-code">{stop.code}</span>}
+                    <span className="rh-stop-time">{stop.arr || stop.dep || stop.time}</span>
+                  </li>
+                )
+              })}
+            </ul>
+          </div>
+
+          {/* Fasilitas Kelas + Restorasi Shortcut + Perjalanan Lain */}
+          <div className="rh-journey-minimal-block">
+            <div className="rh-journey-block-title">
+              <Train size={14} /> Fasilitas · {ticket?.seats?.carriages?.carriage_class || 'Eksekutif'}
+            </div>
+            <div className="rh-journey-facility-chips">
+              <span><Wifi size={13} /> WiFi Kabin</span>
+              <span><Plug size={13} /> Stopkontak</span>
+              <span><Wind size={13} /> AC</span>
+            </div>
+
+            <div className="rh-journey-inline-promo">
+              <div>
+                <strong>Restorasi On-Board</strong>
+                <span>Kopi, Nasi Goreng, Snack · antar ke kursi</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => onSelectTab?.('services')}
+                className="rh-journey-inline-link"
+              >
+                Pesan <ArrowRight size={13} />
+              </button>
+            </div>
+
+            {otherBookings.length > 0 && (
+              <div className="rh-journey-other-list">
+                <div className="rh-journey-block-title" style={{ marginBottom: '0.4rem' }}>
+                  Perjalanan Lainnya
+                </div>
+                {otherBookings.map((ob) => (
+                  <Link key={ob.id} href={`/booking/payment/${ob.id}`} className="rh-journey-other-item">
+                    <span>
+                      <strong>{ob.schedules?.trains?.name || 'Kereta'}</strong>
+                      <small>{ob.schedules?.routes?.name || ''} · {formatDate(ob.schedules?.departure_time, { day: 'numeric', month: 'short' })}</small>
+                    </span>
+                    <ArrowRight size={14} />
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* 3. Promo Banner 8:2 (3 Slide, 2s auto-loop, blurred left/right peek, touch swipe) */}
+        <JourneyPromoBanner onSelectTab={onSelectTab} />
       </div>
     </div>
   )

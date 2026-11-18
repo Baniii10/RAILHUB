@@ -34,7 +34,7 @@ const publicNavLinks = (t) => [
   { href: '/trains', label: t.nav.book },
   { href: '/railfans', label: t.nav.community || 'Komunitas' },
   { href: '/about', label: t.nav.about },
-  { href: '/faq', label: 'Bantuan & Kontak' },
+  { href: '/faq', label: 'Bantuan' },
 ]
 
 export default function Navbar() {
@@ -287,7 +287,7 @@ export default function Navbar() {
             </Link>
 
             {/* Desktop Nav */}
-            <nav className="rh-hide-mobile" style={{ flex: 1, marginLeft: '1rem' }}>
+            <nav className="rh-hide-mobile" style={{ flex: 1, minWidth: 0, marginLeft: '0.75rem' }}>
               <ul className="rh-nav-links">
                 {navLinks.map(link => {
                   const [linkPath, linkQuery = ''] = link.href.split('?')
@@ -308,7 +308,7 @@ export default function Navbar() {
             </nav>
 
             {/* Right Actions */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', flexShrink: 0, whiteSpace: 'nowrap' }}>
               {/* Lang Toggle */}
               <button
                 onClick={toggleLang}

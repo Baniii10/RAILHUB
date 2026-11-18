@@ -370,7 +370,7 @@ function PassengerDashboardContent() {
         </section>
 
         {/* ── TAB CONTENT ── */}
-        <div className={activeTab === 'overview' ? 'passenger-main-container' : 'rh-container'} style={{ marginTop: activeTab === 'overview' ? 0 : '2rem' }}>
+        <div className="rh-container" style={{ marginTop: activeTab === 'overview' ? '1.25rem' : '2rem' }}>
           {error && (
             <div role="alert" className="rh-card" style={{ padding: '1.25rem', color: 'var(--rh-danger)', marginBottom: '1.5rem', borderLeft: '4px solid var(--rh-danger)' }}>
               <AlertCircle size={18} style={{ verticalAlign: 'middle', marginRight: 6 }} /> {error}
@@ -399,6 +399,7 @@ function PassengerDashboardContent() {
                     countdown={countdown}
                     journeyProgress={journeyProgress}
                     onSelectTab={selectTab}
+                    otherBookings={(bookings || []).filter(b => b.status === 'paid' && b.id !== activePaidBooking?.id).slice(0, 3)}
                   />
                 </div>
               )}
