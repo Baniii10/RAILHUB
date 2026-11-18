@@ -28,14 +28,14 @@ const MARQUEE_PHOTOS = [
     loco: 'CC 203 98 01',
     title: 'CC 203 Moncong Hiu Jalur Selatan',
     location: 'Priangan Timur',
-    image: '/images/kelas-eksekutif.jpg',
+    image: '/images/gallery-train-hero.jpg',
   },
   {
     id: 'p4',
     loco: 'CC 300 12 01',
     title: 'CC 300 Diesel Hidrolik PT INKA',
     location: 'Stasiun Madiun',
-    image: '/images/kelas-luxury.jpg',
+    image: '/images/loco-cc300-inka.jpg',
   },
   {
     id: 'p5',

@@ -72,35 +72,30 @@ export default function PwaGalleryBento() {
     <section className="rh-section rh-pwa-gallery-bento" style={{ background: '#f8fafc', paddingTop: '3rem', paddingBottom: '3.5rem', borderTop: '1px solid #e2e8f0' }}>
       <div className="rh-container">
         
-        {/* Section Header (Craft-Floor: No banned kickers, balanced readable line length <= 58ch) */}
-        <div style={{ textAlign: 'center', maxWidth: 640, margin: '0 auto 2.5rem' }}>
-          <h2 className="rh-h2" style={{ margin: '0 0 0.85rem', color: 'var(--rh-navy)', fontSize: 'clamp(1.5rem, 3vw, 2.25rem)', fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1.25 }}>
-            {lang === 'en' ? 'Travel Experience in the Palm of Your Hand' : 'Pengalaman Perjalanan Terlengkap di Genggaman'}
+        {/* Minimal Section Header */}
+        <div style={{ textAlign: 'center', maxWidth: 520, margin: '0 auto 1.75rem' }}>
+          <h2 className="rh-h2" style={{ margin: 0, color: 'var(--rh-navy)', fontSize: 'clamp(1.35rem, 3vw, 2rem)', fontWeight: 800, letterSpacing: '-0.025em', lineHeight: 1.25 }}>
+            {lang === 'en' ? 'RailHub in Your Hand' : 'RailHub di Genggaman Anda'}
           </h2>
-          <p style={{ margin: '0 auto', maxWidth: '52ch', color: '#475569', fontSize: '0.95rem', lineHeight: 1.65, textWrap: 'balance' }}>
-            {lang === 'en'
-              ? 'Book tickets in seconds, access offline QR boarding passes, and enjoy seamless rail travel from western to eastern Java.'
-              : 'Pesan tiket dalam hitungan detik, simpan e-boarding pass QR secara offline, dan nikmati perjalanan kereta api tanpa antre di seluruh rute Nusantara.'}
-          </p>
         </div>
 
-        {/* BENTO GRID (Screenshot layout: 3 Columns) */}
+        {/* BENTO GRID (Visual-first, minimal text) */}
         <div className="rh-bento-grid">
           
           {/* CARD 1: PWA / Mobile App Showcase with iPhone 16 Frame (Left) */}
           <div className="rh-bento-card rh-bento-card-app">
             <div className="rh-bento-app-content">
-              <h3 className="rh-bento-title-dark">
-                {lang === 'en' ? 'Our app for every step of your journey!' : 'Aplikasi RailHub untuk setiap langkah perjalanan Anda!'}
+              <h3 className="rh-bento-title-dark" style={{ marginBottom: '0.5rem' }}>
+                {lang === 'en' ? 'RailHub App' : 'Aplikasi RailHub'}
               </h3>
               
-              <p className="rh-bento-desc-dark">
+              <p className="rh-bento-desc-dark rh-hide-mobile" style={{ marginBottom: '1rem' }}>
                 {lang === 'en'
-                  ? 'Our top-rated PWA makes trip planning easy wherever you are. Install the app directly to your home screen without heavy store downloads!'
-                  : 'Aplikasi web progresif (PWA) resmi kami memudahkan pemesanan tiket di mana pun. Pasang langsung ke layar utama ponsel Anda, hemat kuota tanpa instalasi berat!'}
+                  ? 'Instant tickets & offline QR boarding.'
+                  : 'Tiket cepat & e-boarding QR offline.'}
               </p>
 
-              {/* Install PWA Interactive CTA Button (Clean without chip label) */}
+              {/* Install PWA Interactive CTA Button */}
               <button
                 type="button"
                 onClick={handleInstallClick}
@@ -108,7 +103,7 @@ export default function PwaGalleryBento() {
                 title="Pasang Aplikasi RailHub ke HP / PC"
               >
                 <Download size={18} />
-                <span>{installed ? (lang === 'en' ? 'App Installed ✓' : 'Aplikasi Terpasang ✓') : (lang === 'en' ? 'Pasang Aplikasi RailHub (PWA)' : 'Pasang Aplikasi RailHub (PWA)')}</span>
+                <span>{installed ? (lang === 'en' ? 'Installed ✓' : 'Terpasang ✓') : (lang === 'en' ? 'Install App (PWA)' : 'Pasang Aplikasi (PWA)')}</span>
               </button>
 
               {/* QR Code (Clean & Minimalist, No Label Below) */}
@@ -251,21 +246,13 @@ export default function PwaGalleryBento() {
               <div className="rh-bento-card-overlay" />
             </div>
 
-            {/* Card Content Overlay */}
+            {/* Minimal Caption Overlay so the train photo stays unobstructed */}
             <div className="rh-bento-center-content">
-              <h3 className="rh-bento-title-white">
+              <h3 className="rh-bento-title-white" style={{ margin: 0, fontSize: 'clamp(1.05rem, 2vw, 1.35rem)' }}>
                 {lang === 'en'
-                  ? 'From Express to High-Speed – Book Any Intercity Train'
-                  : 'Dari Lintas Pantura ke Lintas Selatan – Jelajahi Nusantara dengan Kereta Api Modern'}
+                  ? 'Intercity Express Across Java'
+                  : 'Lintas Jawa & Ekspres Modern'}
               </h3>
-
-              <p className="rh-bento-desc-white">
-                {lang === 'en'
-                  ? 'Argo Bromo Anggrek, Gajayana, Taksaka, Lodaya, to Whoosh Fast Train - book tickets across the most advanced rail network in Indonesia, all from our seamless online service.'
-                  : 'Argo Bromo Anggrek, Argo Lawu, Taksaka Hype Trip, Gajayana, hingga Kereta Cepat Whoosh - nikmati kemudahan reservasi tiket seluruh jalur kereta api utama Indonesia tanpa biaya tersembunyi.'}
-              </p>
-
-              
             </div>
           </div>
 
@@ -312,19 +299,12 @@ export default function PwaGalleryBento() {
               </div>
 
               <div className="rh-bento-passenger-content">
-                <h4 style={{ margin: '0 0 0.5rem', fontSize: '1.25rem', fontWeight: 800, color: '#ffffff', lineHeight: 1.3, textShadow: '0 2px 8px rgba(0,0,0,0.85)' }}>
-                  {lang === 'en' ? 'Explore Indonesia with Premium Comfort' : 'Jelajahi Indonesia dengan Kenyamanan Penuh'}
+                <h4 style={{ margin: '0 0 0.35rem', fontSize: '1.1rem', fontWeight: 800, color: '#ffffff', lineHeight: 1.25, textShadow: '0 2px 8px rgba(0,0,0,0.85)' }}>
+                  {lang === 'en' ? 'Premium Cabin Comfort' : 'Kenyamanan Kabin'}
                 </h4>
-                <p style={{ margin: 0, fontSize: '0.875rem', color: '#f8fafc', lineHeight: 1.55, textShadow: '0 1px 4px rgba(0,0,0,0.85)' }}>
-                  {lang === 'en'
-                    ? 'Book tickets and travel in total comfort across Java, Bali ferry connections, and Sumatra in just a few steps.'
-                    : 'Pesan tiket dan nikmati pemandangan sawah, bukit, dan pesisir pulau Jawa dalam ketenangan kabin ber-AC.'}
-                </p>
-                <div style={{ marginTop: '0.95rem' }}>
-                  <Link href="/about" style={{ fontSize: '0.8125rem', color: '#fed7aa', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: 5, textDecoration: 'underline', textUnderlineOffset: '3px' }}>
-                    {lang === 'en' ? 'Learn more about amenities' : 'Pelajari fasilitas kabin'} &rarr;
-                  </Link>
-                </div>
+                <Link href="/about" style={{ fontSize: '0.8rem', color: '#fed7aa', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: 4, textDecoration: 'underline', textUnderlineOffset: '3px' }}>
+                  {lang === 'en' ? 'Amenities' : 'Fasilitas kabin'} &rarr;
+                </Link>
               </div>
             </div>
 

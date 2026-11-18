@@ -14,6 +14,7 @@ import PopularTicketRoutes from '@/components/home/PopularTicketRoutes'
 import TravelClassShowcase from '@/components/home/TravelClassShowcase'
 import PwaGalleryBento from '@/components/home/PwaGalleryBento'
 import FeedbackSection from '@/components/home/FeedbackSection'
+import ScrollReveal from '@/components/ui/ScrollReveal'
 import { useLang } from '@/contexts/LangContext'
 import { useAuth } from '@/contexts/AuthContext'
 import { ChevronRight } from 'lucide-react'
@@ -117,30 +118,42 @@ export default function HomePage() {
       </section>
 
       {/* Featured services */}
-      <FeaturedServicesSlider />
+      <ScrollReveal direction="up">
+        <FeaturedServicesSlider isDay={isDay} />
+      </ScrollReveal>
 
-      <section id="promos" className="rh-section" style={{ background: '#ffffff', paddingTop: '2rem', paddingBottom: '2rem' }}>
-        <div className="rh-container">
-          <h2 className="rh-h3" style={{ margin: '0 0 1rem', color: 'var(--rh-navy)', fontSize: '1.35rem', fontWeight: 800 }}>
-            {lang === 'en' ? 'Travel Deals' : 'Promo Perjalanan Kereta'}
-          </h2>
-          <PromoBannerCarousel />
-        </div>
-      </section>
+      <ScrollReveal direction="right">
+        <section id="promos" className="rh-section" style={{ background: '#ffffff', paddingTop: '2rem', paddingBottom: '2rem' }}>
+          <div className="rh-container">
+            <h2 className="rh-h3" style={{ margin: '0 0 1rem', color: 'var(--rh-navy)', fontSize: '1.35rem', fontWeight: 800 }}>
+              {lang === 'en' ? 'Travel Deals' : 'Promo Perjalanan Kereta'}
+            </h2>
+            <PromoBannerCarousel />
+          </div>
+        </section>
+      </ScrollReveal>
 
       {/* Popular routes - Fun Ticket Shape & Continuous Mobile Sliding */}
-      <PopularTicketRoutes />
+      <ScrollReveal direction="left">
+        <PopularTicketRoutes />
+      </ScrollReveal>
 
       {/* Guest-Only Sections: Class Showcase with Photos & Bento Gallery with PWA App Download */}
       {isGuest && (
         <>
-          <TravelClassShowcase />
-          <PwaGalleryBento />
+          <ScrollReveal direction="up">
+            <TravelClassShowcase />
+          </ScrollReveal>
+          <ScrollReveal direction="right">
+            <PwaGalleryBento />
+          </ScrollReveal>
         </>
       )}
 
       {/* Suara & Masukan Penumpang: Kritik & Saran */}
-      <FeedbackSection />
+      <ScrollReveal direction="up">
+        <FeedbackSection />
+      </ScrollReveal>
     </div>
   )
 }

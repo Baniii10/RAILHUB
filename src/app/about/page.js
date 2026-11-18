@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import Navbar from '@/components/layout/Navbar'
 import AboutNetworkBumperPlayer from '@/components/about/AboutNetworkBumperPlayer'
+import ScrollReveal from '@/components/ui/ScrollReveal'
 import { ArrowRight } from 'lucide-react'
 
 const KEY_STATS = [
@@ -78,32 +79,37 @@ export default function AboutPage() {
         <div className="rh-container pt-10 sm:pt-12 space-y-14">
           {/* 1. Mission + Single Remotion Bumper */}
           <section className="grid grid-cols-1 lg:grid-cols-[1fr_1.15fr] gap-8 lg:gap-12 items-center">
-            <div className="space-y-6">
-              <div className="space-y-2.5">
-                <h2 className="text-xl sm:text-2xl font-extrabold text-[var(--rh-blue)] m-0">
-                  Arsitektur Perjalanan Digital
-                </h2>
-                <p className="text-sm sm:text-base text-[var(--rh-text)] opacity-85 m-0 leading-relaxed">
-                  RAILHUB menghubungkan alur kerja Penumpang, Petugas Kondektur, dan Admin secara real-time dengan penguncian kursi transaksional agar tidak terjadi kursi ganda.
-                </p>
+            <ScrollReveal direction="left">
+              <div className="space-y-6">
+                <div className="space-y-2.5">
+                  <h2 className="text-xl sm:text-2xl font-extrabold text-[var(--rh-blue)] m-0">
+                    Arsitektur Perjalanan Digital
+                  </h2>
+                  <p className="text-sm sm:text-base text-[var(--rh-text)] opacity-85 m-0 leading-relaxed">
+                    RAILHUB menghubungkan alur kerja Penumpang, Petugas Kondektur, dan Admin secara real-time dengan penguncian kursi transaksional agar tidak terjadi kursi ganda.
+                  </p>
+                </div>
+
+                {/* Hairline Stats Row (No boxes) */}
+                <dl className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-5 border-t border-[var(--rh-border)] m-0">
+                  {KEY_STATS.map((stat) => (
+                    <div key={stat.label}>
+                      <dt className="text-xl sm:text-2xl font-extrabold text-[var(--rh-blue)]">{stat.value}</dt>
+                      <dd className="text-xs text-[var(--rh-text-3)] m-0 mt-0.5">{stat.label}</dd>
+                    </div>
+                  ))}
+                </dl>
               </div>
+            </ScrollReveal>
 
-              {/* Hairline Stats Row (No boxes) */}
-              <dl className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-5 border-t border-[var(--rh-border)] m-0">
-                {KEY_STATS.map((stat) => (
-                  <div key={stat.label}>
-                    <dt className="text-xl sm:text-2xl font-extrabold text-[var(--rh-blue)]">{stat.value}</dt>
-                    <dd className="text-xs text-[var(--rh-text-3)] m-0 mt-0.5">{stat.label}</dd>
-                  </div>
-                ))}
-              </dl>
-            </div>
-
-            <AboutNetworkBumperPlayer />
+            <ScrollReveal direction="right" delay={0.06}>
+              <AboutNetworkBumperPlayer />
+            </ScrollReveal>
           </section>
 
           {/* 2. Armada Utama (Clean Image Strip, No Box Slop) */}
-          <section className="space-y-5">
+          <ScrollReveal direction="up">
+            <section className="space-y-5">
             <div className="flex items-end justify-between gap-4 pb-3 border-b border-[var(--rh-border)]">
               <div>
                 <h2 className="text-xl sm:text-2xl font-extrabold text-[var(--rh-blue)] m-0">
@@ -147,8 +153,10 @@ export default function AboutPage() {
               ))}
             </div>
           </section>
+          </ScrollReveal>
 
           {/* 3. Tim Penyusun & Keamanan (Minimalist Editorial Grid) */}
+          <ScrollReveal direction="up" delay={0.05}>
           <section className="grid grid-cols-1 md:grid-cols-2 gap-10 pt-6 border-t border-[var(--rh-border)]">
             <div className="space-y-4">
               <h2 className="text-lg sm:text-xl font-extrabold text-[var(--rh-blue)] m-0">
@@ -193,6 +201,7 @@ export default function AboutPage() {
               </div>
             </div>
           </section>
+          </ScrollReveal>
         </div>
       </main>
     </div>

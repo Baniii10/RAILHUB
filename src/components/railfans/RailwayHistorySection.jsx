@@ -20,7 +20,7 @@ const HISTORY_EVENTS = [
     location: 'Semarang Kemijen – Tanggung (25 km)',
     description:
       'Nederlandsch-Indische Spoorweg Maatschappij (NIS) membuka jalur kereta api pertama di Indonesia untuk angkutan komoditas.',
-    image: '/images/gallery-train-hero.jpg',
+    image: '/images/history-1864-steam.jpg',
   },
   {
     id: 'h2',
@@ -30,7 +30,7 @@ const HISTORY_EVENTS = [
     location: 'Tanjung Priok – Jatinegara',
     description:
       'Staatsspoorwegen mengoperasikan lokomotif listrik seri ESS 3200 "Bonbon" bertegangan 1500V DC sebagai pelopor di Asia Tenggara.',
-    image: '/images/gallery-train-speed.jpg',
+    image: '/images/history-1945-dkari.jpg',
   },
   {
     id: 'h3',
@@ -40,7 +40,7 @@ const HISTORY_EVENTS = [
     location: 'Balai Besar Kereta Api, Bandung',
     description:
       'Angkatan Pemuda Kereta Api mengambil alih operasional perkeretaapian nasional dan membentuk Djawatan Kereta Api Republik Indonesia.',
-    image: '/images/gallery-passenger-window.jpg',
+    image: '/images/history-1945-dkari.jpg',
   },
   {
     id: 'h4',
@@ -50,7 +50,7 @@ const HISTORY_EVENTS = [
     location: 'Lintas Jawa & Sumatera',
     description:
       'Kehadiran lokomotif General Electric U18C (CC 201) menggantikan traksi uap di jalur pegunungan terjal Jawa Barat dan Tengah.',
-    image: '/images/kelas-eksekutif.jpg',
+    image: '/images/gallery-train-speed.jpg',
   },
   {
     id: 'h5',
@@ -60,7 +60,7 @@ const HISTORY_EVENTS = [
     location: 'Jakarta – Bandung & Surabaya',
     description:
       'Peluncuran layanan eksekutif berkecepatan 120 km/jam dengan lokomotif moncong miring aerodinamis CC 203.',
-    image: '/images/kelas-luxury.jpg',
+    image: '/images/gallery-train-hero.jpg',
   },
   {
     id: 'h6',
@@ -70,7 +70,7 @@ const HISTORY_EVENTS = [
     location: 'Seluruh Jaringan KAI',
     description:
       'Pengoperasian 150 unit lokomotif kabin ganda CC 206, inovasi diesel hidrolik CC 300 karya PT INKA Madiun, dan tiket digital terpadu.',
-    image: '/images/gallery-train-hero.jpg',
+    image: '/images/loco-cc300-inka.jpg',
   },
 ]
 
