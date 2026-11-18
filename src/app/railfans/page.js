@@ -1,257 +1,63 @@
 'use client'
 
-import { useState } from 'react'
 import Link from 'next/link'
 import Navbar from '@/components/layout/Navbar'
-import Footer from '@/components/layout/Footer'
 import DiscordCommunityBanner from '@/components/railfans/DiscordCommunityBanner'
 import Locomotive3DViewer from '@/components/railfans/Locomotive3DViewer'
 import RailwayHistorySection from '@/components/railfans/RailwayHistorySection'
-import { Train, History, Camera, Compass, Sparkles, ChevronRight, Share2, Layers } from 'lucide-react'
-import { useLang } from '@/contexts/LangContext'
+import GalleryMarqueeSection from '@/components/railfans/GalleryMarqueeSection'
 
 export default function RailfansPage() {
-  const { lang } = useLang()
-  const [activeTab, setActiveTab] = useState('3d') // '3d' | 'sejarah'
-
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--rh-bg, #f8fafc)' }}>
+    <div className="min-h-screen flex flex-col bg-[var(--rh-bg)]">
       <Navbar />
 
-      <main style={{ flex: 1, paddingBottom: '4rem' }}>
-        {/* Hero Section */}
-        <section
-          style={{
-            background: 'linear-gradient(180deg, #07162C 0%, #0B244A 60%, #0F2D59 100%)',
-            color: '#ffffff',
-            paddingTop: '3.5rem',
-            paddingBottom: '3rem',
-            position: 'relative',
-            overflow: 'hidden',
-          }}
-        >
-          {/* Subtle Grid Pattern Overlay */}
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              backgroundImage: 'radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px)',
-              backgroundSize: '24px 24px',
-              opacity: 0.4,
-              pointerEvents: 'none',
-            }}
-          />
-
-          <div className="rh-container" style={{ position: 'relative', zIndex: 1 }}>
-            {/* Breadcrumb */}
-            <nav style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.84rem', color: 'rgba(255,255,255,0.7)', marginBottom: '1.25rem' }}>
-              <Link href="/" style={{ color: 'rgba(255,255,255,0.85)', textDecoration: 'none' }}>
+      <main className="flex-1 pb-16">
+        {/* Clean Editorial Header */}
+        <section className="bg-[#0b1626] text-white border-b border-white/10" style={{ padding: '4.5rem 0 3rem' }}>
+          <div className="rh-container">
+            <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs text-white/60 mb-3">
+              <Link href="/" style={{ color: 'rgba(255,255,255,0.75)' }} className="no-underline hover:text-white">
                 Beranda
               </Link>
               <span>/</span>
-              <span style={{ color: '#F97316', fontWeight: 700 }}>Komunitas Railfans</span>
+              <span className="text-[var(--rh-orange)] font-semibold">Komunitas Railfans</span>
             </nav>
 
-            <div style={{ maxWidth: 760 }}>
-              <div
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                  background: 'rgba(249, 115, 22, 0.2)',
-                  color: '#FDBA74',
-                  border: '1px solid rgba(249, 115, 22, 0.35)',
-                  padding: '0.35rem 0.85rem',
-                  borderRadius: 999,
-                  fontSize: '0.82rem',
-                  fontWeight: 700,
-                  marginBottom: '1rem',
-                }}
-              >
-                <Sparkles size={14} color="#F97316" />
-                <span>Portal Resmi Pecinta Kereta Api Indonesia</span>
-              </div>
-
-              <h1
-                className="rh-h1"
-                style={{
-                  color: '#ffffff',
-                  fontSize: 'clamp(2rem, 4.5vw, 3rem)',
-                  fontWeight: 800,
-                  lineHeight: 1.15,
-                  marginBottom: '1rem',
-                }}
-              >
-                Ruang Komunitas Railfans RAILHUB
-              </h1>
-
-              <p
-                style={{
-                  color: 'rgba(255, 255, 255, 0.88)',
-                  fontSize: 'clamp(0.95rem, 1.8vw, 1.12rem)',
-                  lineHeight: 1.6,
-                  margin: 0,
-                }}
-              >
-                Tempat berkumpulnya para pecinta kereta api se-Nusantara. Eksplorasi sejarah panjang perkeretaapian Indonesia, jelajahi model 3D lokomotif legendaris interaktif, unduh koleksi foto HD, dan bergabung dalam diskusi komunitas di Discord.
-              </p>
-            </div>
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight m-0">
+              Komunitas Railfans RAILHUB
+            </h1>
+            <p className="text-sm sm:text-base text-white/75 m-0 mt-2 max-w-xl">
+              Sejarah perkeretaapian Indonesia, showroom 3D lokomotif, galeri spotting, dan komunitas Discord.
+            </p>
           </div>
         </section>
 
-        {/* Content Container */}
-        <div className="rh-container" style={{ marginTop: '-1.5rem', position: 'relative', zIndex: 10 }}>
-          {/* Discord Banner di Bagian Paling Atas */}
+        {/* Unified Single-Page Flow */}
+        <div className="rh-container pt-8 sm:pt-10 space-y-12">
+          {/* 1. Sejarah (Compact Preview + Baca Selengkapnya) */}
+          <RailwayHistorySection />
+
+          {/* 2. Showroom 3D Lokomotif */}
+          <section aria-labelledby="showroom-3d-heading" className="space-y-4">
+            <div className="pb-3 border-b border-[var(--rh-border)]">
+              <h2 id="showroom-3d-heading" className="text-xl sm:text-2xl font-extrabold text-[var(--rh-blue)] m-0">
+                Showroom 3D Lokomotif
+              </h2>
+              <p className="text-xs sm:text-sm text-[var(--rh-text)] opacity-80 m-0 mt-0.5">
+                Putar 360°, nyalakan lampu sorot, dan bandingkan 4 seri lokomotif legendaris Indonesia.
+              </p>
+            </div>
+            <Locomotive3DViewer />
+          </section>
+
+          {/* 3. Galeri Foto Minimalis Sliding ke Kanan */}
+          <GalleryMarqueeSection />
+
+          {/* 4. Discord Bumper Chat + Invite */}
           <DiscordCommunityBanner />
-
-          {/* Navigasi Pilihan Tab / Menu */}
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              flexWrap: 'wrap',
-              gap: '1rem',
-              marginBottom: '2rem',
-              background: 'var(--rh-surface, #ffffff)',
-              padding: '0.85rem 1.25rem',
-              borderRadius: 18,
-              boxShadow: '0 6px 20px rgba(7, 26, 56, 0.06)',
-              border: '1px solid var(--rh-border, #e2e8f0)',
-            }}
-          >
-            {/* Tab Switches: 3D Simulator vs Sejarah */}
-            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-              <button
-                type="button"
-                onClick={() => setActiveTab('3d')}
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                  padding: '0.6rem 1.15rem',
-                  borderRadius: 12,
-                  border: activeTab === '3d' ? '1px solid var(--rh-primary)' : '1px solid transparent',
-                  background: activeTab === '3d' ? 'var(--rh-primary)' : 'transparent',
-                  color: activeTab === '3d' ? '#ffffff' : 'var(--rh-text-1)',
-                  fontWeight: 700,
-                  fontSize: '0.88rem',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s',
-                }}
-              >
-                <Train size={16} />
-                <span>Model 3D Lokomotif</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setActiveTab('sejarah')}
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                  padding: '0.6rem 1.15rem',
-                  borderRadius: 12,
-                  border: activeTab === 'sejarah' ? '1px solid var(--rh-primary)' : '1px solid transparent',
-                  background: activeTab === 'sejarah' ? 'var(--rh-primary)' : 'transparent',
-                  color: activeTab === 'sejarah' ? '#ffffff' : 'var(--rh-text-1)',
-                  fontWeight: 700,
-                  fontSize: '0.88rem',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s',
-                }}
-              >
-                <History size={16} />
-                <span>Sejarah Kereta Api</span>
-              </button>
-            </div>
-
-            {/* Shortcut Button to Dedicated Photo Gallery */}
-            <Link
-              href="/railfans/galeri"
-              className="rh-btn rh-btn-sm"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-                background: '#F97316',
-                color: '#ffffff',
-                fontWeight: 700,
-                padding: '0.6rem 1.25rem',
-                borderRadius: 12,
-                textDecoration: 'none',
-                boxShadow: '0 4px 12px rgba(249, 115, 22, 0.25)',
-              }}
-            >
-              <Camera size={16} />
-              <span>Buka Galeri Foto Kereta</span>
-              <ChevronRight size={15} />
-            </Link>
-          </div>
-
-          {/* Tab 1: 3D Locomotive Viewer */}
-          {activeTab === '3d' && (
-            <div>
-              <div style={{ marginBottom: '1.25rem' }}>
-                <h2 className="rh-h3" style={{ margin: '0 0 0.35rem', color: 'var(--rh-navy)', fontWeight: 800 }}>
-                  Showroom 3D Lokomotif Interaktif
-                </h2>
-                <p style={{ margin: 0, color: 'var(--rh-text-2)', fontSize: '0.92rem' }}>
-                  Pilih seri lokomotif (CC 206, CC 201, CC 203, CC 300), putar 360°, nyalakan lampu sorot, pelajari spesifikasi teknisnya, dan gunakan tombol &apos;Ambil Foto 3D&apos; untuk mengunduh snapshot.
-                </p>
-              </div>
-
-              {/* Three.js Interactive Locomotive Viewer */}
-              <Locomotive3DViewer />
-
-              {/* Sejarah preview card under 3D */}
-              <div
-                style={{
-                  marginTop: '2.5rem',
-                  background: 'var(--rh-surface, #ffffff)',
-                  borderRadius: 20,
-                  padding: '1.75rem',
-                  border: '1px solid var(--rh-border)',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  flexWrap: 'wrap',
-                  gap: '1rem',
-                }}
-              >
-                <div>
-                  <h3 style={{ fontSize: '1.15rem', fontWeight: 800, margin: '0 0 0.25rem', color: 'var(--rh-navy)' }}>
-                    Tertarik Mengetahui Sejarah di Balik Lokomotif Ini?
-                  </h3>
-                  <p style={{ margin: 0, color: 'var(--rh-text-2)', fontSize: '0.88rem' }}>
-                    Telusuri jejak rel pertama di Kemijen 1864 hingga modernisasi armada PT Kereta Api Indonesia.
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setActiveTab('sejarah')}
-                  className="rh-btn rh-btn-primary rh-btn-sm"
-                  style={{ borderRadius: 12, fontWeight: 700 }}
-                >
-                  <History size={16} />
-                  <span>Baca Sejarah Kereta Api</span>
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* Tab 2: Railway History Timeline */}
-          {activeTab === 'sejarah' && (
-            <div>
-              <RailwayHistorySection />
-            </div>
-          )}
         </div>
       </main>
-
-      <Footer />
     </div>
   )
 }
-

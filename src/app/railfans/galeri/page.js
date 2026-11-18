@@ -5,13 +5,12 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import Navbar from '@/components/layout/Navbar'
-import Footer from '@/components/layout/Footer'
-import { Camera, Download, ArrowLeft, Filter, Sparkles, Heart, Eye, Check, X, Shield, Lock } from 'lucide-react'
+import { Download, ArrowLeft, Heart, X } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import toast from 'react-hot-toast'
 
 const PHOTO_CATEGORIES = [
-  { id: 'all', label: 'Semua Koleksi' },
+  { id: 'all', label: 'Semua' },
   { id: 'cc206', label: 'CC 206' },
   { id: 'cc201', label: 'CC 201' },
   { id: 'cc203', label: 'CC 203' },
@@ -23,98 +22,90 @@ const GALLERY_PHOTOS = [
   {
     id: 'p1',
     category: 'cc206',
-    title: 'Lokomotif CC 206 Melintas Tikungan Lembah Jawa Barat',
+    title: 'CC 206 Melintas Tikungan Lembah Jawa Barat',
     loco: 'CC 206 13 55',
     location: 'Jembatan Cisomang, Jawa Barat',
     photographer: 'Arsip Railfans RAILHUB',
     image: '/images/gallery-train-hero.jpg',
-    resolution: '1920 x 1080 HD',
+    resolution: '1920 x 1080',
     likes: 248,
-    tags: ['CC 206', 'Jembatan', 'Argo Parahyangan'],
   },
   {
     id: 'p2',
     category: 'cc201',
-    title: 'CC 201 Hidung Miring Berdinas Lintas Utara Sore Hari',
+    title: 'CC 201 Hidung Miring Lintas Utara',
     loco: 'CC 201 83 25',
     location: 'Lintas Cirebon – Semarang',
     photographer: 'Komunitas Spotter Jawa',
     image: '/images/gallery-train-speed.jpg',
-    resolution: '1920 x 1080 HD',
+    resolution: '1920 x 1080',
     likes: 312,
-    tags: ['CC 201', 'Golden Hour', 'Kereta Campuran'],
   },
   {
     id: 'p3',
     category: 'cc203',
-    title: 'CC 203 Moncong Miring Aerodinamis Menembus Pegunungan',
+    title: 'CC 203 Moncong Miring Jalur Selatan',
     loco: 'CC 203 98 01',
-    location: 'Lintas Jalur Selatan, Priangan Timur',
+    location: 'Priangan Timur, Jawa Barat',
     photographer: 'Railfans Indonesia',
     image: '/images/kelas-eksekutif.jpg',
-    resolution: '1920 x 1080 HD',
+    resolution: '1920 x 1080',
     likes: 195,
-    tags: ['CC 203', 'Pegunungan', 'Eksekutif Argo'],
   },
   {
     id: 'p4',
     category: 'cc300',
-    title: 'Lokomotif CC 300 Diesel Hidrolik Uji Lintas PT INKA',
+    title: 'CC 300 Diesel Hidrolik Uji Lintas',
     loco: 'CC 300 12 01',
     location: 'Stasiun Madiun, Jawa Timur',
     photographer: 'Dokumentasi Industri Kereta',
     image: '/images/kelas-luxury.jpg',
-    resolution: '1920 x 1080 HD',
+    resolution: '1920 x 1080',
     likes: 284,
-    tags: ['CC 300', 'Merah Putih', 'PT INKA Madiun'],
   },
   {
     id: 'p5',
     category: 'interior',
-    title: 'Suasana Kabin Eksekutif Luxury Sleeper Panoramic',
-    loco: 'Kereta Luxury Gen-3',
-    location: 'Armada KA Taksaka Luxury',
-    photographer: 'RAILHUB Media Center',
+    title: 'Kabin Eksekutif Luxury Sleeper',
+    loco: 'Luxury Gen-3',
+    location: 'KA Taksaka Luxury',
+    photographer: 'RAILHUB Media',
     image: '/images/kelas-luxury.webp',
-    resolution: '1920 x 1080 HD',
+    resolution: '1920 x 1080',
     likes: 420,
-    tags: ['Luxury', 'Interior', 'Sleeper'],
   },
   {
     id: 'p6',
     category: 'interior',
-    title: 'Pemandangan Jendela Penumpang Menatap Hamparan Sawah',
+    title: 'Panorama Jendela Lintas Selatan',
     loco: 'KA Argo Wilis',
     location: 'Lintas Kroya – Kutoarjo',
     photographer: 'Dokumentasi Penumpang',
     image: '/images/gallery-passenger-window.jpg',
-    resolution: '1920 x 1080 HD',
+    resolution: '1920 x 1080',
     likes: 350,
-    tags: ['Jendela', 'Sawah', 'Perjalanan'],
   },
   {
     id: 'p7',
     category: 'cc206',
-    title: 'Armada CC 206 Siap Berangkat dari Jalur Utama',
+    title: 'Armada CC 206 Persiapan Keberangkatan',
     loco: 'CC 206 15 08',
     location: 'Stasiun Gambir, Jakarta',
-    photographer: 'Tim Dokumentasi Stasiun',
+    photographer: 'Dokumentasi Stasiun',
     image: '/images/promo railhub.png',
-    resolution: '2048 x 768 Panorama HD',
+    resolution: '2048 x 768',
     likes: 275,
-    tags: ['CC 206', 'Gambir', 'Keberangkatan'],
   },
   {
     id: 'p8',
     category: 'cc201',
-    title: 'Tarif Reduksi & Lokomotif Dinas Jawa',
+    title: 'Dinas Lintas Yogyakarta – Solo',
     loco: 'CC 201 Series',
-    location: 'Lintas Yogyakarta – Solo',
+    location: 'Yogyakarta – Solo',
     photographer: 'Arsip Komunitas',
     image: '/images/Railhub Tarif Reduksi Kereta.png',
-    resolution: '2048 x 768 Panorama HD',
+    resolution: '2048 x 768',
     likes: 198,
-    tags: ['CC 201', 'Arsip', 'Sejarah'],
   },
 ]
 
@@ -130,15 +121,11 @@ export default function RailfansGaleriPage() {
       ? GALLERY_PHOTOS
       : GALLERY_PHOTOS.filter((p) => p.category === selectedCategory)
 
-  // Download Handler (Safe check with passenger login requirement)
   const handleDownload = (photo, e) => {
     if (e) e.stopPropagation()
 
     if (!user) {
-      toast('Silakan login dengan akun Penumpang untuk mengunduh koleksi foto resolusi penuh!', {
-        icon: '🔒',
-        duration: 3500,
-      })
+      toast('Silakan login untuk mengunduh foto resolusi penuh.')
       router.push('/auth/login?next=%2Frailfans%2Fgaleri')
       return
     }
@@ -146,15 +133,11 @@ export default function RailfansGaleriPage() {
     try {
       const link = document.createElement('a')
       link.href = photo.image
-      link.download = `RAILHUB-Photo-${photo.loco.replace(/\s+/g, '-')}-${photo.id}.jpg`
+      link.download = `RAILHUB-${photo.loco.replace(/\s+/g, '-')}-${photo.id}.jpg`
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
-
-      toast.success(`Mengunduh foto ${photo.loco} (${photo.resolution})...`, {
-        icon: '📥',
-        duration: 3000,
-      })
+      toast.success(`Mengunduh ${photo.loco}`)
     } catch {
       toast.error('Gagal mengunduh foto.')
     }
@@ -169,101 +152,33 @@ export default function RailfansGaleriPage() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--rh-bg, #f8fafc)' }}>
+    <div className="min-h-screen flex flex-col bg-[var(--rh-bg)]">
       <Navbar />
 
-      <main style={{ flex: 1, paddingBottom: '4rem' }}>
-        {/* Header Hero */}
-        <section
-          style={{
-            background: 'linear-gradient(180deg, #07162C 0%, #0F2D59 100%)',
-            color: '#ffffff',
-            paddingTop: '3rem',
-            paddingBottom: '2.5rem',
-            position: 'relative',
-          }}
-        >
+      <main className="flex-1 pb-16">
+        {/* Compact Dark Header */}
+        <section className="bg-[#0b1626] text-white border-b border-white/10" style={{ padding: '4.5rem 0 3rem' }}>
           <div className="rh-container">
-            {/* Breadcrumb & Back Link */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
-              <Link
-                href="/railfans"
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.4rem',
-                  color: 'rgba(255,255,255,0.8)',
-                  textDecoration: 'none',
-                  fontSize: '0.85rem',
-                  fontWeight: 600,
-                  background: 'rgba(255,255,255,0.1)',
-                  padding: '0.35rem 0.85rem',
-                  borderRadius: 999,
-                }}
-              >
-                <ArrowLeft size={14} />
-                <span>Kembali ke Komunitas</span>
-              </Link>
-            </div>
+            <Link
+              href="/railfans"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-white/75 no-underline hover:text-white mb-4"
+            >
+              <ArrowLeft size={14} />
+              <span>Kembali ke Komunitas</span>
+            </Link>
 
-            <div style={{ maxWidth: 680 }}>
-              <div
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.4rem',
-                  background: 'rgba(249, 115, 22, 0.2)',
-                  color: '#FDBA74',
-                  padding: '0.3rem 0.75rem',
-                  borderRadius: 999,
-                  fontSize: '0.78rem',
-                  fontWeight: 700,
-                  marginBottom: '0.85rem',
-                }}
-              >
-                <Camera size={14} />
-                <span>Koleksi Wallpaper & Arsip Kereta Api HD</span>
-              </div>
-
-              <h1
-                className="rh-h1"
-                style={{
-                  color: '#ffffff',
-                  fontSize: 'clamp(1.8rem, 3.8vw, 2.6rem)',
-                  fontWeight: 800,
-                  margin: '0 0 0.75rem',
-                }}
-              >
-                Galeri Foto Lokomotif & Spotting
-              </h1>
-
-              <p
-                style={{
-                  color: 'rgba(255, 255, 255, 0.86)',
-                  fontSize: '0.96rem',
-                  lineHeight: 1.6,
-                  margin: 0,
-                }}
-              >
-                Simpan dan unduh foto-foto terbaik lokomotif legendaris Indonesia: CC 206, CC 201, CC 203, CC 300, serta lanskap panorama jalur kereta api Pulau Jawa.
-              </p>
-            </div>
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight m-0">
+              Galeri Foto Railfans
+            </h1>
+            <p className="text-sm text-white/75 m-0 mt-1.5 max-w-xl">
+              Arsip dokumentasi lokomotif CC 206, CC 201, CC 203, CC 300, dan perjalanan lintas Jawa.
+            </p>
           </div>
         </section>
 
-        {/* Gallery Content Area */}
-        <div className="rh-container" style={{ marginTop: '2rem' }}>
-          {/* Category Filter Pills */}
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              overflowX: 'auto',
-              paddingBottom: '0.75rem',
-              marginBottom: '1.75rem',
-            }}
-          >
+        {/* Filter + Grid */}
+        <div className="rh-container pt-6 sm:pt-8 space-y-6">
+          <div className="flex items-center gap-2 overflow-x-auto pb-2 border-b border-[var(--rh-border)]">
             {PHOTO_CATEGORIES.map((cat) => {
               const isActive = selectedCategory === cat.id
               return (
@@ -271,18 +186,11 @@ export default function RailfansGaleriPage() {
                   key={cat.id}
                   type="button"
                   onClick={() => setSelectedCategory(cat.id)}
-                  style={{
-                    padding: '0.5rem 1.15rem',
-                    borderRadius: 999,
-                    border: isActive ? '1px solid var(--rh-primary)' : '1px solid var(--rh-border)',
-                    background: isActive ? 'var(--rh-primary)' : 'var(--rh-surface, #ffffff)',
-                    color: isActive ? '#ffffff' : 'var(--rh-text-1)',
-                    fontWeight: isActive ? 800 : 600,
-                    fontSize: '0.84rem',
-                    cursor: 'pointer',
-                    whiteSpace: 'nowrap',
-                    transition: 'all 0.2s',
-                  }}
+                  className={`px-3.5 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap cursor-pointer transition-colors ${
+                    isActive
+                      ? 'bg-[var(--rh-blue)] text-white'
+                      : 'bg-white text-[var(--rh-text)] border border-[var(--rh-border)] hover:border-[var(--rh-blue)]'
+                  }`}
                 >
                   {cat.label}
                 </button>
@@ -290,145 +198,60 @@ export default function RailfansGaleriPage() {
             })}
           </div>
 
-          {/* Photo Grid */}
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 340px), 1fr))',
-              gap: '1.5rem',
-            }}
-          >
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredPhotos.map((photo) => {
               const isLiked = likedPhotos[photo.id]
               return (
                 <article
                   key={photo.id}
-                  className="rh-card"
                   onClick={() => setActivePhotoModal(photo)}
-                  style={{
-                    padding: 0,
-                    borderRadius: 18,
-                    overflow: 'hidden',
-                    cursor: 'pointer',
-                    border: '1px solid var(--rh-border)',
-                    boxShadow: '0 8px 24px rgba(7, 26, 56, 0.08)',
-                    transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-                    display: 'flex',
-                    flexDirection: 'column',
-                  }}
+                  className="group bg-white border border-[var(--rh-border)] rounded-xl overflow-hidden cursor-pointer flex flex-col hover:border-[var(--rh-blue)] transition-colors"
                 >
-                  {/* Photo Thumbnail */}
-                  <div style={{ position: 'relative', width: '100%', height: 220, background: '#0a1628' }}>
+                  <div className="relative w-full aspect-[16/10] bg-[#0b1626] overflow-hidden">
                     <Image
                       src={photo.image}
                       alt={photo.title}
                       fill
                       unoptimized
-                      sizes="(max-width: 768px) 100vw, 400px"
-                      style={{ objectFit: 'cover' }}
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className="object-cover group-hover:scale-[1.02] transition-transform duration-300"
                     />
-                    <div
-                      style={{
-                        position: 'absolute',
-                        top: 12,
-                        left: 12,
-                        background: 'rgba(7, 22, 44, 0.75)',
-                        backdropFilter: 'blur(8px)',
-                        padding: '0.25rem 0.65rem',
-                        borderRadius: 8,
-                        fontSize: '0.75rem',
-                        fontWeight: 800,
-                        color: '#ffffff',
-                      }}
-                    >
-                      {photo.loco}
-                    </div>
-
-                    <div
-                      style={{
-                        position: 'absolute',
-                        top: 12,
-                        right: 12,
-                        background: 'rgba(7, 22, 44, 0.75)',
-                        backdropFilter: 'blur(8px)',
-                        padding: '0.25rem 0.65rem',
-                        borderRadius: 8,
-                        fontSize: '0.72rem',
-                        fontWeight: 700,
-                        color: '#38BDF8',
-                      }}
-                    >
-                      {photo.resolution}
-                    </div>
                   </div>
 
-                  {/* Card Description */}
-                  <div style={{ padding: '1.25rem', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                  <div className="p-4 flex-1 flex flex-col justify-between gap-3">
                     <div>
-                      <h3
-                        style={{
-                          fontSize: '1.02rem',
-                          fontWeight: 800,
-                          color: 'var(--rh-navy)',
-                          margin: '0 0 0.35rem',
-                          lineHeight: 1.4,
-                        }}
-                      >
+                      <div className="flex items-center justify-between text-[11px] font-bold text-[var(--rh-orange)] mb-1">
+                        <span>{photo.loco}</span>
+                        <span className="text-[var(--rh-text-3)] font-medium">{photo.resolution}</span>
+                      </div>
+                      <h2 className="text-sm sm:text-base font-bold text-[var(--rh-blue)] m-0 leading-snug">
                         {photo.title}
-                      </h3>
-                      <div style={{ fontSize: '0.8rem', color: 'var(--rh-text-2)', marginBottom: '0.75rem' }}>
-                        📍 {photo.location}
+                      </h2>
+                      <div className="text-xs text-[var(--rh-text-3)] mt-1">
+                        {photo.location}
                       </div>
                     </div>
 
-                    {/* Bottom Action Footer */}
-                    <div
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        borderTop: '1px solid var(--rh-border)',
-                        paddingTop: '0.85rem',
-                        marginTop: '0.5rem',
-                      }}
-                    >
+                    <div className="flex items-center justify-between pt-3 border-t border-[var(--rh-border)]">
                       <button
                         type="button"
                         onClick={(e) => toggleLike(photo.id, e)}
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '0.35rem',
-                          background: 'transparent',
-                          border: 'none',
-                          color: isLiked ? '#EF4444' : 'var(--rh-text-2)',
-                          cursor: 'pointer',
-                          fontSize: '0.82rem',
-                          fontWeight: 700,
-                        }}
+                        aria-label="Sukai foto"
+                        className={`inline-flex items-center gap-1.5 text-xs font-bold bg-transparent border-0 cursor-pointer p-0 ${
+                          isLiked ? 'text-[var(--rh-orange)]' : 'text-[var(--rh-text-3)] hover:text-[var(--rh-blue)]'
+                        }`}
                       >
-                        <Heart size={16} fill={isLiked ? '#EF4444' : 'none'} />
+                        <Heart size={15} fill={isLiked ? 'currentColor' : 'none'} />
                         <span>{photo.likes + (isLiked ? 1 : 0)}</span>
                       </button>
 
                       <button
                         type="button"
                         onClick={(e) => handleDownload(photo, e)}
-                        className="rh-btn rh-btn-sm"
-                        style={{
-                          background: 'var(--rh-primary)',
-                          color: '#ffffff',
-                          borderRadius: 10,
-                          padding: '0.45rem 0.95rem',
-                          fontSize: '0.8rem',
-                          fontWeight: 700,
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: '0.4rem',
-                        }}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--rh-blue)] text-white text-xs font-bold cursor-pointer hover:opacity-90 transition-opacity border-0"
                       >
-                        <Download size={14} />
-                        <span>Ambil Foto</span>
+                        <Download size={13} />
+                        <span>Unduh</span>
                       </button>
                     </div>
                   </div>
@@ -439,111 +262,59 @@ export default function RailfansGaleriPage() {
         </div>
       </main>
 
-      {/* Expanded Photo Preview Modal */}
+      {/* Clean Lightbox Modal */}
       {activePhotoModal && (
         <div
           onClick={() => setActivePhotoModal(null)}
-          style={{
-            position: 'fixed',
-            inset: 0,
-            background: 'rgba(0, 0, 0, 0.85)',
-            backdropFilter: 'blur(10px)',
-            zIndex: 9999,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '1.25rem',
-          }}
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[9999] flex items-center justify-center p-4"
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            style={{
-              background: '#07162C',
-              color: '#ffffff',
-              borderRadius: 24,
-              overflow: 'hidden',
-              maxWidth: 880,
-              width: '100%',
-              boxShadow: '0 24px 70px rgba(0,0,0,0.6)',
-              border: '1px solid rgba(255,255,255,0.15)',
-            }}
+            className="bg-[#0b1626] text-white rounded-xl overflow-hidden max-w-3xl w-full border border-white/15"
           >
-            {/* Modal Image Display */}
-            <div style={{ position: 'relative', width: '100%', height: 'clamp(280px, 50vh, 460px)', background: '#000' }}>
+            <div className="relative w-full h-[260px] sm:h-[420px] bg-black">
               <Image
                 src={activePhotoModal.image}
                 alt={activePhotoModal.title}
                 fill
                 unoptimized
-                style={{ objectFit: 'contain' }}
+                className="object-contain"
               />
               <button
                 type="button"
                 onClick={() => setActivePhotoModal(null)}
-                style={{
-                  position: 'absolute',
-                  top: 14,
-                  right: 14,
-                  background: 'rgba(0,0,0,0.6)',
-                  color: '#ffffff',
-                  border: 'none',
-                  borderRadius: '50%',
-                  width: 36,
-                  height: 36,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: 'pointer',
-                }}
+                aria-label="Tutup pratinjau"
+                className="absolute top-3 right-3 w-9 h-9 rounded-full bg-black/70 text-white border-0 flex items-center justify-center cursor-pointer hover:bg-black"
               >
-                <X size={20} />
+                <X size={18} />
               </button>
             </div>
 
-            {/* Modal Info Footer */}
-            <div style={{ padding: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+            <div className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-t border-white/10">
               <div>
-                <span style={{ fontSize: '0.8rem', background: '#F97316', color: '#fff', padding: '0.15rem 0.5rem', borderRadius: 6, fontWeight: 700 }}>
-                  {activePhotoModal.loco}
+                <span className="text-xs font-bold text-[var(--rh-orange)]">
+                  {activePhotoModal.loco} · {activePhotoModal.resolution}
                 </span>
-                <h3 style={{ fontSize: '1.2rem', fontWeight: 800, margin: '0.5rem 0 0.25rem', color: '#ffffff' }}>
+                <h3 className="text-base sm:text-lg font-bold text-white m-0 mt-0.5">
                   {activePhotoModal.title}
                 </h3>
-                <div style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.7)' }}>
-                  📍 {activePhotoModal.location} • 📷 {activePhotoModal.photographer} • 📐 {activePhotoModal.resolution}
+                <div className="text-xs text-white/65 mt-1">
+                  {activePhotoModal.location} · {activePhotoModal.photographer}
                 </div>
               </div>
 
-              <div>
-                <button
-                  type="button"
-                  onClick={(e) => handleDownload(activePhotoModal, e)}
-                  style={{
-                    background: '#10B981',
-                    color: '#ffffff',
-                    border: 'none',
-                    fontWeight: 700,
-                    padding: '0.75rem 1.5rem',
-                    borderRadius: 12,
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                    cursor: 'pointer',
-                    fontSize: '0.9rem',
-                    boxShadow: '0 4px 16px rgba(16, 185, 129, 0.3)',
-                  }}
-                >
-                  <Download size={18} />
-                  <span>Unduh Foto Resolusi Penuh</span>
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={(e) => handleDownload(activePhotoModal, e)}
+                className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-[var(--rh-orange)] text-white text-xs sm:text-sm font-bold border-0 cursor-pointer hover:opacity-90 transition-opacity shrink-0"
+              >
+                <Download size={16} />
+                <span>Unduh Resolusi Penuh</span>
+              </button>
             </div>
           </div>
         </div>
       )}
-
-      <Footer />
     </div>
   )
 }
-

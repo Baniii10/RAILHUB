@@ -3,91 +3,73 @@
 import { useEffect, useRef, useState } from 'react'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import { Camera, RotateCw, Lightbulb, Sparkles, Download, Check, Info } from 'lucide-react'
+import { Camera, RotateCw, Lightbulb, Download, Check } from 'lucide-react'
 import toast from 'react-hot-toast'
 
 export const LOCOMOTIVES = [
   {
     id: 'cc206',
     code: 'CC 206',
-    fullName: 'General Electric CM20EMP',
-    nickname: 'Si Hidung Ganda (Double Cab)',
+    fullName: 'GE CM20EMP',
+    nickname: 'Double Cab',
     type: 'Diesel Elektrik',
-    year: '2012 - Sekarang',
-    builder: 'GE Transportation (Erie, Pennsylvania, USA)',
-    engine: 'GE 7FDL-8 (8 Silinder V-Twin Turbocharged)',
-    power: '2.250 HP (1.680 kW)',
+    builder: 'GE Transportation, USA',
+    power: '2.250 HP',
     topSpeed: '120 km/jam',
-    axle: 'Co-Co (2 Bogi, 6 Gandar Penggerak)',
+    axle: 'Co-Co (6 Gandar)',
     weight: '90 Ton',
-    duty: 'Kereta Eksekutif Utama & Angkutan Barang Logistik Jawa',
-    colorLivery: '#FFFFFF',
-    stripeColor: '#FF6B00',
-    blueStripe: '#1A428A',
     description:
-      'Lokomotif paling modern dan tangguh andalan PT Kereta Api Indonesia saat ini. Memiliki keunikan berupa kabin ganda (double cabin) di kedua ujungnya sehingga masinis tidak perlu memutar lokomotif di pemutar rel (turntable).',
+      'Lokomotif kabin ganda andalan PT KAI untuk kereta eksekutif dan angkutan logistik lintas Jawa tanpa perlu diputar di turntable.',
   },
   {
     id: 'cc201',
     code: 'CC 201',
-    fullName: 'General Electric U18C',
-    nickname: 'Si Hidung Miring Legendaris',
+    fullName: 'GE U18C',
+    nickname: 'Hidung Miring',
     type: 'Diesel Elektrik',
-    year: '1977 - Sekarang',
-    builder: 'GE Transportation (USA)',
-    engine: 'GE 7FDL-8 (Turbocharged)',
-    power: '1.950 HP (1.450 kW)',
+    builder: 'GE Transportation, USA',
+    power: '1.950 HP',
     topSpeed: '120 km/jam',
-    axle: 'Co-Co (2 Bogi, 6 Gandar Penggerak)',
+    axle: 'Co-Co (6 Gandar)',
     weight: '84 Ton',
-    duty: 'Kereta Penumpang Antarkota & Kereta Campuran',
-    colorLivery: '#F3F4F6',
-    stripeColor: '#EA580C',
-    blueStripe: '#1E3A8A',
     description:
-      'Lokomotif pekerja keras paling legendaris dalam sejarah perkeretaapian modern Indonesia. Telah berdinas lebih dari empat dekade menaklukkan jalur pegunungan dan lintas utara-selatan Pulau Jawa.',
+      'Lokomotif pekerja keras paling legendaris sejak 1977 dengan short hood rendah, kabin tinggi, dan walkway samping untuk jalur pegunungan.',
   },
   {
     id: 'cc203',
     code: 'CC 203',
-    fullName: 'General Electric U20C',
-    nickname: 'Si Moncong Hiu Aerodinamis',
+    fullName: 'GE U20C',
+    nickname: 'Moncong Hiu',
     type: 'Diesel Elektrik',
-    year: '1995 - Sekarang',
-    builder: 'GE Transportation / PT INKA (Perakitan Madiun)',
-    engine: 'GE 7FDL-8 Turbocharged EFI',
-    power: '2.150 HP (1.600 kW)',
+    builder: 'GE / PT INKA Madiun',
+    power: '2.150 HP',
     topSpeed: '120 km/jam',
-    axle: 'Co-Co (2 Bogi, 6 Gandar Penggerak)',
+    axle: 'Co-Co (6 Gandar)',
     weight: '84 Ton',
-    duty: 'Kereta Cepat Eksekutif Argo Generasi Pertama',
-    colorLivery: '#F8FAFC',
-    stripeColor: '#F97316',
-    blueStripe: '#0F2C59',
     description:
-      'Diperkenalkan pertama kali bersamaan dengan peluncuran armada prestisius KA Argo Bromo Anggrek dan Argo Gede pada tahun 1995. Memiliki moncong aerodinamis miring yang ikonik dan modern karya General Electric bekerjasama dengan Goninan.',
+      'Dikenal dengan hidung aerodinamis miring khas era peluncuran KA Argo Bromo dan Argo Gede pada 1995.',
   },
   {
     id: 'cc300',
     code: 'CC 300',
-    fullName: 'INKA CC 300 Diesel Hidrolik',
-    nickname: 'Karya Merah Putih Anak Bangsa',
+    fullName: 'INKA DH-2200',
+    nickname: 'Merah Putih',
     type: 'Diesel Hidrolik',
-    year: '2012 - Sekarang',
-    builder: 'PT INKA Madiun (Indonesia)',
-    engine: 'Caterpillar 3512B HD TA',
-    power: '2.200 HP (1.640 kW)',
+    builder: 'PT INKA Madiun',
+    power: '2.200 HP',
     topSpeed: '120 km/jam',
-    axle: 'Co-Co (Bogi Buatan Madiun)',
+    axle: 'Co-Co (6 Gandar)',
     weight: '84 Ton',
-    duty: 'Dinas Penyelamatan Banjir, Luar Biasa & Inspeksi',
-    colorLivery: '#DC2626',
-    stripeColor: '#FFFFFF',
-    blueStripe: '#18181B',
     description:
-      'Lokomotif diesel hidrolik pertama yang sepenuhnya dirancang dan diproduksi di Indonesia oleh insinyur PT INKA Madiun. Mampu menerjang genangan air setinggi 1 meter (anti-banjir) berkat sistem penggerak hidrolik kedap air.',
+      'Lokomotif diesel hidrolik karya PT INKA Madiun dengan kabin ganda, masker kaca hitam, dan kemampuan menerjang genangan banjir.',
   },
 ]
+
+function getCameraPositionForAspect(aspect) {
+  if (aspect < 0.9) return new THREE.Vector3(14.5, 5.4, 13.0)
+  if (aspect < 1.3) return new THREE.Vector3(12.5, 4.8, 11.0)
+  return new THREE.Vector3(10.8, 4.2, 9.2)
+}
 
 export default function Locomotive3DViewer({ onPhotoCaptured }) {
   const containerRef = useRef(null)
@@ -97,6 +79,7 @@ export default function Locomotive3DViewer({ onPhotoCaptured }) {
   const controlsRef = useRef(null)
   const trainGroupRef = useRef(null)
   const lightsRef = useRef([])
+  const autoRotateRef = useRef(true)
 
   const [activeLocoId, setActiveLocoId] = useState('cc206')
   const [autoRotate, setAutoRotate] = useState(true)
@@ -105,57 +88,65 @@ export default function Locomotive3DViewer({ onPhotoCaptured }) {
 
   const activeLoco = LOCOMOTIVES.find((l) => l.id === activeLocoId) || LOCOMOTIVES[0]
 
-  // Setup Three.js Scene
+  useEffect(() => {
+    autoRotateRef.current = autoRotate
+    if (controlsRef.current) {
+      controlsRef.current.autoRotate = autoRotate
+    }
+  }, [autoRotate])
+
   useEffect(() => {
     const container = containerRef.current
     if (!container) return
 
     const width = container.clientWidth || 800
-    const height = container.clientHeight || 500
+    const height = container.clientHeight || 460
+    const aspect = width / height
 
-    // 1. Scene
     const scene = new THREE.Scene()
-    scene.background = new THREE.Color(0x0a1628)
-    scene.fog = new THREE.FogExp2(0x0a1628, 0.02)
+    scene.background = new THREE.Color(0x0b1626)
+    scene.fog = new THREE.FogExp2(0x0b1626, 0.018)
     sceneRef.current = scene
 
-    // 2. Camera
-    const camera = new THREE.PerspectiveCamera(42, width / height, 0.1, 100)
-    camera.position.set(11, 4.5, 9.5)
+    const camera = new THREE.PerspectiveCamera(40, aspect, 0.1, 100)
+    camera.position.copy(getCameraPositionForAspect(aspect))
     cameraRef.current = camera
 
-    // 3. Renderer
-    const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true, powerPreference: 'high-performance' })
+    const renderer = new THREE.WebGLRenderer({
+      antialias: true,
+      preserveDrawingBuffer: true,
+      powerPreference: 'high-performance',
+    })
     renderer.setSize(width, height)
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2))
     renderer.shadowMap.enabled = true
     renderer.shadowMap.type = THREE.PCFSoftShadowMap
     renderer.toneMapping = THREE.ACESFilmicToneMapping
-    renderer.toneMappingExposure = 1.15
+    renderer.toneMappingExposure = 1.12
     container.replaceChildren(renderer.domElement)
     rendererRef.current = renderer
 
-    // 4. Controls
     const controls = new OrbitControls(camera, renderer.domElement)
     controls.enableDamping = true
-    controls.dampingFactor = 0.05
-    controls.maxPolarAngle = Math.PI / 2 - 0.02 // Don't go below ground
-    controls.minDistance = 5
-    controls.maxDistance = 22
-    controls.target.set(0, 1.2, 0)
+    controls.dampingFactor = 0.06
+    controls.maxPolarAngle = Math.PI / 2 - 0.03
+    controls.minDistance = 5.5
+    controls.maxDistance = 24
+    controls.target.set(0, 1.35, 0)
+    controls.autoRotate = autoRotateRef.current
+    controls.autoRotateSpeed = 1.0
     controlsRef.current = controls
 
-    // 5. Lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.75)
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.85)
     scene.add(ambientLight)
 
-    const keyLight = new THREE.DirectionalLight(0xfff5e6, 1.8)
-    keyLight.position.set(12, 18, 10)
+    const keyLight = new THREE.DirectionalLight(0xfff6e8, 1.9)
+    keyLight.position.set(12, 18, 11)
     keyLight.castShadow = true
     keyLight.shadow.mapSize.width = 2048
     keyLight.shadow.mapSize.height = 2048
     keyLight.shadow.camera.near = 0.5
-    keyLight.shadow.camera.far = 40
+    keyLight.shadow.camera.far = 42
     keyLight.shadow.camera.left = -10
     keyLight.shadow.camera.right = 10
     keyLight.shadow.camera.top = 10
@@ -163,42 +154,36 @@ export default function Locomotive3DViewer({ onPhotoCaptured }) {
     keyLight.shadow.bias = -0.0005
     scene.add(keyLight)
 
-    const rimLight = new THREE.DirectionalLight(0x70a5ff, 1.2)
+    const rimLight = new THREE.DirectionalLight(0x93c5fd, 1.0)
     rimLight.position.set(-14, 10, -12)
     scene.add(rimLight)
 
-    const groundBounce = new THREE.DirectionalLight(0x1a335a, 0.6)
-    groundBounce.position.set(0, -5, 0)
-    scene.add(groundBounce)
+    const fillLight = new THREE.DirectionalLight(0xe2e8f0, 0.5)
+    fillLight.position.set(0, 4, -12)
+    scene.add(fillLight)
 
-    // 6. Railway Track & Ground
     buildRailwayEnvironment(scene)
 
-    // 7. Train Group
     const trainGroup = new THREE.Group()
     scene.add(trainGroup)
     trainGroupRef.current = trainGroup
 
-    // 8. Animation Loop
     let animId
     const animate = () => {
       animId = requestAnimationFrame(animate)
-
       if (controlsRef.current) {
-        controlsRef.current.autoRotate = autoRotate
-        controlsRef.current.autoRotateSpeed = 1.2
+        controlsRef.current.autoRotate = autoRotateRef.current
         controlsRef.current.update()
       }
-
       renderer.render(scene, camera)
     }
     animate()
 
-    // 9. Resize Handling
     const handleResize = () => {
       if (!container || !renderer || !camera) return
       const w = container.clientWidth
       const h = container.clientHeight
+      if (!w || !h) return
       camera.aspect = w / h
       camera.updateProjectionMatrix()
       renderer.setSize(w, h)
@@ -216,41 +201,30 @@ export default function Locomotive3DViewer({ onPhotoCaptured }) {
     }
   }, [])
 
-  // Update autoRotate on controls
-  useEffect(() => {
-    if (controlsRef.current) {
-      controlsRef.current.autoRotate = autoRotate
-    }
-  }, [autoRotate])
-
-  // Build Locomotive Mesh whenever activeLocoId changes
   useEffect(() => {
     const trainGroup = trainGroupRef.current
     const scene = sceneRef.current
     if (!trainGroup || !scene) return
 
-    // Clear previous train meshes
     while (trainGroup.children.length > 0) {
       const obj = trainGroup.children[0]
       trainGroup.remove(obj)
       disposeMesh(obj)
     }
 
-    // Build the specific locomotive
     lightsRef.current = []
     buildLocomotive(trainGroup, activeLocoId, headlightsOn, lightsRef)
   }, [activeLocoId, headlightsOn])
 
-  // Reset Camera View
   const handleResetCamera = () => {
-    if (!cameraRef.current || !controlsRef.current) return
-    cameraRef.current.position.set(11, 4.5, 9.5)
-    controlsRef.current.target.set(0, 1.2, 0)
+    const container = containerRef.current
+    if (!cameraRef.current || !controlsRef.current || !container) return
+    const aspect = (container.clientWidth || 800) / (container.clientHeight || 460)
+    cameraRef.current.position.copy(getCameraPositionForAspect(aspect))
+    controlsRef.current.target.set(0, 1.35, 0)
     controlsRef.current.update()
-    toast.success('Sudut pandang direset', { id: 'reset-cam', duration: 1500 })
   }
 
-  // Capture 3D Snapshot
   const handleCaptureSnapshot = () => {
     const renderer = rendererRef.current
     const scene = sceneRef.current
@@ -259,81 +233,36 @@ export default function Locomotive3DViewer({ onPhotoCaptured }) {
 
     setIsSnapshotting(true)
     try {
-      // Force render frame to guarantee drawing buffer is fresh
       renderer.render(scene, camera)
       const dataUrl = renderer.domElement.toDataURL('image/png')
 
       const link = document.createElement('a')
       link.href = dataUrl
-      link.download = `RAILHUB-3D-${activeLoco.code.replace(/\s+/g, '-')}-Snapshot.png`
+      link.download = `RAILHUB-3D-${activeLoco.code.replace(/\s+/g, '-')}.png`
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
 
-      toast.success(`Foto 3D ${activeLoco.code} berhasil diunduh!`, {
-        icon: '📸',
-        duration: 3000,
-      })
-
+      toast.success(`Foto 3D ${activeLoco.code} diunduh`)
       if (onPhotoCaptured) {
-        onPhotoCaptured({
-          loco: activeLoco,
-          imageUrl: dataUrl,
-        })
+        onPhotoCaptured({ loco: activeLoco, imageUrl: dataUrl })
       }
     } catch {
-      toast.error('Gagal mengambil tangkapan layar 3D')
+      toast.error('Gagal mengambil foto 3D')
     } finally {
       setTimeout(() => setIsSnapshotting(false), 500)
     }
   }
 
   return (
-    <div className="rh-loco-viewer-container" style={{ position: 'relative', width: '100%', borderRadius: 24, overflow: 'hidden', background: '#07162C', border: '1px solid rgba(255,255,255,0.12)', boxShadow: '0 20px 60px rgba(0,0,0,0.5)' }}>
-      {/* 3D Canvas Viewport */}
-      <div
-        ref={containerRef}
-        style={{
-          width: '100%',
-          height: 'clamp(380px, 58vh, 580px)',
-          display: 'block',
-          cursor: 'grab',
-        }}
-        onMouseDown={(e) => { e.currentTarget.style.cursor = 'grabbing' }}
-        onMouseUp={(e) => { e.currentTarget.style.cursor = 'grab' }}
-      />
-
-      {/* Top Floating Controls Bar */}
-      <div
-        style={{
-          position: 'absolute',
-          top: 16,
-          left: 16,
-          right: 16,
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          flexWrap: 'wrap',
-          gap: '0.75rem',
-          pointerEvents: 'none',
-          zIndex: 10,
-        }}
-      >
-        {/* Locomotive Selector Tabs */}
+    <div className="w-full border border-[var(--rh-border)] bg-white rounded-xl overflow-hidden">
+      {/* Top Toolbar: Separated from canvas so mobile viewport stays unobstructed */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-4 py-3 border-b border-[var(--rh-border)] bg-[var(--rh-surface)]">
+        {/* Locomotive Series Selector */}
         <div
-          style={{
-            display: 'flex',
-            gap: '0.35rem',
-            background: 'rgba(7, 22, 44, 0.85)',
-            backdropFilter: 'blur(12px)',
-            WebkitBackdropFilter: 'blur(12px)',
-            padding: '0.35rem',
-            borderRadius: 14,
-            border: '1px solid rgba(255,255,255,0.15)',
-            pointerEvents: 'auto',
-            overflowX: 'auto',
-            maxWidth: '100%',
-          }}
+          role="tablist"
+          aria-label="Pilih seri lokomotif"
+          className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0"
         >
           {LOCOMOTIVES.map((loco) => {
             const isActive = loco.id === activeLocoId
@@ -341,215 +270,122 @@ export default function Locomotive3DViewer({ onPhotoCaptured }) {
               <button
                 key={loco.id}
                 type="button"
+                role="tab"
+                aria-selected={isActive}
                 onClick={() => setActiveLocoId(loco.id)}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.4rem',
-                  padding: '0.45rem 0.85rem',
-                  borderRadius: 10,
-                  border: isActive ? '1px solid #F97316' : '1px solid transparent',
-                  background: isActive ? '#F97316' : 'transparent',
-                  color: '#FFFFFF',
-                  fontWeight: 700,
-                  fontSize: '0.82rem',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease',
-                  whiteSpace: 'nowrap',
-                }}
+                className={`px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold whitespace-nowrap cursor-pointer transition-colors ${
+                  isActive
+                    ? 'bg-[var(--rh-blue)] text-white'
+                    : 'bg-white text-[var(--rh-text)] border border-[var(--rh-border)] hover:border-[var(--rh-blue)]'
+                }`}
               >
-                <span>{loco.code}</span>
-                {isActive && <Sparkles size={12} color="#FFFFFF" />}
+                {loco.code}
               </button>
             )
           })}
         </div>
 
-        {/* Action Tool Buttons */}
-        <div
-          style={{
-            display: 'flex',
-            gap: '0.4rem',
-            background: 'rgba(7, 22, 44, 0.85)',
-            backdropFilter: 'blur(12px)',
-            WebkitBackdropFilter: 'blur(12px)',
-            padding: '0.35rem',
-            borderRadius: 14,
-            border: '1px solid rgba(255,255,255,0.15)',
-            pointerEvents: 'auto',
-          }}
-        >
-          {/* Headlights Toggle */}
-          <button
-            type="button"
-            onClick={() => setHeadlightsOn(!headlightsOn)}
-            title={headlightsOn ? 'Matikan Lampu' : 'Nyalakan Lampu'}
-            style={{
-              width: 36,
-              height: 36,
-              borderRadius: 10,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              border: headlightsOn ? '1px solid #FBBF24' : '1px solid rgba(255,255,255,0.1)',
-              background: headlightsOn ? 'rgba(251, 191, 36, 0.2)' : 'transparent',
-              color: headlightsOn ? '#FBBF24' : 'rgba(255,255,255,0.7)',
-              cursor: 'pointer',
-            }}
-          >
-            <Lightbulb size={18} />
-          </button>
+        {/* Viewer Controls */}
+        <div className="flex items-center justify-between sm:justify-end gap-2">
+          <div className="flex items-center gap-1.5">
+            <button
+              type="button"
+              onClick={() => setHeadlightsOn((v) => !v)}
+              aria-label={headlightsOn ? 'Matikan lampu sorot' : 'Nyalakan lampu sorot'}
+              title={headlightsOn ? 'Matikan Lampu' : 'Nyalakan Lampu'}
+              className={`h-9 w-9 rounded-lg flex items-center justify-center border cursor-pointer transition-colors ${
+                headlightsOn
+                  ? 'bg-[var(--rh-orange)]/10 border-[var(--rh-orange)] text-[var(--rh-orange)]'
+                  : 'bg-white border-[var(--rh-border)] text-[var(--rh-text)]'
+              }`}
+            >
+              <Lightbulb size={16} />
+            </button>
 
-          {/* Auto Rotate Toggle */}
-          <button
-            type="button"
-            onClick={() => setAutoRotate(!autoRotate)}
-            title={autoRotate ? 'Jeda Putaran' : 'Putar 360°'}
-            style={{
-              width: 36,
-              height: 36,
-              borderRadius: 10,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              border: autoRotate ? '1px solid #38BDF8' : '1px solid rgba(255,255,255,0.1)',
-              background: autoRotate ? 'rgba(56, 189, 248, 0.2)' : 'transparent',
-              color: autoRotate ? '#38BDF8' : 'rgba(255,255,255,0.7)',
-              cursor: 'pointer',
-            }}
-          >
-            <RotateCw size={18} />
-          </button>
+            <button
+              type="button"
+              onClick={() => setAutoRotate((v) => !v)}
+              aria-label={autoRotate ? 'Jeda putaran otomatis' : 'Aktifkan putaran otomatis'}
+              title={autoRotate ? 'Jeda Putaran' : 'Putar 360°'}
+              className={`h-9 w-9 rounded-lg flex items-center justify-center border cursor-pointer transition-colors ${
+                autoRotate
+                  ? 'bg-[var(--rh-blue)]/10 border-[var(--rh-blue)] text-[var(--rh-blue)]'
+                  : 'bg-white border-[var(--rh-border)] text-[var(--rh-text)]'
+              }`}
+            >
+              <RotateCw size={16} />
+            </button>
 
-          {/* Reset Camera */}
-          <button
-            type="button"
-            onClick={handleResetCamera}
-            title="Reset Sudut Pandang"
-            style={{
-              width: 36,
-              height: 36,
-              borderRadius: 10,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              border: '1px solid rgba(255,255,255,0.1)',
-              background: 'transparent',
-              color: 'rgba(255,255,255,0.7)',
-              cursor: 'pointer',
-            }}
-          >
-            <Camera size={18} />
-          </button>
+            <button
+              type="button"
+              onClick={handleResetCamera}
+              aria-label="Reset sudut pandang kamera"
+              title="Reset Kamera"
+              className="h-9 px-2.5 rounded-lg flex items-center justify-center border border-[var(--rh-border)] bg-white text-[var(--rh-text)] text-xs font-semibold cursor-pointer hover:border-[var(--rh-blue)] transition-colors"
+            >
+              Reset
+            </button>
+          </div>
 
-          {/* Capture Photo Snapshot */}
           <button
             type="button"
             onClick={handleCaptureSnapshot}
             disabled={isSnapshotting}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.4rem',
-              padding: '0 0.85rem',
-              height: 36,
-              borderRadius: 10,
-              border: '1px solid #10B981',
-              background: '#10B981',
-              color: '#FFFFFF',
-              fontWeight: 700,
-              fontSize: '0.8rem',
-              cursor: isSnapshotting ? 'wait' : 'pointer',
-              transition: 'all 0.2s',
-            }}
+            className="h-9 px-3.5 rounded-lg flex items-center gap-1.5 bg-[var(--rh-orange)] text-white text-xs font-bold cursor-pointer hover:opacity-90 transition-opacity disabled:opacity-60"
           >
-            {isSnapshotting ? <Check size={14} /> : <Download size={14} />}
-            <span>Ambil Foto 3D</span>
+            {isSnapshotting ? <Check size={14} /> : <Camera size={14} />}
+            <span>Simpan PNG</span>
           </button>
         </div>
       </div>
 
-      {/* Floating Instructions & Badge at bottom right */}
-      <div
-        style={{
-          position: 'absolute',
-          bottom: 16,
-          right: 16,
-          background: 'rgba(7, 22, 44, 0.75)',
-          backdropFilter: 'blur(8px)',
-          WebkitBackdropFilter: 'blur(8px)',
-          padding: '0.4rem 0.85rem',
-          borderRadius: 999,
-          color: 'rgba(255,255,255,0.75)',
-          fontSize: '0.75rem',
-          pointerEvents: 'none',
-          border: '1px solid rgba(255,255,255,0.1)',
-        }}
-      >
-        👆 Geser untuk memutar • Scroll untuk zoom
+      {/* 3D Viewport */}
+      <div className="relative bg-[#0b1626]">
+        <div
+          ref={containerRef}
+          className="w-full h-[300px] sm:h-[420px] lg:h-[500px] cursor-grab active:cursor-grabbing"
+          aria-label={`Model 3D interaktif lokomotif ${activeLoco.code}`}
+        />
+        <div className="pointer-events-none absolute bottom-3.5 right-4 z-10 text-[11px] leading-normal text-white/70 bg-[#0b1626]/80 px-3 py-1 rounded-md border border-white/10">
+          Geser untuk memutar • Cubit/scroll untuk zoom
+        </div>
       </div>
 
-      {/* Bottom Technical Specs Panel */}
-      <div
-        style={{
-          background: 'linear-gradient(180deg, rgba(7,22,44,0.92) 0%, #07162C 100%)',
-          padding: '1.25rem 1.5rem',
-          borderTop: '1px solid rgba(255,255,255,0.1)',
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))',
-          gap: '1.25rem',
-          alignItems: 'center',
-        }}
-      >
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.25rem' }}>
-            <span style={{ fontSize: '1.35rem', fontWeight: 800, color: '#FFFFFF' }}>{activeLoco.code}</span>
-            <span style={{ fontSize: '0.8rem', background: '#F97316', color: '#fff', padding: '0.15rem 0.5rem', borderRadius: 6, fontWeight: 700 }}>
-              {activeLoco.type}
-            </span>
-          </div>
-          <div style={{ fontSize: '0.9rem', color: '#38BDF8', fontWeight: 600, marginBottom: '0.35rem' }}>
-            {activeLoco.fullName} ({activeLoco.nickname})
-          </div>
-          <p style={{ margin: 0, fontSize: '0.82rem', color: 'rgba(255,255,255,0.75)', lineHeight: 1.5, maxWidth: 540 }}>
-            {activeLoco.description}
-          </p>
-        </div>
-
-        {/* Specs Grid */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
-            gap: '0.65rem',
-            background: 'rgba(255,255,255,0.04)',
-            padding: '0.85rem',
-            borderRadius: 14,
-            border: '1px solid rgba(255,255,255,0.08)',
-          }}
-        >
-          <div>
-            <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase' }}>Daya Mesin</div>
-            <div style={{ fontSize: '0.88rem', fontWeight: 700, color: '#FFFFFF' }}>{activeLoco.power.split('(')[0]}</div>
-          </div>
-          <div>
-            <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase' }}>Kecepatan</div>
-            <div style={{ fontSize: '0.88rem', fontWeight: 700, color: '#10B981' }}>{activeLoco.topSpeed}</div>
-          </div>
-          <div>
-            <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase' }}>Gandar</div>
-            <div style={{ fontSize: '0.88rem', fontWeight: 700, color: '#FFFFFF' }}>{activeLoco.axle.split(' ')[0]}</div>
-          </div>
-          <div>
-            <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase' }}>Berat Kosong</div>
-            <div style={{ fontSize: '0.88rem', fontWeight: 700, color: '#FFFFFF' }}>{activeLoco.weight}</div>
-          </div>
-          <div style={{ gridColumn: 'span 2' }}>
-            <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase' }}>Pabrikan</div>
-            <div style={{ fontSize: '0.82rem', fontWeight: 600, color: '#FCD34D', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-              {activeLoco.builder.split('(')[0]}
+      {/* Specs Strip: Clean flat grid, no nested box-slop */}
+      <div className="px-4 py-4 sm:px-6 sm:py-5 border-t border-[var(--rh-border)] bg-white">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+          <div className="max-w-xl">
+            <div className="flex items-baseline gap-2.5 mb-1">
+              <h3 className="text-lg sm:text-xl font-extrabold text-[var(--rh-blue)] m-0">
+                {activeLoco.code}
+              </h3>
+              <span className="text-xs font-semibold text-[var(--rh-orange)]">
+                {activeLoco.fullName} · {activeLoco.nickname}
+              </span>
             </div>
+            <p className="text-xs sm:text-sm text-[var(--rh-text)] opacity-85 m-0 leading-relaxed">
+              {activeLoco.description}
+            </p>
           </div>
+
+          <dl className="grid grid-cols-2 sm:grid-cols-4 gap-x-6 gap-y-2.5 pt-3 lg:pt-0 border-t lg:border-t-0 lg:border-l border-[var(--rh-border)] lg:pl-6 m-0">
+            <div>
+              <dt className="text-[11px] uppercase tracking-wider text-[var(--rh-text-3)]">Daya</dt>
+              <dd className="text-sm font-bold text-[var(--rh-blue)] m-0">{activeLoco.power}</dd>
+            </div>
+            <div>
+              <dt className="text-[11px] uppercase tracking-wider text-[var(--rh-text-3)]">Kecepatan</dt>
+              <dd className="text-sm font-bold text-[var(--rh-blue)] m-0">{activeLoco.topSpeed}</dd>
+            </div>
+            <div>
+              <dt className="text-[11px] uppercase tracking-wider text-[var(--rh-text-3)]">Gandar</dt>
+              <dd className="text-sm font-bold text-[var(--rh-blue)] m-0">{activeLoco.axle}</dd>
+            </div>
+            <div>
+              <dt className="text-[11px] uppercase tracking-wider text-[var(--rh-text-3)]">Berat</dt>
+              <dd className="text-sm font-bold text-[var(--rh-blue)] m-0">{activeLoco.weight}</dd>
+            </div>
+          </dl>
         </div>
       </div>
     </div>
@@ -557,17 +393,16 @@ export default function Locomotive3DViewer({ onPhotoCaptured }) {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   3D PROCEDURAL LOCOMOTIVE GENERATOR
-   Creates detailed, recognizable 3D models for CC 206, 201, 203, 300
+   3D PROCEDURAL LOCOMOTIVE BUILDER
+   Accurate proportions & silhouettes for CC 206, CC 201, CC 203, CC 300
    ═══════════════════════════════════════════════════════════════ */
 
 function buildRailwayEnvironment(scene) {
-  // Ground
-  const groundGeo = new THREE.PlaneGeometry(60, 40)
+  const groundGeo = new THREE.PlaneGeometry(70, 50)
   const groundMat = new THREE.MeshStandardMaterial({
-    color: 0x0c1e36,
-    roughness: 0.9,
-    metalness: 0.1,
+    color: 0x0d192b,
+    roughness: 0.95,
+    metalness: 0.05,
   })
   const ground = new THREE.Mesh(groundGeo, groundMat)
   ground.rotation.x = -Math.PI / 2
@@ -575,509 +410,639 @@ function buildRailwayEnvironment(scene) {
   ground.receiveShadow = true
   scene.add(ground)
 
-  // Ballast Bed (Kerikil Rel)
-  const ballastGeo = new THREE.BoxGeometry(32, 0.25, 4.2)
+  // Trapezoid-like Ballast Bed
+  const ballastGeo = new THREE.BoxGeometry(36, 0.24, 3.8)
   const ballastMat = new THREE.MeshStandardMaterial({
-    color: 0x3d434d,
+    color: 0x333a45,
     roughness: 0.95,
     metalness: 0.05,
   })
   const ballast = new THREE.Mesh(ballastGeo, ballastMat)
-  ballast.position.set(0, 0.1, 0)
+  ballast.position.set(0, 0.08, 0)
   ballast.receiveShadow = true
   scene.add(ballast)
 
-  // Sleepers (Bantalan Rel Kayu / Beton)
-  const sleeperGeo = new THREE.BoxGeometry(0.35, 0.16, 3.2)
+  // Concrete Sleepers (Bantalan Rel)
+  const sleeperGeo = new THREE.BoxGeometry(0.32, 0.14, 2.8)
   const sleeperMat = new THREE.MeshStandardMaterial({
-    color: 0x24272c,
+    color: 0x475569,
     roughness: 0.85,
     metalness: 0.1,
   })
-
-  for (let x = -15; x <= 15; x += 0.8) {
+  for (let x = -16; x <= 16; x += 0.72) {
     const sleeper = new THREE.Mesh(sleeperGeo, sleeperMat)
-    sleeper.position.set(x, 0.28, 0)
+    sleeper.position.set(x, 0.24, 0)
     sleeper.receiveShadow = true
     scene.add(sleeper)
   }
 
-  // Steel Rails (Rel Baja)
-  const railGeo = new THREE.BoxGeometry(32, 0.15, 0.12)
+  // Steel Rails (1.067 mm Cape Gauge scaled proportionally)
+  const railGeo = new THREE.BoxGeometry(36, 0.14, 0.1)
   const railMat = new THREE.MeshStandardMaterial({
-    color: 0x94a3b8,
+    color: 0xcbd5e1,
     metalness: 0.85,
     roughness: 0.25,
   })
 
-  // Left rail (Z = -0.85)
   const leftRail = new THREE.Mesh(railGeo, railMat)
-  leftRail.position.set(0, 0.42, -0.85)
+  leftRail.position.set(0, 0.38, -0.78)
   leftRail.castShadow = true
-  leftRail.receiveShadow = true
   scene.add(leftRail)
 
-  // Right rail (Z = +0.85)
   const rightRail = new THREE.Mesh(railGeo, railMat)
-  rightRail.position.set(0, 0.42, 0.85)
+  rightRail.position.set(0, 0.38, 0.78)
   rightRail.castShadow = true
-  rightRail.receiveShadow = true
   scene.add(rightRail)
 }
 
 function buildLocomotive(group, type, headlightsOn, lightsRef) {
-  // Shared Materials
-  const chassisMat = new THREE.MeshStandardMaterial({ color: 0x1f242e, metalness: 0.6, roughness: 0.4 })
-  const steelWheelMat = new THREE.MeshStandardMaterial({ color: 0x5a6270, metalness: 0.9, roughness: 0.25 })
-  const glassMat = new THREE.MeshPhysicalMaterial({ color: 0x1e3a5f, metalness: 0.1, roughness: 0.1, transmission: 0.7, opacity: 0.9, transparent: true })
-  const grillMat = new THREE.MeshStandardMaterial({ color: 0x181a20, metalness: 0.8, roughness: 0.6 })
+  const chassisMat = new THREE.MeshStandardMaterial({ color: 0x1e2430, metalness: 0.55, roughness: 0.45 })
+  const steelWheelMat = new THREE.MeshStandardMaterial({ color: 0x64748b, metalness: 0.85, roughness: 0.25 })
+  const glassMat = new THREE.MeshPhysicalMaterial({
+    color: 0x0f2744,
+    metalness: 0.15,
+    roughness: 0.08,
+    opacity: 0.92,
+    transparent: true,
+  })
+  const grillMat = new THREE.MeshStandardMaterial({ color: 0x111827, metalness: 0.7, roughness: 0.6 })
+  const handrailMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, metalness: 0.7, roughness: 0.3 })
   const headlightMat = new THREE.MeshStandardMaterial({
-    color: headlightsOn ? 0xfff3d1 : 0x475569,
+    color: headlightsOn ? 0xfff7d6 : 0x475569,
     emissive: headlightsOn ? 0xffea9f : 0x000000,
-    emissiveIntensity: headlightsOn ? 2.8 : 0,
+    emissiveIntensity: headlightsOn ? 2.6 : 0,
     roughness: 0.2,
   })
+  const markerRedMat = new THREE.MeshStandardMaterial({
+    color: 0xdc2626,
+    emissive: headlightsOn ? 0xef4444 : 0x000000,
+    emissiveIntensity: headlightsOn ? 1.2 : 0,
+    roughness: 0.3,
+  })
 
-  // 1. Chassis / Frame Base
-  const chassisLength = 11.2
-  const chassisWidth = 2.45
-  const chassisHeight = 0.45
-  const chassisY = 1.05
+  const chassisLength = 11.4
+  const chassisWidth = 2.44
+  const chassisHeight = 0.32
+  const chassisY = 1.28
 
-  const chassisGeo = new THREE.BoxGeometry(chassisLength, chassisHeight, chassisWidth)
-  const chassis = new THREE.Mesh(chassisGeo, chassisMat)
+  // Main Underframe Deck
+  const chassis = new THREE.Mesh(new THREE.BoxGeometry(chassisLength, chassisHeight, chassisWidth), chassisMat)
   chassis.position.set(0, chassisY, 0)
   chassis.castShadow = true
   chassis.receiveShadow = true
   group.add(chassis)
 
-  // Underframe Fuel Tank (Tangki Solar Tengah)
-  const fuelTankGeo = new THREE.CylinderGeometry(0.65, 0.65, 3.8, 16)
-  const fuelTank = new THREE.Mesh(fuelTankGeo, chassisMat)
-  fuelTank.rotation.z = Math.PI / 2
-  fuelTank.position.set(0, chassisY - 0.42, 0)
+  // Underframe Fuel Tank + Air Reservoirs
+  const fuelTank = new THREE.Mesh(new THREE.BoxGeometry(3.4, 0.56, 1.55), chassisMat)
+  fuelTank.position.set(0, chassisY - 0.34, 0)
   fuelTank.castShadow = true
   group.add(fuelTank)
 
-  // 2. Bogies & Wheels (Co-Co: 2 Bogies x 3 Axles = 6 Axles)
-  buildBogie(group, -3.4, chassisY - 0.45, steelWheelMat, chassisMat)
-  buildBogie(group, 3.4, chassisY - 0.45, steelWheelMat, chassisMat)
+  const airTankGeo = new THREE.CylinderGeometry(0.16, 0.16, 2.2, 12)
+  const airTankL = new THREE.Mesh(airTankGeo, chassisMat)
+  airTankL.rotation.z = Math.PI / 2
+  airTankL.position.set(0, chassisY - 0.28, -0.92)
+  group.add(airTankL)
 
-  // 3. Couplers & Cowcatcher (Penghalau Rintangan)
-  buildCouplerAndPilot(group, chassisLength / 2 + 0.15, chassisY - 0.2, 1)
-  buildCouplerAndPilot(group, -chassisLength / 2 - 0.15, chassisY - 0.2, -1)
+  const airTankR = new THREE.Mesh(airTankGeo, chassisMat)
+  airTankR.rotation.z = Math.PI / 2
+  airTankR.position.set(0, chassisY - 0.28, 0.92)
+  group.add(airTankR)
 
-  // 4. Carbody based on Locomotive Series
+  // Two Co-Co Bogies (Wheel radius 0.38, wheel center Y = 0.83 -> bottom touches rail top at 0.45)
+  buildBogie(group, -3.45, 0.93, steelWheelMat, chassisMat)
+  buildBogie(group, 3.45, 0.93, steelWheelMat, chassisMat)
+
+  // Angled Cowcatchers & Janney Couplers
+  buildCouplerAndPilot(group, chassisLength / 2 + 0.05, chassisY - 0.12, 1, type === 'cc300' ? 0x18181b : 0xea580c)
+  buildCouplerAndPilot(group, -chassisLength / 2 - 0.05, chassisY - 0.12, -1, type === 'cc300' ? 0x18181b : 0xea580c)
+
+  const baseY = chassisY + chassisHeight / 2
+
   if (type === 'cc206') {
-    // CC 206: Double Cab (Kabin Ganda Depan & Belakang Simetris)
-    buildCC206Body(group, chassisY + chassisHeight / 2, glassMat, grillMat, headlightMat, headlightsOn, lightsRef)
+    buildCC206Body(group, baseY, glassMat, grillMat, handrailMat, headlightMat, markerRedMat, headlightsOn, lightsRef)
   } else if (type === 'cc201') {
-    // CC 201: Hidung Miring Pendek di Depan, Kabin, Long Hood di Belakang
-    buildCC201Body(group, chassisY + chassisHeight / 2, glassMat, grillMat, headlightMat, headlightsOn, lightsRef)
+    buildCC201Body(group, baseY, glassMat, grillMat, handrailMat, headlightMat, markerRedMat, headlightsOn, lightsRef)
   } else if (type === 'cc203') {
-    // CC 203: Aerodinamis Hidung Miring Panjang di Depan
-    buildCC203Body(group, chassisY + chassisHeight / 2, glassMat, grillMat, headlightMat, headlightsOn, lightsRef)
+    buildCC203Body(group, baseY, glassMat, grillMat, handrailMat, headlightMat, markerRedMat, headlightsOn, lightsRef)
   } else if (type === 'cc300') {
-    // CC 300: INKA Merah Putih Diesel Hidrolik Modern
-    buildCC300Body(group, chassisY + chassisHeight / 2, glassMat, grillMat, headlightMat, headlightsOn, lightsRef)
+    buildCC300Body(group, baseY, glassMat, grillMat, handrailMat, headlightMat, markerRedMat, headlightsOn, lightsRef)
   }
 }
 
-// ── Bogie Builder ──
 function buildBogie(group, xPos, yPos, wheelMat, frameMat) {
   const bogie = new THREE.Group()
   bogie.position.set(xPos, yPos, 0)
 
-  // Bogie side frame
-  const frameGeo = new THREE.BoxGeometry(3.2, 0.25, 2.2)
-  const frame = new THREE.Mesh(frameGeo, frameMat)
-  frame.castShadow = true
-  bogie.add(frame)
+  // Bogie sideframes (left & right) + bolster
+  const sideFrameGeo = new THREE.BoxGeometry(3.15, 0.24, 0.2)
+  const leftFrame = new THREE.Mesh(sideFrameGeo, frameMat)
+  leftFrame.position.set(0, 0.04, -1.02)
+  leftFrame.castShadow = true
+  bogie.add(leftFrame)
 
-  // 3 Axles (6 Wheels)
-  const wheelRadius = 0.42
-  const wheelWidth = 0.15
-  const axleOffsets = [-1.15, 0, 1.15]
+  const rightFrame = new THREE.Mesh(sideFrameGeo, frameMat)
+  rightFrame.position.set(0, 0.04, 1.02)
+  rightFrame.castShadow = true
+  bogie.add(rightFrame)
+
+  const bolster = new THREE.Mesh(new THREE.BoxGeometry(1.6, 0.24, 1.85), frameMat)
+  bolster.position.set(0, 0.08, 0)
+  bogie.add(bolster)
+
+  const wheelRadius = 0.38
+  const wheelWidth = 0.14
+  const axleOffsets = [-1.1, 0, 1.1]
 
   axleOffsets.forEach((ox) => {
-    // Axle rod
-    const axleGeo = new THREE.CylinderGeometry(0.06, 0.06, 1.9, 12)
-    const axle = new THREE.Mesh(axleGeo, wheelMat)
+    const axle = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 1.85, 12), wheelMat)
     axle.rotation.x = Math.PI / 2
     axle.position.set(ox, -0.1, 0)
     bogie.add(axle)
 
-    // Left Wheel (Z = -0.85)
     const wheelGeo = new THREE.CylinderGeometry(wheelRadius, wheelRadius, wheelWidth, 24)
     const leftWheel = new THREE.Mesh(wheelGeo, wheelMat)
     leftWheel.rotation.x = Math.PI / 2
-    leftWheel.position.set(ox, -0.1, -0.85)
+    leftWheel.position.set(ox, -0.1, -0.78)
     leftWheel.castShadow = true
     bogie.add(leftWheel)
 
-    // Right Wheel (Z = +0.85)
     const rightWheel = new THREE.Mesh(wheelGeo, wheelMat)
     rightWheel.rotation.x = Math.PI / 2
-    rightWheel.position.set(ox, -0.1, 0.85)
+    rightWheel.position.set(ox, -0.1, 0.78)
     rightWheel.castShadow = true
     bogie.add(rightWheel)
+
+    // Axlebox caps
+    const capGeo = new THREE.BoxGeometry(0.24, 0.24, 0.16)
+    const capL = new THREE.Mesh(capGeo, frameMat)
+    capL.position.set(ox, -0.08, -1.05)
+    bogie.add(capL)
+
+    const capR = new THREE.Mesh(capGeo, frameMat)
+    capR.position.set(ox, -0.08, 1.05)
+    bogie.add(capR)
   })
 
   group.add(bogie)
 }
 
-// ── Coupler & Cowcatcher ──
-function buildCouplerAndPilot(group, xPos, yPos, direction) {
-  const pilotMat = new THREE.MeshStandardMaterial({ color: 0xd97706, metalness: 0.4, roughness: 0.5 }) // Orange cowcatcher
+function buildCouplerAndPilot(group, xPos, yPos, dir, pilotColor) {
+  const pilotMat = new THREE.MeshStandardMaterial({ color: pilotColor, metalness: 0.35, roughness: 0.5 })
   const couplerMat = new THREE.MeshStandardMaterial({ color: 0x111827, metalness: 0.8, roughness: 0.3 })
 
-  // Cowcatcher wedge
-  const cowcatcherGeo = new THREE.BoxGeometry(0.35, 0.45, 2.3)
-  const cowcatcher = new THREE.Mesh(cowcatcherGeo, pilotMat)
-  cowcatcher.position.set(xPos, yPos - 0.1, 0)
-  cowcatcher.castShadow = true
-  group.add(cowcatcher)
+  // Sloped Wedge Cowcatcher
+  const plowShape = new THREE.Shape()
+  plowShape.moveTo(0, 0)
+  plowShape.lineTo(0.45, 0)
+  plowShape.lineTo(0.15, 0.48)
+  plowShape.lineTo(0, 0.48)
+  plowShape.closePath()
 
-  // Coupler (Penghubung Gerbong Janney AAR)
-  const couplerGeo = new THREE.BoxGeometry(0.5, 0.2, 0.25)
-  const coupler = new THREE.Mesh(couplerGeo, couplerMat)
-  coupler.position.set(xPos + direction * 0.3, yPos + 0.05, 0)
+  const plowGeo = new THREE.ExtrudeGeometry(plowShape, { depth: 2.25, bevelEnabled: false })
+  plowGeo.translate(0, -0.35, -1.125)
+  const plow = new THREE.Mesh(plowGeo, pilotMat)
+  plow.position.set(xPos, yPos, 0)
+  if (dir < 0) plow.rotation.y = Math.PI
+  plow.castShadow = true
+  group.add(plow)
+
+  // Janney Coupler
+  const coupler = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.18, 0.24), couplerMat)
+  coupler.position.set(xPos + dir * 0.34, yPos + 0.02, 0)
   coupler.castShadow = true
   group.add(coupler)
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   1. CC 206 (GE CM20EMP) - Double Cab Modern
-   ═══════════════════════════════════════════════════════════════ */
-function buildCC206Body(group, baseY, glassMat, grillMat, headlightMat, headlightsOn, lightsRef) {
-  const whiteBodyMat = new THREE.MeshStandardMaterial({ color: 0xf3f4f6, metalness: 0.2, roughness: 0.3 })
-  const orangeStripeMat = new THREE.MeshStandardMaterial({ color: 0xff6b00, metalness: 0.3, roughness: 0.4 })
-  const blueStripeMat = new THREE.MeshStandardMaterial({ color: 0x1a428a, metalness: 0.4, roughness: 0.3 })
+function addSpotLight(group, x, y, z, targetX, lightsRef) {
+  const spot = new THREE.SpotLight(0xfff5d1, 3.6, 22, Math.PI / 6, 0.45, 1)
+  spot.position.set(x, y, z)
+  spot.target.position.set(targetX, 0.2, z)
+  group.add(spot)
+  group.add(spot.target)
+  lightsRef.current.push(spot)
+}
+
+/* ── 1. CC 206 (GE CM20EMP) — Double Cab ── */
+function buildCC206Body(group, baseY, glassMat, grillMat, handrailMat, headlightMat, markerRedMat, headlightsOn, lightsRef) {
+  const whiteMat = new THREE.MeshStandardMaterial({ color: 0xf8fafc, metalness: 0.2, roughness: 0.35 })
+  const orangeMat = new THREE.MeshStandardMaterial({ color: 0xea580c, metalness: 0.3, roughness: 0.4 })
+  const blueMat = new THREE.MeshStandardMaterial({ color: 0x1a428a, metalness: 0.35, roughness: 0.35 })
   const roofMat = new THREE.MeshStandardMaterial({ color: 0x334155, metalness: 0.5, roughness: 0.5 })
 
-  const bodyLength = 10.4
-  const bodyWidth = 2.4
-  const bodyHeight = 2.1
-  const bodyCenterY = baseY + bodyHeight / 2
+  const len = 10.6
+  const width = 2.38
+  const height = 2.05
 
-  // Main Hood Body
-  const bodyGeo = new THREE.BoxGeometry(bodyLength, bodyHeight, bodyWidth)
-  const body = new THREE.Mesh(bodyGeo, whiteBodyMat)
-  body.position.set(0, bodyCenterY, 0)
+  // Main Body
+  const body = new THREE.Mesh(new THREE.BoxGeometry(len, height, width), whiteMat)
+  body.position.set(0, baseY + height / 2, 0)
   body.castShadow = true
   body.receiveShadow = true
   group.add(body)
 
-  // Curved Roof
-  const roofGeo = new THREE.CylinderGeometry(1.22, 1.22, bodyLength, 16, 1, false, 0, Math.PI)
+  // Chamfered Roof Crown along X (using ExtrudeGeometry so orientation is guaranteed along X)
+  const roofShape = new THREE.Shape()
+  roofShape.moveTo(-len / 2 + 0.05, 0)
+  roofShape.lineTo(len / 2 - 0.05, 0)
+  roofShape.lineTo(len / 2 - 0.35, 0.24)
+  roofShape.lineTo(-len / 2 + 0.35, 0.24)
+  roofShape.closePath()
+
+  const roofGeo = new THREE.ExtrudeGeometry(roofShape, { depth: width - 0.12, bevelEnabled: false })
+  roofGeo.translate(0, baseY + height, -(width - 0.12) / 2)
   const roof = new THREE.Mesh(roofGeo, roofMat)
-  roof.rotation.z = Math.PI / 2
-  roof.rotation.y = Math.PI / 2
-  roof.position.set(0, baseY + bodyHeight, 0)
   roof.castShadow = true
   group.add(roof)
 
-  // Livery Stripes (Orange & Blue)
-  const stripeOrangeGeo = new THREE.BoxGeometry(bodyLength + 0.02, 0.22, bodyWidth + 0.02)
-  const stripeOrange = new THREE.Mesh(stripeOrangeGeo, orangeStripeMat)
-  stripeOrange.position.set(0, baseY + 0.5, 0)
-  group.add(stripeOrange)
+  // Flush Livery Stripes
+  const orangeBand = new THREE.Mesh(new THREE.BoxGeometry(len + 0.02, 0.22, width + 0.02), orangeMat)
+  orangeBand.position.set(0, baseY + 0.42, 0)
+  group.add(orangeBand)
 
-  const stripeBlueGeo = new THREE.BoxGeometry(bodyLength + 0.02, 0.16, bodyWidth + 0.02)
-  const stripeBlue = new THREE.Mesh(stripeBlueGeo, blueStripeMat)
-  stripeBlue.position.set(0, baseY + 0.72, 0)
-  group.add(stripeBlue)
+  const blueBand = new THREE.Mesh(new THREE.BoxGeometry(len + 0.02, 0.18, width + 0.02), blueMat)
+  blueBand.position.set(0, baseY + 0.64, 0)
+  group.add(blueBand)
 
-  // Cab Windows (Front & Back - Double Cab!)
-  const cabEnds = [-bodyLength / 2, bodyLength / 2]
-  cabEnds.forEach((xEnd, idx) => {
-    const dir = xEnd > 0 ? 1 : -1
+  // Side Radiator Grilles & Louvers
+  const grilleGeo = new THREE.BoxGeometry(3.4, 0.72, width + 0.03)
+  const grille = new THREE.Mesh(grilleGeo, grillMat)
+  grille.position.set(0, baseY + 1.48, 0)
+  group.add(grille)
 
-    // Windshield 1 & 2
-    const winGeo = new THREE.BoxGeometry(0.08, 0.55, 0.75)
-    const winLeft = new THREE.Mesh(winGeo, glassMat)
-    winLeft.position.set(xEnd + dir * 0.02, bodyCenterY + 0.45, -0.48)
-    group.add(winLeft)
-
-    const winRight = new THREE.Mesh(winGeo, glassMat)
-    winRight.position.set(xEnd + dir * 0.02, bodyCenterY + 0.45, 0.48)
-    group.add(winRight)
-
-    // Headlight Assembly
-    const hlGeo = new THREE.CylinderGeometry(0.12, 0.12, 0.08, 16)
-    const hl = new THREE.Mesh(hlGeo, headlightMat)
-    hl.rotation.z = Math.PI / 2
-    hl.position.set(xEnd + dir * 0.05, bodyCenterY + 0.9, 0)
-    group.add(hl)
-
-    // Spotlight beam when on
-    if (headlightsOn && dir > 0) {
-      const spot = new THREE.SpotLight(0xfff5d1, 3.5, 20, Math.PI / 6, 0.4, 1)
-      spot.position.set(xEnd + 0.2, bodyCenterY + 0.9, 0)
-      spot.target.position.set(xEnd + 10, 0, 0)
-      group.add(spot)
-      group.add(spot.target)
-      lightsRef.current.push(spot)
-    }
-  })
-
-  // Roof AC Units & Dynamic Exhaust Fans
-  const acGeo = new THREE.BoxGeometry(1.6, 0.35, 1.4)
+  // Roof AC Units, Exhaust Stack, & Dynamic Brake Blister (resting cleanly on top of roof crown)
+  const acGeo = new THREE.BoxGeometry(1.3, 0.18, 1.3)
   const ac1 = new THREE.Mesh(acGeo, roofMat)
-  ac1.position.set(-1.8, baseY + bodyHeight + 0.15, 0)
+  ac1.position.set(-3.1, baseY + height + 0.32, 0)
   group.add(ac1)
 
   const ac2 = new THREE.Mesh(acGeo, roofMat)
-  ac2.position.set(1.8, baseY + bodyHeight + 0.15, 0)
+  ac2.position.set(3.1, baseY + height + 0.32, 0)
   group.add(ac2)
 
-  // Radiator Fan Grill Center
-  const grillGeo = new THREE.CylinderGeometry(0.55, 0.55, 0.1, 16)
-  const fanGrill = new THREE.Mesh(grillGeo, grillMat)
-  fanGrill.position.set(0, baseY + bodyHeight + 0.08, 0)
-  group.add(fanGrill)
+  const exhaust = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.2, 0.55), grillMat)
+  exhaust.position.set(-0.9, baseY + height + 0.33, 0)
+  group.add(exhaust)
+
+  const fan = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.55, 0.1, 16), grillMat)
+  fan.position.set(0.8, baseY + height + 0.29, 0)
+  group.add(fan)
+
+  // Symmetrical Double Cabs (Front & Rear)
+  ;[-len / 2, len / 2].forEach((xEnd) => {
+    const dir = xEnd > 0 ? 1 : -1
+
+    // Front Blue Nose Mask
+    const mask = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.85, width - 0.15), blueMat)
+    mask.position.set(xEnd + dir * 0.01, baseY + 0.85, 0)
+    group.add(mask)
+
+    // Split Windshields
+    const winGeo = new THREE.BoxGeometry(0.06, 0.54, 0.78)
+    const winL = new THREE.Mesh(winGeo, glassMat)
+    winL.position.set(xEnd + dir * 0.02, baseY + 1.56, -0.5)
+    group.add(winL)
+
+    const winR = new THREE.Mesh(winGeo, glassMat)
+    winR.position.set(xEnd + dir * 0.02, baseY + 1.56, 0.5)
+    group.add(winR)
+
+    // Side Cab Windows
+    const sideWinGeo = new THREE.BoxGeometry(0.95, 0.48, width + 0.03)
+    const sideWin = new THREE.Mesh(sideWinGeo, glassMat)
+    sideWin.position.set(xEnd - dir * 0.85, baseY + 1.54, 0)
+    group.add(sideWin)
+
+    // Top Center Headlight + Lower Twin Headlights + Red Markers
+    const topHl = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.11, 0.08, 16), headlightMat)
+    topHl.rotation.z = Math.PI / 2
+    topHl.position.set(xEnd + dir * 0.04, baseY + 1.98, 0)
+    group.add(topHl)
+
+    ;[-0.65, 0.65].forEach((zOff) => {
+      const lowHl = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.12, 0.22), headlightMat)
+      lowHl.position.set(xEnd + dir * 0.03, baseY + 0.44, zOff)
+      group.add(lowHl)
+
+      const marker = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.1, 0.12), markerRedMat)
+      marker.position.set(xEnd + dir * 0.03, baseY + 0.44, zOff + (zOff > 0 ? 0.2 : -0.2))
+      group.add(marker)
+    })
+
+    // Front Safety Handrails
+    ;[-0.95, 0.95].forEach((zOff) => {
+      const rail = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.85, 8), handrailMat)
+      rail.position.set(xEnd + dir * 0.12, baseY + 0.5, zOff)
+      group.add(rail)
+    })
+
+    if (headlightsOn && dir > 0) {
+      addSpotLight(group, xEnd + 0.2, baseY + 1.98, 0, xEnd + 11, lightsRef)
+    }
+  })
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   2. CC 201 (GE U18C) - Hidung Miring Pendek Legendaris
-   ═══════════════════════════════════════════════════════════════ */
-function buildCC201Body(group, baseY, glassMat, grillMat, headlightMat, headlightsOn, lightsRef) {
-  const bodyMat = new THREE.MeshStandardMaterial({ color: 0xf1f5f9, metalness: 0.2, roughness: 0.4 })
-  const orangeStripeMat = new THREE.MeshStandardMaterial({ color: 0xea580c, metalness: 0.3, roughness: 0.4 })
-  const blueStripeMat = new THREE.MeshStandardMaterial({ color: 0x1e3a8a, metalness: 0.4, roughness: 0.3 })
-  const darkMat = new THREE.MeshStandardMaterial({ color: 0x334155, metalness: 0.6, roughness: 0.5 })
+/* ── 2. CC 201 (GE U18C) — Short Hood + High Cab + Narrow Long Hood + Walkways ── */
+function buildCC201Body(group, baseY, glassMat, grillMat, handrailMat, headlightMat, markerRedMat, headlightsOn, lightsRef) {
+  const whiteMat = new THREE.MeshStandardMaterial({ color: 0xf1f5f9, metalness: 0.2, roughness: 0.4 })
+  const orangeMat = new THREE.MeshStandardMaterial({ color: 0xea580c, metalness: 0.3, roughness: 0.4 })
+  const blueMat = new THREE.MeshStandardMaterial({ color: 0x1a428a, metalness: 0.35, roughness: 0.35 })
+  const roofMat = new THREE.MeshStandardMaterial({ color: 0x334155, metalness: 0.5, roughness: 0.5 })
 
-  // Short Slanted Hood (Front: X = +1.8 to +4.8)
-  const shortHoodGeo = new THREE.BoxGeometry(2.8, 1.45, 2.1)
-  const shortHood = new THREE.Mesh(shortHoodGeo, bodyMat)
-  shortHood.position.set(3.4, baseY + 1.45 / 2, 0)
+  const hoodWidth = 1.85
+  const cabWidth = 2.38
+
+  // 1. Short Hood (Front: X = +2.3 to +4.95)
+  const shortLen = 2.65
+  const shortH = 1.42
+  const shortHood = new THREE.Mesh(new THREE.BoxGeometry(shortLen, shortH, hoodWidth), whiteMat)
+  shortHood.position.set(3.62, baseY + shortH / 2, 0)
   shortHood.castShadow = true
   group.add(shortHood)
 
-  // Slanted Nose Slope
-  const slopeGeo = new THREE.BoxGeometry(0.8, 0.6, 2.08)
-  const slope = new THREE.Mesh(slopeGeo, bodyMat)
-  slope.rotation.z = -Math.PI / 4
-  slope.position.set(4.6, baseY + 1.2, 0)
-  group.add(slope)
+  // Slanted Short Hood Nose Tip
+  const noseTip = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.35, hoodWidth - 0.04), whiteMat)
+  noseTip.rotation.z = -Math.PI / 6
+  noseTip.position.set(4.85, baseY + 1.24, 0)
+  group.add(noseTip)
 
-  // High Driver Cab (Tengah-Depan: X = +0.5 to +2.0)
-  const cabGeo = new THREE.BoxGeometry(1.6, 2.25, 2.38)
-  const cab = new THREE.Mesh(cabGeo, bodyMat)
-  cab.position.set(1.2, baseY + 2.25 / 2, 0)
+  // 2. High Driver Cab (X = +0.7 to +2.3)
+  const cabLen = 1.65
+  const cabH = 2.2
+  const cab = new THREE.Mesh(new THREE.BoxGeometry(cabLen, cabH, cabWidth), whiteMat)
+  cab.position.set(1.5, baseY + cabH / 2, 0)
   cab.castShadow = true
   group.add(cab)
 
-  // Long Engine Hood (Rear: X = -4.8 to +0.4)
-  const longHoodGeo = new THREE.BoxGeometry(5.2, 1.75, 2.1)
-  const longHood = new THREE.Mesh(longHoodGeo, bodyMat)
-  longHood.position.set(-2.2, baseY + 1.75 / 2, 0)
+  const cabRoof = new THREE.Mesh(new THREE.BoxGeometry(cabLen + 0.1, 0.14, cabWidth + 0.06), roofMat)
+  cabRoof.position.set(1.5, baseY + cabH + 0.07, 0)
+  group.add(cabRoof)
+
+  // 3. Narrow Long Engine Hood (Rear: X = -5.05 to +0.7)
+  const longLen = 5.75
+  const longH = 1.82
+  const longHood = new THREE.Mesh(new THREE.BoxGeometry(longLen, longH, hoodWidth), whiteMat)
+  longHood.position.set(-2.2, baseY + longH / 2, 0)
   longHood.castShadow = true
   group.add(longHood)
 
-  // Front Cab Windshield
-  const winGeo = new THREE.BoxGeometry(0.08, 0.55, 0.72)
-  const winLeft = new THREE.Mesh(winGeo, glassMat)
-  winLeft.position.set(2.02, baseY + 1.65, -0.48)
-  group.add(winLeft)
+  const longRoof = new THREE.Mesh(new THREE.BoxGeometry(longLen, 0.12, hoodWidth - 0.15), roofMat)
+  longRoof.position.set(-2.2, baseY + longH + 0.06, 0)
+  group.add(longRoof)
 
-  const winRight = new THREE.Mesh(winGeo, glassMat)
-  winRight.position.set(2.02, baseY + 1.65, 0.48)
-  group.add(winRight)
+  // Flush Stripes on Narrow Hoods & Cab
+  const hoodStripeO = new THREE.Mesh(new THREE.BoxGeometry(10.0, 0.18, hoodWidth + 0.02), orangeMat)
+  hoodStripeO.position.set(-0.05, baseY + 0.38, 0)
+  group.add(hoodStripeO)
 
-  // Headlight on Front Nose
-  const hlGeo = new THREE.CylinderGeometry(0.14, 0.14, 0.08, 16)
-  const hl = new THREE.Mesh(hlGeo, headlightMat)
+  const hoodStripeB = new THREE.Mesh(new THREE.BoxGeometry(10.0, 0.14, hoodWidth + 0.02), blueMat)
+  hoodStripeB.position.set(-0.05, baseY + 0.56, 0)
+  group.add(hoodStripeB)
+
+  const cabStripeO = new THREE.Mesh(new THREE.BoxGeometry(cabLen + 0.02, 0.18, cabWidth + 0.02), orangeMat)
+  cabStripeO.position.set(1.5, baseY + 0.38, 0)
+  group.add(cabStripeO)
+
+  const cabStripeB = new THREE.Mesh(new THREE.BoxGeometry(cabLen + 0.02, 0.14, cabWidth + 0.02), blueMat)
+  cabStripeB.position.set(1.5, baseY + 0.56, 0)
+  group.add(cabStripeB)
+
+  // Cab Front, Rear & Side Windows
+  const frontWinGeo = new THREE.BoxGeometry(0.06, 0.52, 0.72)
+  ;[-0.48, 0.48].forEach((zOff) => {
+    const fw = new THREE.Mesh(frontWinGeo, glassMat)
+    fw.position.set(2.33, baseY + 1.72, zOff)
+    group.add(fw)
+  })
+
+  const sideCabWin = new THREE.Mesh(new THREE.BoxGeometry(0.95, 0.48, cabWidth + 0.03), glassMat)
+  sideCabWin.position.set(1.5, baseY + 1.7, 0)
+  group.add(sideCabWin)
+
+  // Walkway Handrails along Long & Short Hoods
+  ;[-1.12, 1.12].forEach((zOff) => {
+    const longRail = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.022, 5.6, 8), handrailMat)
+    longRail.rotation.z = Math.PI / 2
+    longRail.position.set(-2.2, baseY + 0.85, zOff)
+    group.add(longRail)
+
+    const shortRail = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.022, 2.5, 8), handrailMat)
+    shortRail.rotation.z = Math.PI / 2
+    shortRail.position.set(3.65, baseY + 0.85, zOff)
+    group.add(shortRail)
+  })
+
+  // Exhaust Stack & Rear Radiator Louvers
+  const exhaust = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.18, 0.28, 12), grillMat)
+  exhaust.position.set(-0.8, baseY + longH + 0.18, 0)
+  group.add(exhaust)
+
+  const rearGrill = new THREE.Mesh(new THREE.BoxGeometry(0.08, 1.1, 1.35), grillMat)
+  rearGrill.position.set(-5.08, baseY + 1.1, 0)
+  group.add(rearGrill)
+
+  // Headlights
+  const hl = new THREE.Mesh(new THREE.CylinderGeometry(0.13, 0.13, 0.08, 16), headlightMat)
   hl.rotation.z = Math.PI / 2
-  hl.position.set(4.82, baseY + 0.95, 0)
+  hl.position.set(4.96, baseY + 0.92, 0)
   group.add(hl)
 
+  ;[-0.55, 0.55].forEach((zOff) => {
+    const marker = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.1, 0.12), markerRedMat)
+    marker.position.set(4.96, baseY + 0.38, zOff)
+    group.add(marker)
+  })
+
   if (headlightsOn) {
-    const spot = new THREE.SpotLight(0xfff5d1, 3.5, 20, Math.PI / 6, 0.4, 1)
-    spot.position.set(5.0, baseY + 0.95, 0)
-    spot.target.position.set(14, 0, 0)
-    group.add(spot)
-    group.add(spot.target)
-    lightsRef.current.push(spot)
+    addSpotLight(group, 5.1, baseY + 0.92, 0, 15, lightsRef)
   }
-
-  // Radiator Grill at Rear
-  const radGrillGeo = new THREE.BoxGeometry(0.06, 1.2, 1.6)
-  const radGrill = new THREE.Mesh(radGrillGeo, grillMat)
-  radGrill.position.set(-4.82, baseY + 1.0, 0)
-  group.add(radGrill)
-
-  // Side Livery Stripes
-  const stripeOrangeGeo = new THREE.BoxGeometry(9.6, 0.18, 2.42)
-  const stripeOrange = new THREE.Mesh(stripeOrangeGeo, orangeStripeMat)
-  stripeOrange.position.set(-0.1, baseY + 0.45, 0)
-  group.add(stripeOrange)
-
-  const stripeBlueGeo = new THREE.BoxGeometry(9.6, 0.12, 2.42)
-  const stripeBlue = new THREE.Mesh(stripeBlueGeo, blueStripeMat)
-  stripeBlue.position.set(-0.1, baseY + 0.64, 0)
-  group.add(stripeBlue)
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   3. CC 203 (GE U20C) - Aerodinamis Hidung Miring Panjang
-   ═══════════════════════════════════════════════════════════════ */
-function buildCC203Body(group, baseY, glassMat, grillMat, headlightMat, headlightsOn, lightsRef) {
-  const bodyMat = new THREE.MeshStandardMaterial({ color: 0xf8fafc, metalness: 0.25, roughness: 0.3 })
-  const orangeStripeMat = new THREE.MeshStandardMaterial({ color: 0xf97316, metalness: 0.3, roughness: 0.4 })
-  const blueStripeMat = new THREE.MeshStandardMaterial({ color: 0x0f2c59, metalness: 0.4, roughness: 0.3 })
-  const roofMat = new THREE.MeshStandardMaterial({ color: 0x334155, metalness: 0.6, roughness: 0.4 })
+/* ── 3. CC 203 (GE U20C) — Aerodynamic "Moncong Hiu" Streamlined Nose ── */
+function buildCC203Body(group, baseY, glassMat, grillMat, handrailMat, headlightMat, markerRedMat, headlightsOn, lightsRef) {
+  const whiteMat = new THREE.MeshStandardMaterial({ color: 0xf8fafc, metalness: 0.25, roughness: 0.3 })
+  const orangeMat = new THREE.MeshStandardMaterial({ color: 0xea580c, metalness: 0.3, roughness: 0.4 })
+  const blueMat = new THREE.MeshStandardMaterial({ color: 0x1a428a, metalness: 0.35, roughness: 0.35 })
+  const roofMat = new THREE.MeshStandardMaterial({ color: 0x334155, metalness: 0.55, roughness: 0.45 })
 
-  // Aerodynamic Sloped Cab Front (Wedge profile)
-  const cabGeo = new THREE.BoxGeometry(2.4, 2.15, 2.38)
-  const cab = new THREE.Mesh(cabGeo, bodyMat)
-  cab.position.set(3.2, baseY + 2.15 / 2, 0)
-  cab.castShadow = true
-  group.add(cab)
+  const cabWidth = 2.38
+  const hoodWidth = 2.02
 
-  // Slanted aerodynamic front nose cone
-  const noseWedgeGeo = new THREE.BoxGeometry(1.6, 1.4, 2.35)
-  const noseWedge = new THREE.Mesh(noseWedgeGeo, bodyMat)
-  noseWedge.rotation.z = -Math.PI / 5.5
-  noseWedge.position.set(4.5, baseY + 0.95, 0)
-  noseWedge.castShadow = true
-  group.add(noseWedge)
+  // Streamlined Aerodynamic Nose + Cab Profile using ExtrudeGeometry
+  const cabShape = new THREE.Shape()
+  cabShape.moveTo(0.8, 0)
+  cabShape.lineTo(5.15, 0) // nose bottom front
+  cabShape.lineTo(4.75, 0.95) // lower nose slope
+  cabShape.lineTo(3.65, 2.15) // slanted windshield top
+  cabShape.lineTo(0.8, 2.15) // cab roof back
+  cabShape.closePath()
 
-  // Slanted Aerodynamic Windshields
-  const winGeo = new THREE.BoxGeometry(0.08, 0.65, 0.8)
-  const winLeft = new THREE.Mesh(winGeo, glassMat)
-  winLeft.rotation.z = -Math.PI / 8
-  winLeft.position.set(4.35, baseY + 1.62, -0.52)
-  group.add(winLeft)
+  const cabGeo = new THREE.ExtrudeGeometry(cabShape, { depth: cabWidth, bevelEnabled: false })
+  cabGeo.translate(0, baseY, -cabWidth / 2)
+  const cabMesh = new THREE.Mesh(cabGeo, whiteMat)
+  cabMesh.castShadow = true
+  cabMesh.receiveShadow = true
+  group.add(cabMesh)
 
-  const winRight = new THREE.Mesh(winGeo, glassMat)
-  winRight.rotation.z = -Math.PI / 8
-  winRight.position.set(4.35, baseY + 1.62, 0.52)
-  group.add(winRight)
-
-  // Long Rear Engine Hood
-  const longHoodGeo = new THREE.BoxGeometry(6.6, 1.85, 2.2)
-  const longHood = new THREE.Mesh(longHoodGeo, bodyMat)
-  longHood.position.set(-1.3, baseY + 1.85 / 2, 0)
+  // Long Engine Hood behind Cab
+  const longLen = 5.95
+  const longH = 1.88
+  const longHood = new THREE.Mesh(new THREE.BoxGeometry(longLen, longH, hoodWidth), whiteMat)
+  longHood.position.set(-2.15, baseY + longH / 2, 0)
   longHood.castShadow = true
   group.add(longHood)
 
-  // Curved Top Roof on Long Hood
-  const roofGeo = new THREE.CylinderGeometry(1.1, 1.1, 6.6, 16, 1, false, 0, Math.PI)
-  const roof = new THREE.Mesh(roofGeo, roofMat)
-  roof.rotation.z = Math.PI / 2
-  roof.rotation.y = Math.PI / 2
-  roof.position.set(-1.3, baseY + 1.85, 0)
-  group.add(roof)
+  const longRoof = new THREE.Mesh(new THREE.BoxGeometry(longLen, 0.12, hoodWidth - 0.14), roofMat)
+  longRoof.position.set(-2.15, baseY + longH + 0.06, 0)
+  group.add(longRoof)
 
-  // Streamlined Dynamic Stripes
-  const stripeOrangeGeo = new THREE.BoxGeometry(9.6, 0.22, 2.4)
-  const stripeOrange = new THREE.Mesh(stripeOrangeGeo, orangeStripeMat)
-  stripeOrange.position.set(0.1, baseY + 0.48, 0)
-  group.add(stripeOrange)
+  // Slanted Panoramic Windshields
+  const winGeo = new THREE.BoxGeometry(0.06, 0.72, 0.78)
+  ;[-0.5, 0.5].forEach((zOff) => {
+    const win = new THREE.Mesh(winGeo, glassMat)
+    win.rotation.z = Math.PI / 4.2
+    win.position.set(4.18, baseY + 1.54, zOff)
+    group.add(win)
+  })
 
-  const stripeBlueGeo = new THREE.BoxGeometry(9.6, 0.16, 2.4)
-  const stripeBlue = new THREE.Mesh(stripeBlueGeo, blueStripeMat)
-  stripeBlue.position.set(0.1, baseY + 0.72, 0)
-  group.add(stripeBlue)
+  // Side Cab Windows
+  const sideWin = new THREE.Mesh(new THREE.BoxGeometry(1.1, 0.48, cabWidth + 0.03), glassMat)
+  sideWin.position.set(2.15, baseY + 1.66, 0)
+  group.add(sideWin)
 
-  // Twin Headlights on Wedge Nose
-  const hlGeo = new THREE.CylinderGeometry(0.13, 0.13, 0.08, 16)
-  const hl = new THREE.Mesh(hlGeo, headlightMat)
-  hl.rotation.z = Math.PI / 2
-  hl.position.set(5.15, baseY + 0.95, 0)
-  group.add(hl)
+  // Flush Stripes on Hood & Cab
+  const hoodStripeO = new THREE.Mesh(new THREE.BoxGeometry(longLen, 0.2, hoodWidth + 0.02), orangeMat)
+  hoodStripeO.position.set(-2.15, baseY + 0.4, 0)
+  group.add(hoodStripeO)
+
+  const hoodStripeB = new THREE.Mesh(new THREE.BoxGeometry(longLen, 0.15, hoodWidth + 0.02), blueMat)
+  hoodStripeB.position.set(-2.15, baseY + 0.6, 0)
+  group.add(hoodStripeB)
+
+  const cabStripeO = new THREE.Mesh(new THREE.BoxGeometry(4.1, 0.2, cabWidth + 0.02), orangeMat)
+  cabStripeO.position.set(2.85, baseY + 0.4, 0)
+  group.add(cabStripeO)
+
+  const cabStripeB = new THREE.Mesh(new THREE.BoxGeometry(3.95, 0.15, cabWidth + 0.02), blueMat)
+  cabStripeB.position.set(2.78, baseY + 0.6, 0)
+  group.add(cabStripeB)
+
+  // Walkway Handrails along Long Hood
+  ;[-1.14, 1.14].forEach((zOff) => {
+    const rail = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.022, 5.8, 8), handrailMat)
+    rail.rotation.z = Math.PI / 2
+    rail.position.set(-2.1, baseY + 0.85, zOff)
+    group.add(rail)
+  })
+
+  // Exhaust & Rear Grille
+  const exhaust = new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.19, 0.26, 12), grillMat)
+  exhaust.position.set(-0.9, baseY + longH + 0.18, 0)
+  group.add(exhaust)
+
+  const rearGrill = new THREE.Mesh(new THREE.BoxGeometry(0.08, 1.1, 1.5), grillMat)
+  rearGrill.position.set(-5.14, baseY + 1.15, 0)
+  group.add(rearGrill)
+
+  // Twin Nose Headlights
+  ;[-0.36, 0.36].forEach((zOff) => {
+    const hl = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.11, 0.08, 16), headlightMat)
+    hl.rotation.z = Math.PI / 2
+    hl.position.set(4.85, baseY + 0.86, zOff)
+    group.add(hl)
+  })
 
   if (headlightsOn) {
-    const spot = new THREE.SpotLight(0xfff5d1, 3.8, 22, Math.PI / 6, 0.4, 1)
-    spot.position.set(5.3, baseY + 0.95, 0)
-    spot.target.position.set(15, 0, 0)
-    group.add(spot)
-    group.add(spot.target)
-    lightsRef.current.push(spot)
+    addSpotLight(group, 5.05, baseY + 0.86, 0, 15, lightsRef)
   }
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   4. CC 300 (INKA) - Merah Putih Diesel Hidrolik Modern
-   ═══════════════════════════════════════════════════════════════ */
-function buildCC300Body(group, baseY, glassMat, grillMat, headlightMat, headlightsOn, lightsRef) {
-  const redMat = new THREE.MeshStandardMaterial({ color: 0xdc2626, metalness: 0.3, roughness: 0.3 })
-  const whiteMat = new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.2, roughness: 0.3 })
+/* ── 4. CC 300 (PT INKA) — Merah Putih Diesel Hidrolik ── */
+function buildCC300Body(group, baseY, glassMat, grillMat, handrailMat, headlightMat, markerRedMat, headlightsOn, lightsRef) {
+  const redMat = new THREE.MeshStandardMaterial({ color: 0xb91c1c, metalness: 0.3, roughness: 0.35 })
+  const whiteMat = new THREE.MeshStandardMaterial({ color: 0xf8fafc, metalness: 0.2, roughness: 0.35 })
   const blackMat = new THREE.MeshStandardMaterial({ color: 0x18181b, metalness: 0.5, roughness: 0.5 })
 
-  const bodyLength = 10.6
-  const bodyWidth = 2.42
-  const bodyHeight = 2.2
-  const bodyCenterY = baseY + bodyHeight / 2
+  const len = 10.6
+  const width = 2.4
 
-  // Boxy European-style body
-  const bodyGeo = new THREE.BoxGeometry(bodyLength, bodyHeight, bodyWidth)
+  // Tapered Double-Cab Profile
+  const profile = new THREE.Shape()
+  profile.moveTo(-len / 2, 0)
+  profile.lineTo(len / 2, 0)
+  profile.lineTo(len / 2 - 0.18, 2.15)
+  profile.lineTo(-len / 2 + 0.18, 2.15)
+  profile.closePath()
+
+  const bodyGeo = new THREE.ExtrudeGeometry(profile, { depth: width, bevelEnabled: false })
+  bodyGeo.translate(0, baseY, -width / 2)
   const body = new THREE.Mesh(bodyGeo, redMat)
-  body.position.set(0, bodyCenterY, 0)
   body.castShadow = true
   body.receiveShadow = true
   group.add(body)
 
-  // White Speedline Accent
-  const whiteBandGeo = new THREE.BoxGeometry(bodyLength + 0.02, 0.32, bodyWidth + 0.02)
-  const whiteBand = new THREE.Mesh(whiteBandGeo, whiteMat)
+  // White Speedline Band
+  const whiteBand = new THREE.Mesh(new THREE.BoxGeometry(len - 0.06, 0.3, width + 0.02), whiteMat)
   whiteBand.position.set(0, baseY + 0.65, 0)
   group.add(whiteBand)
 
-  // Dark Roof Panel
-  const roofGeo = new THREE.BoxGeometry(bodyLength, 0.25, bodyWidth - 0.2)
-  const roof = new THREE.Mesh(roofGeo, blackMat)
-  roof.position.set(0, baseY + bodyHeight + 0.1, 0)
+  // Dark Roof & 3 Cooling Fans
+  const roof = new THREE.Mesh(new THREE.BoxGeometry(len - 0.42, 0.18, width - 0.18), blackMat)
+  roof.position.set(0, baseY + 2.22, 0)
   roof.castShadow = true
   group.add(roof)
 
-  // Double Cab Windows (Depan & Belakang)
-  const cc300CabEnds = [-bodyLength / 2, bodyLength / 2]
-  cc300CabEnds.forEach((xEnd, idx) => {
-    const dir = xEnd > 0 ? 1 : -1
-
-    // Large Windshields
-    const winGeo = new THREE.BoxGeometry(0.08, 0.68, 0.85)
-    const winLeft = new THREE.Mesh(winGeo, glassMat)
-    winLeft.position.set(xEnd + dir * 0.02, bodyCenterY + 0.45, -0.52)
-    group.add(winLeft)
-
-    const winRight = new THREE.Mesh(winGeo, glassMat)
-    winRight.position.set(xEnd + dir * 0.02, bodyCenterY + 0.45, 0.52)
-    group.add(winRight)
-
-    // Sleek LED Headlights (Khas INKA)
-    const hlGeo = new THREE.BoxGeometry(0.08, 0.14, 0.38)
-    const hlLeft = new THREE.Mesh(hlGeo, headlightMat)
-    hlLeft.position.set(xEnd + dir * 0.02, baseY + 0.82, -0.65)
-    group.add(hlLeft)
-
-    const hlRight = new THREE.Mesh(hlGeo, headlightMat)
-    hlRight.position.set(xEnd + dir * 0.02, baseY + 0.82, 0.65)
-    group.add(hlRight)
-
-    if (headlightsOn && dir > 0) {
-      const spot = new THREE.SpotLight(0xfff5d1, 3.8, 22, Math.PI / 6, 0.4, 1)
-      spot.position.set(xEnd + 0.2, baseY + 0.82, 0)
-      spot.target.position.set(xEnd + 12, 0, 0)
-      group.add(spot)
-      group.add(spot.target)
-      lightsRef.current.push(spot)
-    }
+  ;[-1.6, 0, 1.6].forEach((gx) => {
+    const fan = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.45, 0.08, 16), grillMat)
+    fan.position.set(gx, baseY + 2.34, 0)
+    group.add(fan)
   })
 
-  // Top Exhaust Fan Grills
-  const fanPositions = [-1.5, 0, 1.5]
-  fanPositions.forEach((gx) => {
-    const grillGeo = new THREE.CylinderGeometry(0.45, 0.45, 0.08, 16)
-    const fanGrill = new THREE.Mesh(grillGeo, grillMat)
-    fanGrill.position.set(gx, baseY + bodyHeight + 0.24, 0)
-    group.add(fanGrill)
+  // Side Engine Louvers
+  const louvers = new THREE.Mesh(new THREE.BoxGeometry(3.8, 0.65, width + 0.03), grillMat)
+  louvers.position.set(0, baseY + 1.45, 0)
+  group.add(louvers)
+
+  // Symmetrical Double Cabs with Black Windshield Mask
+  ;[-len / 2, len / 2].forEach((xEnd) => {
+    const dir = xEnd > 0 ? 1 : -1
+
+    // Characteristic Black Window Mask
+    const mask = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.72, width - 0.22), blackMat)
+    mask.rotation.z = dir * -0.08
+    mask.position.set(xEnd - dir * 0.12, baseY + 1.56, 0)
+    group.add(mask)
+
+    // Twin Windshields
+    ;[-0.52, 0.52].forEach((zOff) => {
+      const win = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.58, 0.82), glassMat)
+      win.rotation.z = dir * -0.08
+      win.position.set(xEnd - dir * 0.11, baseY + 1.56, zOff)
+      group.add(win)
+    })
+
+    // Side Cab Windows
+    const sideWin = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.48, width + 0.03), glassMat)
+    sideWin.position.set(xEnd - dir * 0.95, baseY + 1.56, 0)
+    group.add(sideWin)
+
+    // Sleek Rectangular LED Headlights & Red Markers
+    ;[-0.68, 0.68].forEach((zOff) => {
+      const hl = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.14, 0.34), headlightMat)
+      hl.position.set(xEnd - dir * 0.03, baseY + 0.72, zOff)
+      group.add(hl)
+
+      const marker = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.1, 0.14), markerRedMat)
+      marker.position.set(xEnd - dir * 0.03, baseY + 0.72, zOff + (zOff > 0 ? 0.26 : -0.26))
+      group.add(marker)
+    })
+
+    if (headlightsOn && dir > 0) {
+      addSpotLight(group, xEnd + 0.15, baseY + 0.72, 0, xEnd + 12, lightsRef)
+    }
   })
 }
 
-// ── Cleanup Helper ──
 function disposeMesh(mesh) {
   if (!mesh) return
   if (mesh.geometry) mesh.geometry.dispose()
@@ -1092,4 +1057,3 @@ function disposeMesh(mesh) {
     mesh.children.forEach(disposeMesh)
   }
 }
-
