@@ -11,7 +11,7 @@ export default function PageHeader({
   action,
 }) {
   return (
-    <section className="bg-white rounded-b-[28px] sm:rounded-b-[36px] border-b border-[var(--rh-border)] shadow-[0_6px_22px_rgba(26,66,138,0.06)] pt-4 pb-6 sm:pt-5 sm:pb-8">
+    <section className="bg-white rounded-b-[28px] sm:rounded-b-[36px] border-b border-[var(--rh-border)] shadow-[0_6px_22px_rgba(26,66,138,0.06)] pt-5 pb-7 sm:pt-6 sm:pb-9">
       <div className="rh-container">
         {backHref ? (
           <Link

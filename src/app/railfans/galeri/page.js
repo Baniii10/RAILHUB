@@ -164,7 +164,7 @@ export default function RailfansGaleriPage() {
         />
 
         {/* Filter + Grid */}
-        <div className="rh-container pt-6 sm:pt-8 space-y-6">
+        <div className="rh-container pt-10 sm:pt-12 space-y-6">
           <div className="flex items-center gap-2 overflow-x-auto pb-2 border-b border-[var(--rh-border)]">
             {PHOTO_CATEGORIES.map((cat) => {
               const isActive = selectedCategory === cat.id

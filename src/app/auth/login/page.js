@@ -329,10 +329,16 @@ export default function LoginPage() {
 
       <div className="rh-login-viewport" style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
         <div className="rh-login-container">
-          {/* Top Header Vector Illustration */}
-          <NightTrainBumperPlayer />
+          {/* Left / Top Header Vector Illustration */}
+          <div className="rh-login-visual">
+            <NightTrainBumperPlayer />
+            <div className="rh-login-visual-caption">
+              <span className="rh-login-visual-kicker">RAILHUB Access</span>
+              <p>Reservasi tiket, pemilihan kursi interaktif, dan e-boarding pass dalam satu pintu.</p>
+            </div>
+          </div>
 
-          {/* Bottom Form Sheet */}
+          {/* Right / Bottom Form Sheet */}
           <div className="rh-login-sheet">
             <div style={{ marginBottom: '1.25rem' }}>
               <h1
@@ -715,22 +721,6 @@ export default function LoginPage() {
         @keyframes spin {
           to { transform: rotate(360deg); }
         }
-        .rh-login-viewport {
-          width: 100%;
-          background: #ffffff;
-          display: flex;
-          justify-content: center;
-          margin: 0;
-          padding: 0;
-        }
-        .rh-login-container {
-          width: 100%;
-          max-width: 440px;
-          display: flex;
-          flex-direction: column;
-          background: #ffffff;
-          position: relative;
-        }
         .rh-quick-login-chip:hover {
           border-color: #cbd5e1 !important;
           background: #f1f5f9 !important;
@@ -739,30 +729,6 @@ export default function LoginPage() {
         }
         .rh-quick-login-chip:active {
           transform: translateY(0);
-        }
-        .rh-login-sheet {
-          background-color: #ffffff;
-          border-top-left-radius: 28px;
-          border-top-right-radius: 28px;
-          margin-top: -24px;
-          position: relative;
-          z-index: 10;
-          padding: 24px 22px calc(24px + env(safe-area-inset-bottom, 20px));
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-        }
-        @media (min-width: 641px) {
-          .rh-login-viewport {
-            background: linear-gradient(135deg, #0b1120 0%, #171738 50%, #231244 100%);
-            padding: 2rem 1rem;
-            align-items: center;
-          }
-          .rh-login-container {
-            border-radius: 28px;
-            overflow: hidden;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-          }
         }
       `}</style>
     </div>

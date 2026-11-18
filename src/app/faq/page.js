@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Navbar from '@/components/layout/Navbar'
+import PageHeader from '@/components/layout/PageHeader'
 import { ChevronDown, ChevronRight, HelpCircle, Search, ShieldCheck, Ticket, Train, Utensils, Wallet } from 'lucide-react'
 
 const FAQ_CATEGORIES = [
@@ -75,25 +76,17 @@ export default function FaqPage() {
   })
 
   return (
-    <div>
+    <div className="min-h-screen flex flex-col bg-[var(--rh-bg)]">
       <Navbar />
 
-      <section className="rh-hero" style={{ padding: '4rem 0 3.5rem' }}>
-        <div className="rh-container" style={{ position: 'relative', zIndex: 1 }}>
-          <span className="rh-badge" style={{ background: 'rgba(255,255,255,0.12)', color: 'var(--rh-accent)', border: '1px solid rgba(255,255,255,0.18)', marginBottom: '1rem' }}>
-            <HelpCircle size={14} /> Pusat Informasi Penumpang
-          </span>
-          <h1 className="rh-h1" style={{ color: 'white', marginBottom: '0.75rem' }}>
-            Pertanyaan yang Sering Diajukan (FAQ)
-          </h1>
-          <p className="rh-body-lg" style={{ color: 'rgba(255,255,255,0.75)', maxWidth: 620 }}>
-            Temukan jawaban lengkap mengenai pemesanan tiket, pemilihan kursi, e-boarding pass, reschedule, hingga layanan makanan di atas kereta.
-          </p>
-        </div>
-      </section>
+      <main className="flex-1 pb-20">
+        <PageHeader
+          title="Pertanyaan yang Sering Diajukan"
+          subtitle="Jawaban seputar pemesanan tiket, pemilihan kursi, e-boarding pass, reschedule, dan layanan di atas kereta."
+          breadcrumbLabel="FAQ"
+        />
 
-      <section className="rh-section" style={{ background: 'var(--rh-surface)' }}>
-        <div className="rh-container" style={{ maxWidth: 880 }}>
+        <div className="rh-container pt-12 sm:pt-14" style={{ maxWidth: 880 }}>
           <div className="rh-card" style={{ padding: '1rem', marginBottom: '1.25rem' }}>
             <div style={{ position: 'relative' }}>
               <Search size={18} style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: 'var(--rh-text-3)' }} />
@@ -171,8 +164,7 @@ export default function FaqPage() {
             </Link>
           </div>
         </div>
-      </section>
-
+      </main>
     </div>
   )
 }

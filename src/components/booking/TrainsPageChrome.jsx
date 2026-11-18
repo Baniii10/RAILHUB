@@ -72,7 +72,9 @@ export default function TrainsPageChrome({ empty, children }) {
                   ? '0 25px 60px -12px rgba(2, 44, 102, 0.28), 0 10px 30px -8px rgba(0, 0, 0, 0.12), inset 0 1px 2px rgba(255, 255, 255, 0.9)'
                   : '0 25px 60px -12px rgba(0, 0, 0, 0.55), 0 10px 30px -8px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.2)',
                 border: isDay ? '1.5px solid rgba(255, 255, 255, 0.85)' : '1.5px solid rgba(255, 255, 255, 0.18)',
-                overflow: 'hidden',
+                overflow: 'visible',
+                position: 'relative',
+                zIndex: 20,
               }}
             >
               <div

@@ -156,10 +156,16 @@ export default function RegisterPage() {
 
       <div className="rh-login-viewport" style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
         <div className="rh-login-container">
-          {/* Top Header Vector Illustration */}
-          <MobileTrainIllustration />
+          {/* Left / Top Header Vector Illustration */}
+          <div className="rh-login-visual">
+            <MobileTrainIllustration />
+            <div className="rh-login-visual-caption">
+              <span className="rh-login-visual-kicker">RAILHUB Access</span>
+              <p>Buat akun sekali untuk memesan perjalanan dan memantau tiket aktif Anda.</p>
+            </div>
+          </div>
 
-          {/* Bottom Form Sheet */}
+          {/* Right / Bottom Form Sheet */}
           <div className="rh-login-sheet">
             <div style={{ marginBottom: '1.25rem' }}>
               <h1

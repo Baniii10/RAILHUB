@@ -285,13 +285,12 @@ export default function BookingFlow({
               <small style={{ color: 'var(--rh-text-2)' }}>Tiket pergi telah tersimpan. Konfirmasikan kursi tiket pulang untuk menyelesaikan seluruh reservasi Anda.</small>
             </div>
           )}
-          <header className="rh-booking-page-heading" style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', marginBottom: '1.25rem' }}>
+          <header className="rh-booking-page-heading" style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', marginBottom: '1rem' }}>
             <Link href={returnTo} className="rh-back-btn" aria-label="Kembali ke jadwal" title="Kembali ke jadwal">
               <ArrowLeft size={18} />
             </Link>
             <div>
-              <span className="rh-label">Pemesanan perjalanan</span>
-              <h1 className="rh-h2" style={{ margin: '0.2rem 0 0' }}>Lengkapi data perjalanan</h1>
+              <h1 className="rh-h2" style={{ margin: 0 }}>Lengkapi data perjalanan</h1>
             </div>
           </header>
 
@@ -372,12 +371,9 @@ export default function BookingFlow({
               </div>
 
               <form onSubmit={submitBooking} style={{ display: 'grid', gap: '1rem' }}>
-                <section className="rh-card rh-booking-class-card">
-                  <div className="rh-card-header">
-                    <h2 className="rh-h4">Pilih kelas perjalanan</h2>
-                    <p>Pilih tarif dan kelas yang sesuai sebelum melanjutkan.</p>
-                  </div>
-                  <div className="rh-card-body rh-booking-class-options">
+                <div className="rh-booking-class-bar" role="group" aria-label="Pilih kelas perjalanan">
+                  <span className="rh-booking-class-bar-label">Kelas</span>
+                  <div className="rh-booking-class-options">
                     {journey.fares.map(item => (
                       <button
                         type="button"
@@ -391,59 +387,40 @@ export default function BookingFlow({
                         }}
                       >
                         <span>{item.carriage_class}</span>
-                        <strong>{formatIDR(item.price)}<small> / orang</small></strong>
+                        <strong>{formatIDR(item.price)}</strong>
                       </button>
                     ))}
                   </div>
-                </section>
+                </div>
 
                 {step === 'details' && (
                   <div className="rh-booking-details-layout">
                     <div className="rh-booking-details-main">
-                      <section className="rh-card">
-                        <div className="rh-card-header">
-                          <h2 className="rh-h4">Data pemesan</h2>
-                          <p style={{ color: 'var(--rh-text-2)', marginTop: '0.25rem' }}>
-                            Informasi kontak mengikuti akun yang sedang digunakan.
-                          </p>
-                        </div>
-                        <div className="rh-card-body rh-booking-contact-grid">
-                          <div className="rh-booking-contact-item">
-                            <UserRound size={17} aria-hidden="true" />
-                            <span>
-                              <small>Nama pemesan</small>
-                              <strong>{profile?.full_name || user?.user_metadata?.full_name || 'Nama belum diatur'}</strong>
-                            </span>
-                          </div>
-                          <div className="rh-booking-contact-item">
-                            <Mail size={17} aria-hidden="true" />
-                            <span>
-                              <small>Email akun</small>
-                              <strong>{user?.email || '-'}</strong>
-                            </span>
-                          </div>
-                          <div className="rh-booking-contact-item">
-                            <Phone size={17} aria-hidden="true" />
-                            <span>
-                              <small>No. HP</small>
-                              <strong>{profile?.phone_number || 'Belum diisi di profil'}</strong>
-                            </span>
-                          </div>
-                        </div>
-                      </section>
+                      <div className="rh-booking-booker-strip">
+                        <UserRound size={15} aria-hidden="true" />
+                        <span>
+                          <strong>Pemesan:</strong> {profile?.full_name || user?.user_metadata?.full_name || 'Akun'} · {user?.email || '-'}
+                          {profile?.phone_number ? ` · ${profile.phone_number}` : ''}
+                        </span>
+                      </div>
 
                       <section className="rh-card" ref={passengerDetailsRef}>
-                        <div className="rh-card-header">
-                          <h2 className="rh-h4">Data penumpang</h2>
-                          <p style={{ color: 'var(--rh-warning)', marginTop: '0.25rem', fontSize: '0.875rem' }}>
-                            Isi nama dan ID simulasi. Jangan masukkan NIK atau data identitas asli.
-                          </p>
+                        <div className="rh-card-header" style={{ paddingBottom: '0.75rem' }}>
+                          <h2 className="rh-h4" style={{ margin: 0 }}>Data Penumpang</h2>
                         </div>
-                        <div className="rh-card-body" style={{ display: 'grid', gap: '1rem' }}>
+                        <div className="rh-card-body" style={{ display: 'grid', gap: '0.85rem' }}>
                           {passengers.map((passenger, index) => (
-                            <fieldset key={index} style={{ border: '1px solid var(--rh-border)', borderRadius: 12, padding: '1rem', minWidth: 0 }}>
-                              <legend style={{ fontWeight: 700, padding: '0 0.4rem' }}>Penumpang {index + 1}</legend>
-                              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 180px), 1fr))', gap: '0.75rem' }}>
+                            <div
+                              key={index}
+                              style={{
+                                paddingTop: index > 0 ? '0.85rem' : 0,
+                                borderTop: index > 0 ? '1px solid var(--rh-border)' : 'none',
+                              }}
+                            >
+                              <div style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--rh-blue)', marginBottom: '0.5rem' }}>
+                                Penumpang {index + 1}
+                              </div>
+                              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 175px), 1fr))', gap: '0.65rem' }}>
                                 <label className="rh-input-group">
                                   <span className="rh-label-text">Nama lengkap <span aria-hidden="true">*</span></span>
                                   <input
@@ -451,7 +428,7 @@ export default function BookingFlow({
                                     autoComplete="off"
                                     maxLength={120}
                                     minLength={2}
-                                    placeholder="Nama sesuai identitas simulasi"
+                                    placeholder="Nama penumpang"
                                     required
                                     aria-invalid={detailsAttempted && passenger.fullName.trim().length < 2}
                                     aria-describedby={detailsAttempted && passenger.fullName.trim().length < 2 ? `passenger-name-error-${index}` : undefined}
@@ -463,7 +440,7 @@ export default function BookingFlow({
                                   )}
                                 </label>
                                 <label className="rh-input-group">
-                                  <span className="rh-label-text">ID simulasi <span aria-hidden="true">*</span></span>
+                                  <span className="rh-label-text">ID / NIK Simulasi <span aria-hidden="true">*</span></span>
                                   <input
                                     className={`rh-input ${detailsAttempted && passenger.identity.trim().length < 3 ? 'rh-input-error' : ''}`}
                                     autoComplete="off"
@@ -477,38 +454,27 @@ export default function BookingFlow({
                                     onChange={event => changePassenger(index, 'identity', event.target.value)}
                                   />
                                   {detailsAttempted && passenger.identity.trim().length < 3 && (
-                                    <small className="rh-error-msg" id={`passenger-id-error-${index}`}>ID simulasi minimal 3 karakter.</small>
+                                    <small className="rh-error-msg" id={`passenger-id-error-${index}`}>ID minimal 3 karakter.</small>
                                   )}
                                 </label>
                                 <label className="rh-input-group">
-                                  <span className="rh-label-text">Telepon fiktif (opsional)</span>
-                                  <input className="rh-input" autoComplete="off" maxLength={30} value={passenger.phone} onChange={event => changePassenger(index, 'phone', event.target.value)} />
+                                  <span className="rh-label-text">No. HP (opsional)</span>
+                                  <input className="rh-input" autoComplete="off" maxLength={30} placeholder="08xx…" value={passenger.phone} onChange={event => changePassenger(index, 'phone', event.target.value)} />
                                 </label>
                               </div>
-                            </fieldset>
+                            </div>
                           ))}
                         </div>
                       </section>
 
-                      <div className="rh-booking-reservation-note">
-                        <strong>Ketentuan reservasi simulasi</strong>
-                        <ol>
-                          <li>Nama dan ID simulasi diperlukan untuk setiap penumpang.</li>
-                          <li>Ketersediaan kursi dapat berubah sampai booking dibuat.</li>
-                          <li>Pemesanan ini menggunakan pembayaran simulasi.</li>
-                        </ol>
-                      </div>
                       <div className="rh-booking-continue">
                         <button
                           className="rh-btn rh-btn-primary rh-btn-lg"
                           type="button"
                           onClick={continueToSeats}
                         >
-                          Lanjutkan pilih kursi <ChevronRight size={17} />
+                          Pilih Kursi <ChevronRight size={17} />
                         </button>
-                        {!passengerDetailsComplete && (
-                          <small>Lengkapi nama dan ID simulasi setiap penumpang untuk melanjutkan.</small>
-                        )}
                       </div>
                     </div>
 
@@ -569,7 +535,7 @@ export default function BookingFlow({
                                   onClick={() => setSelectedCarriageId(carriage.id)}
                                 >
                                   <span>{selectedClass} {carriage.number || index + 1}</span>
-                                  <small>{carriage.seats.length}/40 kursi · {carriage.seats.filter(seat => seat.is_available).length} tersedia</small>
+                                  <small>{carriage.seats.filter(seat => seat.is_available).length}/{carriage.seats.length} tersedia</small>
                                 </button>
                               ))}
                             </div>
@@ -578,25 +544,24 @@ export default function BookingFlow({
                               <div className="rh-seat-prompt" role="status">
                                 <Train size={26} />
                                 <strong>Pilih gerbong untuk melihat denah kursi</strong>
-                                <span>Pilih salah satu gerbong di atas untuk melihat dan memilih kursi.</span>
                               </div>
                             ) : (
                               <div className="rh-seat-map-wrap">
                                 <div className="rh-seat-map-label">
                                   <strong>Gerbong {selectedCarriage.number}</strong>
-                                  <span>{selectedCarriageSeats.length}/40 kursi · {selectedCarriageSeats.filter(seat => seat.is_available).length} tersedia</span>
+                                  <span>{selectedCarriageSeats.filter(seat => seat.is_available).length} dari {selectedCarriageSeats.length} kursi tersedia</span>
                                 </div>
-                                {selectedCarriageSeats.length !== 40 && (
-                                  <p className="rh-seat-capacity-warning" role="status">
-                                    Data gerbong ini baru memuat {selectedCarriageSeats.length} dari 40 kursi. Jalankan migrasi kapasitas kursi di Supabase agar denah lengkap.
-                                  </p>
-                                )}
                                 <div className="rh-seat-map-scroll">
-                                  <div className="rh-seat-map" role="group" aria-label={`Denah kursi gerbong ${selectedCarriage.number}`}>
+                                  <div className="rh-seat-map rh-coach-cabin" role="group" aria-label={`Denah kursi gerbong ${selectedCarriage.number}`}>
+                                    <div className="rh-coach-direction" aria-hidden="true">
+                                      <span>▲ Arah Laju Kereta</span>
+                                    </div>
                                     <div className="rh-seat-map-column-labels" aria-hidden="true">
+                                      <span />
                                       <span />
                                       <span>A</span><span>B</span><span className="is-aisle" />
                                       <span>C</span><span>D</span>
+                                      <span />
                                     </div>
                                     {/* Legend Bar: Status Kursi & Prioritas */}
                                     <div className="rh-seat-legend-bar" role="note" aria-label="Keterangan denah kursi">
@@ -610,97 +575,109 @@ export default function BookingFlow({
                                       </div>
                                       <div className="rh-seat-legend-item">
                                         <span className="rh-seat-legend-sample is-disability" />
-                                        <span>Disabilitas / Lansia</span>
+                                        <span>Disabilitas</span>
                                       </div>
                                       <div className="rh-seat-legend-item">
                                         <span className="rh-seat-legend-sample is-female-priority" />
-                                        <span>Prioritas Perempuan</span>
+                                        <span>Prioritas Wanita</span>
                                       </div>
                                       <div className="rh-seat-legend-item">
                                         <span className="rh-seat-legend-sample is-booked-male" />
-                                        <span>Terisi (Pria)</span>
+                                        <span>Terisi (P)</span>
                                       </div>
                                       <div className="rh-seat-legend-item">
                                         <span className="rh-seat-legend-sample is-booked-female" />
-                                        <span>Terisi (Perempuan)</span>
+                                        <span>Terisi (W)</span>
                                       </div>
                                     </div>
 
-                                    {seatRows.map(([rowNumber, rowSeats]) => (
-                                      <div className="rh-seat-map-row" key={rowNumber}>
-                                        <span className="rh-seat-row-number">{rowNumber}</span>
-                                        {[0, 1, null, 2, 3].map((column, columnIndex) => {
-                                          if (column === null) return <span key={`aisle-${columnIndex}`} className="rh-seat-aisle" aria-hidden="true" />
-                                          const seat = rowSeats[column]
-                                          if (!seat) return <span key={`empty-${column}`} className="rh-seat-empty-cell" aria-hidden="true" />
-                                          const selected = selectedSeats.includes(seat.id)
-                                          
-                                          // Deterministic special categories
-                                          const match = String(seat.seat_number).match(/^(\d+)\s*([A-D])$/i)
-                                          const rNum = match ? Number(match[1]) : rowNumber
-                                          const colLet = match ? match[2].toUpperCase() : ''
-                                          const isDisability = rNum === 1
-                                          const isFemalePriority = (rNum === 2 || rNum === 3) && (colLet === 'A' || colLet === 'B')
-                                          const bookedGender = !seat.is_available
-                                            ? ((String(seat.seat_number).charCodeAt(0) + String(seat.id || '').charCodeAt(0)) % 2 === 0 ? 'F' : 'M')
-                                            : null
+                                    {seatRows.map(([rowNumber, rowSeats], rowIdx) => {
+                                      const isFacingDown = rowIdx % 2 === 0
+                                      const isPairEnd = rowIdx % 2 === 1 && rowIdx < seatRows.length - 1
+                                      return (
+                                        <div
+                                          className={`rh-seat-map-row ${isFacingDown ? 'is-facing-down' : 'is-facing-up'} ${isPairEnd ? 'is-pair-end' : ''}`}
+                                          key={rowNumber}
+                                        >
+                                          <span className="rh-coach-window" aria-hidden="true" />
+                                          <span className="rh-seat-row-number">{rowNumber}</span>
+                                          {[0, 1, null, 2, 3].map((column, columnIndex) => {
+                                            if (column === null) return <span key={`aisle-${columnIndex}`} className="rh-seat-aisle" aria-hidden="true" />
+                                            const seat = rowSeats[column]
+                                            if (!seat) return <span key={`empty-${column}`} className="rh-seat-empty-cell" aria-hidden="true" />
+                                            const selected = selectedSeats.includes(seat.id)
 
-                                          let seatClasses = 'rh-seat-map-seat'
-                                          if (selected) {
-                                            seatClasses += ' is-selected'
-                                          } else if (!seat.is_available) {
-                                            seatClasses += bookedGender === 'F' ? ' is-booked is-booked-female' : ' is-booked is-booked-male'
-                                          } else if (isDisability) {
-                                            seatClasses += ' is-available is-disability-priority'
-                                          } else if (isFemalePriority) {
-                                            seatClasses += ' is-available is-female-priority'
-                                          } else {
-                                            seatClasses += ' is-available'
-                                          }
+                                            // Deterministic special categories
+                                            const match = String(seat.seat_number).match(/^(\d+)\s*([A-D])$/i)
+                                            const rNum = match ? Number(match[1]) : rowNumber
+                                            const colLet = match ? match[2].toUpperCase() : ''
+                                            const isDisability = rNum === 1
+                                            const isFemalePriority = (rNum === 2 || rNum === 3) && (colLet === 'A' || colLet === 'B')
+                                            const bookedGender = !seat.is_available
+                                              ? ((String(seat.seat_number).charCodeAt(0) + String(seat.id || '').charCodeAt(0)) % 2 === 0 ? 'F' : 'M')
+                                              : null
 
-                                          let seatLabel = `Kursi ${seat.seat_number}`
-                                          if (selected) seatLabel += ', dipilih'
-                                          else if (!seat.is_available) seatLabel += `, terpesan oleh penumpang ${bookedGender === 'F' ? 'perempuan' : 'pria'}`
-                                          else if (isDisability) seatLabel += ', prioritas disabilitas & lansia'
-                                          else if (isFemalePriority) seatLabel += ', prioritas perempuan'
-                                          else seatLabel += ', tersedia'
+                                            let seatClasses = `rh-seat-map-seat ${isFacingDown ? 'is-facing-down' : 'is-facing-up'}`
+                                            if (selected) {
+                                              seatClasses += ' is-selected'
+                                            } else if (!seat.is_available) {
+                                              seatClasses += bookedGender === 'F' ? ' is-booked is-booked-female' : ' is-booked is-booked-male'
+                                            } else if (isDisability) {
+                                              seatClasses += ' is-available is-disability-priority'
+                                            } else if (isFemalePriority) {
+                                              seatClasses += ' is-available is-female-priority'
+                                            } else {
+                                              seatClasses += ' is-available'
+                                            }
 
-                                          return (
-                                            <button
-                                              key={seat.id}
-                                              type="button"
-                                              className={seatClasses}
-                                              disabled={!seat.is_available}
-                                              aria-disabled={!seat.is_available}
-                                              tabIndex={!seat.is_available ? -1 : 0}
-                                              aria-pressed={selected}
-                                              aria-label={seatLabel}
-                                              title={seatLabel}
-                                              onClick={event => {
-                                                if (!seat.is_available) {
-                                                  event.preventDefault()
-                                                  event.stopPropagation()
-                                                  toast.error(`Kursi ${seat.seat_number} sudah terisi oleh penumpang lain.`)
-                                                  return
-                                                }
-                                                toggleSeat(seat, isDisability, isFemalePriority)
-                                              }}
-                                            >
-                                              {selected ? (
-                                                <Check size={16} aria-hidden="true" />
-                                              ) : !seat.is_available ? (
-                                                <span style={{ pointerEvents: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', lineHeight: 1, fontSize: '0.62rem' }}>
-                                                  <User size={12} strokeWidth={2.5} style={{ color: bookedGender === 'F' ? '#ec4899' : '#0284c7', marginBottom: 1 }} />
-                                                  <span style={{ fontSize: '0.65rem' }}>{seat.seat_number}</span>
+                                            let seatLabel = `Kursi ${seat.seat_number}`
+                                            if (selected) seatLabel += ', dipilih'
+                                            else if (!seat.is_available) seatLabel += `, terpesan oleh penumpang ${bookedGender === 'F' ? 'perempuan' : 'pria'}`
+                                            else if (isDisability) seatLabel += ', prioritas disabilitas & lansia'
+                                            else if (isFemalePriority) seatLabel += ', prioritas perempuan'
+                                            else seatLabel += ', tersedia'
+
+                                            return (
+                                              <button
+                                                key={seat.id}
+                                                type="button"
+                                                className={seatClasses}
+                                                disabled={!seat.is_available}
+                                                aria-disabled={!seat.is_available}
+                                                tabIndex={!seat.is_available ? -1 : 0}
+                                                aria-pressed={selected}
+                                                aria-label={seatLabel}
+                                                title={seatLabel}
+                                                onClick={event => {
+                                                  if (!seat.is_available) {
+                                                    event.preventDefault()
+                                                    event.stopPropagation()
+                                                    toast.error(`Kursi ${seat.seat_number} sudah terisi oleh penumpang lain.`)
+                                                    return
+                                                  }
+                                                  toggleSeat(seat, isDisability, isFemalePriority)
+                                                }}
+                                              >
+                                                <span className="rh-seat-backrest" aria-hidden="true" />
+                                                <span className="rh-seat-cushion">
+                                                  {selected ? (
+                                                    <Check size={15} aria-hidden="true" />
+                                                  ) : !seat.is_available ? (
+                                                    <span style={{ pointerEvents: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', lineHeight: 1, fontSize: '0.6rem' }}>
+                                                      <User size={11} strokeWidth={2.5} style={{ color: bookedGender === 'F' ? '#ec4899' : '#0284c7', marginBottom: 1 }} />
+                                                      <span>{seat.seat_number}</span>
+                                                    </span>
+                                                  ) : (
+                                                    seat.seat_number
+                                                  )}
                                                 </span>
-                                              ) : (
-                                                seat.seat_number
-                                              )}
-                                            </button>
-                                          )
-                                        })}
-                                      </div>
-                                    ))}
+                                              </button>
+                                            )
+                                          })}
+                                          <span className="rh-coach-window" aria-hidden="true" />
+                                        </div>
+                                      )
+                                    })}
                                   </div>
                                 </div>
                               </div>

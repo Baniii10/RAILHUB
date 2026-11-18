@@ -63,7 +63,7 @@ export default function AboutPage() {
           breadcrumbLabel="Tentang RAILHUB"
         />
 
-        <div className="rh-container pt-10 sm:pt-12 space-y-14">
+        <div className="rh-container pt-12 sm:pt-16 space-y-14">
           {/* 1. Mission + Single Remotion Bumper */}
           <section className="grid grid-cols-1 lg:grid-cols-[1fr_1.15fr] gap-8 lg:gap-12 items-center">
             <ScrollReveal direction="left">

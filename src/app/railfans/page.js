@@ -21,7 +21,7 @@ export default function RailfansPage() {
         />
 
         {/* Unified Single-Page Flow */}
-        <div className="rh-container pt-8 sm:pt-10 space-y-12">
+        <div className="rh-container pt-12 sm:pt-14 space-y-12">
           {/* 1. Sejarah (Compact Preview + Baca Selengkapnya) */}
           <ScrollReveal direction="up">
             <RailwayHistorySection />

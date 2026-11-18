@@ -68,13 +68,13 @@ export default function HomePage() {
             : 'linear-gradient(180deg, #050d1a 0%, #0a1f3d 35%, #0f2c59 70%, #07162c 100%)',
           transition: 'background 0.5s ease',
           position: 'relative',
-          overflow: 'hidden',
         }}
       >
         {/* Subtle Sun, Clouds & 5% Transparent Nature Scenery */}
-        <HomeHeroScenery isDay={isDay} />
-
-        <div className="rh-pattern-dots" style={{ position: 'absolute', inset: 0, opacity: isDay ? 0.12 : 0.25, pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
+          <HomeHeroScenery isDay={isDay} />
+          <div className="rh-pattern-dots" style={{ position: 'absolute', inset: 0, opacity: isDay ? 0.12 : 0.25, pointerEvents: 'none' }} />
+        </div>
 
         <div className="rh-container" style={{ position: 'relative', zIndex: 1 }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))', gap: 'clamp(1.5rem, 3.5vw, 3rem)', alignItems: 'center' }}>
@@ -102,7 +102,9 @@ export default function HomePage() {
                     ? '0 24px 60px -12px rgba(2, 44, 102, 0.25), 0 10px 30px -8px rgba(0, 0, 0, 0.1), inset 0 1px 2px rgba(255, 255, 255, 0.85)'
                     : '0 24px 60px -12px rgba(0, 0, 0, 0.5), 0 10px 30px -8px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.2)',
                   border: isDay ? '1.5px solid rgba(255, 255, 255, 0.8)' : '1.5px solid rgba(255, 255, 255, 0.18)',
-                  overflow: 'hidden',
+                  overflow: 'visible',
+                  position: 'relative',
+                  zIndex: 20,
                 }}
               >
                 <SearchWidget isNight={!isDay} />

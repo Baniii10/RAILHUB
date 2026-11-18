@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Clock, ArrowRight, ChevronRight } from 'lucide-react'
+import { Clock, ArrowRight, ChevronRight, Minus, Plus, Users } from 'lucide-react'
 import { useLang } from '@/contexts/LangContext'
 
 const POPULAR_ROUTES = [
@@ -287,6 +287,7 @@ export default function PopularTicketRoutes() {
   const { lang } = useLang()
   const router = useRouter()
   const [isPaused, setIsPaused] = useState(false)
+  const [pax, setPax] = useState(1)
 
   function handleOpenRoute(route) {
     const tomorrow = new Date()
@@ -297,7 +298,7 @@ export default function PopularTicketRoutes() {
       String(tomorrow.getDate()).padStart(2, '0'),
     ].join('-')
 
-    router.push(`/trains?from=${route.from}&to=${route.to}&date=${date}&pax=1`)
+    router.push(`/trains?from=${route.from}&to=${route.to}&date=${date}&pax=${pax}`)
   }
 
   // Duplicate the array for seamless infinite sliding on mobile
@@ -340,16 +341,81 @@ export default function PopularTicketRoutes() {
             </h2>
           </div>
 
-          <span
-            className="rh-show-mobile-only"
-            style={{
-              fontSize: '0.72rem',
-              color: '#64748b',
-              fontWeight: 500,
-            }}
-          >
-            {lang === 'en' ? 'Sliding right • Tap to choose' : 'Sliding ke kanan • Sentuh untuk memilih'}
-          </span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+            <div
+              role="group"
+              aria-label={lang === 'en' ? 'Quick booking passengers' : 'Jumlah penumpang pesan cepat'}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                background: '#ffffff',
+                border: '1px solid #e2e8f0',
+                borderRadius: 999,
+                padding: '0.3rem 0.45rem 0.3rem 0.75rem',
+                boxShadow: '0 1px 3px rgba(15, 23, 42, 0.04)',
+              }}
+            >
+              <Users size={15} style={{ color: '#1a428a', flexShrink: 0 }} />
+              <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#475569' }}>
+                {lang === 'en' ? 'Passengers' : 'Penumpang'}
+              </span>
+              <button
+                type="button"
+                disabled={pax <= 1}
+                onClick={() => setPax(p => Math.max(1, p - 1))}
+                aria-label={lang === 'en' ? 'Decrease passengers' : 'Kurangi penumpang'}
+                style={{
+                  width: 28,
+                  height: 28,
+                  borderRadius: '50%',
+                  border: '1px solid #e2e8f0',
+                  background: pax <= 1 ? '#f8fafc' : '#ffffff',
+                  color: pax <= 1 ? '#cbd5e1' : '#0f172a',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: pax <= 1 ? 'not-allowed' : 'pointer',
+                }}
+              >
+                <Minus size={13} />
+              </button>
+              <span style={{ minWidth: 18, textAlign: 'center', fontSize: '0.875rem', fontWeight: 800, color: '#0f172a' }}>
+                {pax}
+              </span>
+              <button
+                type="button"
+                disabled={pax >= 6}
+                onClick={() => setPax(p => Math.min(6, p + 1))}
+                aria-label={lang === 'en' ? 'Increase passengers' : 'Tambah penumpang'}
+                style={{
+                  width: 28,
+                  height: 28,
+                  borderRadius: '50%',
+                  border: '1px solid #e2e8f0',
+                  background: pax >= 6 ? '#f8fafc' : '#ffffff',
+                  color: pax >= 6 ? '#cbd5e1' : '#0f172a',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: pax >= 6 ? 'not-allowed' : 'pointer',
+                }}
+              >
+                <Plus size={13} />
+              </button>
+            </div>
+
+            <span
+              className="rh-show-mobile-only"
+              style={{
+                fontSize: '0.72rem',
+                color: '#64748b',
+                fontWeight: 500,
+              }}
+            >
+              {lang === 'en' ? 'Sliding right • Tap to choose' : 'Sliding ke kanan • Sentuh untuk memilih'}
+            </span>
+          </div>
         </div>
       </div>
 

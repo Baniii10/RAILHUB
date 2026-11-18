@@ -25,9 +25,9 @@ export function AboutNetworkBumper() {
   return (
     <AbsoluteFill
       style={{
-        backgroundColor: '#0b1626',
+        background: 'linear-gradient(135deg, #ffffff 0%, #f1f6ff 55%, #e8f0fe 100%)',
         fontFamily: 'system-ui, -apple-system, sans-serif',
-        color: '#ffffff',
+        color: '#0f172a',
         padding: '28px 32px',
         display: 'flex',
         flexDirection: 'column',
@@ -43,10 +43,10 @@ export function AboutNetworkBumper() {
           opacity: interpolate(titleIn, [0, 1], [0, 1]),
         }}
       >
-        <div style={{ fontSize: 13, fontWeight: 700, letterSpacing: '0.08em', color: '#FF8C00', textTransform: 'uppercase' }}>
+        <div style={{ fontSize: 13, fontWeight: 800, letterSpacing: '0.08em', color: '#1A428A', textTransform: 'uppercase' }}>
           Jaringan Lintas Jawa
         </div>
-        <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)', fontFamily: 'monospace' }}>
+        <div style={{ fontSize: 12, color: '#64748b', fontFamily: 'monospace', fontWeight: 600 }}>
           50 STASIUN TERHUBUNG
         </div>
       </div>
@@ -55,10 +55,10 @@ export function AboutNetworkBumper() {
       <div style={{ position: 'relative', height: 140, display: 'flex', alignItems: 'center' }}>
         <svg width="700" height="120" viewBox="0 0 700 120" style={{ width: '100%', height: 'auto' }}>
           {/* Base Track Line */}
-          <line x1="90" y1="54" x2="610" y2="54" stroke="rgba(255,255,255,0.16)" strokeWidth="3" strokeLinecap="round" />
+          <line x1="90" y1="54" x2="610" y2="54" stroke="#cbd5e1" strokeWidth="3.5" strokeLinecap="round" />
 
           {/* Active Progress Line */}
-          <line x1="90" y1="54" x2={trainX} y2="54" stroke="#FF8C00" strokeWidth="3.5" strokeLinecap="round" />
+          <line x1="90" y1="54" x2={trainX} y2="54" stroke="#FF8C00" strokeWidth="4" strokeLinecap="round" />
 
           {/* Station Nodes */}
           {STATIONS.map((st) => {
@@ -69,15 +69,15 @@ export function AboutNetworkBumper() {
                   cx={st.x}
                   cy={54}
                   r={reached ? 8 : 6}
-                  fill={reached ? '#FF8C00' : '#0b1626'}
-                  stroke={reached ? '#ffffff' : 'rgba(255,255,255,0.45)'}
+                  fill={reached ? '#FF8C00' : '#ffffff'}
+                  stroke={reached ? '#1A428A' : '#94a3b8'}
                   strokeWidth="2.5"
                 />
                 <text
                   x={st.x}
                   y={84}
                   textAnchor="middle"
-                  fill="#ffffff"
+                  fill="#1A428A"
                   fontSize="13"
                   fontWeight="800"
                   fontFamily="monospace"
@@ -88,8 +88,9 @@ export function AboutNetworkBumper() {
                   x={st.x}
                   y={102}
                   textAnchor="middle"
-                  fill="rgba(255,255,255,0.6)"
+                  fill="#64748b"
                   fontSize="11"
+                  fontWeight="500"
                 >
                   {st.name}
                 </text>
@@ -111,15 +112,16 @@ export function AboutNetworkBumper() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          borderTop: '1px solid rgba(255,255,255,0.1)',
+          borderTop: '1px solid #dbeafe',
           paddingTop: 14,
           fontSize: 13,
-          color: 'rgba(255,255,255,0.75)',
+          fontWeight: 600,
+          color: '#475569',
         }}
       >
         <span>Reservasi Kursi Atomik</span>
         <span>E-Boarding QR</span>
-        <span style={{ color: '#FF8C00', fontWeight: 700 }}>Real-Time Sync</span>
+        <span style={{ color: '#ea580c', fontWeight: 700 }}>Real-Time Sync</span>
       </div>
     </AbsoluteFill>
   )

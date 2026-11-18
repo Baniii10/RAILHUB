@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Navbar from '@/components/layout/Navbar'
+import PageHeader from '@/components/layout/PageHeader'
 import toast from 'react-hot-toast'
 import { CheckCircle2, Clock, Headphones, Mail, MapPin, MessageCircle, Phone, Send, Train } from 'lucide-react'
 
@@ -37,25 +38,17 @@ export default function ContactPage() {
   )}`
 
   return (
-    <div>
+    <div className="min-h-screen flex flex-col bg-[var(--rh-bg)]">
       <Navbar />
 
-      <section className="rh-hero" style={{ padding: '4rem 0 3.5rem' }}>
-        <div className="rh-container" style={{ position: 'relative', zIndex: 1 }}>
-          <span className="rh-badge" style={{ background: 'rgba(255,255,255,0.12)', color: 'var(--rh-accent)', border: '1px solid rgba(255,255,255,0.18)', marginBottom: '1rem' }}>
-            <Headphones size={14} /> Contact Service 24/7
-          </span>
-          <h1 className="rh-h1" style={{ color: 'white', marginBottom: '0.75rem' }}>
-            Pusat Bantuan & Layanan Pelanggan
-          </h1>
-          <p className="rh-body-lg" style={{ color: 'rgba(255,255,255,0.75)', maxWidth: 620 }}>
-            Hubungi tim operasional RAILHUB untuk bantuan tiket, informasi peron, kendala perjalanan, maupun pelaporan barang tertinggal di rangkaian kereta.
-          </p>
-        </div>
-      </section>
+      <main className="flex-1 pb-20">
+        <PageHeader
+          title="Pusat Bantuan & Layanan"
+          subtitle="Hubungi tim operasional RAILHUB untuk bantuan tiket, informasi peron, atau laporan barang tertinggal."
+          breadcrumbLabel="Kontak"
+        />
 
-      <section className="rh-section" style={{ background: 'var(--rh-surface)' }}>
-        <div className="rh-container">
+        <div className="rh-container pt-12 sm:pt-14">
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(310px, 1fr))', gap: '1.5rem', alignItems: 'start' }}>
             <div className="rh-card">
               <div className="rh-card-header">
@@ -189,8 +182,7 @@ export default function ContactPage() {
             </div>
           </div>
         </div>
-      </section>
-
+      </main>
     </div>
   )
 }

@@ -8,7 +8,7 @@ const Player = dynamic(
   () => import('@remotion/player').then((mod) => mod.Player),
   {
     ssr: false,
-    loading: () => <div className="w-full h-full bg-[#0b1626]" />,
+    loading: () => <div className="w-full h-full bg-gradient-to-br from-[#f8fafc] to-[#eff6ff]" />,
   }
 )
 
@@ -21,7 +21,7 @@ export default function AboutNetworkBumperPlayer() {
 
   return (
     <div
-      className="relative w-full aspect-[7/3] min-h-[200px] rounded-xl overflow-hidden bg-[#0b1626] border border-white/10 select-none"
+      className="relative w-full aspect-[7/3] min-h-[200px] rounded-2xl overflow-hidden bg-gradient-to-br from-[#f8fafc] to-[#eff6ff] border border-[var(--rh-border)] shadow-[0_8px_24px_rgba(26,66,138,0.06)] select-none"
       aria-label="Animasi jaringan kereta api RAILHUB Pulau Jawa"
     >
       {mounted ? (
@@ -40,7 +40,7 @@ export default function AboutNetworkBumperPlayer() {
           spaceKeyToPlayOrPause={false}
         />
       ) : (
-        <div className="w-full h-full bg-[#0b1626]" />
+        <div className="w-full h-full bg-gradient-to-br from-[#f8fafc] to-[#eff6ff]" />
       )}
     </div>
   )
