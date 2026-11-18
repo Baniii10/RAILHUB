@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Mail, Lock, Eye, EyeOff, AlertCircle } from 'lucide-react'
@@ -98,7 +98,8 @@ const DEMO_ACCOUNTS = [
 export default function LoginPage() {
   const { t, lang } = useLang()
   const router = useRouter()
-  const supabase = createClient()
+  const supabase = useMemo(() => createClient(), [])
+  const redirectingRef = useRef(false)
 
   const [email,         setEmail]         = useState('')
   const [password,      setPassword]      = useState('')
@@ -111,7 +112,8 @@ export default function LoginPage() {
   const { user: currentUser, profile: currentProfile, loading: authLoading } = useAuth()
 
   useEffect(() => {
-    if (authLoading || !currentUser) return
+    if (authLoading || !currentUser || redirectingRef.current) return
+    redirectingRef.current = true
     const requestedNext = new URLSearchParams(window.location.search).get('next')
     const role = getOperationalRole(currentProfile, currentUser.email)
     const destination = isSafeNextPath(requestedNext, role) ? requestedNext : getDashboardForProfile(currentProfile, currentUser.email)
@@ -201,18 +203,32 @@ export default function LoginPage() {
 
     setLoadingRole('Menyiapkan dashboard akun...')
 
-    let profileResult = await supabase
-      .from('profiles')
-      .select('id, email, role')
-      .eq('id', data.user.id)
-      .maybeSingle()
+    let profileData = null
+    try {
+      const profileResult = await Promise.race([
+        supabase
+          .from('profiles')
+          .select('id, email, role')
+          .eq('id', data.user.id)
+          .maybeSingle(),
+        new Promise((resolve) => setTimeout(() => resolve({ data: null }), 1500)),
+      ])
+      profileData = profileResult?.data || null
+    } catch {
+      profileData = null
+    }
 
-    const rawProfile = profileResult?.data || { id: data.user.id, email: data.user.email }
+    const rawProfile = profileData || {
+      id: data.user.id,
+      email: data.user.email,
+      role: data.user.user_metadata?.role,
+    }
     const role = getOperationalRole(rawProfile, data.user.email)
     const profile = normalizeProfile(rawProfile, data.user.email)
 
     toast.success(successMessage)
 
+    redirectingRef.current = true
     const requestedNext = new URLSearchParams(window.location.search).get('next')
     const destination = isSafeNextPath(requestedNext, role) ? requestedNext : getDashboardForProfile(profile, data.user.email)
     router.replace(destination)
@@ -261,20 +277,19 @@ export default function LoginPage() {
       return
     }
 
-    setLoadingRole(`Memuat profil ${account.title}...`)
+    setLoadingRole(`Membuka dashboard ${account.title}...`)
 
-    let profileResult = await supabase
-      .from('profiles')
-      .select('id, email, role')
-      .eq('id', data.user.id)
-      .maybeSingle()
-
-    const rawProfile = profileResult?.data || { id: data.user.id, email: data.user.email }
+    const rawProfile = {
+      id: data.user.id,
+      email: data.user.email,
+      role: account.role,
+    }
     const role = getOperationalRole(rawProfile, data.user.email)
     const profile = normalizeProfile(rawProfile, data.user.email)
 
     toast.success(`Login berhasil sebagai ${account.title}!`)
 
+    redirectingRef.current = true
     const requestedNext = new URLSearchParams(window.location.search).get('next')
     const destination = isSafeNextPath(requestedNext, role) ? requestedNext : getDashboardForProfile(profile, data.user.email)
     router.replace(destination)
