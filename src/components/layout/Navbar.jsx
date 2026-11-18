@@ -32,6 +32,7 @@ import toast from 'react-hot-toast'
 const publicNavLinks = (t) => [
   { href: '/', label: t.nav.home },
   { href: '/trains', label: t.nav.book },
+  { href: '/railfans', label: t.nav.community || 'Komunitas' },
   { href: '/about', label: t.nav.about },
   { href: '/faq', label: t.nav.faq },
   { href: '/contact', label: t.nav.contact },

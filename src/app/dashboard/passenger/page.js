@@ -31,6 +31,7 @@ import {
   Share2,
   Shield,
   ShieldCheck,
+  Sparkles,
   Star,
   Ticket,
   Train,
@@ -378,6 +379,87 @@ function PassengerDashboardContent() {
                     journeyProgress={journeyProgress}
                     onSelectTab={selectTab}
                   />
+
+                  {/* ── CARD FITUR KOMUNITAS RAILFANS ── */}
+                  <div
+                    className="rh-card"
+                    style={{
+                      background: 'linear-gradient(135deg, #071A38 0%, #0F2D59 50%, #1A428A 100%)',
+                      color: '#ffffff',
+                      borderRadius: 20,
+                      padding: '1.75rem',
+                      position: 'relative',
+                      overflow: 'hidden',
+                      boxShadow: '0 12px 32px rgba(7, 26, 56, 0.25)',
+                      border: '1px solid rgba(255, 255, 255, 0.12)',
+                    }}
+                  >
+                    <div
+                      style={{
+                        position: 'absolute',
+                        right: '-20px',
+                        bottom: '-20px',
+                        opacity: 0.08,
+                        pointerEvents: 'none',
+                      }}
+                    >
+                      <Train size={220} />
+                    </div>
+
+                    <div style={{ position: 'relative', zIndex: 1 }}>
+                      <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(255, 255, 255, 0.15)', padding: '0.35rem 0.85rem', borderRadius: 999, fontSize: '0.8rem', fontWeight: 700, marginBottom: '0.85rem' }}>
+                        <Sparkles size={14} color="#FBBF24" />
+                        <span>Fitur Baru Komunitas</span>
+                      </div>
+
+                      <h3 style={{ fontSize: 'clamp(1.2rem, 2.5vw, 1.55rem)', fontWeight: 800, margin: '0 0 0.5rem', color: '#ffffff' }}>
+                        Komunitas Railfans RAILHUB
+                      </h3>
+                      <p style={{ margin: '0 0 1.25rem', maxWidth: 640, color: 'rgba(255, 255, 255, 0.86)', fontSize: '0.92rem', lineHeight: 1.6 }}>
+                        Eksplorasi sejarah panjang perkeretaapian Indonesia, jelajahi model 3D lokomotif interaktif (CC 206, CC 201, CC 203, CC 300), unduh galeri foto resolusi tinggi, dan bergabunglah bersama ribuan pecinta kereta di Discord.
+                      </p>
+
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
+                        <Link
+                          href="/railfans"
+                          className="rh-btn rh-btn-primary rh-btn-sm"
+                          style={{
+                            background: '#F97316',
+                            borderColor: '#F97316',
+                            color: '#ffffff',
+                            fontWeight: 700,
+                            padding: '0.65rem 1.25rem',
+                            borderRadius: 12,
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '0.5rem',
+                          }}
+                        >
+                          <Train size={16} />
+                          <span>Jelajahi Komunitas & 3D</span>
+                          <ChevronRight size={15} />
+                        </Link>
+
+                        <Link
+                          href="/railfans/galeri"
+                          className="rh-btn rh-btn-ghost rh-btn-sm"
+                          style={{
+                            background: 'rgba(255, 255, 255, 0.12)',
+                            color: '#ffffff',
+                            borderColor: 'rgba(255, 255, 255, 0.25)',
+                            padding: '0.65rem 1.15rem',
+                            borderRadius: 12,
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '0.5rem',
+                          }}
+                        >
+                          <Layers size={16} />
+                          <span>Galeri Foto Kereta</span>
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               )}
 
