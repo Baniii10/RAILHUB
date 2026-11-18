@@ -34,8 +34,7 @@ const publicNavLinks = (t) => [
   { href: '/trains', label: t.nav.book },
   { href: '/railfans', label: t.nav.community || 'Komunitas' },
   { href: '/about', label: t.nav.about },
-  { href: '/faq', label: t.nav.faq },
-  { href: '/contact', label: t.nav.contact },
+  { href: '/faq', label: 'Bantuan & Kontak' },
 ]
 
 export default function Navbar() {
