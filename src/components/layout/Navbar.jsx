@@ -125,7 +125,15 @@ export default function Navbar() {
           .eq('user_id', user.id)
           .order('created_at', { ascending: false })
           .limit(4)
-        if (active) setActiveJourney((bks || []).find(booking => booking.status === 'paid' && booking.schedules) || null)
+        const nowMs = Date.now()
+        const activeBk = (bks || [])
+          .filter(booking => {
+            if (booking.status !== 'paid' || !booking.schedules?.departure_time) return false
+            const endTime = Date.parse(booking.schedules.arrival_time || booking.schedules.departure_time)
+            return Number.isFinite(endTime) && endTime >= nowMs
+          })
+          .sort((a, b) => Date.parse(a.schedules.departure_time) - Date.parse(b.schedules.departure_time))[0] || null
+        if (active) setActiveJourney(activeBk)
         for (const b of bks || []) {
           items.push({
             id: `bk-${b.id}`,

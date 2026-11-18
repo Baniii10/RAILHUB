@@ -117,8 +117,8 @@ export default function LoginPage() {
     const requestedNext = new URLSearchParams(window.location.search).get('next')
     const role = getOperationalRole(currentProfile, currentUser.email)
     const destination = isSafeNextPath(requestedNext, role) ? requestedNext : getDashboardForProfile(currentProfile, currentUser.email)
-    router.replace(destination)
-  }, [authLoading, currentUser, currentProfile, router])
+    window.location.replace(destination)
+  }, [authLoading, currentUser, currentProfile])
 
   async function handleGoogleAuth() {
     setError('')
@@ -155,10 +155,11 @@ export default function LoginPage() {
     setLoading(true)
     setLoadingRole('Memverifikasi akun Anda...')
 
-    const { data, error: authError } = await supabase.auth.signInWithPassword({
-      email: loginEmail,
-      password: loginPassword,
-    })
+    try {
+      const { data, error: authError } = await supabase.auth.signInWithPassword({
+        email: loginEmail,
+        password: loginPassword,
+      })
 
     if (authError) {
       const msg = authError.message?.toLowerCase() || ''
@@ -183,7 +184,8 @@ export default function LoginPage() {
           })
           if (!retryErr && retryData?.user) {
             toast.success('Berhasil masuk sebagai Petugas KA!')
-            router.replace('/dashboard/staff')
+            redirectingRef.current = true
+            window.location.replace('/dashboard/staff')
             return
           }
         }
@@ -231,7 +233,12 @@ export default function LoginPage() {
     redirectingRef.current = true
     const requestedNext = new URLSearchParams(window.location.search).get('next')
     const destination = isSafeNextPath(requestedNext, role) ? requestedNext : getDashboardForProfile(profile, data.user.email)
-    router.replace(destination)
+    window.location.replace(destination)
+    } catch (err) {
+      setError(err?.message || t.auth.loginError)
+      setLoading(false)
+      setLoadingRole('')
+    }
   }
 
   async function handleQuickLogin(account) {
@@ -241,58 +248,65 @@ export default function LoginPage() {
     setLoading(true)
     setLoadingRole(`Masuk sebagai ${account.title}...`)
 
-    const { data, error: authError } = await supabase.auth.signInWithPassword({
-      email: account.email,
-      password: account.password,
-    })
+    try {
+      const { data, error: authError } = await supabase.auth.signInWithPassword({
+        email: account.email,
+        password: account.password,
+      })
 
-    if (authError) {
-      const msg = authError.message?.toLowerCase() || ''
-      const isNotFound = authError.code === 'invalid_credentials' || msg.includes('invalid') || msg.includes('not found')
+      if (authError) {
+        const msg = authError.message?.toLowerCase() || ''
+        const isNotFound = authError.code === 'invalid_credentials' || msg.includes('invalid') || msg.includes('not found')
 
-      if (isNotFound) {
-        setLoadingRole(`Mendaftarkan akun demo ${account.title}...`)
-        const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-          email: account.email,
-          password: account.password,
-          options: {
-            data: {
-              full_name: account.title,
-              role: account.role,
+        if (isNotFound) {
+          setLoadingRole(`Mendaftarkan akun demo ${account.title}...`)
+          const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+            email: account.email,
+            password: account.password,
+            options: {
+              data: {
+                full_name: account.title,
+                role: account.role,
+              },
             },
-          },
-        })
+          })
 
-        if (!signUpError && (signUpData?.session || signUpData?.user)) {
-          toast.success(`Login berhasil sebagai ${account.title}!`)
-          const destination = account.role === 'admin' ? '/dashboard/admin' : account.role === 'passenger' ? '/dashboard/passenger' : '/dashboard/staff'
-          router.replace(destination)
-          return
+          if (!signUpError && (signUpData?.session || signUpData?.user)) {
+            toast.success(`Login berhasil sebagai ${account.title}!`)
+            redirectingRef.current = true
+            const destination = account.role === 'admin' ? '/dashboard/admin' : account.role === 'passenger' ? '/dashboard/passenger' : '/dashboard/staff'
+            window.location.replace(destination)
+            return
+          }
         }
+
+        setError(authError.message || t.auth.loginError)
+        setLoading(false)
+        setLoadingRole('')
+        return
       }
 
-      setError(authError.message || t.auth.loginError)
+      setLoadingRole(`Membuka dashboard ${account.title}...`)
+
+      const rawProfile = {
+        id: data.user.id,
+        email: data.user.email,
+        role: account.role,
+      }
+      const role = getOperationalRole(rawProfile, data.user.email)
+      const profile = normalizeProfile(rawProfile, data.user.email)
+
+      toast.success(`Login berhasil sebagai ${account.title}!`)
+
+      redirectingRef.current = true
+      const requestedNext = new URLSearchParams(window.location.search).get('next')
+      const destination = isSafeNextPath(requestedNext, role) ? requestedNext : getDashboardForProfile(profile, data.user.email)
+      window.location.replace(destination)
+    } catch (err) {
+      setError(err?.message || t.auth.loginError)
       setLoading(false)
       setLoadingRole('')
-      return
     }
-
-    setLoadingRole(`Membuka dashboard ${account.title}...`)
-
-    const rawProfile = {
-      id: data.user.id,
-      email: data.user.email,
-      role: account.role,
-    }
-    const role = getOperationalRole(rawProfile, data.user.email)
-    const profile = normalizeProfile(rawProfile, data.user.email)
-
-    toast.success(`Login berhasil sebagai ${account.title}!`)
-
-    redirectingRef.current = true
-    const requestedNext = new URLSearchParams(window.location.search).get('next')
-    const destination = isSafeNextPath(requestedNext, role) ? requestedNext : getDashboardForProfile(profile, data.user.email)
-    router.replace(destination)
   }
 
   async function handleSubmit(e) {

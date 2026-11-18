@@ -42,6 +42,27 @@ export default function LiveJourneyMapTracker({ booking, ticket, countdown, jour
         <h2 id="journey-empty-title" className="rh-h3">Belum ada perjalanan aktif</h2>
         <p style={{ color: 'var(--rh-text-2)' }}>Perjalanan akan tampil setelah tiket dibayar dan jadwalnya masih aktif.</p>
         <Link href="/trains" className="rh-btn rh-btn-primary">Cari jadwal kereta</Link>
+        {onSelectTab && (
+          <div style={{ marginTop: '0.85rem' }}>
+            <button
+              type="button"
+              onClick={() => onSelectTab('tickets')}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                padding: 0,
+                color: 'var(--rh-text-3)',
+                fontSize: '0.8rem',
+                fontWeight: 600,
+                textDecoration: 'underline',
+                textUnderlineOffset: '3px',
+                cursor: 'pointer',
+              }}
+            >
+              Riwayat pembelian
+            </button>
+          </div>
+        )}
       </div>
     </section>
   }
