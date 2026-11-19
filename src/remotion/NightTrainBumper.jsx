@@ -228,21 +228,6 @@ export function NightTrainBumper(props = {}) {
             <stop offset="30%" stopColor="#110d1f" />
             <stop offset="100%" stopColor="#05040a" />
           </linearGradient>
-
-          {/* Neon Logo Glow Filter */}
-          <filter id="rhLogoGlow" x="-20%" y="-20%" width="140%" height="140%">
-            <feDropShadow dx="0" dy="2" stdDeviation="4" floodColor="#38bdf8" floodOpacity="0.45" />
-            <feDropShadow dx="0" dy="6" stdDeviation="12" floodColor="#1e3a8a" floodOpacity="0.5" />
-          </filter>
-
-          {/* Headlight Bloom Filter */}
-          <filter id="rhBloom" x="-30%" y="-30%" width="160%" height="160%">
-            <feGaussianBlur stdDeviation="5" result="blur" />
-            <feMerge>
-              <feMergeNode in="blur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
         </defs>
 
         {/* 1. SKY BACKGROUND */}
@@ -277,7 +262,7 @@ export function NightTrainBumper(props = {}) {
               strokeWidth="2.5"
               strokeLinecap="round"
             />
-            <circle cx={meteorX} cy={meteorY} r="3" fill="#ffffff" filter="url(#rhBloom)" />
+            <circle cx={meteorX} cy={meteorY} r="3" fill="#ffffff" />
           </g>
         )}
 
@@ -287,7 +272,7 @@ export function NightTrainBumper(props = {}) {
           <circle cx="0" cy="0" r="46" fill="#f8fafc" opacity={moonGlow * 0.08} />
           <circle cx="0" cy="0" r="30" fill="#f8fafc" opacity={moonGlow * 0.15} />
           {/* Main Moon Disc */}
-          <circle cx="0" cy="0" r="22" fill="#fffbeb" filter="url(#rhBloom)" opacity="0.95" />
+          <circle cx="0" cy="0" r="22" fill="#fffbeb" opacity="0.95" />
           {/* Shadow creating glowing crescent */}
           <circle cx="8" cy="-6" r="19" fill="#0b1228" opacity="0.92" />
         </g>
@@ -321,7 +306,7 @@ export function NightTrainBumper(props = {}) {
                 r="3.5"
                 fill="#ef4444"
                 opacity={Math.sin((frame / 10 + idx) * Math.PI) > 0 ? 0.95 : 0.2}
-                filter="url(#rhBloom)"
+               
               />
             </g>
           ))}
@@ -368,7 +353,7 @@ export function NightTrainBumper(props = {}) {
               {/* Ceramic Insulator */}
               <circle cx="-35" cy="46" r="4.5" fill="#38bdf8" opacity="0.85" />
               {/* Signal aspect light */}
-              <circle cx="12" cy="70" r="5" fill="#22c55e" opacity={signalBlink} filter="url(#rhBloom)" />
+              <circle cx="12" cy="70" r="5" fill="#22c55e" opacity={signalBlink} />
             </g>
           ))}
         </g>
@@ -495,7 +480,7 @@ export function NightTrainBumper(props = {}) {
             />
 
             {/* Driver Cab Interior Light */}
-            <circle cx="172" cy="42" r="7" fill="#fef08a" opacity="0.75" filter="url(#rhBloom)" />
+            <circle cx="172" cy="42" r="7" fill="#fef08a" opacity="0.75" />
             <circle cx="172" cy="42" r="4" fill="#1e293b" />
 
             {/* Orange Livery Chevron Arrow on the Nose */}
@@ -515,16 +500,16 @@ export function NightTrainBumper(props = {}) {
               {/* Headlight Housing */}
               <rect x="-4" y="-8" width="10" height="16" rx="3" fill="#0f172a" stroke="#cbd5e1" strokeWidth="1.5" />
               {/* Lamp 1 */}
-              <circle cx="1" cy="-3" r="4" fill="#ffffff" filter="url(#rhBloom)" />
+              <circle cx="1" cy="-3" r="4" fill="#ffffff" />
               <circle cx="1" cy="-3" r="7" fill="url(#rhHeadlightCore)" opacity={beamPulse} />
               {/* Lamp 2 */}
-              <circle cx="1" cy="3" r="4" fill="#ffffff" filter="url(#rhBloom)" />
+              <circle cx="1" cy="3" r="4" fill="#ffffff" />
               <circle cx="1" cy="3" r="7" fill="url(#rhHeadlightCore)" opacity={beamPulse} />
             </g>
 
             {/* Center High Beam Lamp */}
             <g transform="translate(195, 23)">
-              <circle cx="0" cy="0" r="3.5" fill="#ffffff" filter="url(#rhBloom)" />
+              <circle cx="0" cy="0" r="3.5" fill="#ffffff" />
               <circle cx="0" cy="0" r="6" fill="#fef08a" opacity={beamPulse * 0.9} />
             </g>
 

@@ -1,29 +1,27 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import dynamic from 'next/dynamic'
 import Navbar from '@/components/layout/Navbar'
 import SearchWidget from '@/components/booking/SearchWidget'
 import FeaturedServicesSlider from '@/components/home/FeaturedServicesSlider'
 import TrainBumperBanner from '@/components/home/TrainBumperBanner'
 import HomeHeroScenery from '@/components/home/HomeHeroScenery'
-import PromoBannerCarousel from '@/components/home/PromoBannerCarousel'
-import PopularTicketRoutes from '@/components/home/PopularTicketRoutes'
-import TravelClassShowcase from '@/components/home/TravelClassShowcase'
-import PwaGalleryBento from '@/components/home/PwaGalleryBento'
-import FeedbackSection from '@/components/home/FeedbackSection'
 import ScrollReveal from '@/components/ui/ScrollReveal'
 import { useLang } from '@/contexts/LangContext'
 import { useAuth } from '@/contexts/AuthContext'
-import { ChevronRight } from 'lucide-react'
+
+const PromoBannerCarousel = dynamic(() => import('@/components/home/PromoBannerCarousel'))
+const PopularTicketRoutes = dynamic(() => import('@/components/home/PopularTicketRoutes'))
+const TravelClassShowcase = dynamic(() => import('@/components/home/TravelClassShowcase'))
+const PwaGalleryBento = dynamic(() => import('@/components/home/PwaGalleryBento'))
+const FeedbackSection = dynamic(() => import('@/components/home/FeedbackSection'))
 
 export default function HomePage() {
   const { t, lang } = useLang()
   const { user } = useAuth()
   const [mounted, setMounted] = useState(false)
   const [isDay, setIsDay] = useState(true)
-  const router = useRouter()
 
   useEffect(() => {
     setMounted(true)

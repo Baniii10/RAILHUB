@@ -1,12 +1,12 @@
 'use client'
 
-import { motion, useReducedMotion } from 'framer-motion'
+import { useEffect, useRef, useState } from 'react'
 
 const OFFSETS = {
-  up: { x: 0, y: 22 },
-  down: { x: 0, y: -22 },
-  left: { x: -24, y: 0 },
-  right: { x: 24, y: 0 },
+  up: 'translate3d(0, 18px, 0)',
+  down: 'translate3d(0, -18px, 0)',
+  left: 'translate3d(-20px, 0, 0)',
+  right: 'translate3d(20px, 0, 0)',
 }
 
 export default function ScrollReveal({
@@ -15,27 +15,48 @@ export default function ScrollReveal({
   delay = 0,
   className = '',
 }) {
-  const prefersReduced = useReducedMotion()
-  const offset = OFFSETS[direction] || OFFSETS.up
+  const ref = useRef(null)
+  const [visible, setVisible] = useState(false)
 
-  if (prefersReduced) {
-    return <div className={className}>{children}</div>
-  }
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+
+    if (typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+      setVisible(true)
+      return
+    }
+
+    if (typeof IntersectionObserver === 'undefined') {
+      setVisible(true)
+      return
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          setVisible(true)
+          observer.disconnect()
+        }
+      },
+      { threshold: 0.08, rootMargin: '0px 0px 40px 0px' }
+    )
+
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
 
   return (
-    <div className={`overflow-x-clip ${className}`}>
-      <motion.div
-        initial={{ opacity: 0, x: offset.x, y: offset.y }}
-        whileInView={{ opacity: 1, x: 0, y: 0 }}
-        viewport={{ once: true, amount: 0.12 }}
-        transition={{
-          duration: 0.38,
-          delay,
-          ease: [0.22, 1, 0.36, 1],
+    <div ref={ref} className={`overflow-x-clip rh-defer-section ${className}`}>
+      <div
+        style={{
+          opacity: visible ? 1 : 0,
+          transform: visible ? 'translate3d(0, 0, 0)' : (OFFSETS[direction] || OFFSETS.up),
+          transition: `opacity 0.34s cubic-bezier(0.22, 1, 0.36, 1) ${delay}s, transform 0.34s cubic-bezier(0.22, 1, 0.36, 1) ${delay}s`,
         }}
       >
         {children}
-      </motion.div>
+      </div>
     </div>
   )
 }
