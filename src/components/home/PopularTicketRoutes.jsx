@@ -97,7 +97,7 @@ function TicketCard({ route, onClick, lang }) {
         flexDirection: 'column',
         justifyContent: 'space-between',
         background: '#ffffff',
-        borderRadius: 14,
+        borderRadius: 16,
         border: '1px solid #e2e8f0',
         boxShadow: '0 2px 8px -2px rgba(15, 23, 42, 0.06)',
         cursor: 'pointer',
@@ -106,6 +106,7 @@ function TicketCard({ route, onClick, lang }) {
         maxWidth: 340,
         flex: '0 0 auto',
         padding: '1.15rem 1.25rem 1.05rem',
+        overflow: 'visible',
       }}
     >
       {/* TOP ROW: Tag & Duration (Craft-floor & UI/UX Pro Max: No undersized text) */}
@@ -220,15 +221,16 @@ function TicketCard({ route, onClick, lang }) {
         </div>
       </div>
 
-      {/* BOTTOM ROW: Clean Divider, Price & Button */}
+      {/* TICKET PERFORATION LINE WITH SIDE NOTCHES */}
+      <div className="rh-ticket-perforation" aria-hidden="true" />
+
+      {/* BOTTOM ROW: Price & Button */}
       <div
         style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          borderTop: '1px solid #f1f5f9',
-          paddingTop: '0.85rem',
-          marginTop: '0.25rem',
+          paddingTop: '0.15rem',
         }}
       >
         <div>

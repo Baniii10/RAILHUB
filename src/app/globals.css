@@ -5551,8 +5551,48 @@ input[type="checkbox"] {
   border-color: #cbd5e1;
 }
 
+.rh-fun-ticket-card:hover .rh-ticket-perforation::before {
+  border-right-color: #cbd5e1;
+}
+
+.rh-fun-ticket-card:hover .rh-ticket-perforation::after {
+  border-left-color: #cbd5e1;
+}
+
 .rh-fun-ticket-card:active {
   transform: translateY(0);
+}
+
+.rh-ticket-perforation {
+  position: relative;
+  height: 1px;
+  margin: 0.2rem -1.25rem 0.9rem;
+  border-top: 1.5px dashed #cbd5e1;
+}
+
+.rh-ticket-perforation::before,
+.rh-ticket-perforation::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--rh-surface, #f8fafc);
+  transform: translateY(-50%);
+  pointer-events: none;
+  z-index: 2;
+  transition: border-color 0.2s ease;
+}
+
+.rh-ticket-perforation::before {
+  left: -10px;
+  border-right: 1px solid #e2e8f0;
+}
+
+.rh-ticket-perforation::after {
+  right: -10px;
+  border-left: 1px solid #e2e8f0;
 }
 
 @media (prefers-reduced-motion: reduce) {
