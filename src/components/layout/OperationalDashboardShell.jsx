@@ -24,6 +24,7 @@ import { DashboardShellSkeleton } from '@/components/ui/RailLoader'
 
 export default function OperationalDashboardShell({
   role = 'admin', // 'admin' | 'staff' | 'conductor' | 'gate'
+  layout = 'sidebar', // 'sidebar' | 'topbar'
   roleBadge = 'Administrator Sistem',
   subtitle = 'Pusat Kendali & Operasional Jaringan Kereta Api',
   menuGroups = [],
@@ -94,6 +95,261 @@ export default function OperationalDashboardShell({
     .slice(0, 2)
     .map((w) => w[0].toUpperCase())
     .join('') || 'RH'
+
+  const flatItems = menuGroups.flatMap((g) => g.items || [])
+
+  if (layout === 'topbar') {
+    return (
+      <div
+        style={{
+          minHeight: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+          background: '#f8fafc',
+          color: '#0f172a',
+          fontFamily: 'var(--font-montserrat), sans-serif',
+        }}
+      >
+        <header
+          style={{
+            position: 'sticky',
+            top: 0,
+            zIndex: 40,
+            background: '#ffffff',
+            borderBottom: '1px solid #e2e8f0',
+          }}
+        >
+          <div
+            style={{
+              maxWidth: 1280,
+              margin: '0 auto',
+              padding: '0 clamp(0.85rem, 2.5vw, 1.5rem)',
+              height: 60,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: '1rem',
+            }}
+          >
+            {/* Brand + Role */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flexShrink: 0 }}>
+              <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', textDecoration: 'none' }}>
+                <Image
+                  src="/images/Fix logo railhub.png"
+                  alt="RAILHUB"
+                  width={950}
+                  height={275}
+                  unoptimized
+                  priority
+                  style={{ height: 24, width: 'auto', objectFit: 'contain', display: 'block' }}
+                />
+              </Link>
+              <span
+                style={{
+                  padding: '0.2rem 0.55rem',
+                  borderRadius: 999,
+                  background: roleBg,
+                  color: roleColor,
+                  fontSize: '0.7rem',
+                  fontWeight: 700,
+                }}
+              >
+                {roleBadge}
+              </span>
+            </div>
+
+            {/* Clean Top Navigation Tabs (Desktop) */}
+            <nav
+              aria-label="Navigasi utama"
+              className="rh-hide-mobile"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.25rem',
+                overflowX: 'auto',
+                scrollbarWidth: 'none',
+              }}
+            >
+              {flatItems.map((item) => {
+                const Icon = item.icon
+                const isActive = activeTab === item.id
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => onSelectTab(item.id)}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.4rem',
+                      padding: '0.45rem 0.8rem',
+                      borderRadius: 8,
+                      border: 'none',
+                      background: isActive ? '#eff6ff' : 'transparent',
+                      color: isActive ? '#1a428a' : '#475569',
+                      fontSize: '0.82rem',
+                      fontWeight: isActive ? 700 : 500,
+                      cursor: 'pointer',
+                      whiteSpace: 'nowrap',
+                      transition: 'background 0.15s ease, color 0.15s ease',
+                    }}
+                  >
+                    <Icon size={15} style={{ color: isActive ? '#2563eb' : '#64748b' }} />
+                    <span>{item.label}</span>
+                    {item.badge != null && item.badge > 0 && (
+                      <span
+                        style={{
+                          padding: '0.1rem 0.4rem',
+                          borderRadius: 999,
+                          background: item.badgeColor || '#ea580c',
+                          color: '#ffffff',
+                          fontSize: '0.66rem',
+                          fontWeight: 700,
+                          lineHeight: 1.1,
+                        }}
+                      >
+                        {item.badge}
+                      </span>
+                    )}
+                  </button>
+                )
+              })}
+            </nav>
+
+            {/* Compact Right Actions */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', flexShrink: 0 }}>
+              <button
+                type="button"
+                onClick={onRefresh}
+                disabled={loading}
+                title={lang === 'en' ? 'Reload' : 'Muat Ulang'}
+                aria-label="Muat ulang data"
+                style={{
+                  border: '1px solid #e2e8f0',
+                  background: '#ffffff',
+                  color: '#334155',
+                  width: 34,
+                  height: 34,
+                  borderRadius: 8,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                }}
+              >
+                <RefreshCw size={15} className={loading ? 'rh-spin' : ''} />
+              </button>
+
+              <Link
+                href="/"
+                title="Portal Penumpang"
+                aria-label="Buka Portal Penumpang"
+                style={{
+                  border: '1px solid #e2e8f0',
+                  background: '#ffffff',
+                  color: '#334155',
+                  width: 34,
+                  height: 34,
+                  borderRadius: 8,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  textDecoration: 'none',
+                }}
+              >
+                <ExternalLink size={15} />
+              </Link>
+
+              <button
+                type="button"
+                onClick={handleSignOut}
+                title="Keluar"
+                aria-label="Keluar dari akun"
+                style={{
+                  border: '1px solid #fecaca',
+                  background: '#fef2f2',
+                  color: '#dc2626',
+                  width: 34,
+                  height: 34,
+                  borderRadius: 8,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                }}
+              >
+                <LogOut size={15} />
+              </button>
+            </div>
+          </div>
+
+          {/* Mobile Horizontal Tabs */}
+          <div className="rh-sidebar-mobile-tabs" aria-label="Menu Tab Navigasi">
+            {flatItems.map((item) => {
+              const Icon = item.icon
+              const isActive = activeTab === item.id
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => onSelectTab(item.id)}
+                  className={`rh-mobile-tab-pill ${isActive ? 'is-active' : ''}`}
+                >
+                  <Icon size={14} />
+                  <span>{item.label}</span>
+                  {item.badge != null && item.badge > 0 && (
+                    <span className="rh-pill-badge">{item.badge}</span>
+                  )}
+                </button>
+              )
+            })}
+          </div>
+        </header>
+
+        {error && (
+          <div
+            style={{
+              maxWidth: 1280,
+              width: '100%',
+              margin: '0.85rem auto 0',
+              padding: '0 clamp(0.85rem, 2.5vw, 1.5rem)',
+            }}
+          >
+            <div
+              style={{
+                padding: '0.7rem 0.95rem',
+                borderRadius: 10,
+                background: '#fef2f2',
+                border: '1px solid #fecaca',
+                color: '#dc2626',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.55rem',
+                fontSize: '0.84rem',
+              }}
+            >
+              <AlertCircle size={16} style={{ flexShrink: 0 }} />
+              <span>{error}</span>
+            </div>
+          </div>
+        )}
+
+        <main
+          style={{
+            flex: 1,
+            width: '100%',
+            maxWidth: 1280,
+            margin: '0 auto',
+            padding: 'clamp(1rem, 2vw, 1.5rem)',
+            minWidth: 0,
+            overflowX: 'hidden',
+          }}
+        >
+          {loading ? <DashboardShellSkeleton role={role} /> : children}
+        </main>
+      </div>
+    )
+  }
 
   return (
     <div

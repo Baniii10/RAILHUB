@@ -115,38 +115,15 @@ function getTripOperationalCategory(schedule, nowTime = new Date()) {
   return 'belum_jalan'
 }
 
-// Sidebar Navigation Groups
-const getAdminMenuGroups = ({ stats, unassignedCount }) => [
+// Minimal 5-Tab Top Navigation (No Sidebar Clutter)
+const getAdminMenuGroups = ({ unassignedCount }) => [
   {
-    groupLabel: 'Utama',
     items: [
-      { id: 'overview', label: 'Dashboard Utama', icon: LayoutDashboard },
-    ],
-  },
-  {
-    groupLabel: 'Operasional KA',
-    items: [
-      { id: 'journeys', label: 'Perjalanan & Jadwal KA', icon: CalendarDays },
-      { id: 'trains', label: 'Armada & Spesifikasi', icon: Train },
-      { id: 'routes', label: 'Jalur & Rute Koridor', icon: Navigation },
-      { id: 'stations', label: 'Stasiun & Wilayah', icon: MapPin },
-      { id: 'seats', label: 'Formasi Kursi Gerbong', icon: Grid },
-    ],
-  },
-  {
-    groupLabel: 'Staf & Petugas',
-    items: [
-      { id: 'staff', label: 'Petugas & Akun (jxx)', icon: ShieldCheck, badge: unassignedCount || 0, badgeColor: '#f59e0b' },
-      { id: 'users', label: 'Pengguna & Penumpang', icon: Users },
-    ],
-  },
-  {
-    groupLabel: 'Bisnis & Keuangan',
-    items: [
-      { id: 'finance', label: 'Laporan Keuangan', icon: CircleDollarSign },
-      { id: 'bookings', label: 'Semua Pemesanan', icon: TicketCheck, badge: stats?.bookings || 0 },
-      { id: 'reports', label: 'Layanan & Bantuan', icon: ClipboardList },
-      { id: 'content', label: 'Pengumuman Sistem', icon: Megaphone },
+      { id: 'overview', label: 'Ringkasan', icon: LayoutDashboard },
+      { id: 'journeys', label: 'Perjalanan', icon: CalendarDays },
+      { id: 'staff', label: 'Petugas', icon: ShieldCheck, badge: unassignedCount || 0, badgeColor: '#f59e0b' },
+      { id: 'trains', label: 'Master Data', icon: Train },
+      { id: 'finance', label: 'Transaksi', icon: CircleDollarSign },
     ],
   },
 ]
@@ -157,7 +134,7 @@ function AdminDashboardContent() {
   const { user, profile, loading: authLoading } = useAuth()
   const { confirm } = useConfirm()
 
-  const validTabs = useMemo(() => ['overview', 'journeys', 'staff', 'trains', 'routes', 'stations', 'passengers', 'finance'], [])
+  const validTabs = useMemo(() => ['overview', 'journeys', 'staff', 'trains', 'routes', 'stations', 'finance', 'bookings', 'users'], [])
   const tabQuery = searchParams.get('tab')
   const initialTab = (tabQuery && validTabs.includes(tabQuery)) ? tabQuery : 'overview'
 
@@ -1086,225 +1063,223 @@ function AdminDashboardContent() {
   }, [stations, stationSearch, stationProvinceFilter])
 
   const unassignedCount = schedules.filter(s => s.status !== 'cancelled' && !s.assignedStaff?.length).length
-  const menuGroups = getAdminMenuGroups({ stats, unassignedCount })
+  const menuGroups = getAdminMenuGroups({ unassignedCount })
+  const isMasterTab = ['trains', 'routes', 'stations'].includes(activeTab)
+  const isTransactionTab = ['finance', 'bookings', 'users'].includes(activeTab)
+  const shellActiveTab = isMasterTab ? 'trains' : isTransactionTab ? 'finance' : activeTab
+  const highlightedSchedules = schedules.filter(s => s.tripCategory === 'sedang_jalan' || s.hasRealAccount).slice(0, 6)
+  const previewSchedules = highlightedSchedules.length > 0 ? highlightedSchedules : schedules.slice(0, 5)
 
   return (
     <OperationalDashboardShell
       role="admin"
-      roleBadge="Administrator Sistem"
-      subtitle="Pusat Kendali Seluruh Jaringan Kereta Api Pulau Jawa"
+      layout="topbar"
+      roleBadge="Admin"
       menuGroups={menuGroups}
-      activeTab={activeTab}
+      activeTab={shellActiveTab}
       onSelectTab={setActiveTab}
       loading={loading}
       error={error}
       onRefresh={loadAdminData}
     >
-      <div style={{ maxWidth: 1400, margin: '0 auto', paddingBottom: '3rem' }}>
+      <div style={{ paddingBottom: '2.5rem' }}>
+        {/* Segmented Sub-Tabs for Master Data */}
+        {isMasterTab && (
+          <div style={{ display: 'inline-flex', gap: '0.25rem', padding: 4, background: '#e2e8f0', borderRadius: 10, marginBottom: '1rem' }} role="tablist" aria-label="Master Data">
+            {[
+              { id: 'trains', label: `Armada (${trains.length})` },
+              { id: 'routes', label: `Rute (${routes.length})` },
+              { id: 'stations', label: `Stasiun (${stations.length})` },
+            ].map((sub) => (
+              <button
+                key={sub.id}
+                type="button"
+                role="tab"
+                aria-selected={activeTab === sub.id}
+                onClick={() => setActiveTab(sub.id)}
+                style={{
+                  padding: '0.4rem 0.9rem',
+                  borderRadius: 8,
+                  border: 'none',
+                  background: activeTab === sub.id ? '#ffffff' : 'transparent',
+                  color: activeTab === sub.id ? '#0f172a' : '#475569',
+                  fontSize: '0.8rem',
+                  fontWeight: activeTab === sub.id ? 700 : 500,
+                  boxShadow: activeTab === sub.id ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
+                  cursor: 'pointer',
+                }}
+              >
+                {sub.label}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Segmented Sub-Tabs for Transaksi */}
+        {isTransactionTab && (
+          <div style={{ display: 'inline-flex', gap: '0.25rem', padding: 4, background: '#e2e8f0', borderRadius: 10, marginBottom: '1rem' }} role="tablist" aria-label="Transaksi">
+            {[
+              { id: 'finance', label: 'Keuangan' },
+              { id: 'bookings', label: `Pemesanan (${bookings.length})` },
+              { id: 'users', label: `Pengguna (${usersList.length})` },
+            ].map((sub) => (
+              <button
+                key={sub.id}
+                type="button"
+                role="tab"
+                aria-selected={activeTab === sub.id}
+                onClick={() => setActiveTab(sub.id)}
+                style={{
+                  padding: '0.4rem 0.9rem',
+                  borderRadius: 8,
+                  border: 'none',
+                  background: activeTab === sub.id ? '#ffffff' : 'transparent',
+                  color: activeTab === sub.id ? '#0f172a' : '#475569',
+                  fontSize: '0.8rem',
+                  fontWeight: activeTab === sub.id ? 700 : 500,
+                  boxShadow: activeTab === sub.id ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
+                  cursor: 'pointer',
+                }}
+              >
+                {sub.label}
+              </button>
+            ))}
+          </div>
+        )}
 
         {/* ══════════════════════════════════════════════════════════════════════════
-            TAB 1: DASHBOARD UTAMA (OVERVIEW)
+            TAB 1: RINGKASAN (MINIMAL EXECUTIVE OVERVIEW)
         ══════════════════════════════════════════════════════════════════════════ */}
         {activeTab === 'overview' && (
-          <div>
-            {/* Top KPI Grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.85rem', marginBottom: '1.25rem' }}>
-              <div style={{ background: '#fff', border: '1px solid var(--rh-border)', borderRadius: 12, padding: '1.15rem' }}>
-                <span style={{ fontSize: '0.8rem', color: 'var(--rh-text-2)', display: 'flex', alignItems: 'center', gap: 6 }}>
-                  <Activity size={15} color="#10b981" /> KA Sedang Jalan
-                </span>
-                <strong style={{ display: 'block', fontSize: '1.75rem', color: '#10b981', margin: '0.35rem 0' }}>
-                  {stats.sedangJalan}
-                </strong>
-                <small style={{ color: 'var(--rh-text-3)', fontSize: '0.74rem' }}>Aktif di jalur / boarding</small>
-              </div>
-
-              <div style={{ background: '#fff', border: '1px solid var(--rh-border)', borderRadius: 12, padding: '1.15rem' }}>
-                <span style={{ fontSize: '0.8rem', color: 'var(--rh-text-2)', display: 'flex', alignItems: 'center', gap: 6 }}>
-                  <Clock3 size={15} color="var(--rh-primary)" /> KA Belum Jalan
-                </span>
-                <strong style={{ display: 'block', fontSize: '1.75rem', color: 'var(--rh-primary)', margin: '0.35rem 0' }}>
-                  {stats.belumJalan}
-                </strong>
-                <small style={{ color: 'var(--rh-text-3)', fontSize: '0.74rem' }}>Terjadwal s/d 25 Des 2026</small>
-              </div>
-
-              <div style={{ background: '#fff', border: '1px solid var(--rh-border)', borderRadius: 12, padding: '1.15rem' }}>
-                <span style={{ fontSize: '0.8rem', color: 'var(--rh-text-2)', display: 'flex', alignItems: 'center', gap: 6 }}>
-                  <CheckCircle2 size={15} color="#64748b" /> KA Sudah Jalan
-                </span>
-                <strong style={{ display: 'block', fontSize: '1.75rem', color: '#64748b', margin: '0.35rem 0' }}>
-                  {stats.sudahJalan}
-                </strong>
-                <small style={{ color: 'var(--rh-text-3)', fontSize: '0.74rem' }}>Tiba di tujuan</small>
-              </div>
-
-              <div style={{ background: '#fff', border: '1px solid var(--rh-border)', borderRadius: 12, padding: '1.15rem' }}>
-                <span style={{ fontSize: '0.8rem', color: 'var(--rh-text-2)', display: 'flex', alignItems: 'center', gap: 6 }}>
-                  <CircleDollarSign size={15} color="#059669" /> Pendapatan Bersih
-                </span>
-                <strong style={{ display: 'block', fontSize: '1.5rem', color: '#059669', margin: '0.35rem 0', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                  {formatIDR(financialData.netRevenue || stats.revenue || 0)}
-                </strong>
-                <small style={{ color: 'var(--rh-text-3)', fontSize: '0.74rem' }}>Tiket + kuliner - refund</small>
-              </div>
-
-              <div style={{ background: '#fff', border: '1px solid var(--rh-border)', borderRadius: 12, padding: '1.15rem' }}>
-                <span style={{ fontSize: '0.8rem', color: 'var(--rh-text-2)', display: 'flex', alignItems: 'center', gap: 6 }}>
-                  <Train size={15} color="var(--rh-primary)" /> Total Armada KA
-                </span>
-                <strong style={{ display: 'block', fontSize: '1.75rem', color: 'var(--rh-text)', margin: '0.35rem 0' }}>
-                  {stats.trains}
-                </strong>
-                <small style={{ color: 'var(--rh-text-3)', fontSize: '0.74rem' }}>Lokomotif &amp; rangkaian aktif</small>
-              </div>
-
-              <div style={{ background: '#fff', border: '1px solid var(--rh-border)', borderRadius: 12, padding: '1.15rem' }}>
-                <span style={{ fontSize: '0.8rem', color: 'var(--rh-text-2)', display: 'flex', alignItems: 'center', gap: 6 }}>
-                  <MapPin size={15} color="var(--rh-primary)" /> Stasiun Jaringan
-                </span>
-                <strong style={{ display: 'block', fontSize: '1.75rem', color: 'var(--rh-text)', margin: '0.35rem 0' }}>
-                  {stats.stations}
-                </strong>
-                <small style={{ color: 'var(--rh-text-3)', fontSize: '0.74rem' }}>Lintas Utara, Selatan, &amp; Timur</small>
-              </div>
+          <div style={{ display: 'grid', gap: '1rem' }}>
+            {/* Single Clean KPI Strip (No 6 Chunky Boxes) */}
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+                background: '#ffffff',
+                border: '1px solid #e2e8f0',
+                borderRadius: 12,
+                overflow: 'hidden',
+              }}
+            >
+              {[
+                { label: 'Sedang Jalan', value: stats.sedangJalan, color: '#059669' },
+                { label: 'Belum Jalan', value: stats.belumJalan, color: '#1a428a' },
+                { label: 'Pendapatan Bersih', value: formatIDR(financialData.netRevenue || stats.revenue || 0), color: '#0f172a' },
+                { label: 'Armada · Stasiun', value: `${stats.trains} · ${stats.stations}`, color: '#334155' },
+              ].map((kpi, idx) => (
+                <div
+                  key={kpi.label}
+                  style={{
+                    padding: '1rem 1.2rem',
+                    borderTop: idx > 0 ? '1px solid #f1f5f9' : 'none',
+                    borderLeft: idx > 0 ? '1px solid #f1f5f9' : 'none',
+                  }}
+                >
+                  <span style={{ display: 'block', fontSize: '0.75rem', fontWeight: 600, color: '#64748b' }}>
+                    {kpi.label}
+                  </span>
+                  <strong style={{ display: 'block', fontSize: '1.35rem', fontWeight: 800, color: kpi.color, marginTop: '0.25rem', fontVariantNumeric: 'tabular-nums' }}>
+                    {kpi.value}
+                  </strong>
+                </div>
+              ))}
             </div>
 
-            {/* Quick Actions Bar */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '0.75rem', marginBottom: '1.5rem' }}>
+            {/* Compact Single-Row Quick Actions (No Rainbow Cards) */}
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', alignItems: 'center' }}>
               <button
                 type="button"
-                onClick={() => setActiveTab('journeys')}
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.9rem 1.15rem', background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 10, cursor: 'pointer', textAlign: 'left' }}
-              >
-                <div>
-                  <strong style={{ display: 'block', color: 'var(--rh-primary)', fontSize: '0.9rem' }}>Monitoring Perjalanan</strong>
-                  <small style={{ color: 'var(--rh-text-2)', fontSize: '0.75rem' }}>Lihat status sedang/belum/sudah jalan</small>
-                </div>
-                <ChevronRight size={18} color="var(--rh-primary)" />
-              </button>
-
-              <button
-                type="button"
+                className="rh-btn rh-btn-sm rh-btn-primary"
                 onClick={() => {
                   suggestNextStaffEmail()
                   setStaffModalOpen(true)
                 }}
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.9rem 1.15rem', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 10, cursor: 'pointer', textAlign: 'left' }}
               >
-                <div>
-                  <strong style={{ display: 'block', color: '#166534', fontSize: '0.9rem' }}>⚡ Buat Akun Petugas Cepat</strong>
-                  <small style={{ color: 'var(--rh-text-2)', fontSize: '0.75rem' }}>Generate instan jxx@gmail.com</small>
-                </div>
-                <Sparkles size={18} color="#166534" />
+                <Plus size={14} /> Akun Petugas
               </button>
-
               <button
                 type="button"
+                className="rh-btn rh-btn-sm rh-btn-secondary"
                 onClick={() => setTrainModalOpen(true)}
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.9rem 1.15rem', background: '#faf5ff', border: '1px solid #e9d5ff', borderRadius: 10, cursor: 'pointer', textAlign: 'left' }}
               >
-                <div>
-                  <strong style={{ display: 'block', color: '#6b21a8', fontSize: '0.9rem' }}>+ Tambah Armada KA</strong>
-                  <small style={{ color: 'var(--rh-text-2)', fontSize: '0.75rem' }}>Spesifikasi lokomotif &amp; aturan</small>
-                </div>
-                <Plus size={18} color="#6b21a8" />
+                <Plus size={14} /> Armada
               </button>
-
               <button
                 type="button"
+                className="rh-btn rh-btn-sm rh-btn-secondary"
                 onClick={() => setRouteModalOpen(true)}
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.9rem 1.15rem', background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 10, cursor: 'pointer', textAlign: 'left' }}
               >
-                <div>
-                  <strong style={{ display: 'block', color: '#92400e', fontSize: '0.9rem' }}>+ Tambah Rute / Jalur</strong>
-                  <small style={{ color: 'var(--rh-text-2)', fontSize: '0.75rem' }}>Daftarkan koridor baru</small>
-                </div>
-                <Navigation size={18} color="#92400e" />
+                <Plus size={14} /> Rute
               </button>
-
               <button
                 type="button"
-                onClick={() => setActiveTab('finance')}
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.9rem 1.15rem', background: '#ecfdf5', border: '1px solid #a7f3d0', borderRadius: 10, cursor: 'pointer', textAlign: 'left' }}
+                className="rh-btn rh-btn-sm rh-btn-ghost"
+                onClick={() => setActiveTab('journeys')}
+                style={{ marginLeft: 'auto' }}
               >
-                <div>
-                  <strong style={{ display: 'block', color: '#065f46', fontSize: '0.9rem' }}>Laporan Keuangan</strong>
-                  <small style={{ color: 'var(--rh-text-2)', fontSize: '0.75rem' }}>Tiket, restoran onboard, &amp; refund</small>
-                </div>
-                <CircleDollarSign size={18} color="#065f46" />
+                Semua Jadwal ({schedules.length}) <ChevronRight size={14} />
               </button>
             </div>
 
-            {/* Quick Live Preview: Kereta yang Sedang Berjalan & Berisi Akun Asli */}
-            <div className="rh-card" style={{ padding: '1.25rem', marginBottom: '1.5rem' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                <div>
-                  <h3 className="rh-h4" style={{ margin: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <Activity size={18} color="#10b981" /> Perjalanan Kereta Api Prioritas &amp; Aktif
-                  </h3>
-                  <small style={{ color: 'var(--rh-text-2)' }}>Sorotan jadwal perjalanan yang sedang berjalan atau memiliki penumpang akun asli</small>
-                </div>
-                <button type="button" className="rh-btn rh-btn-sm rh-btn-ghost" onClick={() => setActiveTab('journeys')}>
-                  Buka Semua ({schedules.length}) <ChevronRight size={14} />
-                </button>
+            {/* Clean Active Journeys List */}
+            <section style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 12, overflow: 'hidden' }}>
+              <div style={{ padding: '0.85rem 1.15rem', borderBottom: '1px solid #f1f5f9', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <strong style={{ fontSize: '0.9rem', color: '#0f172a' }}>Perjalanan Hari Ini</strong>
+                <span style={{ fontSize: '0.76rem', color: '#64748b' }}>{previewSchedules.length} dari {schedules.length}</span>
               </div>
 
-              <div style={{ display: 'grid', gap: '0.65rem' }}>
-                {schedules
-                  .filter(s => s.tripCategory === 'sedang_jalan' || s.hasRealAccount)
-                  .slice(0, 5)
-                  .map(sch => (
+              {previewSchedules.length === 0 ? (
+                <div style={{ padding: '2rem', textAlign: 'center', color: '#64748b', fontSize: '0.86rem' }}>
+                  Belum ada jadwal aktif hari ini.
+                </div>
+              ) : (
+                <div>
+                  {previewSchedules.map((sch, idx) => (
                     <div
                       key={sch.id}
-                      className={sch.hasRealAccount ? 'rh-journey-real-highlight' : ''}
                       style={{
                         display: 'flex',
                         flexWrap: 'wrap',
                         justifyContent: 'space-between',
                         alignItems: 'center',
                         gap: '0.75rem',
-                        padding: '0.85rem 1rem',
-                        borderRadius: 10,
-                        border: '1px solid var(--rh-border)',
-                        background: '#fff',
+                        padding: '0.8rem 1.15rem',
+                        borderTop: idx > 0 ? '1px solid #f1f5f9' : 'none',
                       }}
                     >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
-                        <div style={{ width: 40, height: 40, borderRadius: 8, background: sch.tripCategory === 'sedang_jalan' ? '#ecfdf5' : '#eff6ff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                          <Train size={20} color={sch.tripCategory === 'sedang_jalan' ? '#10b981' : 'var(--rh-primary)'} />
+                      <div style={{ minWidth: 0 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+                          <strong style={{ fontSize: '0.88rem', color: '#0f172a' }}>{sch.trains?.name}</strong>
+                          <span style={{ fontSize: '0.74rem', color: '#64748b' }}>{sch.trains?.train_number}</span>
+                          {sch.hasRealAccount && (
+                            <span className="rh-badge-real-account">Akun Asli</span>
+                          )}
                         </div>
-                        <div>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                            <strong style={{ fontSize: '0.95rem' }}>{sch.trains?.name}</strong>
-                            <span className="rh-badge rh-badge-secondary" style={{ fontSize: '0.72rem' }}>{sch.trains?.train_number}</span>
-                            {sch.hasRealAccount && (
-                              <span className="rh-badge-real-account">★ Ada Akun Asli</span>
-                            )}
-                          </div>
-                          <div style={{ fontSize: '0.8rem', color: 'var(--rh-text-2)' }}>
-                            {sch.routes?.name} · {formatDate(sch.departure_time)} ({formatTime(sch.departure_time)} WIB)
-                          </div>
+                        <div style={{ fontSize: '0.78rem', color: '#64748b', marginTop: 2 }}>
+                          {sch.routes?.name} · {formatTime(sch.departure_time)} WIB
                         </div>
                       </div>
 
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
-                        <span style={{ fontSize: '0.78rem', color: 'var(--rh-text-2)' }}>
-                          <strong>{sch.paxCount}</strong> Kursi Terisi
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                        <span style={{ fontSize: '0.76rem', color: '#64748b' }}>
+                          {sch.paxCount} pnp
                         </span>
                         <StatusBadge status={sch.status} />
                         <button
                           type="button"
-                          className="rh-btn rh-btn-sm rh-btn-primary"
+                          className="rh-btn rh-btn-sm rh-btn-ghost"
                           onClick={() => openManifestModal(sch)}
                         >
-                          <Eye size={13} style={{ marginRight: 4 }} /> Manifest
+                          Manifest
                         </button>
                       </div>
                     </div>
                   ))}
-              </div>
-            </div>
+                </div>
+              )}
+            </section>
           </div>
         )}
 
@@ -1314,29 +1289,19 @@ function AdminDashboardContent() {
         {activeTab === 'journeys' && (
           <section className="rh-card" style={{ padding: '1.5rem' }}>
             {/* Header */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', marginBottom: '1.25rem' }}>
-              <div>
-                <h2 className="rh-h3" style={{ margin: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <CalendarDays size={22} color="var(--rh-primary)" /> Pusat Jadwal &amp; Manifest Perjalanan Kereta
-                </h2>
-                <p style={{ margin: '0.2rem 0 0', color: 'var(--rh-text-2)', fontSize: '0.88rem' }}>
-                  Pantau seluruh kereta api yang sudah jalan, sedang jalan, dan belum jalan sampai 25 Desember 2026.
-                </p>
-              </div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
+              <h2 className="rh-h4" style={{ margin: 0 }}>
+                Jadwal &amp; Manifest ({filteredJourneys.length})
+              </h2>
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
-                <span className="rh-badge rh-badge-primary">
-                  {filteredJourneys.length} Perjalanan Ditampilkan
-                </span>
-                <button
-                  type="button"
-                  className="rh-btn rh-btn-sm rh-btn-ghost"
-                  onClick={() => loadJourneysInternal(journeyDateFrom, journeyDateTo)}
-                  title="Segarkan data jadwal"
-                >
-                  <RefreshCw size={14} /> Refresh
-                </button>
-              </div>
+              <button
+                type="button"
+                className="rh-btn rh-btn-sm rh-btn-ghost"
+                onClick={() => loadJourneysInternal(journeyDateFrom, journeyDateTo)}
+                title="Segarkan data jadwal"
+              >
+                <RefreshCw size={14} /> Muat Ulang
+              </button>
             </div>
 
             {/* Filter Operational Status Tabs */}
@@ -1841,15 +1806,10 @@ function AdminDashboardContent() {
         {activeTab === 'staff' && (
           <section className="rh-card" style={{ padding: '1.5rem' }}>
             {/* Header Title & Actions */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.25rem' }}>
-              <div>
-                <h2 className="rh-h3" style={{ margin: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <ShieldCheck size={22} color="var(--rh-primary)" /> Buku Kredensial &amp; Akun Petugas KA (`jxx@gmail.com`)
-                </h2>
-                <p style={{ margin: '0.2rem 0 0', color: 'var(--rh-text-2)', fontSize: '0.88rem' }}>
-                  Seluruh perjalanan KA telah otomatis dipaketkan dengan petugas resmi. Akun siap pakai untuk testing dengan kata sandi seragam.
-                </p>
-              </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '1rem' }}>
+              <h2 className="rh-h4" style={{ margin: 0 }}>
+                Petugas Operasional
+              </h2>
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
                 <button
@@ -1857,10 +1817,9 @@ function AdminDashboardContent() {
                   className="rh-btn rh-btn-secondary rh-btn-sm"
                   onClick={handleAutoBundleAllStaff}
                   disabled={autoBundling}
-                  title="Simpan penugasan otomatis ke database untuk seluruh jadwal keberangkatan"
                 >
-                  <RefreshCw size={14} className={autoBundling ? 'rh-spin' : ''} style={{ marginRight: 4 }} />
-                  {autoBundling ? 'Memproses Database...' : 'Auto-Paketkan Seluruh Jadwal'}
+                  <RefreshCw size={14} className={autoBundling ? 'rh-spin' : ''} />
+                  {autoBundling ? 'Memproses...' : 'Auto-Tugaskan'}
                 </button>
 
                 <button
@@ -1871,43 +1830,30 @@ function AdminDashboardContent() {
                     setStaffModalOpen(true)
                   }}
                 >
-                  <Sparkles size={15} style={{ marginRight: 4 }} /> Buat Akun Baru (`jxx`)
+                  <Plus size={14} /> Buat Akun
                 </button>
               </div>
             </div>
 
-            {/* Master Credential Banner */}
+            {/* Compact Default Credential Strip */}
             <div style={{
-              background: 'linear-gradient(135deg, rgba(26, 66, 138, 0.08) 0%, rgba(16, 185, 129, 0.1) 100%)',
-              border: '1.5px solid rgba(26, 66, 138, 0.25)',
-              borderRadius: 14,
-              padding: '1.15rem 1.35rem',
-              marginBottom: '1.5rem',
+              background: '#f8fafc',
+              border: '1px solid #e2e8f0',
+              borderRadius: 10,
+              padding: '0.65rem 0.9rem',
+              marginBottom: '1.15rem',
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
               flexWrap: 'wrap',
-              gap: '1rem',
+              gap: '0.75rem',
+              fontSize: '0.82rem',
             }}>
-              <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: 4 }}>
-                  <span style={{ fontSize: '1.15rem' }}>🔑</span>
-                  <strong style={{ fontSize: '0.98rem', color: 'var(--rh-navy)' }}>
-                    Kredensial Pengujian Akun Petugas Operasional
-                  </strong>
-                  <span className="rh-badge rh-badge-success" style={{ fontWeight: 800, fontSize: '0.72rem' }}>
-                    Siap Pakai
-                  </span>
-                </div>
-                <div style={{ fontSize: '0.86rem', color: 'var(--rh-text)', lineHeight: 1.5 }}>
-                  Kata sandi seragam untuk seluruh akun (<code>j01@gmail.com</code> s/d <code>j25@gmail.com</code>):
-                  <strong style={{ marginLeft: 6, padding: '2px 8px', borderRadius: 6, background: '#ffffff', border: '1px solid #cbd5e1', fontFamily: 'var(--font-mono, monospace)', color: '#0f172a' }}>
-                    {DEFAULT_STAFF_PASSWORD}
-                  </strong>
-                </div>
-                <small style={{ color: 'var(--rh-text-2)', display: 'block', marginTop: 4 }}>
-                  Tip: Klik tombol <strong>&quot;Masuk Cepat&quot;</strong> pada kartu di bawah untuk langsung beralih login sebagai petugas tersebut tanpa mengetik kata sandi.
-                </small>
+              <div style={{ color: '#334155' }}>
+                Password default <code>j01–j25@gmail.com</code>:
+                <strong style={{ marginLeft: 6, fontFamily: 'var(--font-mono, monospace)', color: '#0f172a' }}>
+                  {DEFAULT_STAFF_PASSWORD}
+                </strong>
               </div>
 
               <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
@@ -2244,30 +2190,25 @@ function AdminDashboardContent() {
         ══════════════════════════════════════════════════════════════════════════ */}
         {activeTab === 'finance' && (
           <section className="rh-card" style={{ padding: '1.5rem' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.25rem' }}>
-              <div>
-                <h2 className="rh-h3" style={{ margin: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <CircleDollarSign size={22} color="#059669" /> Laporan Keuangan &amp; Arus Kas Operasional
-                </h2>
-                <p style={{ margin: '0.2rem 0 0', color: 'var(--rh-text-2)', fontSize: '0.88rem' }}>
-                  Rekapitulasi pendapatan tiket perjalanan, penjualan restorasi kuliner di atas KA, pengembalian dana pembatalan (refund), dan ekspor CSV.
-                </p>
-              </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '1rem' }}>
+              <h2 className="rh-h4" style={{ margin: 0 }}>
+                Laporan Keuangan
+              </h2>
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', flexWrap: 'wrap' }}>
                 <button
                   type="button"
                   className="rh-btn rh-btn-sm rh-btn-secondary"
                   onClick={handleExportFinancialCSV}
                 >
-                  <Download size={14} style={{ marginRight: 4 }} /> Unduh CSV
+                  <Download size={14} /> CSV
                 </button>
                 <button
                   type="button"
                   className="rh-btn rh-btn-sm rh-btn-ghost"
                   onClick={() => window.print()}
                 >
-                  <Printer size={14} style={{ marginRight: 4 }} /> Cetak Laporan
+                  <Printer size={14} /> Cetak
                 </button>
                 <button
                   type="button"
@@ -2275,7 +2216,7 @@ function AdminDashboardContent() {
                   onClick={loadFinancialData}
                   disabled={financialLoading}
                 >
-                  <RefreshCw size={14} className={financialLoading ? 'rh-spin' : ''} style={{ marginRight: 4 }} /> Segarkan
+                  <RefreshCw size={14} className={financialLoading ? 'rh-spin' : ''} /> Muat Ulang
                 </button>
               </div>
             </div>
