@@ -6,6 +6,7 @@ import { NightTrainBumper } from './NightTrainBumper'
 import { DiscordChatBumper } from './DiscordChatBumper'
 import { AboutNetworkBumper } from './AboutNetworkBumper'
 import { LiveTrainScene } from './LiveTrainScene'
+import { PwaPromoBumper } from './PwaPromoBumper'
 
 export function RemotionRoot() {
   return (
@@ -45,6 +46,15 @@ export function RemotionRoot() {
         width={800}
         height={310}
         defaultProps={{ isDay: true, isRunning: false, stationName: 'Gambir', stationCode: 'GMR' }}
+      />
+      <Composition
+        id="PwaPromoBumper"
+        component={PwaPromoBumper}
+        durationInFrames={300}
+        fps={30}
+        width={760}
+        height={460}
+        defaultProps={{}}
       />
     </>
   )

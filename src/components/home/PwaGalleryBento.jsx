@@ -17,6 +17,7 @@ import {
   Zap
 } from 'lucide-react'
 import { useLang } from '@/contexts/LangContext'
+import PwaPromoBumperPlayer from '@/components/home/PwaPromoBumperPlayer'
 
 export default function PwaGalleryBento() {
   const { lang } = useLang()
@@ -82,148 +83,35 @@ export default function PwaGalleryBento() {
         {/* BENTO GRID (Visual-first, minimal text) */}
         <div className="rh-bento-grid">
           
-          {/* CARD 1: PWA / Mobile App Showcase with iPhone 16 Frame (Left) */}
-          <div className="rh-bento-card rh-bento-card-app">
-            <div className="rh-bento-app-content">
-              <h3 className="rh-bento-title-dark" style={{ marginBottom: '0.5rem' }}>
-                {lang === 'en' ? 'RailHub App' : 'Aplikasi RailHub'}
-              </h3>
-              
-              <p className="rh-bento-desc-dark rh-hide-mobile" style={{ marginBottom: '1rem' }}>
-                {lang === 'en'
-                  ? 'Instant tickets & offline QR boarding.'
-                  : 'Tiket cepat & e-boarding QR offline.'}
-              </p>
+          {/* CARD 1: Light-Themed Remotion PWA Marketing Bumper (Responsive Desktop & Mobile) */}
+          <div className="rh-bento-card rh-bento-card-app rh-bento-card-app-bumper">
+            <div className="rh-pwa-bumper-viewport">
+              <PwaPromoBumperPlayer />
+            </div>
 
-              {/* Install PWA Interactive CTA Button */}
+            <div className="rh-pwa-bumper-cta-bar">
               <button
                 type="button"
                 onClick={handleInstallClick}
-                className="rh-bento-install-btn"
-                title="Pasang Aplikasi RailHub ke HP / PC"
+                className="rh-pwa-bumper-install-btn"
+                title="Pasang Aplikasi RailHub ke HP / Desktop"
               >
-                <Download size={18} />
-                <span>{installed ? (lang === 'en' ? 'Installed ✓' : 'Terpasang ✓') : (lang === 'en' ? 'Install App (PWA)' : 'Pasang Aplikasi (PWA)')}</span>
+                <Download size={17} />
+                <span>
+                  {installed
+                    ? (lang === 'en' ? 'Installed ✓' : 'Sudah Terpasang ✓')
+                    : (lang === 'en' ? 'Install RailHub (PWA)' : 'Pasang Aplikasi (PWA)')}
+                </span>
               </button>
 
-              {/* QR Code (Clean & Minimalist, No Label Below) */}
-              <div className="rh-bento-qr-store-wrap">
-                <div className="rh-bento-qr-box" onClick={() => setShowModal(true)} title="Pindai atau klik untuk panduan pasang PWA">
-                  {/* High Quality Crisp SVG QR Code */}
-                  <svg viewBox="0 0 100 100" width="88" height="88" style={{ display: 'block', borderRadius: 6 }}>
-                    <rect width="100" height="100" fill="#ffffff" />
-                    {/* Corner Squares */}
-                    <rect x="6" y="6" width="28" height="28" fill="#0f172a" rx="4" />
-                    <rect x="10" y="10" width="20" height="20" fill="#ffffff" rx="2" />
-                    <rect x="14" y="14" width="12" height="12" fill="#1a428a" rx="2" />
-
-                    <rect x="66" y="6" width="28" height="28" fill="#0f172a" rx="4" />
-                    <rect x="70" y="10" width="20" height="20" fill="#ffffff" rx="2" />
-                    <rect x="74" y="14" width="12" height="12" fill="#1a428a" rx="2" />
-
-                    <rect x="6" y="66" width="28" height="28" fill="#0f172a" rx="4" />
-                    <rect x="10" y="70" width="20" height="20" fill="#ffffff" rx="2" />
-                    <rect x="14" y="74" width="12" height="12" fill="#1a428a" rx="2" />
-
-                    {/* Data Pattern Modules */}
-                    <rect x="38" y="10" width="6" height="6" fill="#0f172a" />
-                    <rect x="48" y="14" width="6" height="12" fill="#0f172a" />
-                    <rect x="14" y="40" width="6" height="6" fill="#0f172a" />
-                    <rect x="24" y="46" width="10" height="6" fill="#0f172a" />
-                    <rect x="40" y="38" width="20" height="20" fill="#ea580c" rx="3" />
-                    <circle cx="50" cy="48" r="4" fill="#ffffff" />
-                    <rect x="68" y="42" width="6" height="10" fill="#0f172a" />
-                    <rect x="78" y="38" width="12" height="6" fill="#0f172a" />
-                    <rect x="38" y="68" width="8" height="8" fill="#0f172a" />
-                    <rect x="52" y="74" width="10" height="6" fill="#0f172a" />
-                    <rect x="68" y="68" width="6" height="18" fill="#0f172a" />
-                    <rect x="78" y="78" width="14" height="10" fill="#0f172a" />
-                  </svg>
-                </div>
-
-              </div>
-            </div>
-
-            {/* iPhone 16 Frame Mockup (Screen image to be filled via /images/pwa-mobile-preview.webp) */}
-            <div className="rh-bento-phone-col">
-              <div className="rh-iphone16-frame">
-                {/* Physical Titanium Hardware Buttons */}
-                <span className="rh-iphone16-btn rh-iphone16-btn-action" title="Action Button" />
-                <span className="rh-iphone16-btn rh-iphone16-btn-vol-up" />
-                <span className="rh-iphone16-btn rh-iphone16-btn-vol-down" />
-                <span className="rh-iphone16-btn rh-iphone16-btn-power" />
-                <span className="rh-iphone16-btn rh-iphone16-btn-camera" title="Camera Control" />
-
-                {/* iPhone 16 Display Screen */}
-                <div className="rh-iphone16-screen">
-                  {/* Dynamic Island pill notch with camera lens */}
-                  <div className="rh-iphone16-island">
-                    <span className="rh-iphone16-sensor" />
-                    <span className="rh-iphone16-lens" />
-                  </div>
-
-                  {/* Top Status Bar (09:41, Cellular, Wi-Fi, Battery) */}
-                  <div className="rh-iphone16-statusbar">
-                    <span className="rh-iphone16-time">09:41</span>
-                    <div className="rh-iphone16-status-icons">
-                      <svg width="13" height="9" viewBox="0 0 17 11" fill="currentColor"><path d="M1 9h2V2H1v7zm4 0h2V0H5v9zm4 0h2V4H9v5zm4 0h2V6h-2v3z"/></svg>
-                      <svg width="12" height="9" viewBox="0 0 16 12" fill="currentColor"><path d="M8 2.5a10.9 10.9 0 0 1 7.2 2.7l-1.3 1.5A9 9 0 0 0 8 4.5a9 9 0 0 0-5.9 2.2L.8 5.2A10.9 10.9 0 0 1 8 2.5zm0 4a6.9 6.9 0 0 1 4.5 1.7l-1.3 1.5A5 5 0 0 0 8 8.5a5 5 0 0 0-3.2 1.2L3.5 8.2A6.9 6.9 0 0 1 8 6.5zm0 4a2.9 2.9 0 0 1 1.8.7L8 13l-1.8-1.8A2.9 2.9 0 0 1 8 10.5z"/></svg>
-                      <div className="rh-iphone16-battery"><div className="rh-iphone16-battery-fill" /></div>
-                    </div>
-                  </div>
-
-                  {/* Screen Content: User can put screenshot image in /images/pwa-mobile-preview.webp */}
-                  {!imgErrors.mobilePreview ? (
-                    <img
-                      src="/images/pwa-mobile-preview.webp"
-                      alt="Preview Aplikasi RailHub di iPhone 16"
-                      className="rh-iphone16-img"
-                      onError={() => handleImgError('mobilePreview')}
-                    />
-                  ) : (
-                    /* Fallback UI when user image is not yet placed in public/images/ */
-                    <div className="rh-iphone16-fallback-content">
-                      <div className="rh-mock-logo-row">
-                        <Train size={13} style={{ color: '#ea580c' }} />
-                        <span style={{ fontSize: '0.68rem', fontWeight: 900, color: '#ffffff', letterSpacing: '0.04em' }}>RAILHUB</span>
-                        <span className="rh-mock-live-chip">LIVE</span>
-                      </div>
-
-                      <div className="rh-mock-ticket-box">
-                        <div style={{ fontSize: '0.58rem', color: '#94a3b8' }}>Kereta Anda berikutnya:</div>
-                        <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#38bdf8', marginTop: 1 }}>KA 2 Argo Bromo Anggrek</div>
-                        <div style={{ fontSize: '0.58rem', color: '#cbd5e1' }}>Berangkat dalam 20 jam &bull; Gambir</div>
-                      </div>
-
-                      <div className="rh-mock-form">
-                        <div className="rh-mock-input">
-                          <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#3b82f6', flexShrink: 0 }} />
-                          <span>Gambir (GMR)</span>
-                        </div>
-                        <div className="rh-mock-input">
-                          <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#10b981', flexShrink: 0 }} />
-                          <span>Surabaya Gubeng (SGU)</span>
-                        </div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.58rem', color: '#94a3b8', padding: '0 2px' }}>
-                          <span>1 Penumpang</span>
-                          <span style={{ color: '#38bdf8' }}>+ Jadwal Pulang</span>
-                        </div>
-                        <Link href="/trains" className="rh-mock-cta">
-                          Cari Tiket Kereta &rarr;
-                        </Link>
-                      </div>
-
-                      <div className="rh-mock-drop-hint">
-                        <span>Foto cover iPhone 16:</span>
-                        <code>/images/pwa-mobile-preview.webp</code>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* iPhone 16 Home Indicator Bar */}
-                  <div className="rh-iphone16-homebar" />
-                </div>
-              </div>
+              <button
+                type="button"
+                onClick={() => setShowModal(true)}
+                className="rh-pwa-bumper-guide-btn"
+              >
+                <Smartphone size={15} />
+                <span>{lang === 'en' ? 'Guide' : 'Cara Pasang'}</span>
+              </button>
             </div>
           </div>
 

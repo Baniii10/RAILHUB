@@ -5922,6 +5922,86 @@ input[type="checkbox"] {
   gap: 1.25rem;
 }
 
+.rh-bento-card-app.rh-bento-card-app-bumper {
+  padding: 0 !important;
+  gap: 0 !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  justify-content: space-between !important;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.rh-pwa-bumper-viewport {
+  flex: 1;
+  width: 100%;
+  min-height: 310px;
+  display: flex;
+}
+
+.rh-pwa-bumper-cta-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1rem;
+  background: #ffffff;
+  border-top: 1px solid #e2e8f0;
+}
+
+.rh-pwa-bumper-install-btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0.65rem 1rem;
+  border-radius: 11px;
+  border: none;
+  background: #1a428a;
+  color: #ffffff;
+  font-size: 0.86rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.rh-pwa-bumper-install-btn:hover {
+  background: #14336d;
+  transform: translateY(-1px);
+}
+
+.rh-pwa-bumper-guide-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  min-height: 44px;
+  padding: 0.65rem 0.9rem;
+  border-radius: 11px;
+  border: 1px solid #cbd5e1;
+  background: #f8fafc;
+  color: #334155;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s ease;
+}
+
+.rh-pwa-bumper-guide-btn:hover {
+  background: #f1f5f9;
+}
+
+@media (max-width: 640px) {
+  .rh-pwa-bumper-viewport {
+    min-height: 290px;
+  }
+  .rh-pwa-bumper-cta-bar {
+    padding: 0.75rem;
+  }
+}
+
 .rh-bento-app-content {
   flex: 1.1;
   display: flex;
