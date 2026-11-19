@@ -7427,19 +7427,22 @@ input[type="checkbox"] {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
-    background: linear-gradient(160deg, #0b1626 0%, #102a56 100%);
-    padding: 2.5rem 2rem;
+    align-items: stretch;
+    background: #050813;
+    padding: 0;
+    overflow: hidden;
+    min-height: 100%;
   }
 
-  .rh-login-visual > * {
+  .rh-login-visual > .rh-login-remotion-stage {
     width: 100%;
-    max-width: 540px;
+    height: 100%;
+    flex: 1;
   }
 
   .rh-login-visual-caption {
     display: block;
-    padding: 1.5rem 0.5rem 0;
+    padding: 1.5rem 2rem 2rem;
     color: rgba(255, 255, 255, 0.78);
   }
 

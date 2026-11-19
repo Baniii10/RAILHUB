@@ -32,6 +32,12 @@ const STARS = [
   { x: 630, y: 50, size: 1.7, phase: 0.7 },
 ]
 
+const TAGLINES = [
+  'Pesan tiket kereta cepat, mudah, tanpa antre.',
+  'Pilih kursi favorit & pantau perjalanan live.',
+  'Satu pintu perjalanan kereta api Pulau Jawa.',
+]
+
 export function NightTrainBumper(props = {}) {
   let frame = 0
   let width = 800
@@ -51,6 +57,39 @@ export function NightTrainBumper(props = {}) {
     width = props.width || 800
     height = props.height || 450
   }
+
+  const isTall = height >= 540
+  const sceneShiftY = Math.max(0, height - 450)
+
+  // Typewriter tagline animation (120 frames per phrase = 4s at 30fps, 360 frames total)
+  const phraseDuration = 120
+  const phraseIndex = Math.floor(frame / phraseDuration) % TAGLINES.length
+  const localFrame = frame % phraseDuration
+  const currentPhrase = TAGLINES[phraseIndex]
+
+  let visibleChars = 0
+  if (localFrame < 50) {
+    visibleChars = Math.floor(
+      interpolate(localFrame, [0, 50], [0, currentPhrase.length], {
+        extrapolateLeft: 'clamp',
+        extrapolateRight: 'clamp',
+      })
+    )
+  } else if (localFrame < 94) {
+    visibleChars = currentPhrase.length
+  } else if (localFrame < 114) {
+    visibleChars = Math.floor(
+      interpolate(localFrame, [94, 114], [currentPhrase.length, 0], {
+        extrapolateLeft: 'clamp',
+        extrapolateRight: 'clamp',
+      })
+    )
+  } else {
+    visibleChars = 0
+  }
+
+  const typedText = currentPhrase.slice(0, visibleChars)
+  const cursorVisible = localFrame < 50 || localFrame >= 94 ? true : Math.floor(frame / 10) % 2 === 0
 
   // 1. High-speed continuous loop offsets
   // Rail ties glide backward very fast (speed 22 px/frame)
@@ -213,11 +252,12 @@ export function NightTrainBumper(props = {}) {
         {STARS.map((star, i) => {
           const starAlpha =
             Math.sin((frame / 15 + star.phase) * Math.PI) * 0.35 + 0.65
+          const starY = isTall ? star.y * (height / 450) * 0.85 : star.y
           return (
             <circle
               key={i}
               cx={star.x}
-              cy={star.y}
+              cy={starY}
               r={star.size}
               fill="#ffffff"
               opacity={starAlpha}
@@ -242,7 +282,7 @@ export function NightTrainBumper(props = {}) {
         )}
 
         {/* 4. CRESCENT MOON & LUNAR HALO */}
-        <g transform="translate(670, 70)">
+        <g transform={`translate(670, ${isTall ? 95 : 70})`}>
           {/* Outer Ambient Glow */}
           <circle cx="0" cy="0" r="46" fill="#f8fafc" opacity={moonGlow * 0.08} />
           <circle cx="0" cy="0" r="30" fill="#f8fafc" opacity={moonGlow * 0.15} />
@@ -252,6 +292,8 @@ export function NightTrainBumper(props = {}) {
           <circle cx="8" cy="-6" r="19" fill="#0b1228" opacity="0.92" />
         </g>
 
+        {/* LOWER SCENIC LAYER (Anchored to bottom so sky fills full height cleanly) */}
+        <g transform={`translate(0, ${sceneShiftY})`}>
         {/* 5. DISTANT MOUNTAIN PARALLAX (Layer 1) */}
         <g transform={`translate(${-mountainOffset}, 0)`}>
           <path
@@ -496,68 +538,97 @@ export function NightTrainBumper(props = {}) {
           </g>
 
         </g>
+        </g>
 
-        {/* 11. TOP VIGNETTE / LETTERBOX SHADOW */}
+        {/* 11. TOP VIGNETTE / SKY DEPTH */}
         <rect
           x="0"
           y="0"
           width={width}
-          height="110"
+          height={isTall ? 200 : 110}
           fill="url(#rhNightSky)"
-          opacity="0.85"
-        />
-
-        {/* Ambient Spotlight Behind Logo */}
-        <ellipse
-          cx={width / 2}
-          cy="48"
-          rx="180"
-          ry="40"
-          fill="radial-gradient(ellipse at center, rgba(37, 99, 235, 0.45) 0%, rgba(15, 23, 42, 0) 70%)"
-          opacity="0.95"
+          opacity="0.72"
         />
       </svg>
 
-      {/* 12. OFFICIAL FIX LOGO RAILHUB ON TOP ("logo diatasnya ya yg fix logo railhub") */}
+      {/* 12. OFFICIAL LOGO + TYPEWRITER TAGLINE OVERLAY INSIDE ANIMATION */}
       <div
         style={{
           position: 'absolute',
-          top: 18,
+          top: isTall ? '16%' : 16,
           left: '50%',
           transform: 'translateX(-50%)',
+          width: isTall ? '84%' : '90%',
+          maxWidth: 640,
           zIndex: 30,
           display: 'flex',
+          flexDirection: 'column',
           alignItems: 'center',
-          justifyContent: 'center',
+          textAlign: 'center',
+          gap: isTall ? 22 : 10,
           pointerEvents: 'none',
         }}
       >
+        <img
+          src="/images/Fix logo railhub.png"
+          alt="RAILHUB"
+          style={{
+            height: isTall ? 58 : 38,
+            width: 'auto',
+            maxWidth: isTall ? 280 : 200,
+            objectFit: 'contain',
+            display: 'block',
+            filter: 'drop-shadow(0 4px 18px rgba(0, 0, 0, 0.55))',
+          }}
+        />
+
         <div
           style={{
-            padding: '7px 24px',
-            borderRadius: 18,
-            background: 'rgba(5, 10, 22, 0.82)',
-            backdropFilter: 'blur(12px)',
-            WebkitBackdropFilter: 'blur(12px)',
-            border: '1px solid rgba(255, 255, 255, 0.18)',
-            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.6), 0 0 24px rgba(37, 99, 235, 0.35)',
+            minHeight: isTall ? 92 : 42,
             display: 'flex',
+            flexDirection: 'column',
             alignItems: 'center',
-            justifyContent: 'center',
+            gap: isTall ? 10 : 4,
           }}
         >
-          <img
-            src="/images/Fix logo railhub.png"
-            alt="RAILHUB Official Logo"
+          {isTall && (
+            <span
+              style={{
+                fontSize: 15,
+                fontWeight: 700,
+                letterSpacing: '0.16em',
+                textTransform: 'uppercase',
+                color: '#fb923c',
+              }}
+            >
+              Kereta Api Pulau Jawa
+            </span>
+          )}
+          <div
             style={{
-              height: 42,
-              width: 'auto',
-              maxWidth: 220,
-              objectFit: 'contain',
-              display: 'block',
-              filter: 'drop-shadow(0 2px 10px rgba(0, 0, 0, 0.65))',
+              fontSize: isTall ? 32 : 18,
+              fontWeight: 700,
+              lineHeight: 1.35,
+              color: '#f8fafc',
+              letterSpacing: '-0.015em',
+              textShadow: '0 2px 14px rgba(2, 6, 23, 0.75)',
+              maxWidth: isTall ? 580 : 520,
             }}
-          />
+          >
+            <span>{typedText}</span>
+            <span
+              style={{
+                display: 'inline-block',
+                width: isTall ? 3 : 2,
+                height: isTall ? 30 : 17,
+                marginLeft: 4,
+                verticalAlign: 'text-bottom',
+                borderRadius: 2,
+                backgroundColor: '#fb923c',
+                opacity: cursorVisible ? 1 : 0,
+              }}
+            />
+          </div>
         </div>
       </div>
     </div>

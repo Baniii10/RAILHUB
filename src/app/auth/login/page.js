@@ -329,13 +329,9 @@ export default function LoginPage() {
 
       <div className="rh-login-viewport" style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
         <div className="rh-login-container">
-          {/* Left / Top Header Vector Illustration */}
+          {/* Left / Top Full-Bleed Remotion Night Train Animation */}
           <div className="rh-login-visual">
             <NightTrainBumperPlayer />
-            <div className="rh-login-visual-caption">
-              <span className="rh-login-visual-kicker">RAILHUB Access</span>
-              <p>Reservasi tiket, pemilihan kursi interaktif, dan e-boarding pass dalam satu pintu.</p>
-            </div>
           </div>
 
           {/* Right / Bottom Form Sheet */}
@@ -351,7 +347,7 @@ export default function LoginPage() {
                   margin: '0 0 6px',
                 }}
               >
-                Welcome to Access!
+                {lang === 'en' ? 'Sign in to RAILHUB' : 'Masuk ke RAILHUB'}
               </h1>
               <p
                 style={{
@@ -361,7 +357,9 @@ export default function LoginPage() {
                   margin: 0,
                 }}
               >
-                Login or Register now! to enjoy all the features available on Access by RAILHUB.
+                {lang === 'en'
+                  ? 'Sign in or register to book tickets, select seats, and track your journey live.'
+                  : 'Masuk atau daftar untuk memesan tiket, memilih kursi, dan memantau perjalanan kereta Anda.'}
               </p>
             </div>
 
@@ -400,7 +398,7 @@ export default function LoginPage() {
                     marginBottom: 5,
                   }}
                 >
-                  Email Address / Phone Number
+                  {lang === 'en' ? 'Email Address' : 'Alamat Email'}
                 </label>
                 <div style={{ position: 'relative' }}>
                   <Mail
@@ -419,7 +417,7 @@ export default function LoginPage() {
                     type="email"
                     name="email"
                     spellCheck={false}
-                    placeholder="Enter your Email Address / Phone Number"
+                    placeholder={lang === 'en' ? 'Enter your email address' : 'Masukkan alamat email Anda'}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
@@ -450,7 +448,7 @@ export default function LoginPage() {
                       color: '#475569',
                     }}
                   >
-                    Password
+                    {lang === 'en' ? 'Password' : 'Kata Sandi'}
                   </label>
                   <Link
                     href="/auth/register"
@@ -461,7 +459,7 @@ export default function LoginPage() {
                       textDecoration: 'none',
                     }}
                   >
-                    Forgot?
+                    {lang === 'en' ? 'Forgot?' : 'Lupa?'}
                   </Link>
                 </div>
                 <div style={{ position: 'relative' }}>
@@ -479,7 +477,7 @@ export default function LoginPage() {
                   <input
                     id="password"
                     type={showPw ? 'text' : 'password'}
-                    placeholder="Enter your Password"
+                    placeholder={lang === 'en' ? 'Enter your password' : 'Masukkan kata sandi'}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
@@ -499,7 +497,7 @@ export default function LoginPage() {
                   />
                   <button
                     type="button"
-                    aria-label={showPw ? 'Hide password' : 'Show password'}
+                    aria-label={showPw ? (lang === 'en' ? 'Hide password' : 'Sembunyikan kata sandi') : (lang === 'en' ? 'Show password' : 'Tampilkan kata sandi')}
                     onClick={() => setShowPw((v) => !v)}
                     style={{
                       position: 'absolute',
@@ -557,7 +555,7 @@ export default function LoginPage() {
                     }}
                   />
                 ) : (
-                  <span>LOGIN</span>
+                  <span>{lang === 'en' ? 'SIGN IN' : 'MASUK'}</span>
                 )}
               </button>
             </form>
@@ -570,7 +568,7 @@ export default function LoginPage() {
                 margin: '16px 0 14px',
               }}
             >
-              Don&apos;t have an Access account yet?{' '}
+              {lang === 'en' ? "Don't have a RAILHUB account yet?" : 'Belum punya akun RAILHUB?'}{' '}
               <Link
                 href="/auth/register"
                 style={{
@@ -579,7 +577,7 @@ export default function LoginPage() {
                   textDecoration: 'none',
                 }}
               >
-                Register Now
+                {lang === 'en' ? 'Register Now' : 'Daftar Sekarang'}
               </Link>
             </p>
 
@@ -593,7 +591,7 @@ export default function LoginPage() {
             >
               <div style={{ flex: 1, height: 1, backgroundColor: '#e2e8f0' }} />
               <span style={{ fontSize: '0.78125rem', color: '#94a3b8', fontWeight: 500 }}>
-                Or use account
+                {lang === 'en' ? 'Or continue with' : 'Atau masuk dengan'}
               </span>
               <div style={{ flex: 1, height: 1, backgroundColor: '#e2e8f0' }} />
             </div>
@@ -633,7 +631,7 @@ export default function LoginPage() {
               ) : (
                 <GoogleIcon size={19} />
               )}
-              <span>Sign in with Google</span>
+              <span>{lang === 'en' ? 'Sign in with Google' : 'Masuk dengan Google'}</span>
             </button>
 
             <div style={{ marginTop: '1.15rem', paddingTop: '0.85rem', borderTop: '1px solid #f1f5f9' }}>

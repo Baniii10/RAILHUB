@@ -160,7 +160,7 @@ export default function RegisterPage() {
           <div className="rh-login-visual">
             <MobileTrainIllustration />
             <div className="rh-login-visual-caption">
-              <span className="rh-login-visual-kicker">RAILHUB Access</span>
+              <span className="rh-login-visual-kicker">RAILHUB</span>
               <p>Buat akun sekali untuk memesan perjalanan dan memantau tiket aktif Anda.</p>
             </div>
           </div>
@@ -178,7 +178,7 @@ export default function RegisterPage() {
                   margin: '0 0 6px',
                 }}
               >
-                Register Account
+                {lang === 'en' ? 'Create RAILHUB Account' : 'Daftar Akun RAILHUB'}
               </h1>
               <p
                 style={{
@@ -188,7 +188,9 @@ export default function RegisterPage() {
                   margin: 0,
                 }}
               >
-                Create your account to start booking trains across Java.
+                {lang === 'en'
+                  ? 'Create your account to start booking trains across Java.'
+                  : 'Buat akun Anda untuk mulai memesan tiket kereta api di Pulau Jawa.'}
               </p>
             </div>
 
