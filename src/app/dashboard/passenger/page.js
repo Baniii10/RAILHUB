@@ -72,6 +72,15 @@ function PassengerDashboardContent() {
   const [ticketDetails, setTicketDetails] = useState([])
   const [qrCodes, setQrCodes] = useState({})
   const [selectedTicketForQR, setSelectedTicketForQR] = useState(null)
+
+  useEffect(() => {
+    if (!selectedTicketForQR) return undefined
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape') setSelectedTicketForQR(null)
+    }
+    document.addEventListener('keydown', onKeyDown)
+    return () => document.removeEventListener('keydown', onKeyDown)
+  }, [selectedTicketForQR])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
