@@ -84,9 +84,14 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 84px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: clip;
+}
+
+[id] {
+  scroll-margin-top: 84px;
 }
 
 .rh-skip-link {
@@ -588,83 +593,103 @@ textarea { touch-action: manipulation; }
 .rh-journey-dock {
   position: fixed;
   right: 0.75rem;
-  bottom: calc(4.65rem + env(safe-area-inset-bottom, 0px));
+  bottom: calc(4.6rem + env(safe-area-inset-bottom, 0px));
   left: 0.75rem;
   z-index: 89;
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) 72px auto;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
   gap: 0.65rem;
   align-items: center;
-  min-height: 70px;
-  padding: 0.7rem 0.8rem;
+  min-height: 54px;
+  padding: 0.55rem 0.85rem;
   border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 18px;
-  background: var(--rh-primary);
-  box-shadow: 0 14px 36px rgba(26, 66, 138, 0.24);
-  color: white;
+  border-radius: 14px;
+  background: rgba(15, 36, 71, 0.96);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 10px 28px rgba(10, 26, 56, 0.24);
+  color: #ffffff;
+  text-decoration: none;
 }
 
 #main-content:has(.rh-journey-dock) { padding-bottom: 5.5rem; }
 
-.rh-journey-dock-icon {
-  display: grid;
-  width: 38px;
-  height: 38px;
-  place-items: center;
-  border-radius: 12px;
-  background: var(--rh-accent);
-  color: var(--rh-navy);
+.rh-journey-dock-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: #f59e0b;
+}
+
+.rh-journey-dock-dot.is-waiting {
+  background: #fbbf24;
+  box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.22);
+}
+
+.rh-journey-dock-dot.is-boarding,
+.rh-journey-dock-dot.is-live {
+  background: #34d399;
+  box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.26);
+  animation: rh-dock-pulse 2s ease-in-out infinite;
+}
+
+.rh-journey-dock-dot.is-delayed {
+  background: #f87171;
+  box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.24);
+}
+
+@keyframes rh-dock-pulse {
+  0%, 100% { box-shadow: 0 0 0 2px rgba(52, 211, 153, 0.25); }
+  50% { box-shadow: 0 0 0 5px rgba(52, 211, 153, 0.08); }
 }
 
 .rh-journey-dock-copy { min-width: 0; }
-.rh-journey-dock-copy small,
 .rh-journey-dock-copy strong,
-.rh-journey-dock-copy span { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.rh-journey-dock-copy small { color: rgba(255,255,255,.68); font-size: .66rem; }
-.rh-journey-dock-copy strong { font-size: .82rem; }
-.rh-journey-dock-copy span { color: rgba(255,255,255,.8); font-size: .69rem; }
-.rh-journey-dock-copy svg { display: inline; vertical-align: -1px; }
-
-.rh-journey-mini-map {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.rh-journey-dock-copy small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.rh-journey-dock-copy strong {
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: #ffffff;
+}
+.rh-journey-dock-copy small {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.68rem;
+  line-height: 1.3;
 }
 
-.rh-journey-mini-map::before {
-  position: absolute;
-  right: 4px;
-  left: 4px;
-  height: 2px;
-  background: rgba(255,255,255,.35);
-  content: '';
+.rh-journey-dock-time {
+  text-align: right;
+  flex-shrink: 0;
+  padding-left: 0.55rem;
+  border-left: 1px solid rgba(255, 255, 255, 0.14);
 }
 
-.rh-journey-mini-map i {
-  position: relative;
-  z-index: 1;
-  width: 8px;
-  height: 8px;
-  border: 2px solid white;
-  border-radius: 50%;
-  background: var(--rh-primary);
+.rh-journey-dock-time small {
+  display: block;
+  font-size: 0.62rem;
+  color: rgba(255, 255, 255, 0.65);
+  line-height: 1.15;
 }
 
-.rh-journey-mini-map .is-train {
-  display: grid;
-  width: 24px;
-  height: 24px;
-  place-items: center;
-  border: 0;
-  background: var(--rh-accent);
-  color: var(--rh-navy);
-  animation: rh-dock-train 2.6s ease-in-out infinite alternate;
+.rh-journey-dock-time strong {
+  display: block;
+  font-size: 0.84rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.25;
+  color: #ffffff;
 }
 
-@keyframes rh-dock-train {
-  from { transform: translateX(-5px); }
-  to { transform: translateX(5px); }
+.rh-journey-dock-arrow {
+  color: rgba(255, 255, 255, 0.65);
+  flex-shrink: 0;
 }
 
 @media (max-width: 768px) {
@@ -1176,7 +1201,8 @@ input[type="checkbox"]:focus-visible {
   position: relative;
   background: var(--rh-primary);
   padding: 6rem 0 8rem;
-  overflow: hidden;
+  overflow: visible;
+  z-index: 5;
 }
 
 @media (max-width: 768px) {
@@ -1452,6 +1478,11 @@ input[type="checkbox"]:focus-visible {
 
 .rh-detail-toggle-switch.is-active {
   background: #2563eb;
+}
+
+.rh-detail-toggle-switch:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.35);
+  outline-offset: 2px;
 }
 
 .rh-detail-toggle-thumb {
@@ -4264,42 +4295,144 @@ input[type="checkbox"]:focus-visible {
   }
 
   .rh-booking-class-options {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    display: flex;
+    flex-wrap: wrap;
     gap: 0.75rem;
+    flex: 1;
   }
 
   .rh-booking-class-option {
+    position: relative;
     display: grid;
-    gap: 0.35rem;
-    padding: 0.9rem 1rem;
-    border: 1px solid var(--rh-border);
-    border-radius: var(--radius-md);
-    background: var(--rh-white);
+    gap: 0.45rem;
+    flex: 0 1 200px;
+    min-width: 165px;
+    padding: 0.85rem 1.15rem;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 12px;
+    background: #ffffff;
     color: var(--rh-text);
     cursor: pointer;
     text-align: left;
-    transition: border-color var(--transition-fast), background var(--transition-fast), box-shadow var(--transition-fast);
+    overflow: visible;
+    transition: border-color var(--transition-fast), background var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
   }
 
-  .rh-booking-class-option:hover {
+  /* Ticket side notches */
+  .rh-booking-class-option.rh-ticket-option::before,
+  .rh-booking-class-option.rh-ticket-option::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--rh-white);
+    transform: translateY(-50%);
+    pointer-events: none;
+    z-index: 2;
+    transition: border-color var(--transition-fast);
+  }
+
+  .rh-booking-class-option.rh-ticket-option::before {
+    left: -8px;
+    border-right: 1.5px solid #e2e8f0;
+  }
+
+  .rh-booking-class-option.rh-ticket-option::after {
+    right: -8px;
+    border-left: 1.5px solid #e2e8f0;
+  }
+
+  .rh-ticket-option-divider {
+    display: block;
+    width: 100%;
+    border-top: 1px dashed rgba(148, 163, 184, 0.45);
+    margin: 0.05rem 0;
+  }
+
+  /* Economy / Standard ticket: clean white */
+  .rh-booking-class-option.is-economy {
+    background: #ffffff;
+    border-color: #dbe3ee;
+  }
+
+  .rh-booking-class-option.is-economy:hover {
     border-color: var(--rh-primary);
+    transform: translateY(-1px);
   }
 
-  .rh-booking-class-option.is-selected {
+  .rh-booking-class-option.is-economy.is-selected {
     border: 2px solid var(--rh-primary);
-    background: var(--rh-primary-light);
-    box-shadow: 0 0 0 3px rgba(26, 66, 138, 0.08);
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(26, 66, 138, 0.09), 0 6px 16px rgba(26, 66, 138, 0.08);
   }
 
-  .rh-booking-class-option > span {
+  .rh-booking-class-option.is-economy.is-selected::before {
+    border-right: 2px solid var(--rh-primary);
+  }
+
+  .rh-booking-class-option.is-economy.is-selected::after {
+    border-left: 2px solid var(--rh-primary);
+  }
+
+  /* Executive / Luxury ticket: subtle ~10% gold tint */
+  .rh-booking-class-option.is-executive {
+    background: rgba(212, 175, 55, 0.1);
+    border-color: rgba(196, 152, 34, 0.38);
+  }
+
+  .rh-booking-class-option.is-executive::before {
+    border-right-color: rgba(196, 152, 34, 0.38);
+  }
+
+  .rh-booking-class-option.is-executive::after {
+    border-left-color: rgba(196, 152, 34, 0.38);
+  }
+
+  .rh-booking-class-option.is-executive .rh-ticket-option-divider {
+    border-top-color: rgba(180, 138, 30, 0.35);
+  }
+
+  .rh-booking-class-option.is-executive:hover {
+    border-color: #b8860b;
+    background: rgba(212, 175, 55, 0.14);
+    transform: translateY(-1px);
+  }
+
+  .rh-booking-class-option.is-executive.is-selected {
+    border: 2px solid #b8860b;
+    background: rgba(212, 175, 55, 0.14);
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.18), 0 6px 16px rgba(184, 134, 11, 0.12);
+  }
+
+  .rh-booking-class-option.is-executive.is-selected::before {
+    border-right: 2px solid #b8860b;
+  }
+
+  .rh-booking-class-option.is-executive.is-selected::after {
+    border-left: 2px solid #b8860b;
+  }
+
+  .rh-booking-class-option > .rh-ticket-option-class,
+  .rh-booking-class-option > span:first-child {
     color: var(--rh-text-2);
-    font-size: 0.875rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+  }
+
+  .rh-booking-class-option.is-executive > .rh-ticket-option-class {
+    color: #855a08;
   }
 
   .rh-booking-class-option > strong {
     color: var(--rh-primary-dark);
     font-size: 1rem;
+    font-weight: 800;
+  }
+
+  .rh-booking-class-option.is-executive > strong {
+    color: #6b4705;
   }
 
   .rh-booking-class-option small {
@@ -6745,6 +6878,7 @@ input[type="checkbox"] {
 }
 
 /* 10. Passenger Popover */
+.rh-passenger-popover.is-night,
 .rh-detail-journey-container.is-night .rh-passenger-popover,
 .rh-hero-night .rh-passenger-popover,
 .rh-search-card.rh-night-theme .rh-passenger-popover,
@@ -6754,6 +6888,7 @@ input[type="checkbox"] {
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65);
 }
 
+.rh-passenger-popover.is-night .rh-passenger-popover-header,
 .rh-detail-journey-container.is-night .rh-passenger-popover-header,
 .rh-hero-night .rh-passenger-popover-header,
 .rh-search-card.rh-night-theme .rh-passenger-popover-header,
@@ -6762,6 +6897,7 @@ input[type="checkbox"] {
   color: #ffffff;
 }
 
+.rh-passenger-popover.is-night .rh-passenger-close-btn,
 .rh-detail-journey-container.is-night .rh-passenger-close-btn,
 .rh-hero-night .rh-passenger-close-btn,
 .rh-search-card.rh-night-theme .rh-passenger-close-btn,
@@ -6769,6 +6905,7 @@ input[type="checkbox"] {
   color: #94a3b8;
 }
 
+.rh-passenger-popover.is-night .rh-passenger-close-btn:hover,
 .rh-detail-journey-container.is-night .rh-passenger-close-btn:hover,
 .rh-hero-night .rh-passenger-close-btn:hover,
 .rh-search-card.rh-night-theme .rh-passenger-close-btn:hover,
@@ -6777,6 +6914,7 @@ input[type="checkbox"] {
   color: #ffffff;
 }
 
+.rh-passenger-popover.is-night .rh-passenger-type-title,
 .rh-detail-journey-container.is-night .rh-passenger-type-title,
 .rh-hero-night .rh-passenger-type-title,
 .rh-search-card.rh-night-theme .rh-passenger-type-title,
@@ -6784,6 +6922,7 @@ input[type="checkbox"] {
   color: #ffffff;
 }
 
+.rh-passenger-popover.is-night .rh-passenger-type-desc,
 .rh-detail-journey-container.is-night .rh-passenger-type-desc,
 .rh-hero-night .rh-passenger-type-desc,
 .rh-search-card.rh-night-theme .rh-passenger-type-desc,
@@ -6791,6 +6930,7 @@ input[type="checkbox"] {
   color: #94a3b8;
 }
 
+.rh-passenger-popover.is-night .rh-stepper-btn,
 .rh-detail-journey-container.is-night .rh-stepper-btn,
 .rh-hero-night .rh-stepper-btn,
 .rh-search-card.rh-night-theme .rh-stepper-btn,
@@ -6800,6 +6940,7 @@ input[type="checkbox"] {
   color: #60a5fa;
 }
 
+.rh-passenger-popover.is-night .rh-stepper-btn:not(:disabled):hover,
 .rh-detail-journey-container.is-night .rh-stepper-btn:not(:disabled):hover,
 .rh-hero-night .rh-stepper-btn:not(:disabled):hover,
 .rh-search-card.rh-night-theme .rh-stepper-btn:not(:disabled):hover,
@@ -6809,6 +6950,7 @@ input[type="checkbox"] {
   color: #ffffff;
 }
 
+.rh-passenger-popover.is-night .rh-stepper-btn:disabled,
 .rh-detail-journey-container.is-night .rh-stepper-btn:disabled,
 .rh-hero-night .rh-stepper-btn:disabled,
 .rh-search-card.rh-night-theme .rh-stepper-btn:disabled,
@@ -6818,6 +6960,7 @@ input[type="checkbox"] {
   opacity: 0.35;
 }
 
+.rh-passenger-popover.is-night .rh-stepper-count,
 .rh-detail-journey-container.is-night .rh-stepper-count,
 .rh-hero-night .rh-stepper-count,
 .rh-search-card.rh-night-theme .rh-stepper-count,
@@ -6825,6 +6968,7 @@ input[type="checkbox"] {
   color: #ffffff;
 }
 
+.rh-passenger-popover.is-night .rh-passenger-done-btn,
 .rh-detail-journey-container.is-night .rh-passenger-done-btn,
 .rh-hero-night .rh-passenger-done-btn,
 .rh-search-card.rh-night-theme .rh-passenger-done-btn,
@@ -6833,6 +6977,7 @@ input[type="checkbox"] {
   box-shadow: 0 4px 14px rgba(37, 99, 235, 0.45);
 }
 
+.rh-passenger-popover.is-night .rh-passenger-done-btn:hover,
 .rh-detail-journey-container.is-night .rh-passenger-done-btn:hover,
 .rh-hero-night .rh-passenger-done-btn:hover,
 .rh-search-card.rh-night-theme .rh-passenger-done-btn:hover,
@@ -7255,27 +7400,26 @@ input[type="checkbox"] {
   flex-direction: column;
 }
 
-@media (min-width: 641px) {
+@media (min-width: 768px) {
   .rh-login-viewport {
-    background: var(--rh-bg, #f8fafc);
-    padding: 2.5rem 1.25rem;
-    align-items: center;
+    background: #ffffff;
+    padding: 0;
+    align-items: stretch;
+    justify-content: stretch;
+    min-height: calc(100dvh - 64px);
   }
 
   .rh-login-container {
-    max-width: 460px;
-    border-radius: 24px;
+    max-width: none;
+    width: 100%;
+    min-height: 100%;
+    flex: 1;
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
     overflow: hidden;
-    border: 1px solid var(--rh-border, #e2e8f0);
-    box-shadow: 0 20px 45px rgba(26, 66, 138, 0.08);
-  }
-}
-
-@media (min-width: 900px) {
-  .rh-login-container {
-    max-width: 920px;
     display: grid;
-    grid-template-columns: 1fr 1.08fr;
+    grid-template-columns: 1fr 1fr;
     align-items: stretch;
   }
 
@@ -7283,13 +7427,19 @@ input[type="checkbox"] {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
     background: linear-gradient(160deg, #0b1626 0%, #102a56 100%);
-    padding: 1.5rem 0 2rem;
+    padding: 2.5rem 2rem;
+  }
+
+  .rh-login-visual > * {
+    width: 100%;
+    max-width: 540px;
   }
 
   .rh-login-visual-caption {
     display: block;
-    padding: 1.25rem 2rem 0;
+    padding: 1.5rem 0.5rem 0;
     color: rgba(255, 255, 255, 0.78);
   }
 
@@ -7305,16 +7455,28 @@ input[type="checkbox"] {
 
   .rh-login-visual-caption p {
     margin: 0;
-    font-size: 0.9rem;
-    line-height: 1.55;
+    font-size: 0.92rem;
+    line-height: 1.6;
     color: rgba(255, 255, 255, 0.8);
   }
 
   .rh-login-sheet {
     margin-top: 0;
     border-radius: 0;
-    padding: 2.25rem 2.5rem;
+    padding: 2.5rem clamp(2rem, 5vw, 4.5rem);
     justify-content: center;
+    align-items: center;
+  }
+
+  .rh-login-sheet > * {
+    width: 100%;
+    max-width: 440px;
+  }
+}
+
+@media (min-width: 1180px) {
+  .rh-login-container {
+    grid-template-columns: 1.08fr 1fr;
   }
 }
 
@@ -7896,4 +8058,48 @@ input[type="checkbox"] {
 .rh-journey-promo-dots button[aria-current='true'] span {
   width: 20px;
   background: var(--rh-primary, #1a428a);
+}
+
+/* ==========================================================================
+   MODERN WEB GUIDANCE: A11Y, SCROLL CONTAINMENT & OFF-SCREEN PERF
+   (Zero visual UI change — pure UX, keyboard, scroll & rendering ergonomics)
+   ========================================================================== */
+.visually-hidden:where(:not(:focus-within, :active)) {
+  position: absolute !important;
+  clip-path: inset(50%) !important;
+  overflow: hidden !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: -1px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  white-space: nowrap !important;
+}
+
+/* Prevent scroll gestures inside/over modal backdrops from scrolling the page underneath */
+dialog:modal,
+.rh-boarding-pass-overlay,
+.rh-station-modal-backdrop,
+.rh-station-modal,
+.rh-mobile-drawer {
+  overscroll-behavior: contain;
+}
+
+dialog::backdrop {
+  overflow: hidden;
+  overscroll-behavior: contain;
+}
+
+/* Defer validation error styling until after user interaction */
+:is(input.rh-input, textarea.rh-input, select.rh-input):user-invalid {
+  border-color: var(--rh-danger, #dc2626);
+}
+
+/* Defer layout/paint of heavy below-the-fold sections with intrinsic placeholder size */
+#travel-classes,
+.rh-pwa-gallery-bento,
+.rh-feedback-bottom-section,
+.rh-footer {
+  content-visibility: auto;
+  contain-intrinsic-size: auto none auto 420px;
 }

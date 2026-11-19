@@ -374,22 +374,27 @@ export default function BookingFlow({
                 <div className="rh-booking-class-bar" role="group" aria-label="Pilih kelas perjalanan">
                   <span className="rh-booking-class-bar-label">Kelas</span>
                   <div className="rh-booking-class-options">
-                    {journey.fares.map(item => (
-                      <button
-                        type="button"
-                        key={item.carriage_class}
-                        aria-pressed={selectedClass === item.carriage_class}
-                        className={`rh-booking-class-option ${selectedClass === item.carriage_class ? 'is-selected' : ''}`}
-                        onClick={() => {
-                          setSelectedClass(item.carriage_class)
-                          setSelectedCarriageId('')
-                          setSelectedSeats([])
-                        }}
-                      >
-                        <span>{item.carriage_class}</span>
-                        <strong>{formatIDR(item.price)}</strong>
-                      </button>
-                    ))}
+                    {journey.fares.map(item => {
+                      const clsLower = (item.carriage_class || '').toLowerCase()
+                      const isExecutiveTier = clsLower.includes('eksekutif') || clsLower.includes('luxury') || clsLower.includes('compartment') || clsLower.includes('priority')
+                      return (
+                        <button
+                          type="button"
+                          key={item.carriage_class}
+                          aria-pressed={selectedClass === item.carriage_class}
+                          className={`rh-booking-class-option rh-ticket-option ${isExecutiveTier ? 'is-executive' : 'is-economy'} ${selectedClass === item.carriage_class ? 'is-selected' : ''}`}
+                          onClick={() => {
+                            setSelectedClass(item.carriage_class)
+                            setSelectedCarriageId('')
+                            setSelectedSeats([])
+                          }}
+                        >
+                          <span className="rh-ticket-option-class">{item.carriage_class}</span>
+                          <span className="rh-ticket-option-divider" aria-hidden="true" />
+                          <strong className="rh-ticket-option-price">{formatIDR(item.price)}</strong>
+                        </button>
+                      )
+                    })}
                   </div>
                 </div>
 

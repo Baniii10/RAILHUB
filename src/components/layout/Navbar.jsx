@@ -124,7 +124,7 @@ export default function Navbar() {
       } else {
         const { data: bks } = await supabase
           .from('bookings')
-          .select('id, booking_code, status, schedules(departure_time, arrival_time, trains(name, train_number), routes(name))')
+          .select('id, booking_code, status, schedules(status, departure_time, arrival_time, trains(name, train_number), routes(name))')
           .eq('user_id', user.id)
           .order('created_at', { ascending: false })
           .limit(4)
@@ -258,10 +258,51 @@ export default function Navbar() {
   const activeIndex = activeStates.findIndex(Boolean)
 
   const isBookingFlow = pathname.startsWith('/booking/')
-  const journeyRoute = activeJourney?.schedules?.routes?.name || 'Perjalanan aktif'
-  const journeyTime = activeJourney?.schedules?.departure_time
-    ? new Intl.DateTimeFormat(lang === 'en' ? 'en-ID' : 'id-ID', { hour: '2-digit', minute: '2-digit' }).format(new Date(activeJourney.schedules.departure_time))
-    : null
+  const isOnLiveTrackingTab = pathname === '/dashboard/passenger' && (!currentTab || currentTab === 'overview')
+  const journeyRoute = activeJourney?.schedules?.routes?.name || ''
+  const formatDockTime = (iso) => (
+    iso
+      ? new Intl.DateTimeFormat(lang === 'en' ? 'en-GB' : 'id-ID', { hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date(iso))
+      : null
+  )
+  const journeyTime = formatDockTime(activeJourney?.schedules?.departure_time)
+  const journeyArrivalTime = formatDockTime(activeJourney?.schedules?.arrival_time)
+  const journeyMeta = (() => {
+    if (!activeJourney?.schedules) return null
+    const nowMs = Date.now()
+    const depMs = Date.parse(activeJourney.schedules.departure_time || '')
+    const schedStatus = activeJourney.schedules.status
+    if (schedStatus === 'delayed') {
+      return {
+        statusText: lang === 'en' ? 'Delayed' : 'Tertunda',
+        dotState: 'delayed',
+        timeLabel: lang === 'en' ? 'Departs' : 'Berangkat',
+        timeValue: journeyTime,
+      }
+    }
+    if (schedStatus === 'departed' || (Number.isFinite(depMs) && nowMs >= depMs)) {
+      return {
+        statusText: lang === 'en' ? 'On the way' : 'Berjalan',
+        dotState: 'live',
+        timeLabel: lang === 'en' ? 'Arrives' : 'Tiba',
+        timeValue: journeyArrivalTime || journeyTime,
+      }
+    }
+    if (schedStatus === 'boarding' || (Number.isFinite(depMs) && depMs - nowMs <= 30 * 60 * 1000)) {
+      return {
+        statusText: 'Boarding',
+        dotState: 'boarding',
+        timeLabel: lang === 'en' ? 'Departs' : 'Berangkat',
+        timeValue: journeyTime,
+      }
+    }
+    return {
+      statusText: lang === 'en' ? 'Not departed' : 'Belum jalan',
+      dotState: 'waiting',
+      timeLabel: lang === 'en' ? 'Departs' : 'Berangkat',
+      timeValue: journeyTime,
+    }
+  })()
 
   return (
     <>
@@ -686,22 +727,24 @@ export default function Navbar() {
         </div>
       )}
 
-      {activeJourney && dashboardRole === 'passenger' && !isBookingFlow && !pathname.startsWith('/dashboard/passenger') && (
+      {activeJourney && journeyMeta && dashboardRole === 'passenger' && !isBookingFlow && !isOnLiveTrackingTab && (
         <Link
           href="/dashboard/passenger?tab=overview#trip-status"
           className="rh-journey-dock rh-show-mobile-only"
-          aria-label={`Buka perjalanan ${journeyRoute}`}
+          aria-label={`${journeyMeta.statusText}, ${activeJourney.schedules?.trains?.name || 'Kereta Anda'}, ${journeyMeta.timeLabel} ${journeyMeta.timeValue || ''}`}
         >
-          <span className="rh-journey-dock-icon"><Train size={19} aria-hidden="true" /></span>
+          <span className={`rh-journey-dock-dot is-${journeyMeta.dotState}`} aria-hidden="true" />
           <span className="rh-journey-dock-copy">
-            <small>Perjalanan Kita{journeyTime ? ` · ${journeyTime}` : ''}</small>
             <strong>{activeJourney.schedules?.trains?.name || 'Kereta Anda'}</strong>
-            <span><MapPin size={11} aria-hidden="true" /> {journeyRoute}</span>
+            <small>{journeyMeta.statusText}{journeyRoute ? ` · ${journeyRoute}` : ''}</small>
           </span>
-          <span className="rh-journey-mini-map" aria-hidden="true">
-            <i /><i className="is-train"><Train size={12} /></i><i />
-          </span>
-          <ChevronRight size={18} aria-hidden="true" />
+          {journeyMeta.timeValue && (
+            <span className="rh-journey-dock-time">
+              <small>{journeyMeta.timeLabel}</small>
+              <strong>{journeyMeta.timeValue}</strong>
+            </span>
+          )}
+          <ChevronRight size={16} className="rh-journey-dock-arrow" aria-hidden="true" />
         </Link>
       )}
 

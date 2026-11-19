@@ -243,11 +243,13 @@ export default function SearchWidget({
   const [activePicker, setActivePicker] = useState(null) // 'origin' | 'destination' | null
   const [stationQuery, setStationQuery] = useState('')
   const [passengerOpen, setPassengerOpen] = useState(false)
+  const [passengerPopoverStyle, setPassengerPopoverStyle] = useState(null)
 
   const dateInputRef = useRef(null)
   const returnDateInputRef = useRef(null)
   const searchInputRef = useRef(null)
   const passengerRef = useRef(null)
+  const passengerPopoverRef = useRef(null)
 
   function openDatePicker(inputRef) {
     const input = inputRef.current
@@ -315,18 +317,82 @@ export default function SearchWidget({
     }
   }, [activePicker])
 
-  // Close passenger popover on outside click
+  // Keep portaled passenger popover anchored to the passenger box on desktop/iPad
+  useEffect(() => {
+    if (!passengerOpen) {
+      setPassengerPopoverStyle(null)
+      return
+    }
+
+    function updatePosition() {
+      if (typeof window === 'undefined' || !passengerRef.current) return
+      if (window.innerWidth <= 640) {
+        setPassengerPopoverStyle(null)
+        return
+      }
+      const rect = passengerRef.current.getBoundingClientRect()
+      const estimatedHeight = 270
+      const spaceBelow = window.innerHeight - rect.bottom
+      const openAbove = spaceBelow < estimatedHeight && rect.top > estimatedHeight
+
+      if (openAbove) {
+        setPassengerPopoverStyle({
+          position: 'fixed',
+          left: rect.left,
+          width: rect.width,
+          bottom: window.innerHeight - rect.top + 8,
+          top: 'auto',
+          right: 'auto',
+          zIndex: 10001,
+        })
+      } else {
+        setPassengerPopoverStyle({
+          position: 'fixed',
+          left: rect.left,
+          width: rect.width,
+          top: rect.bottom + 8,
+          bottom: 'auto',
+          right: 'auto',
+          zIndex: 10001,
+        })
+      }
+    }
+
+    updatePosition()
+    window.addEventListener('resize', updatePosition)
+    window.addEventListener('scroll', updatePosition, true)
+    return () => {
+      window.removeEventListener('resize', updatePosition)
+      window.removeEventListener('scroll', updatePosition, true)
+    }
+  }, [passengerOpen])
+
+  // Close passenger popover on outside click or Escape key
   useEffect(() => {
     function handleClickOutside(e) {
-      if (passengerRef.current && !passengerRef.current.contains(e.target)) {
+      const inTrigger = passengerRef.current && passengerRef.current.contains(e.target)
+      const inPopover = passengerPopoverRef.current && passengerPopoverRef.current.contains(e.target)
+      if (!inTrigger && !inPopover) {
         setPassengerOpen(false)
+      }
+    }
+    function handleKeyDown(e) {
+      if (e.key === 'Escape') {
+        if (passengerOpen) setPassengerOpen(false)
+        if (activePicker) setActivePicker(null)
       }
     }
     if (passengerOpen) {
       document.addEventListener('mousedown', handleClickOutside)
     }
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [passengerOpen])
+    if (passengerOpen || activePicker) {
+      document.addEventListener('keydown', handleKeyDown)
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [passengerOpen, activePicker])
 
   function handleSwap(e) {
     e.stopPropagation()
@@ -615,98 +681,105 @@ export default function SearchWidget({
             />
           </div>
 
-          {/* Passenger Stepper Popover */}
-          {passengerOpen && (
+          {/* Passenger Stepper Popover (Portaled to body so parent overflow/backdrop-filter never clips it) */}
+          {mounted && passengerOpen && createPortal(
             <>
               <div
                 className="rh-passenger-mobile-backdrop rh-show-mobile-only"
                 onClick={() => setPassengerOpen(false)}
                 aria-hidden="true"
               />
-              <div className="rh-passenger-popover" role="dialog" aria-label="Jumlah Penumpang">
+              <div
+                ref={passengerPopoverRef}
+                className={`rh-passenger-popover ${isNight ? 'is-night' : ''}`}
+                style={passengerPopoverStyle || undefined}
+                role="dialog"
+                aria-label="Jumlah Penumpang"
+              >
                 <div className="rh-bottom-sheet-handle" aria-hidden="true" />
                 <div className="rh-passenger-popover-header">
-                <strong>{lang === 'en' ? 'Select Passengers' : 'Jumlah Penumpang'}</strong>
+                  <strong>{lang === 'en' ? 'Select Passengers' : 'Jumlah Penumpang'}</strong>
+                  <button
+                    type="button"
+                    className="rh-passenger-close-btn"
+                    onClick={() => setPassengerOpen(false)}
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+
+                {/* Adults Counter */}
+                <div className="rh-passenger-row">
+                  <div>
+                    <div className="rh-passenger-type-title">{lang === 'en' ? 'Adults' : 'Dewasa'}</div>
+                    <div className="rh-passenger-type-desc">{lang === 'en' ? 'Age 3+ years' : 'Usia 3 tahun ke atas'}</div>
+                  </div>
+                  <div className="rh-passenger-stepper">
+                    <button
+                      type="button"
+                      disabled={adults <= 1}
+                      onClick={() => {
+                        const next = Math.max(1, adults - 1)
+                        setAdults(next)
+                        if (infants > next) setInfants(next)
+                      }}
+                      className="rh-stepper-btn"
+                      aria-label="Kurangi dewasa"
+                    >
+                      <Minus size={15} />
+                    </button>
+                    <span className="rh-stepper-count">{adults}</span>
+                    <button
+                      type="button"
+                      disabled={adults >= 6}
+                      onClick={() => setAdults(prev => Math.min(6, prev + 1))}
+                      className="rh-stepper-btn"
+                      aria-label="Tambah dewasa"
+                    >
+                      <Plus size={15} />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Infants Counter */}
+                <div className="rh-passenger-row">
+                  <div>
+                    <div className="rh-passenger-type-title">{lang === 'en' ? 'Infants' : 'Bayi'}</div>
+                    <div className="rh-passenger-type-desc">{lang === 'en' ? 'Under 3 years (no seat)' : 'Di bawah 3 th (tanpa kursi)'}</div>
+                  </div>
+                  <div className="rh-passenger-stepper">
+                    <button
+                      type="button"
+                      disabled={infants <= 0}
+                      onClick={() => setInfants(prev => Math.max(0, prev - 1))}
+                      className="rh-stepper-btn"
+                      aria-label="Kurangi bayi"
+                    >
+                      <Minus size={15} />
+                    </button>
+                    <span className="rh-stepper-count">{infants}</span>
+                    <button
+                      type="button"
+                      disabled={infants >= adults}
+                      onClick={() => setInfants(prev => Math.min(adults, prev + 1))}
+                      className="rh-stepper-btn"
+                      aria-label="Tambah bayi"
+                    >
+                      <Plus size={15} />
+                    </button>
+                  </div>
+                </div>
+
                 <button
                   type="button"
-                  className="rh-passenger-close-btn"
+                  className="rh-passenger-done-btn"
                   onClick={() => setPassengerOpen(false)}
                 >
-                  <X size={16} />
+                  {lang === 'en' ? 'Done' : 'Selesai'}
                 </button>
               </div>
-
-              {/* Adults Counter */}
-              <div className="rh-passenger-row">
-                <div>
-                  <div className="rh-passenger-type-title">{lang === 'en' ? 'Adults' : 'Dewasa'}</div>
-                  <div className="rh-passenger-type-desc">{lang === 'en' ? 'Age 3+ years' : 'Usia 3 tahun ke atas'}</div>
-                </div>
-                <div className="rh-passenger-stepper">
-                  <button
-                    type="button"
-                    disabled={adults <= 1}
-                    onClick={() => {
-                      const next = Math.max(1, adults - 1)
-                      setAdults(next)
-                      if (infants > next) setInfants(next)
-                    }}
-                    className="rh-stepper-btn"
-                    aria-label="Kurangi dewasa"
-                  >
-                    <Minus size={15} />
-                  </button>
-                  <span className="rh-stepper-count">{adults}</span>
-                  <button
-                    type="button"
-                    disabled={adults >= 6}
-                    onClick={() => setAdults(prev => Math.min(6, prev + 1))}
-                    className="rh-stepper-btn"
-                    aria-label="Tambah dewasa"
-                  >
-                    <Plus size={15} />
-                  </button>
-                </div>
-              </div>
-
-              {/* Infants Counter */}
-              <div className="rh-passenger-row">
-                <div>
-                  <div className="rh-passenger-type-title">{lang === 'en' ? 'Infants' : 'Bayi'}</div>
-                  <div className="rh-passenger-type-desc">{lang === 'en' ? 'Under 3 years (no seat)' : 'Di bawah 3 th (tanpa kursi)'}</div>
-                </div>
-                <div className="rh-passenger-stepper">
-                  <button
-                    type="button"
-                    disabled={infants <= 0}
-                    onClick={() => setInfants(prev => Math.max(0, prev - 1))}
-                    className="rh-stepper-btn"
-                    aria-label="Kurangi bayi"
-                  >
-                    <Minus size={15} />
-                  </button>
-                  <span className="rh-stepper-count">{infants}</span>
-                  <button
-                    type="button"
-                    disabled={infants >= adults}
-                    onClick={() => setInfants(prev => Math.min(adults, prev + 1))}
-                    className="rh-stepper-btn"
-                    aria-label="Tambah bayi"
-                  >
-                    <Plus size={15} />
-                  </button>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                className="rh-passenger-done-btn"
-                onClick={() => setPassengerOpen(false)}
-              >
-                {lang === 'en' ? 'Done' : 'Selesai'}
-              </button>
-            </div>
-          </>
+            </>,
+            document.body
           )}
         </div>
 
