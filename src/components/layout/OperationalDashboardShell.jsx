@@ -67,9 +67,10 @@ export default function OperationalDashboardShell({
     try {
       await signOut()
       toast.success('Berhasil keluar dari akun!')
-      router.replace('/auth/login')
+      window.location.replace('/auth/login?logout=1')
     } catch (err) {
       toast.error(`Gagal keluar: ${err.message}`)
+      window.location.replace('/auth/login?logout=1')
     }
   }
 
@@ -263,22 +264,26 @@ export default function OperationalDashboardShell({
               <button
                 type="button"
                 onClick={handleSignOut}
-                title="Keluar"
+                title="Keluar dari akun"
                 aria-label="Keluar dari akun"
                 style={{
                   border: '1px solid #fecaca',
                   background: '#fef2f2',
                   color: '#dc2626',
-                  width: 34,
                   height: 34,
+                  padding: '0 0.65rem',
                   borderRadius: 8,
                   display: 'inline-flex',
                   alignItems: 'center',
                   justifyContent: 'center',
+                  gap: '0.35rem',
+                  fontSize: '0.76rem',
+                  fontWeight: 700,
                   cursor: 'pointer',
                 }}
               >
-                <LogOut size={15} />
+                <LogOut size={14} />
+                <span>Keluar</span>
               </button>
             </div>
           </div>

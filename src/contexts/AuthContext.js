@@ -105,12 +105,29 @@ export function AuthProvider({ children }) {
 
   async function signOut() {
     try {
-      const { error } = await supabase.auth.signOut()
-      if (error) {
-        await supabase.auth.signOut({ scope: 'local' })
-      }
+      await supabase.auth.signOut({ scope: 'local' })
+    } catch {
+      // Ignore storage errors during sign out
+    }
+    try {
+      await withTimeout(supabase.auth.signOut(), 1500)
     } catch {
       // Ignore network errors during sign out
+    }
+    try {
+      if (typeof window !== 'undefined') {
+        Object.keys(window.localStorage).forEach((key) => {
+          if (key.startsWith('sb-')) window.localStorage.removeItem(key)
+        })
+        document.cookie.split(';').forEach((cookie) => {
+          const name = cookie.split('=')[0]?.trim()
+          if (name && name.startsWith('sb-')) {
+            document.cookie = `${name}=; Max-Age=0; path=/; SameSite=Lax`
+          }
+        })
+      }
+    } catch {
+      // Ignore storage cleanup errors
     } finally {
       lastFetchedIdRef.current = null
       setUser(null)

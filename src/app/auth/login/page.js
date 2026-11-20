@@ -12,6 +12,7 @@ import toast from 'react-hot-toast'
 import NightTrainBumperPlayer from '@/components/auth/NightTrainBumperPlayer'
 import { getDashboardForProfile, getOperationalRole, isSafeNextPath, normalizeProfile } from '@/lib/auth/roles'
 import { FullScreenAuthLoadingOverlay } from '@/components/ui/RailLoader'
+import { PRE_BUNDLED_STAFF, DEFAULT_STAFF_PASSWORD } from '@/lib/data/staffAccounts'
 
 function GoogleIcon({ size = 19 }) {
   return (
@@ -108,10 +109,15 @@ export default function LoginPage() {
   const [loadingRole,   setLoadingRole]   = useState('')
   const [googleLoading, setGoogleLoading] = useState(false)
   const [error,         setError]         = useState(() => '')
+  const [showAllStaff,  setShowAllStaff]  = useState(false)
+  const [staffTab,      setStaffTab]      = useState('conductor') // 'conductor' | 'gate'
 
   const { user: currentUser, profile: currentProfile, loading: authLoading } = useAuth()
 
   useEffect(() => {
+    if (typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('logout') === '1') {
+      return
+    }
     if (authLoading || !currentUser || redirectingRef.current) return
     redirectingRef.current = true
     const requestedNext = new URLSearchParams(window.location.search).get('next')
@@ -291,7 +297,8 @@ export default function LoginPage() {
       const rawProfile = {
         id: data.user.id,
         email: data.user.email,
-        role: account.role,
+        role: account.role === 'admin' ? 'admin' : account.role === 'passenger' ? 'passenger' : 'conductor',
+        staff_type: account.staffType || (account.role === 'gate' ? 'gate' : null),
       }
       const role = getOperationalRole(rawProfile, data.user.email)
       const profile = normalizeProfile(rawProfile, data.user.email)
@@ -636,9 +643,14 @@ export default function LoginPage() {
 
             <div style={{ marginTop: '1.15rem', paddingTop: '0.85rem', borderTop: '1px solid #f1f5f9' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                  Akses Cepat Demo
-                </span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                  <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                    Akses Cepat Demo
+                  </span>
+                  <span style={{ fontSize: '0.66rem', fontWeight: 700, padding: '0.1rem 0.4rem', borderRadius: 999, background: '#eff6ff', color: '#1d4ed8' }}>
+                    25 Petugas Aktif
+                  </span>
+                </div>
                 <span style={{ fontSize: '0.68rem', color: '#94a3b8' }}>
                   1-klik login
                 </span>
@@ -676,8 +688,8 @@ export default function LoginPage() {
                 ))}
               </div>
 
-              {/* Minimalist Micro-chips for Petugas KA */}
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem' }}>
+              {/* 5 Unggulan Petugas KA */}
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem', marginBottom: '0.45rem' }}>
                 {DEMO_ACCOUNTS.filter(a => a.category === 'staff').map((account) => (
                   <button
                     key={account.email}
@@ -709,6 +721,189 @@ export default function LoginPage() {
                   </button>
                 ))}
               </div>
+
+              {/* Toggle Semua 25 Petugas (J01-J25) */}
+              <div style={{ marginTop: '0.45rem' }}>
+                <button
+                  type="button"
+                  onClick={() => setShowAllStaff(v => !v)}
+                  style={{
+                    width: '100%',
+                    padding: '0.35rem 0.5rem',
+                    background: showAllStaff ? '#f1f5f9' : 'transparent',
+                    border: '1px dashed #cbd5e1',
+                    borderRadius: 8,
+                    fontSize: '0.72rem',
+                    fontWeight: 600,
+                    color: '#475569',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 6,
+                    transition: 'all 0.15s ease',
+                  }}
+                >
+                  <span>{showAllStaff ? '▲ Tutup Katalog 25 Petugas' : '▼ Buka Katalog Lengkap 25 Petugas (J01 - J25)'}</span>
+                </button>
+
+                {showAllStaff && (
+                  <div style={{ marginTop: '0.45rem', padding: '0.6rem', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 10 }}>
+                    <div style={{ display: 'flex', gap: 4, marginBottom: '0.5rem' }}>
+                      <button
+                        type="button"
+                        onClick={() => setStaffTab('conductor')}
+                        style={{
+                          flex: 1,
+                          padding: '0.25rem 0.45rem',
+                          borderRadius: 6,
+                          border: 'none',
+                          background: staffTab === 'conductor' ? '#1a428a' : '#e2e8f0',
+                          color: staffTab === 'conductor' ? '#ffffff' : '#475569',
+                          fontSize: '0.7rem',
+                          fontWeight: 700,
+                          cursor: 'pointer',
+                        }}
+                      >
+                        🚆 20 Kondektur KA (J01–J20)
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setStaffTab('gate')}
+                        style={{
+                          flex: 1,
+                          padding: '0.25rem 0.45rem',
+                          borderRadius: 6,
+                          border: 'none',
+                          background: staffTab === 'gate' ? '#b45309' : '#e2e8f0',
+                          color: staffTab === 'gate' ? '#ffffff' : '#475569',
+                          fontSize: '0.7rem',
+                          fontWeight: 700,
+                          cursor: 'pointer',
+                        }}
+                      >
+                        🏢 5 Gate Stasiun (J21–J25)
+                      </button>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', gap: '0.35rem', maxHeight: 180, overflowY: 'auto' }}>
+                      {PRE_BUNDLED_STAFF
+                        .filter(s => s.staffType === staffTab)
+                        .map(staff => (
+                          <button
+                            key={staff.email}
+                            type="button"
+                            disabled={loading || googleLoading}
+                            onClick={() => handleQuickLogin({
+                              title: staff.fullName,
+                              email: staff.email,
+                              password: staff.password || DEFAULT_STAFF_PASSWORD,
+                              role: staff.role,
+                              staffType: staff.staffType,
+                            })}
+                            style={{
+                              padding: '0.3rem 0.45rem',
+                              borderRadius: 6,
+                              border: '1px solid #cbd5e1',
+                              background: '#ffffff',
+                              textAlign: 'left',
+                              cursor: loading || googleLoading ? 'not-allowed' : 'pointer',
+                              display: 'flex',
+                              flexDirection: 'column',
+                              gap: 1,
+                            }}
+                          >
+                            <span style={{ fontSize: '0.7rem', fontWeight: 700, color: '#0f172a' }}>
+                              {staff.avatar} {staff.trainName || staff.stationCode || staff.fullName.split(' ')[0]}
+                            </span>
+                            <span style={{ fontSize: '0.64rem', color: '#64748b' }}>
+                              {staff.email}
+                            </span>
+                          </button>
+                        ))}
+                    </div>
+                    <div style={{ marginTop: '0.35rem', fontSize: '0.66rem', color: '#64748b', textAlign: 'center' }}>
+                      Password seluruh akun petugas: <code style={{ color: '#059669', fontWeight: 700 }}>petugas123</code>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Collapsible 5 Testing Scenarios for Lecturer / Evaluator */}
+              <details
+                style={{
+                  marginTop: '0.85rem',
+                  padding: '0.65rem 0.85rem',
+                  background: '#f8fafc',
+                  border: '1px solid #e2e8f0',
+                  borderRadius: 10,
+                  fontSize: '0.76rem',
+                  lineHeight: 1.45,
+                }}
+              >
+                <summary style={{ cursor: 'pointer', fontWeight: 700, color: '#1a428a', listStyle: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span>📋 Panduan Pengujian Dosen (5 Skenario Testing)</span>
+                  <span style={{ fontSize: '0.7rem', color: '#64748b' }}>Buka Panduan ▾</span>
+                </summary>
+
+                <div style={{ marginTop: '0.65rem', display: 'grid', gap: '0.6rem', color: '#334155' }}>
+                  <div style={{ padding: '0.45rem 0.6rem', background: '#ffffff', borderRadius: 8, border: '1px solid #f1f5f9' }}>
+                    <strong style={{ color: '#0f172a', display: 'block', marginBottom: 2 }}>
+                      1. Skenario Penumpang (Pemesanan &amp; E-Tiket):
+                    </strong>
+                    <ol style={{ margin: 0, paddingLeft: '1.1rem' }}>
+                      <li>Login <strong>Penumpang</strong> ➔ Buka <strong>Cari Tiket</strong> (/trains).</li>
+                      <li>Pilih tanggal &amp; KA ➔ Klik <strong>Pilih Kursi</strong> pada denah interaktif.</li>
+                      <li>Selesaikan pembayaran simulasi ➔ E-Boarding Pass QR otomatis terbit.</li>
+                    </ol>
+                  </div>
+
+                  <div style={{ padding: '0.45rem 0.6rem', background: '#ffffff', borderRadius: 8, border: '1px solid #f1f5f9' }}>
+                    <strong style={{ color: '#0f172a', display: 'block', marginBottom: 2 }}>
+                      2. Skenario Petugas Kondektur KA (Validasi &amp; Manifest):
+                    </strong>
+                    <ol style={{ margin: 0, paddingLeft: '1.1rem' }}>
+                      <li>Login <strong>Petugas KA</strong> (misal Argo Bromo / J02) ➔ Masuk dashboard.</li>
+                      <li>Tab <strong>Scan Tiket</strong>: Validasi QR kode penumpang (indikator hijau).</li>
+                      <li>Tab <strong>Manifest</strong>: Pantau daftar kursi &amp; ekspor manifest (CSV / Cetak).</li>
+                      <li>Tab <strong>Perjalanan</strong>: Perbarui status KA (Boarding / Berangkat / Tiba).</li>
+                    </ol>
+                  </div>
+
+                  <div style={{ padding: '0.45rem 0.6rem', background: '#ffffff', borderRadius: 8, border: '1px solid #f1f5f9' }}>
+                    <strong style={{ color: '#0f172a', display: 'block', marginBottom: 2 }}>
+                      3. Skenario Petugas Gate Stasiun (Boarding Terminal):
+                    </strong>
+                    <ol style={{ margin: 0, paddingLeft: '1.1rem' }}>
+                      <li>Login <strong>Gate Stasiun</strong> (misal J21 Gambir) ➔ Masuk konsol gerbang.</li>
+                      <li>Pindai QR boarding pass penumpang sebelum diizinkan masuk ke peron.</li>
+                    </ol>
+                  </div>
+
+                  <div style={{ padding: '0.45rem 0.6rem', background: '#ffffff', borderRadius: 8, border: '1px solid #f1f5f9' }}>
+                    <strong style={{ color: '#0f172a', display: 'block', marginBottom: 2 }}>
+                      4. Skenario Administrator (Kontrol Jadwal &amp; Keuangan):
+                    </strong>
+                    <ol style={{ margin: 0, paddingLeft: '1.1rem' }}>
+                      <li>Login <strong>Administrator</strong> ➔ Tinjau chart okupansi &amp; KPI ringkas.</li>
+                      <li>Tab <strong>Perjalanan</strong>: Cek jadwal aktif &amp; buka manifest detail.</li>
+                      <li>Tab <strong>Petugas</strong>: Klik <strong>Auto-Tugaskan</strong> untuk memaketkan 25 petugas.</li>
+                      <li>Tab <strong>Transaksi</strong>: Ekspor Laporan Keuangan ke format CSV.</li>
+                    </ol>
+                  </div>
+
+                  <div style={{ padding: '0.45rem 0.6rem', background: '#ffffff', borderRadius: 8, border: '1px solid #f1f5f9' }}>
+                    <strong style={{ color: '#0f172a', display: 'block', marginBottom: 2 }}>
+                      5. Skenario Alur Layanan Terpadu (Kuliner &amp; Bantuan):
+                    </strong>
+                    <ol style={{ margin: 0, paddingLeft: '1.1rem' }}>
+                      <li>Penumpang memesan kuliner restorasi / lapor kendala di gerbong KA.</li>
+                      <li>Kondektur menerima notifikasi di tab <strong>Layanan Kereta</strong>.</li>
+                      <li>Kondektur update status pesanan ➔ Terekam real-time di sistem.</li>
+                    </ol>
+                  </div>
+                </div>
+              </details>
             </div>
 
           </div>

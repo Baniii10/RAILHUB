@@ -314,10 +314,23 @@ export function getBundledStaffForTrain(trainName) {
   return PRE_BUNDLED_STAFF.find(stf => stf.trainName && clean.includes(stf.trainName.toLowerCase())) || null
 }
 
-// Helper to find pre-bundled staff by email
+// Helper to find pre-bundled staff by email (supports j01-j25@gmail.com and petugas.*@railhub.id aliases)
+const LEGACY_EMAIL_TO_NUM = {
+  'petugas.argobromo@railhub.id': '02',
+  'petugas.parahyangan@railhub.id': '05',
+  'petugas.argowilis@railhub.id': '07',
+  'petugas.taksaka@railhub.id': '19',
+  'petugas.turangga@railhub.id': '20',
+  'gate.gambir@railhub.id': '21',
+}
+
 export function getBundledStaffByEmail(email) {
   if (!email) return null
   const clean = email.toLowerCase().trim()
+  const mappedNum = LEGACY_EMAIL_TO_NUM[clean]
+  if (mappedNum) {
+    return PRE_BUNDLED_STAFF.find(stf => stf.num === mappedNum) || null
+  }
   return PRE_BUNDLED_STAFF.find(stf => stf.email === clean) || null
 }
 

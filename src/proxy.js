@@ -36,9 +36,21 @@ export async function proxy(request) {
     return redirectResponse
   }
 
-  const { pathname } = request.nextUrl
+  const { pathname, searchParams } = request.nextUrl
   const isProtectedBooking = pathname.startsWith('/booking/payment/')
-  const requestedNext = request.nextUrl.searchParams.get('next')
+  const requestedNext = searchParams.get('next')
+  const isExplicitLogout = searchParams.get('logout') === '1'
+
+  // If user explicitly signed out, remove auth cookies and permit access to login
+  if (isExplicitLogout) {
+    const logoutResponse = NextResponse.next({ request })
+    request.cookies.getAll().forEach(({ name }) => {
+      if (name.startsWith('sb-')) {
+        logoutResponse.cookies.set(name, '', { maxAge: 0, path: '/' })
+      }
+    })
+    return logoutResponse
+  }
 
   let profile = null
   if (user && supabase) {
@@ -54,7 +66,7 @@ export async function proxy(request) {
     }
   }
 
-  if (user && (pathname.startsWith('/auth/login') || pathname.startsWith('/auth/register'))) {
+  if (user && !isExplicitLogout && (pathname.startsWith('/auth/login') || pathname.startsWith('/auth/register'))) {
     const role = getOperationalRole(profile, user.email)
     const safeNext = isSafeNextPath(requestedNext, role) ? requestedNext : null
     return redirectWithCookies(safeNext || getDashboardForProfile(profile, user.email))

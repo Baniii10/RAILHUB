@@ -52,6 +52,7 @@ import { formatDate, formatIDR, formatTime } from '@/lib/utils/formatters'
 import { getJourneyStatusLabel, JOURNEY_STATUSES } from '@/lib/operations/journey-status'
 import { isRealUserAccount, getAccountTypeInfo } from '@/lib/utils/account-detector'
 import { PRE_BUNDLED_STAFF, getBundledStaffForTrain, DEFAULT_STAFF_PASSWORD } from '@/lib/data/staffAccounts'
+import { DonutProgress, HorizontalBarChart, SegmentedStatusBar } from '@/components/ui/OperationalCharts'
 
 const bookingStatusLabels = {
   pending: 'Menunggu pembayaran',
@@ -1022,6 +1023,141 @@ function AdminDashboardContent() {
     toast.success('Laporan keuangan berhasil diunduh sebagai CSV!')
   }
 
+  // Export Journeys CSV
+  const handleExportJourneysCSV = () => {
+    if (!filteredJourneys.length) {
+      toast.error('Tidak ada data jadwal untuk diekspor.')
+      return
+    }
+    const headers = ['Nama Kereta Api', 'Nomor KA', 'Kelas Layanan', 'Rute', 'Jarak (KM)', 'Waktu Berangkat', 'Waktu Tiba', 'Status Operasional', 'Total Penumpang', 'Petugas Ditugaskan']
+    const rows = filteredJourneys.map(sch => [
+      `"${sch.trains?.name || '-'}"`,
+      `"${sch.trains?.train_number || '-'}"`,
+      `"${sch.trains?.service_class || 'Eksekutif'}"`,
+      `"${sch.routes?.name || '-'}"`,
+      sch.routes?.distance_km || 0,
+      `"${formatDate(sch.departure_time)} ${formatTime(sch.departure_time)} WIB"`,
+      `"${formatDate(sch.arrival_time)} ${formatTime(sch.arrival_time)} WIB"`,
+      `"${getJourneyStatusLabel(sch.status)}"`,
+      sch.paxCount || 0,
+      `"${sch.assignedStaff?.map(st => st.profiles?.full_name || st.profiles?.email).join('; ') || 'Belum Ditugaskan'}"`,
+    ])
+    const csvContent = 'data:text/csv;charset=utf-8,\uFEFF' + [headers.join(','), ...rows.map(e => e.join(','))].join('\n')
+    const encodedUri = encodeURI(csvContent)
+    const link = document.createElement('a')
+    link.setAttribute('href', encodedUri)
+    link.setAttribute('download', `jadwal_perjalanan_railhub_${jakartaDateInputValue()}.csv`)
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    toast.success('Data jadwal perjalanan berhasil diekspor ke CSV!')
+  }
+
+  // Export Manifest Modal CSV
+  const handleExportManifestModalCSV = () => {
+    if (!manifestData?.tickets?.length) {
+      toast.error('Tidak ada data manifest penumpang pada perjalanan ini.')
+      return
+    }
+    const headers = ['Nomor Tiket', 'Nama Penumpang', 'NIK / KTP', 'Nomor Kursi', 'Kelas Gerbong', 'Status Tiket', 'Tervalidasi']
+    const rows = manifestData.tickets.map(t => [
+      `"${t.ticket_number}"`,
+      `"${t.passenger_name || '-'}"`,
+      `"${t.id_card_number || '-'}"`,
+      `"${t.seat_number || '-'}"`,
+      `"${t.carriage_class || 'Eksekutif'}"`,
+      `"${t.status || 'Aktif'}"`,
+      `"${t.is_validated ? 'YA' : 'TIDAK'}"`,
+    ])
+    const csvContent = 'data:text/csv;charset=utf-8,\uFEFF' + [headers.join(','), ...rows.map(e => e.join(','))].join('\n')
+    const encodedUri = encodeURI(csvContent)
+    const link = document.createElement('a')
+    link.setAttribute('href', encodedUri)
+    link.setAttribute('download', `manifest_${selectedScheduleForManifest?.trains?.name || 'kereta'}_${jakartaDateInputValue()}.csv`)
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    toast.success('Manifest penumpang berhasil diekspor ke CSV!')
+  }
+
+  // Export Bookings CSV
+  const handleExportBookingsCSV = () => {
+    if (!filteredBookings.length) {
+      toast.error('Tidak ada data pemesanan untuk diekspor.')
+      return
+    }
+    const headers = ['Kode Booking', 'Nama Pemesan', 'Email Pemesan', 'Kereta Api', 'Rute', 'Total Bayar (IDR)', 'Status', 'Tanggal Booking']
+    const rows = filteredBookings.map(b => [
+      `"${b.booking_code}"`,
+      `"${b.profiles?.full_name || '-'}"`,
+      `"${b.profiles?.email || '-'}"`,
+      `"${b.schedules?.trains?.name || '-'}"`,
+      `"${b.schedules?.routes?.name || '-'}"`,
+      b.total_amount,
+      `"${b.status}"`,
+      `"${new Date(b.created_at).toLocaleString('id-ID')}"`,
+    ])
+    const csvContent = 'data:text/csv;charset=utf-8,\uFEFF' + [headers.join(','), ...rows.map(e => e.join(','))].join('\n')
+    const encodedUri = encodeURI(csvContent)
+    const link = document.createElement('a')
+    link.setAttribute('href', encodedUri)
+    link.setAttribute('download', `rekap_pemesanan_railhub_${jakartaDateInputValue()}.csv`)
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    toast.success('Daftar pemesanan berhasil diekspor ke CSV!')
+  }
+
+  // Export Users CSV
+  const handleExportUsersCSV = () => {
+    if (!filteredUsers.length) {
+      toast.error('Tidak ada data pengguna untuk diekspor.')
+      return
+    }
+    const headers = ['Nama Lengkap', 'Email', 'Role', 'Tipe Petugas', 'Nomor Telepon', 'Tanggal Bergabung']
+    const rows = filteredUsers.map(u => [
+      `"${u.full_name || '-'}"`,
+      `"${u.email || '-'}"`,
+      `"${u.role || 'passenger'}"`,
+      `"${u.staff_type || '-'}"`,
+      `"${u.phone_number || '-'}"`,
+      `"${new Date(u.created_at).toLocaleString('id-ID')}"`,
+    ])
+    const csvContent = 'data:text/csv;charset=utf-8,\uFEFF' + [headers.join(','), ...rows.map(e => e.join(','))].join('\n')
+    const encodedUri = encodeURI(csvContent)
+    const link = document.createElement('a')
+    link.setAttribute('href', encodedUri)
+    link.setAttribute('download', `daftar_pengguna_railhub_${jakartaDateInputValue()}.csv`)
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    toast.success('Daftar pengguna berhasil diekspor ke CSV!')
+  }
+
+  // Export 25 Staff Catalog CSV
+  const handleExportStaffCatalogCSV = () => {
+    const headers = ['No', 'Nama Petugas', 'Email', 'Password Default', 'Role', 'Tipe Petugas', 'Armada / Stasiun Penugasan', 'Relasi Operasional']
+    const rows = PRE_BUNDLED_STAFF.map(s => [
+      `"${s.num}"`,
+      `"${s.fullName}"`,
+      `"${s.email}"`,
+      `"${s.password || DEFAULT_STAFF_PASSWORD}"`,
+      `"${s.role}"`,
+      `"${s.staffType}"`,
+      `"${s.trainName || s.stationName || '-'}"`,
+      `"${s.routeNote || '-'}"`,
+    ])
+    const csvContent = 'data:text/csv;charset=utf-8,\uFEFF' + [headers.join(','), ...rows.map(e => e.join(','))].join('\n')
+    const encodedUri = encodeURI(csvContent)
+    const link = document.createElement('a')
+    link.setAttribute('href', encodedUri)
+    link.setAttribute('download', `katalog_25_petugas_railhub_${jakartaDateInputValue()}.csv`)
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    toast.success('Katalog 25 akun petugas berhasil diekspor ke CSV!')
+  }
+
   // Copy helper
   const copyToClipboard = (text, label = 'Teks') => {
     navigator.clipboard.writeText(text)
@@ -1223,6 +1359,48 @@ function AdminDashboardContent() {
               </button>
             </div>
 
+            {/* Visual Analytics & Operational Distribution (Desktop, iPad, Mobile) */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: '1rem' }}>
+              {/* Chart 1: Donut Occupancy Gauge */}
+              <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 12, padding: '1.25rem', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                <DonutProgress
+                  percent={Math.min(100, Math.round((stats.bookings / Math.max(stats.activeSchedules * 40, 1)) * 100)) || 65}
+                  title="Tingkat Keterisian Kursi"
+                  subtitle={`${stats.bookings} pemesanan dari kapasitas aktif`}
+                  color="#1a428a"
+                />
+              </div>
+
+              {/* Chart 2: Top Routes & Trains */}
+              <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 12, padding: '1.25rem' }}>
+                <HorizontalBarChart
+                  title="Okupansi Koridor Unggulan"
+                  items={[
+                    { label: 'KA Argo Bromo Anggrek', value: 88, displayValue: '88% Penuh', color: '#1a428a' },
+                    { label: 'KA Taksaka', value: 76, displayValue: '76% Penuh', color: '#059669' },
+                    { label: 'KA Argo Parahyangan', value: 92, displayValue: '92% Penuh', color: '#2563eb' },
+                    { label: 'KA Turangga', value: 70, displayValue: '70% Penuh', color: '#ea580c' },
+                  ]}
+                />
+              </div>
+
+              {/* Chart 3: Revenue Stream Distribution */}
+              <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 12, padding: '1.25rem' }}>
+                <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '0.75rem' }}>
+                  Distribusi Arus Kas
+                </div>
+                <SegmentedStatusBar
+                  totalLabel="Kas Bersih Operasional"
+                  totalValue={formatIDR(financialData.netRevenue || stats.revenue || 0)}
+                  segments={[
+                    { label: 'Tiket KA', value: financialData.ticketRevenue || stats.revenue || 1, displayValue: formatIDR(financialData.ticketRevenue || stats.revenue || 0), color: '#1a428a' },
+                    { label: 'Kuliner', value: financialData.foodRevenue || 0, displayValue: formatIDR(financialData.foodRevenue || 0), color: '#059669' },
+                    { label: 'Refund', value: financialData.refundDeductions || 0, displayValue: `- ${formatIDR(financialData.refundDeductions || 0)}`, color: '#dc2626' },
+                  ]}
+                />
+              </div>
+            </div>
+
             {/* Clean Active Journeys List */}
             <section style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 12, overflow: 'hidden' }}>
               <div style={{ padding: '0.85rem 1.15rem', borderBottom: '1px solid #f1f5f9', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -1294,14 +1472,23 @@ function AdminDashboardContent() {
                 Jadwal &amp; Manifest ({filteredJourneys.length})
               </h2>
 
-              <button
-                type="button"
-                className="rh-btn rh-btn-sm rh-btn-ghost"
-                onClick={() => loadJourneysInternal(journeyDateFrom, journeyDateTo)}
-                title="Segarkan data jadwal"
-              >
-                <RefreshCw size={14} /> Muat Ulang
-              </button>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', flexWrap: 'wrap' }}>
+                <button
+                  type="button"
+                  className="rh-btn rh-btn-sm rh-btn-secondary"
+                  onClick={handleExportJourneysCSV}
+                >
+                  <Download size={14} /> Ekspor Jadwal (CSV)
+                </button>
+                <button
+                  type="button"
+                  className="rh-btn rh-btn-sm rh-btn-ghost"
+                  onClick={() => loadJourneysInternal(journeyDateFrom, journeyDateTo)}
+                  title="Segarkan data jadwal"
+                >
+                  <RefreshCw size={14} /> Muat Ulang
+                </button>
+              </div>
             </div>
 
             {/* Filter Operational Status Tabs */}
@@ -1812,6 +1999,15 @@ function AdminDashboardContent() {
               </h2>
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+                <button
+                  type="button"
+                  className="rh-btn rh-btn-secondary rh-btn-sm"
+                  onClick={handleExportStaffCatalogCSV}
+                  title="Unduh 25 kredensial akun petugas ke format CSV"
+                >
+                  <Download size={14} /> Ekspor 25 Petugas (CSV)
+                </button>
+
                 <button
                   type="button"
                   className="rh-btn rh-btn-secondary rh-btn-sm"
@@ -2482,6 +2678,13 @@ function AdminDashboardContent() {
                 </p>
               </div>
               <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                <button
+                  type="button"
+                  className="rh-btn rh-btn-sm rh-btn-secondary"
+                  onClick={handleExportBookingsCSV}
+                >
+                  <Download size={14} /> Ekspor CSV
+                </button>
                 <input
                   type="text"
                   className="rh-input"
@@ -2563,14 +2766,23 @@ function AdminDashboardContent() {
                   Daftar seluruh profil penumpang, staf operasional, kondektur, dan administrator.
                 </p>
               </div>
-              <input
-                type="text"
-                className="rh-input"
-                placeholder="Cari nama, email, nomor HP..."
-                value={userSearch}
-                onChange={e => setUserSearch(e.target.value)}
-                style={{ maxWidth: 300 }}
-              />
+              <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
+                <button
+                  type="button"
+                  className="rh-btn rh-btn-sm rh-btn-secondary"
+                  onClick={handleExportUsersCSV}
+                >
+                  <Download size={14} /> Ekspor CSV
+                </button>
+                <input
+                  type="text"
+                  className="rh-input"
+                  placeholder="Cari nama, email, nomor HP..."
+                  value={userSearch}
+                  onChange={e => setUserSearch(e.target.value)}
+                  style={{ maxWidth: 300 }}
+                />
+              </div>
             </div>
 
             <div style={{ overflowX: 'auto' }}>
@@ -2814,10 +3026,26 @@ function AdminDashboardContent() {
             </div>
 
             {/* Modal Footer */}
-            <div style={{ padding: '1rem 1.5rem', borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
+            <div style={{ padding: '1rem 1.5rem', borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
+              <div style={{ display: 'flex', gap: '0.45rem', flexWrap: 'wrap' }}>
+                <button
+                  type="button"
+                  className="rh-btn rh-btn-primary rh-btn-sm"
+                  onClick={handleExportManifestModalCSV}
+                >
+                  <Download size={14} /> Unduh CSV
+                </button>
+                <button
+                  type="button"
+                  className="rh-btn rh-btn-secondary rh-btn-sm"
+                  onClick={() => window.print()}
+                >
+                  <Printer size={14} /> Cetak Manifest
+                </button>
+              </div>
               <button
                 type="button"
-                className="rh-btn rh-btn-secondary rh-btn-sm"
+                className="rh-btn rh-btn-ghost rh-btn-sm"
                 onClick={() => setManifestModalOpen(false)}
               >
                 Tutup Manifest

@@ -196,3 +196,121 @@ Jika Anda ingin mengosongkan seluruh tiket yang pernah dibeli akun manapun dan m
 3. Tempel ke editor dan klik **Run**.
 4. Seluruh tabel `tickets`, `booking_seats`, `food_orders`, `payments`, dan `bookings` langsung dikosongkan seketika.
 
+---
+
+## 🎓 10. PANDUAN PENGUJIAN DOSEN / EVALUATOR (5 SKENARIO TESTING LENGKAP)
+
+Untuk mempermudah dosen penguji atau evaluator menguji seluruh alur bisnis sistem RAILHUB dari hulu ke hilir tanpa hambatan, ikuti 5 skenario berurutan berikut:
+
+### 🟢 Skenario 1: Penumpang (Booking, Pembayaran, Tiket QR, Reschedule & Batal)
+1. Masuk ke halaman login (`/auth/login`), klik tombol pintas **"Penumpang Demo"** (atau email `penumpang@railhub.id`, password `password123`).
+2. Di Beranda, cari kereta (misal: Rute Jakarta Gambir ke Surabaya Gubeng), pilih jadwal kereta **Argo Bromo Anggrek**.
+3. Pilih gerbong dan kursi penumpang secara interaktif pada seat map.
+4. Lanjutkan ke pembayaran (simulasi QRIS / Virtual Account), klik **Bayar Sekarang**.
+5. Buka menu **Tiket Saya** (`/dashboard/orders`), verifikasi tiket berstatus **Lunas** dengan **QR Code Digital** boarding pass.
+6. Uji fitur **Reschedule** (ganti jadwal) dan **Batalkan Tiket** untuk menguji sistem refund otomatis.
+
+### 🚆 Skenario 2: Petugas Kereta / Kondektur (Validasi Manifest & Update Status KA)
+1. Di halaman login, klik salah satu akun kereta cepat, misalnya **"Petugas KA Argo Bromo"** (`j02@gmail.com` / `petugas123`).
+2. Di Dashboard Petugas (`/dashboard/staff`), amati gauge boarding, komposisi kelas gerbong, dan status layanan terpadu.
+3. Buka tab **Validasi Tiket**:
+   - Masukkan kode tiket penumpang dari Skenario 1 (atau klik kamera QR).
+   - Status tiket berubah menjadi hijau **"TIKET VALID · BOARDING BERHASIL"**.
+4. Buka tab **Manifest Penumpang**: cek data penumpang, klik tombol **"Ekspor Manifest (CSV)"** atau **"Cetak"**.
+5. Buka tab **Status KA**: ubah status perjalanan dari `scheduled` ➔ `boarding` ➔ `departed`.
+
+### 🚪 Skenario 3: Petugas Gate Stasiun (Check-in Boarding Gate)
+1. Di halaman login, buka katalog petugas dan pilih **"J21 Gate Gambir"** (`j21@gmail.com` / `petugas123`).
+2. Petugas gate otomatis disetel pada lokasi tugas **Stasiun Gambir (GMR)**.
+3. Masukkan kode tiket penumpang pada scanner manual gate.
+4. Sistem gate melakukan verifikasi asal stasiun, tanggal keberangkatan, dan identitas penumpang dengan feedback visual instan.
+5. Unduh riwayat validasi melalui tombol **"Ekspor Riwayat Validasi (CSV)"**.
+
+### 👑 Skenario 4: Administrator (Pusat Kendali, Visual Chart & Ekspor Data Global)
+1. Di halaman login, klik tombol pintas **"Administrator"** (`admin@railhub.id` / `admin123`).
+2. Di Dashboard Admin (`/dashboard/admin`), telaah:
+   - **Ringkasan KPI** (Total Penumpang, Pendapatan, Okupansi Rata-rata, On-Time Performance).
+   - **Visualisasi Chart**: Gauge okupansi, horizontal bar kereta terpopuler, dan segmented bar arus kas.
+3. Coba fitur **Ekspor Data**:
+   - Di tab **Jadwal**: klik **"Ekspor Jadwal (CSV)"**.
+   - Di modal **Manifest**: klik **"Unduh CSV"** atau **"Cetak Manifest"**.
+   - Di tab **Petugas**: klik **"Ekspor 25 Petugas (CSV)"**.
+   - Di tab **Pemesanan** & **Pengguna**: klik **"Ekspor CSV"**.
+4. Uji manajemen jadwal (tambah rute, edit jam, ubah status) dan plot penugasan petugas armada.
+
+### 🛎️ Skenario 5: Layanan Terpadu di Kereta (Kuliner, Bantuan & Lost/Found)
+1. Login sebagai penumpang, buka menu layanan gerbong dan pesan kuliner (Onboard Dining) atau ajukan laporan bantuan kursi roda.
+2. Kembali login sebagai Petugas KA terkait (`j02@gmail.com`), buka tab **Layanan Terpadu**.
+3. Konfirmasi pesanan makanan, update progres penyajian, dan ekspor data melalui **"Ekspor Rekap Pesanan (CSV)"**.
+4. Tindak lanjuti laporan bantuan khusus dan klaim barang tertinggal (Lost & Found).
+
+---
+
+## 👥 11. TABEL KREDENSIAL LENGKAP (25 PETUGAS J01–J25, ADMIN, PENUMPANG)
+
+Semua akun di bawah ini telah terdaftar aktif di database Supabase Production dan dapat digunakan langsung baik melalui pengetikan form manual maupun klik instan tombol Login Cepat.
+
+### Akun Utama:
+| Role | Email | Password | Keterangan |
+| :--- | :--- | :--- | :--- |
+| **Administrator** | `admin@railhub.id` | `admin123` | Akses penuh seluruh modul master data, analitik & armada |
+| **Penumpang Demo** | `penumpang@railhub.id` | `password123` | Akun penumpang umum untuk booking, seat map & e-ticket |
+
+### 25 Akun Petugas Resmi (Password Default: `petugas123`):
+| Kode | Nama Petugas | Email | Tipe Petugas | Penugasan Armada / Stasiun |
+| :--- | :--- | :--- | :--- | :--- |
+| **J01** | Budi Santoso | `j01@gmail.com` | Kondektur (Train Staff) | KA 1 Argo Bromo Anggrek (SBI - GMR) |
+| **J02** | Siti Rahmawati | `j02@gmail.com` | Kondektur (Train Staff) | KA 2 Argo Bromo Anggrek (GMR - SBI) |
+| **J03** | Agus Setiawan | `j03@gmail.com` | Kondektur (Train Staff) | KA 3 Argo Bromo Anggrek (Malam) |
+| **J04** | Dewi Lestari | `j04@gmail.com` | Kondektur (Train Staff) | KA 4 Argo Bromo Anggrek (Malam) |
+| **J05** | Eko Prasetyo | `j05@gmail.com` | Kondektur (Train Staff) | KA 43 Argo Parahyangan (BD - GMR) |
+| **J06** | Rina Wulandari | `j06@gmail.com` | Kondektur (Train Staff) | KA 44 Argo Parahyangan (GMR - BD) |
+| **J07** | Ahmad Fauzi | `j07@gmail.com` | Kondektur (Train Staff) | KA 5 Argo Wilis (SGU - BD) |
+| **J08** | Nur Hidayah | `j08@gmail.com` | Kondektur (Train Staff) | KA 6 Argo Wilis (BD - SGU) |
+| **J09** | Hendra Kurniawan | `j09@gmail.com` | Kondektur (Train Staff) | KA 9 Argo Dwipangga (SLO - GMR) |
+| **J10** | Sri Wahyuni | `j10@gmail.com` | Kondektur (Train Staff) | KA 10 Argo Dwipangga (GMR - SLO) |
+| **J11** | Bambang Supriyadi | `j11@gmail.com` | Kondektur (Train Staff) | KA 7 Argo Lawu (SLO - GMR) |
+| **J12** | Tri Handayani | `j12@gmail.com` | Kondektur (Train Staff) | KA 8 Argo Lawu (GMR - SLO) |
+| **J13** | Dedi Cahyono | `j13@gmail.com` | Kondektur (Train Staff) | KA 67 Taluwo / Gajayana (ML - GMR) |
+| **J14** | Maya Anggraini | `j14@gmail.com` | Kondektur (Train Staff) | KA 68 Gajayana (GMR - ML) |
+| **J15** | Joko Widodo | `j15@gmail.com` | Kondektur (Train Staff) | KA 75 Bima (SGU - GMR) |
+| **J16** | Yuni Astuti | `j16@gmail.com` | Kondektur (Train Staff) | KA 76 Bima (GMR - SGU) |
+| **J17** | Rizky Pratama | `j17@gmail.com` | Kondektur (Train Staff) | KA 81 Sembrani (SBI - GMR) |
+| **J18** | Indah Permata | `j18@gmail.com` | Kondektur (Train Staff) | KA 82 Sembrani (GMR - SBI) |
+| **J19** | Fajar Nugroho | `j19@gmail.com` | Kondektur (Train Staff) | KA 69 Taksaka (YK - GMR) |
+| **J20** | Ratna Sari | `j20@gmail.com` | Kondektur (Train Staff) | KA 70 Turangga (SGU - BD) |
+| **J21** | Ari Wibowo | `j21@gmail.com` | Petugas Pintu (Gate) | Gate Stasiun Gambir (GMR) |
+| **J22** | Dian Kusuma | `j22@gmail.com` | Petugas Pintu (Gate) | Gate Stasiun Pasar Senen (PSE) |
+| **J23** | Bayu Saputra | `j23@gmail.com` | Petugas Pintu (Gate) | Gate Stasiun Bandung (BD) |
+| **J24** | Anisa Putri | `j24@gmail.com` | Petugas Pintu (Gate) | Gate Stasiun Yogyakarta (YK) |
+| **J25** | Doni Hermawan | `j25@gmail.com` | Petugas Pintu (Gate) | Gate Stasiun Surabaya Pasarturi (SBI) |
+
+> **Catatan Pintas Email Petugas Populer:**
+> Tombol cepat juga mendukung email alias `petugas.argobromo@railhub.id`, `petugas.parahyangan@railhub.id`, `petugas.taksaka@railhub.id`, `petugas.argowilis@railhub.id`, `petugas.turangga@railhub.id`, dan `gate.gambir@railhub.id` yang otomatis dipetakan ke kredensial di atas.
+
+---
+
+## 📊 12. FITUR EKSPOR DATA & VISUALISASI CHART
+
+Seluruh dashboard telah dilengkapi sistem pelaporan dan visualisasi data mandiri (*zero-dependency*):
+
+### 1. Visualisasi Chart:
+- **Donut Progress Gauge**: Menampilkan persentase keterisian kursi dan progres boarding secara dinamis berbasis SVG vektor tajam.
+- **Horizontal Bar Chart**: Membandingkan volume okupansi antar kereta api terpopuler dan perincian kelas gerbong (Eksekutif K1, Luxury Sleeper, Bisnis, Ekonomi).
+- **Segmented Status Bar**: Visualisasi proporsi arus kas (Tiket Terbayar, Refund/Batal, Pending) dan status penanganan keluhan penumpang.
+- Seluruh visualisasi responsif dan ramah sentuhan di layar ponsel cerdas, iPad/tablet, hingga monitor desktop resolusi tinggi.
+
+### 2. Kemampuan Ekspor Data:
+- **Admin**:
+  - Ekspor Seluruh Jadwal Kereta (`.csv`)
+  - Ekspor & Cetak Manifest Penumpang Per Jadwal (`.csv` & `.pdf` Print)
+  - Ekspor Katalog 25 Kredensial Petugas (`.csv`)
+  - Ekspor Rekap Seluruh Pemesanan (`.csv`)
+  - Ekspor Database Pengguna (`.csv`)
+- **Petugas**:
+  - Ekspor Manifest Penumpang KA yang Ditugaskan (`.csv`)
+  - Cetak Lembar Manifest Fisik Perjalanan (`.pdf` Print)
+  - Ekspor Log / Riwayat Validasi Tiket Scanner (`.csv`)
+  - Ekspor Rekap Pesanan Kuliner Onboard Dining (`.csv`)
+
+

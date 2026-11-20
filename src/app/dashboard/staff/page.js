@@ -26,11 +26,17 @@ import {
   Utensils,
   XCircle,
   Trash2,
+  Download,
+  Printer,
+  FileText,
+  Check,
+  Copy,
 } from 'lucide-react'
 import toast from 'react-hot-toast'
 import OperationalDashboardShell from '@/components/layout/OperationalDashboardShell'
 import LiveRoleClock from '@/components/ui/LiveRoleClock'
 import TicketScanner from '@/components/staff/TicketScanner'
+import { DonutProgress, HorizontalBarChart, SegmentedStatusBar } from '@/components/ui/OperationalCharts'
 import { useAuth } from '@/contexts/AuthContext'
 import { createClient } from '@/lib/supabase/client'
 import { getJourneyStatusLabel, getNextJourneyStatuses, JOURNEY_STATUSES } from '@/lib/operations/journey-status'
@@ -64,26 +70,14 @@ const TABS = [
 ]
 const GATE_TABS = TABS.filter(tab => ['overview', 'validation'].includes(tab.id))
 
-// Staff Sidebar Navigation Groups
+// Staff Top Navigation Groups
 const getStaffMenuGroups = ({ isGate, ticketTotal, pendingServices }) => {
   if (isGate) {
     return [
       {
-        groupLabel: 'Utama',
         items: [
-          { id: 'overview', label: 'Dashboard Tugas', icon: LayoutDashboard },
-        ],
-      },
-      {
-        groupLabel: 'Pemeriksaan Boarding',
-        items: [
-          { id: 'validation', label: 'Scan & Validasi Tiket', icon: TicketCheck },
-        ],
-      },
-      {
-        groupLabel: 'Layanan & Bantuan',
-        items: [
-          { id: 'notifications', label: 'Pemberitahuan Tugas', icon: Bell },
+          { id: 'overview', label: 'Ringkasan Gate', icon: LayoutDashboard },
+          { id: 'validation', label: 'Scan & Validasi', icon: TicketCheck },
         ],
       },
     ]
@@ -91,29 +85,12 @@ const getStaffMenuGroups = ({ isGate, ticketTotal, pendingServices }) => {
 
   return [
     {
-      groupLabel: 'Utama',
       items: [
-        { id: 'overview', label: 'Dashboard Tugas', icon: LayoutDashboard },
-      ],
-    },
-    {
-      groupLabel: 'Validasi & Boarding',
-      items: [
-        { id: 'validation', label: 'Scan Tiket Penumpang', icon: TicketCheck },
-      ],
-    },
-    {
-      groupLabel: 'Operasional KA',
-      items: [
-        { id: 'passengers', label: 'Manifest Penumpang', icon: Users, badge: ticketTotal || 0 },
-        { id: 'journey', label: 'Status Perjalanan', icon: Train },
-      ],
-    },
-    {
-      groupLabel: 'Layanan Kereta',
-      items: [
-        { id: 'services', label: 'Restorasi & Bantuan', icon: Utensils, badge: pendingServices || 0, badgeColor: '#ea580c' },
-        { id: 'notifications', label: 'Pemberitahuan Tugas', icon: Bell },
+        { id: 'overview', label: 'Ringkasan', icon: LayoutDashboard },
+        { id: 'validation', label: 'Scan Tiket', icon: TicketCheck },
+        { id: 'passengers', label: 'Manifest', icon: Users, badge: ticketTotal || 0 },
+        { id: 'journey', label: 'Status KA', icon: Train },
+        { id: 'services', label: 'Layanan Kereta', icon: Utensils, badge: pendingServices || 0, badgeColor: '#ea580c' },
       ],
     },
   ]
@@ -460,6 +437,118 @@ function StaffDashboardContent() {
     })
   }, [tickets, passengerSearch, passengerScheduleFilter, passengerValidatedFilter])
 
+  // Carriage class distribution for charts
+  const carriageClassCounts = useMemo(() => {
+    const counts = { Eksekutif: 0, Luxury: 0, Bisnis: 0, Ekonomi: 0 }
+    tickets.forEach(t => {
+      const cls = t.seats?.carriages?.carriage_class || 'Eksekutif'
+      if (cls.toLowerCase().includes('lux')) counts.Luxury++
+      else if (cls.toLowerCase().includes('bisnis')) counts.Bisnis++
+      else if (cls.toLowerCase().includes('eko')) counts.Ekonomi++
+      else counts.Eksekutif++
+    })
+    return [
+      { label: 'Eksekutif (K1)', value: counts.Eksekutif, displayValue: `${counts.Eksekutif} Kursi`, color: '#1a428a' },
+      { label: 'Luxury Sleeper', value: counts.Luxury, displayValue: `${counts.Luxury} Kursi`, color: '#d97706' },
+      { label: 'Bisnis / Premium', value: counts.Bisnis, displayValue: `${counts.Bisnis} Kursi`, color: '#2563eb' },
+      { label: 'Ekonomi Terpadu', value: counts.Ekonomi, displayValue: `${counts.Ekonomi} Kursi`, color: '#059669' },
+    ].filter(i => i.value > 0 || counts.Eksekutif === 0)
+  }, [tickets])
+
+  // Export Manifest CSV
+  const handleExportManifestCSV = () => {
+    if (!filteredTickets.length) {
+      toast.error('Tidak ada data penumpang pada manifest untuk diekspor.')
+      return
+    }
+    const headers = ['Nomor Tiket', 'Nama Penumpang', 'NIK / KTP', 'Nomor Kursi', 'Kelas Gerbong', 'Kereta Api', 'Rute', 'Status Boarding', 'Waktu Validasi']
+    const rows = filteredTickets.map(t => [
+      `"${t.ticket_number}"`,
+      `"${t.passengers?.full_name || '-'}"`,
+      `"${t.passengers?.id_card_number || t.passengers?.identity_number || '-'}"`,
+      `"${t.seats?.seat_number || '-'}"`,
+      `"${t.seats?.carriages?.carriage_class || 'Eksekutif'}"`,
+      `"${t.schedules?.trains?.name || '-'}"`,
+      `"${t.schedules?.routes?.name || '-'}"`,
+      `"${t.is_validated ? 'TERVALIDASI' : 'BELUM VALIDASI'}"`,
+      `"${t.validated_at ? new Date(t.validated_at).toLocaleString('id-ID') : '-'}"`,
+    ])
+    const csvContent = 'data:text/csv;charset=utf-8,\uFEFF' + [headers.join(','), ...rows.map(e => e.join(','))].join('\n')
+    const encodedUri = encodeURI(csvContent)
+    const link = document.createElement('a')
+    link.setAttribute('href', encodedUri)
+    link.setAttribute('download', `manifest_penumpang_petugas_${formatDate(new Date()).replace(/\s+/g, '_')}.csv`)
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    toast.success('Manifest penumpang berhasil diekspor ke CSV!')
+  }
+
+  // Print Manifest
+  const handlePrintManifest = () => {
+    window.print()
+  }
+
+  // Export Validation History CSV
+  const handleExportValidationCSV = () => {
+    const list = recentValidations.length > 0 ? recentValidations : tickets.filter(t => t.is_validated).map(t => ({
+      ticket_number: t.ticket_number,
+      passenger_name: t.passengers?.full_name || 'Penumpang',
+      seat_number: t.seats?.seat_number || '-',
+      validated_at: t.validated_at || new Date().toISOString(),
+      success: true,
+    }))
+
+    if (!list.length) {
+      toast.error('Belum ada riwayat validasi tiket pada sesi ini.')
+      return
+    }
+    const headers = ['Nomor Tiket', 'Nama Penumpang', 'Nomor Kursi', 'Waktu Validasi', 'Status']
+    const rows = list.map(rv => [
+      `"${rv.ticket_number}"`,
+      `"${rv.passenger_name}"`,
+      `"${rv.seat_number}"`,
+      `"${new Date(rv.validated_at).toLocaleString('id-ID')}"`,
+      `"${rv.success ? 'BERHASIL' : 'GAGAL'}"`,
+    ])
+    const csvContent = 'data:text/csv;charset=utf-8,\uFEFF' + [headers.join(','), ...rows.map(e => e.join(','))].join('\n')
+    const encodedUri = encodeURI(csvContent)
+    const link = document.createElement('a')
+    link.setAttribute('href', encodedUri)
+    link.setAttribute('download', `log_validasi_tiket_${Date.now()}.csv`)
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    toast.success('Riwayat validasi tiket berhasil diekspor ke CSV!')
+  }
+
+  // Export Food Orders CSV
+  const handleExportFoodOrdersCSV = () => {
+    if (!foodOrders.length) {
+      toast.error('Belum ada pesanan makanan untuk diekspor.')
+      return
+    }
+    const headers = ['Kode Pesanan', 'Nama Penumpang', 'Nomor Kursi', 'Total (IDR)', 'Status', 'Catatan', 'Waktu']
+    const rows = foodOrders.map(o => [
+      `"${o.order_code}"`,
+      `"${o.passengers?.full_name || '-'}"`,
+      `"${o.seats?.seat_number || '-'}"`,
+      o.total_amount,
+      `"${o.status}"`,
+      `"${(o.note || '').replace(/"/g, '""')}"`,
+      `"${new Date(o.created_at).toLocaleString('id-ID')}"`,
+    ])
+    const csvContent = 'data:text/csv;charset=utf-8,\uFEFF' + [headers.join(','), ...rows.map(e => e.join(','))].join('\n')
+    const encodedUri = encodeURI(csvContent)
+    const link = document.createElement('a')
+    link.setAttribute('href', encodedUri)
+    link.setAttribute('download', `rekap_pesanan_kuliner_${Date.now()}.csv`)
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    toast.success('Rekap pesanan kuliner berhasil diekspor ke CSV!')
+  }
+
   const pendingServices = pendingOrders + pendingReports
   const menuGroups = useMemo(() => getStaffMenuGroups({
     isGate,
@@ -470,8 +559,9 @@ function StaffDashboardContent() {
   return (
     <OperationalDashboardShell
       role={isGate ? 'gate' : 'conductor'}
-      roleBadge={isGate ? 'Petugas Gerbang & Boarding' : 'Kondektur & Operasional KA'}
-      subtitle={isGate ? `Lokasi tugas: ${stationName || 'Stasiun Gambir (GMR)'} · Gate In & Validasi Boarding` : (journeys[0] ? `Dinas Aktif: ${journeys[0].schedules?.trains?.name || 'Kereta Api'} · Total ${journeys.length} Perjalanan` : 'Area Penugasan Operasional Awak Kereta Api')}
+      layout="topbar"
+      roleBadge={isGate ? 'Petugas Gate' : 'Petugas KA'}
+      subtitle={isGate ? `Lokasi tugas: ${stationName || 'Stasiun Gambir (GMR)'}` : (journeys[0] ? `Dinas Aktif: ${journeys[0].schedules?.trains?.name || 'Kereta Api'}` : 'Area Penugasan Awak KA')}
       menuGroups={menuGroups}
       activeTab={activeTab}
       onSelectTab={selectTab}
@@ -481,95 +571,165 @@ function StaffDashboardContent() {
     >
           {/* ── TAB 1: OVERVIEW ──────────────────────────────────────────────── */}
           {activeTab === 'overview' && (
-            <div>
-              {/* Stat Cards */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 150px), 1fr))', gap: '0.75rem', marginBottom: '1.25rem' }}>
+            <div style={{ display: 'grid', gap: '1rem' }}>
+              {/* Unified Minimalist KPI Strip */}
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
+                  background: '#ffffff',
+                  border: '1px solid #e2e8f0',
+                  borderRadius: 12,
+                  overflow: 'hidden',
+                }}
+              >
                 {[
-                  { label: 'Perjalanan Tugas', value: journeys.length, icon: Train, color: 'var(--rh-primary)' },
-                  { label: 'Manifest Penumpang', value: ticketTotal, icon: Users, color: 'var(--rh-info)' },
-                  { label: 'Tiket Tervalidasi', value: `${validatedTotal} / ${ticketTotal}`, sub: ticketTotal ? `${Math.round((validatedTotal / ticketTotal) * 100)}% boarding` : '0%', icon: CheckCircle2, color: 'var(--rh-success)' },
-                  { label: 'Pesanan Makanan Aktif', value: pendingOrders, icon: Utensils, color: 'var(--rh-accent)' },
-                  { label: 'Laporan Bantuan / Hilang', value: pendingReports, icon: HelpingHand, color: 'var(--rh-secondary)' },
-                ].map((item, idx) => {
-                  const Icon = item.icon
-                  return (
-                    <article key={idx} className="rh-card" style={{ padding: '1.15rem' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
-                        <div style={{ width: 44, height: 44, borderRadius: 12, background: 'var(--rh-surface)', color: item.color, display: 'grid', placeItems: 'center', flexShrink: 0 }}>
-                          <Icon size={20} />
-                        </div>
-                        <div>
-                          <small style={{ color: 'var(--rh-text-2)', display: 'block', fontSize: '0.8rem' }}>{item.label}</small>
-                          <strong style={{ fontSize: '1.35rem', display: 'block', lineHeight: 1.25 }}>{item.value}</strong>
-                          {item.sub && <small style={{ color: 'var(--rh-text-3)', fontSize: '0.74rem' }}>{item.sub}</small>}
-                        </div>
-                      </div>
-                    </article>
-                  )
-                })}
+                  { label: 'Perjalanan Tugas', value: journeys.length, color: '#1a428a' },
+                  { label: 'Total Penumpang', value: ticketTotal, color: '#0f172a' },
+                  { label: 'Boarding Tervalidasi', value: `${validatedTotal} / ${ticketTotal}`, color: '#059669' },
+                  { label: 'Pesanan Kuliner', value: pendingOrders, color: '#ea580c' },
+                  { label: 'Laporan Bantuan', value: pendingReports, color: '#dc2626' },
+                ].map((kpi, idx) => (
+                  <div
+                    key={kpi.label}
+                    style={{
+                      padding: '1rem 1.15rem',
+                      borderTop: idx > 0 ? '1px solid #f1f5f9' : 'none',
+                      borderLeft: idx > 0 ? '1px solid #f1f5f9' : 'none',
+                    }}
+                  >
+                    <span style={{ display: 'block', fontSize: '0.75rem', fontWeight: 600, color: '#64748b' }}>
+                      {kpi.label}
+                    </span>
+                    <strong style={{ display: 'block', fontSize: '1.35rem', fontWeight: 800, color: kpi.color, marginTop: '0.25rem', fontVariantNumeric: 'tabular-nums' }}>
+                      {kpi.value}
+                    </strong>
+                  </div>
+                ))}
               </div>
 
-              {/* Quick Actions Shortcuts */}
-              <div className="rh-card" style={{ padding: '1.25rem', marginBottom: '1.5rem', background: 'linear-gradient(135deg, rgba(26,66,138,0.04), rgba(255,140,0,0.04))' }}>
-                <h3 className="rh-h4" style={{ margin: '0 0 0.75rem' }}>Aksi Cepat Petugas</h3>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
-                  <button type="button" className="rh-btn rh-btn-primary" onClick={() => selectTab('validation')}>
-                    <TicketCheck size={16} /> Buka Scanner Validasi Tiket
-                  </button>
-                  <button type="button" className="rh-btn rh-btn-secondary" onClick={() => selectTab('passengers')}>
-                    <Users size={16} /> Buka Manifest Penumpang
-                  </button>
-                  <button type="button" className="rh-btn rh-btn-ghost" onClick={() => selectTab('journey')}>
-                    <Train size={16} /> Update Status Perjalanan
-                  </button>
-                  <button type="button" className="rh-btn rh-btn-ghost" onClick={() => selectTab('orders')}>
-                    <Utensils size={16} /> Cek Pesanan Makanan ({pendingOrders})
-                  </button>
+              {/* Compact Quick Actions Row */}
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', alignItems: 'center' }}>
+                <button type="button" className="rh-btn rh-btn-sm rh-btn-primary" onClick={() => selectTab('validation')}>
+                  <TicketCheck size={14} /> Scan Tiket
+                </button>
+                {!isGate && (
+                  <>
+                    <button type="button" className="rh-btn rh-btn-sm rh-btn-secondary" onClick={() => selectTab('passengers')}>
+                      <Users size={14} /> Manifest ({ticketTotal})
+                    </button>
+                    <button type="button" className="rh-btn rh-btn-sm rh-btn-secondary" onClick={() => selectTab('journey')}>
+                      <Train size={14} /> Status Perjalanan
+                    </button>
+                    <button type="button" className="rh-btn rh-btn-sm rh-btn-ghost" onClick={() => selectTab('services')}>
+                      <Utensils size={14} /> Layanan ({pendingServices})
+                    </button>
+                    <button type="button" className="rh-btn rh-btn-sm rh-btn-secondary" onClick={handleExportManifestCSV} style={{ marginLeft: 'auto' }}>
+                      <Download size={14} /> Ekspor Manifest (CSV)
+                    </button>
+                  </>
+                )}
+              </div>
+
+              {/* Visual Operational Charts Grid */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: '1rem' }}>
+                {/* Chart 1: Donut Boarding Progress */}
+                <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 12, padding: '1.25rem', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                  <DonutProgress
+                    percent={ticketTotal ? Math.round((validatedTotal / ticketTotal) * 100) : 0}
+                    title="Laju Validasi Boarding"
+                    subtitle={`${validatedTotal} dari ${ticketTotal} tiket telah diperiksa`}
+                    color="#059669"
+                  />
+                </div>
+
+                {/* Chart 2: Passenger Distribution per Carriage Class */}
+                <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 12, padding: '1.25rem' }}>
+                  <HorizontalBarChart
+                    title="Komposisi Kelas Kursi"
+                    items={carriageClassCounts.length > 0 ? carriageClassCounts : [
+                      { label: 'Eksekutif (K1)', value: ticketTotal || 1, displayValue: `${ticketTotal} Kursi`, color: '#1a428a' }
+                    ]}
+                  />
+                </div>
+
+                {/* Chart 3: Service Desk Status */}
+                <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 12, padding: '1.25rem' }}>
+                  <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '0.75rem' }}>
+                    Status Layanan Kereta
+                  </div>
+                  <SegmentedStatusBar
+                    totalLabel="Layanan Restorasi & Bantuan"
+                    totalValue={`${pendingServices} Antrean Aktif`}
+                    segments={[
+                      { label: 'Selesai', value: foodOrders.filter(o => o.status === 'completed').length + reports.filter(r => r.status === 'resolved').length || 1, color: '#059669' },
+                      { label: 'Diproses', value: foodOrders.filter(o => o.status === 'preparing' || o.status === 'on_the_way').length + reports.filter(r => r.status === 'in_progress').length, color: '#2563eb' },
+                      { label: 'Menunggu', value: foodOrders.filter(o => o.status === 'pending' || o.status === 'confirmed').length + reports.filter(r => r.status === 'pending').length, color: '#ea580c' },
+                    ]}
+                  />
                 </div>
               </div>
 
               {/* Active Assigned Journeys List */}
-              <section>
-                <h3 className="rh-h3" style={{ margin: '0 0 0.85rem' }}>Jadwal Penugasan Hari Ini</h3>
+              <section style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 12, overflow: 'hidden' }}>
+                <div style={{ padding: '0.85rem 1.15rem', borderBottom: '1px solid #f1f5f9', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <strong style={{ fontSize: '0.9rem', color: '#0f172a' }}>Jadwal Penugasan Hari Ini</strong>
+                  <span style={{ fontSize: '0.76rem', color: '#64748b' }}>{journeys.length} Perjalanan</span>
+                </div>
+
                 {journeys.length === 0 ? (
-                  <div className="rh-card" style={{ padding: '2rem', textAlign: 'center', color: 'var(--rh-text-2)' }}>
-                    <Train size={36} style={{ margin: '0 auto 0.75rem', opacity: 0.5 }} />
-                    <p style={{ margin: 0 }}>Belum ada jadwal perjalanan yang ditugaskan kepada akun Anda.</p>
+                  <div style={{ padding: '2rem', textAlign: 'center', color: '#64748b', fontSize: '0.86rem' }}>
+                    Belum ada jadwal perjalanan yang ditugaskan kepada akun Anda.
                   </div>
                 ) : (
-                  <div style={{ display: 'grid', gap: '1rem' }}>
-                    {journeys.map(j => {
+                  <div>
+                    {journeys.map((j, idx) => {
                       const s = j.schedules
                       const countVal = j.tickets.filter(t => t.is_validated).length
                       return (
-                        <article key={j.id} className="rh-card" style={{ padding: '1.25rem' }}>
-                          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '1rem' }}>
-                            <div>
-                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
-                                <strong style={{ fontSize: '1.1rem' }}>{s?.trains?.name} · {s?.trains?.train_number}</strong>
-                                <JourneyStatus status={s?.status} />
-                              </div>
-                              <span style={{ color: 'var(--rh-text-2)', fontSize: '0.9rem' }}>{s?.routes?.name}</span>
-                              <div style={{ display: 'flex', gap: '1rem', marginTop: '0.4rem', fontSize: '0.8rem', color: 'var(--rh-text-3)' }}>
-                                <span><CalendarDays size={13} style={{ verticalAlign: 'middle', marginRight: 4 }} />{formatDate(s?.departure_time)}</span>
-                                <span><Clock3 size={13} style={{ verticalAlign: 'middle', marginRight: 4 }} />{formatTime(s?.departure_time)} WIB</span>
-                              </div>
+                        <div
+                          key={j.id}
+                          style={{
+                            display: 'flex',
+                            flexWrap: 'wrap',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            gap: '0.75rem',
+                            padding: '0.85rem 1.15rem',
+                            borderTop: idx > 0 ? '1px solid #f1f5f9' : 'none',
+                          }}
+                        >
+                          <div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+                              <strong style={{ fontSize: '0.92rem', color: '#0f172a' }}>{s?.trains?.name}</strong>
+                              <span style={{ fontSize: '0.74rem', color: '#64748b' }}>{s?.trains?.train_number}</span>
+                              <JourneyStatus status={s?.status} />
                             </div>
-                            <div style={{ textAlign: 'right' }}>
-                              <div style={{ fontSize: '0.85rem', color: 'var(--rh-text-2)', marginBottom: '0.5rem' }}>
-                                Validasi: <strong>{countVal} / {j.tickets.length}</strong> tiket
-                              </div>
-                              <div style={{ display: 'flex', gap: '0.5rem' }}>
-                                <button type="button" className="rh-btn rh-btn-primary rh-btn-sm" onClick={() => { setPassengerScheduleFilter(j.schedule_id); selectTab('passengers') }}>
-                                  Lihat Penumpang
-                                </button>
-                                <button type="button" className="rh-btn rh-btn-ghost rh-btn-sm" onClick={() => selectTab('journey')}>
-                                  Ubah Status
-                                </button>
-                              </div>
+                            <div style={{ fontSize: '0.78rem', color: '#64748b', marginTop: 2 }}>
+                              {s?.routes?.name} · {formatTime(s?.departure_time)} WIB ({formatDate(s?.departure_time)})
                             </div>
                           </div>
-                        </article>
+
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                            <span style={{ fontSize: '0.76rem', color: '#64748b' }}>
+                              Validasi: <strong>{countVal} / {j.tickets.length}</strong>
+                            </span>
+                            <button
+                              type="button"
+                              className="rh-btn rh-btn-sm rh-btn-primary"
+                              onClick={() => { setPassengerScheduleFilter(j.schedule_id); selectTab('passengers') }}
+                            >
+                              Penumpang
+                            </button>
+                            <button
+                              type="button"
+                              className="rh-btn rh-btn-sm rh-btn-ghost"
+                              onClick={() => selectTab('journey')}
+                            >
+                              Ubah Status
+                            </button>
+                          </div>
+                        </div>
                       )
                     })}
                   </div>
@@ -581,12 +741,17 @@ function StaffDashboardContent() {
           {/* ── TAB 2: TICKET VALIDATION ────────────────────────────────────── */}
           {activeTab === 'validation' && (
             <section className="rh-card" style={{ padding: '1.5rem' }}>
-              <div style={{ marginBottom: '1.25rem' }}>
-                <span className="rh-badge rh-badge-primary">Validasi Tiket &amp; Boarding</span>
-                <h2 className="rh-h3" style={{ margin: '0.4rem 0 0.2rem' }}>Validasi Tiket Digital QR Code</h2>
-                <p style={{ margin: 0, color: 'var(--rh-text-2)', fontSize: '0.88rem' }}>
-                  Arahkan kamera ke QR Code boarding pass tiket penumpang, atau masukkan kode tiket secara manual.
-                </p>
+              <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
+                <div>
+                  <span className="rh-badge rh-badge-primary">Validasi Tiket &amp; Boarding</span>
+                  <h2 className="rh-h3" style={{ margin: '0.4rem 0 0.2rem' }}>Validasi Tiket Digital QR Code</h2>
+                  <p style={{ margin: 0, color: 'var(--rh-text-2)', fontSize: '0.88rem' }}>
+                    Arahkan kamera ke QR Code boarding pass tiket penumpang, atau masukkan kode tiket secara manual.
+                  </p>
+                </div>
+                <button type="button" className="rh-btn rh-btn-sm rh-btn-secondary" onClick={handleExportValidationCSV}>
+                  <Download size={14} /> Ekspor Riwayat Validasi (CSV)
+                </button>
               </div>
 
               <div className="rh-gate-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
@@ -678,9 +843,17 @@ function StaffDashboardContent() {
                     Daftar seluruh penumpang bertiket pada perjalanan kereta api yang ditugaskan kepada Anda.
                   </p>
                 </div>
-                <span style={{ fontSize: '0.85rem', color: 'var(--rh-text-2)' }}>
-                  Total: <strong>{filteredTickets.length}</strong> penumpang
-                </span>
+                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                  <button type="button" className="rh-btn rh-btn-sm rh-btn-primary" onClick={handleExportManifestCSV}>
+                    <Download size={14} /> Ekspor Manifest (CSV)
+                  </button>
+                  <button type="button" className="rh-btn rh-btn-sm rh-btn-secondary" onClick={handlePrintManifest}>
+                    <Printer size={14} /> Cetak
+                  </button>
+                  <span style={{ fontSize: '0.85rem', color: 'var(--rh-text-2)' }}>
+                    Total: <strong>{filteredTickets.length}</strong> penumpang
+                  </span>
+                </div>
               </div>
 
               {/* Filters */}
@@ -1089,17 +1262,22 @@ function StaffDashboardContent() {
                     Pesanan kuliner kereta dari penumpang bertiket untuk diantarkan langsung ke nomor kursi.
                   </p>
                 </div>
-                <div style={{ display: 'flex', gap: '0.5rem' }}>
-                  {['all', 'pending', 'confirmed', 'preparing', 'on_the_way', 'completed'].map(st => (
-                    <button
-                      key={st}
-                      type="button"
-                      className={`rh-btn rh-btn-sm ${orderFilter === st ? 'rh-btn-primary' : 'rh-btn-ghost'}`}
-                      onClick={() => setOrderFilter(st)}
-                    >
-                      {st === 'all' ? 'Semua' : st.replace('_', ' ')}
-                    </button>
-                  ))}
+                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                  <button type="button" className="rh-btn rh-btn-sm rh-btn-secondary" onClick={handleExportFoodOrdersCSV}>
+                    <Download size={14} /> Ekspor Rekap Pesanan (CSV)
+                  </button>
+                  <div style={{ display: 'flex', gap: '0.25rem' }}>
+                    {['all', 'pending', 'confirmed', 'preparing', 'on_the_way', 'completed'].map(st => (
+                      <button
+                        key={st}
+                        type="button"
+                        className={`rh-btn rh-btn-sm ${orderFilter === st ? 'rh-btn-primary' : 'rh-btn-ghost'}`}
+                        onClick={() => setOrderFilter(st)}
+                      >
+                        {st === 'all' ? 'Semua' : st.replace('_', ' ')}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </div>
 

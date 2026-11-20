@@ -180,9 +180,10 @@ export default function Navbar() {
       await signOut()
       toast.success('Berhasil keluar!')
       setMobileOpen(false)
-      window.location.replace('/auth/login')
+      window.location.replace('/auth/login?logout=1')
     } catch (error) {
       toast.error(`Tidak dapat keluar: ${error.message}`)
+      window.location.replace('/auth/login?logout=1')
     }
   }
 

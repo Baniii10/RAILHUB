@@ -48,3 +48,8 @@ graphify-out/20*/
 # Impeccable binaries
 **/skills/impeccable/scripts/bin/
 *.exe
+
+# Agent skills cache
+.agents/
+skills-lock.json
+
